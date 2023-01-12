@@ -10,13 +10,13 @@ ATenetrisPawn::ATenetrisPawn()
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	SetActorLocation(FVector::ZeroVector);
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("CAMERA"));
 	Camera->SetupAttachment(RootComponent);
 	Camera->SetRelativeLocation(FVector::ZeroVector);
 	Camera->SetProjectionMode(ECameraProjectionMode::Orthographic);
 	Camera->SetOrthoWidth(1024.f);
 	Camera->bUsePawnControlRotation = true;
+	// SetActorLocation(FVector::ZeroVector);
 }
 
 // Called when the game starts or when spawned
@@ -24,6 +24,7 @@ void ATenetrisPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	SetActorLocation(FVector::ZeroVector);
 }
 
 // Called every frame
