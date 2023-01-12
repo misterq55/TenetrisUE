@@ -12,6 +12,5 @@
 UCLASS()
 class TENETRIS_API ATenetrisGameMode : public ATenetrisGameModeBase
 {
-	GENERATED_BODY()
-	
+	GENERATED_BODY()	
 };
