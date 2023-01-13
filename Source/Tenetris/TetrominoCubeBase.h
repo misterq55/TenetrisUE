@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "TetrominoCubeBase.generated.h"
 
+class UStaticMeshComponent;
+
 UCLASS()
 class TENETRIS_API ATetrominoCubeBase : public AActor
 {
@@ -23,4 +25,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void SetVitibility(bool InNewVisibility);
+
+private:
+	UStaticMeshComponent* CubeMeshComponent;
 };

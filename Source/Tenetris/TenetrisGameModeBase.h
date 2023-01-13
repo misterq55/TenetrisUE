@@ -18,7 +18,7 @@ class TENETRIS_API ATenetrisGameModeBase : public AGameModeBase
 	GENERATED_UCLASS_BODY()
 
 public:
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "TenetrisGameMode")
+	UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
 	void Initialize();
 	
 	UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")

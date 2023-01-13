@@ -3,6 +3,7 @@
 
 #include "TenetrisGameModeBase.h"
 #include "TenetrisPawn.h"
+#include "TenetrisFieldBase.h"
 
 ATenetrisGameModeBase::ATenetrisGameModeBase(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -10,8 +11,12 @@ ATenetrisGameModeBase::ATenetrisGameModeBase(const FObjectInitializer& ObjectIni
 	DefaultPawnClass = ATenetrisPawn::StaticClass();
 }
 
-void ATenetrisGameModeBase::Initialize_Implementation()
+void ATenetrisGameModeBase::Initialize()
 {
+	for (ATenetrisFieldBase* Field : TenetrisFields)
+	{
+		Field->Initialize();
+	}
 }
 
 void ATenetrisGameModeBase::AddTenetrisFields(ATenetrisFieldBase* InTenetrisField)

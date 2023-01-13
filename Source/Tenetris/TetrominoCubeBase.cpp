@@ -12,14 +12,16 @@ ATetrominoCubeBase::ATetrominoCubeBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshObj(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Cube.Shape_Cube'"));
-	UStaticMeshComponent* StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("STATICMESH_COMPONENT"));
-	StaticMeshComponent->SetupAttachment(RootComponent);
-	StaticMeshComponent->SetStaticMesh(MeshObj.Object);
-	StaticMeshComponent->SetRelativeScale3D(FVector(0.1f, 0.1f, 0.1f));
+	CubeMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("STATICMESH_COMPONENT"));
+	CubeMeshComponent->SetupAttachment(RootComponent);
+	CubeMeshComponent->SetStaticMesh(MeshObj.Object);
+	CubeMeshComponent->SetRelativeScale3D(FVector(0.25f, 0.25f, 0.25f));
 	
 	FSoftObjectPath DefaultTranslucentMaterialName(" Material'/Game/StarterContent/Materials/M_Ground_Grass.M_Ground_Grass'");
 	UMaterialInterface* TranslucentMaterial = Cast<UMaterialInterface>(DefaultTranslucentMaterialName.TryLoad());
-	StaticMeshComponent->SetMaterial(0, TranslucentMaterial);
+	CubeMeshComponent->SetMaterial(0, TranslucentMaterial);
+
+	CubeMeshComponent->SetVisibility(false);
 }
 
 // Called when the game starts or when spawned
@@ -35,5 +37,13 @@ void ATetrominoCubeBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void ATetrominoCubeBase::SetVitibility(bool InNewVisibility)
+{
+	if (CubeMeshComponent)
+	{
+		CubeMeshComponent->SetVisibility(InNewVisibility);
+	}
 }
 
