@@ -9,3 +9,23 @@ ATenetrisGameModeBase::ATenetrisGameModeBase(const FObjectInitializer& ObjectIni
 {
 	DefaultPawnClass = ATenetrisPawn::StaticClass();
 }
+
+void ATenetrisGameModeBase::Initialize_Implementation()
+{
+}
+
+void ATenetrisGameModeBase::AddTenetrisFields(ATenetrisFieldBase* InTenetrisField)
+{
+	TenetrisFields.Add(InTenetrisField);
+}
+
+void ATenetrisGameModeBase::SetPlayerTenetrisField(ATenetrisFieldBase* InPlayerTenetrisField)
+{
+	AddTenetrisFields(InPlayerTenetrisField);
+	PlayerTenetrisField = InPlayerTenetrisField;
+}
+
+ATenetrisFieldBase* ATenetrisGameModeBase::GetPlayerTenetrisField()
+{
+	return PlayerTenetrisField;
+}

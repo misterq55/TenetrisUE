@@ -5,6 +5,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/StaticMeshActor.h"
+#include "TetrominoCubeBase.h"
 
 // Sets default values
 ATenetrisFieldBase::ATenetrisFieldBase()
@@ -25,6 +26,14 @@ void ATenetrisFieldBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	for (int i = 0; i < 20; i++)
+	{
+		for (int j = 0; j < 10; j++)
+		{
+			AActor* TestActor = GetWorld()->SpawnActor(ATetrominoCubeBase::StaticClass());
+			TestActor->SetActorLocation(FVector(90.f, j * 10.f, i * 10.f));
+		}
+	}
 }
 
 // Called every frame
