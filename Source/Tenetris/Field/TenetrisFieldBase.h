@@ -29,11 +29,4 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "TenetrisField")
 		virtual	void Initialize();
-
-	void MoveTetromino(ETetrominoDirection InTetrominoDirection);
-	void RotateTetromino(ETetrominoRotation InTetrominoRotation);
-
-protected:
-	FTetrominoBase* CurrentTetromino;
-	FTetrominoBase* PrevTetromino;
 };

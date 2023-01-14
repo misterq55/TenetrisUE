@@ -2,7 +2,8 @@
 
 #pragma once
 
-#include "Tenetris/Field/TenetrisFieldBase.h"
+// #include "Tenetris/Field/TenetrisFieldBase.h"
+#include "Tenetris/Field/PlayerTenetrisField/PlayerTenetrisField.h"
 #include "Tenetris/Field/Tetromino/TetrominoCube/TetrominoCubeBase.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/StaticMesh.h"
@@ -86,7 +87,7 @@ public:
 };
 
 UCLASS()
-class TENETRIS_API ATestTenetrisField : public ATenetrisFieldBase
+class TENETRIS_API ATestTenetrisField : public APlayerTenetrisField
 {
 	GENERATED_BODY()
 
@@ -106,7 +107,10 @@ public:
 
 protected:
 	// Called when the game starts or when spawned
-	virtual void BeginPlay() {}
+	virtual void BeginPlay() 
+	{
+		Super::BeginPlay();
+	}
 
 public:
 
