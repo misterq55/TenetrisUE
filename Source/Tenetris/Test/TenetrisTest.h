@@ -3,7 +3,7 @@
 #pragma once
 
 #include "Tenetris/Field/TenetrisFieldBase.h"
-#include "Tenetris/Tetromino/TetrominoCube/TetrominoCubeBase.h"
+#include "Tenetris/Field/Tetromino/TetrominoCube/TetrominoCubeBase.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/StaticMeshActor.h"
@@ -16,7 +16,7 @@ class TENETRIS_API ATestTetrominoCube : public ATetrominoCubeBase
 
 public:
 	// Sets default values for this actor's properties
-	ATestTetrominoCube() 
+	ATestTetrominoCube()
 	{
 		// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 		PrimaryActorTick.bCanEverTick = true;
@@ -33,7 +33,7 @@ public:
 
 		CubeMeshComponent->SetVisibility(false);
 	}
-	
+
 	void SetTetrominoType(ETetrominoType InTetrominoType)
 	{
 		Super::SetTetrominoType(InTetrominoType);
@@ -92,7 +92,7 @@ class TENETRIS_API ATestTenetrisField : public ATenetrisFieldBase
 
 public:
 	// Sets default values for this actor's properties
-	ATestTenetrisField() 
+	ATestTenetrisField()
 	{
 		// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 		PrimaryActorTick.bCanEverTick = true;
@@ -102,7 +102,6 @@ public:
 		StaticMeshComponent->SetupAttachment(RootComponent);
 		StaticMeshComponent->SetStaticMesh(MeshObj.Object);
 		StaticMeshComponent->SetRelativeRotation(FRotator(90.f, 0.f, 0.f));
-		StaticMeshComponent->SetRelativeScale3D(FVector(5.f, 2.5f, 0.f));
 	}
 
 protected:
@@ -111,7 +110,7 @@ protected:
 
 public:
 
-		virtual void Initialize() 
+	virtual void Initialize()
 	{
 		FVector FieldLocation = GetActorLocation();
 		FieldLocation.Y -= 112.5f;
@@ -121,17 +120,16 @@ public:
 		{
 			for (int j = 0; j < 10; j++)
 			{
-				ATestTetrominoCube* TestActor = Cast<ATestTetrominoCube>(GetWorld()->SpawnActor(ATestTetrominoCube::StaticClass()));
+				UChildActorComponent* ChildComponent = NewObject<UChildActorComponent>(this);
+				ChildComponent->SetChildActorClass(TSubclassOf< AActor >(ATestTetrominoCube::StaticClass()));
+				ChildComponent->SetupAttachment(RootComponent);
+				ChildComponent->CreateChildActor();
+				// ATestTetrominoCube* TestActor = Cast<ATestTetrominoCube>(GetWorld()->SpawnActor(ATestTetrominoCube::StaticClass()));
+				ATestTetrominoCube* TestActor = Cast<ATestTetrominoCube>(ChildComponent->GetChildActor());
 				TestActor->SetActorLocation(FVector(90.f, j * 25.f + FieldLocation.Y, i * 25.f + FieldLocation.Z));
 				if (i == 0 || i == 19 ||
 					j == 0 || j == 9)
 					TestActor->SetVitibility(true);
-
-				if (i == 0)
-					TestActor->SetTetrominoType(ETetrominoType::I);
-
-				if (i == 19)
-					TestActor->SetTetrominoType(ETetrominoType::O);
 
 				if (j == 0)
 					TestActor->SetTetrominoType(ETetrominoType::J);
@@ -139,7 +137,18 @@ public:
 				if (j == 9)
 					TestActor->SetTetrominoType(ETetrominoType::Z);
 
-				// AddComponentByClass(
+				if (i == 0)
+					TestActor->SetTetrominoType(ETetrominoType::I);
+
+				if (i == 19)
+					TestActor->SetTetrominoType(ETetrominoType::O);
+
+				//UChildActorComponent* ChildComponent = NewObject<UChildActorComponent>();
+				//// ChildComponent->
+				//FActorParentComponentSetter::Set(TestActor, RootComponent);
+				//ChildComponent->SetupAttachment(RootComponent);
+
+				// TestActor->GetRootComponent()->SetupAttachment(RootComponent);;
 			}
 		}
 	}

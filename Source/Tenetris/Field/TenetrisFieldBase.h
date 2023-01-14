@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Tenetris/TenetrisDefine.h"
 #include "TenetrisFieldBase.generated.h"
+
+class FTetrominoBase;
 
 UCLASS()
 class TENETRIS_API ATenetrisFieldBase : public AActor
@@ -14,6 +17,7 @@ class TENETRIS_API ATenetrisFieldBase : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ATenetrisFieldBase();
+	virtual ~ATenetrisFieldBase();
 
 protected:
 	// Called when the game starts or when spawned
@@ -25,4 +29,11 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "TenetrisField")
 		virtual	void Initialize();
+
+	void MoveTetromino(ETetrominoDirection InTetrominoDirection);
+	void RotateTetromino(ETetrominoRotation InTetrominoRotation);
+
+protected:
+	FTetrominoBase* CurrentTetromino;
+	FTetrominoBase* PrevTetromino;
 };

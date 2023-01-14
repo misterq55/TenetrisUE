@@ -4,21 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Tenetris/TenetrisDefine.h"
 #include "TetrominoCubeBase.generated.h"
 
 class UStaticMeshComponent;
-
-enum class ETetrominoType
-{
-	I,
-	J,
-	L,
-	O,
-	S,
-	T,
-	Z,
-	Obstacle,
-};
 
 UCLASS()
 class TENETRIS_API ATetrominoCubeBase : public AActor
