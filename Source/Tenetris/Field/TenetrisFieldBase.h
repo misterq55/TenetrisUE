@@ -24,5 +24,5 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 	UFUNCTION(BlueprintCallable, Category = "TenetrisField")
-		void Initialize();
+		virtual	void Initialize();
 };

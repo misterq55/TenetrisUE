@@ -2,8 +2,8 @@
 
 
 #include "TenetrisGameModeBase.h"
-#include "TenetrisPawn.h"
-#include "TenetrisFieldBase.h"
+#include "Tenetris/TenetrisPawn.h"
+#include "Tenetris/Field/TenetrisFieldBase.h"
 
 ATenetrisGameModeBase::ATenetrisGameModeBase(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

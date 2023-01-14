@@ -8,6 +8,18 @@
 
 class UStaticMeshComponent;
 
+enum class ETetrominoType
+{
+	I,
+	J,
+	L,
+	O,
+	S,
+	T,
+	Z,
+	Obstacle,
+};
+
 UCLASS()
 class TENETRIS_API ATetrominoCubeBase : public AActor
 {
@@ -26,7 +38,10 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void SetVitibility(bool InNewVisibility);
+	void SetTetrominoType(ETetrominoType InTetrominoType);
+	void SetTetrominoCubePosition(int32 X, int32 Y);
 
-private:
+protected:
 	UStaticMeshComponent* CubeMeshComponent;
+	ETetrominoType TetrominoType;
 };

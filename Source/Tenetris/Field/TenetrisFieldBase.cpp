@@ -1,0 +1,31 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "TenetrisFieldBase.h"
+
+#include "Tenetris/Tetromino/TetrominoCube/TetrominoCubeBase.h"
+
+// Sets default values
+ATenetrisFieldBase::ATenetrisFieldBase()
+{
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+}
+
+// Called when the game starts or when spawned
+void ATenetrisFieldBase::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
+// Called every frame
+void ATenetrisFieldBase::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
+void ATenetrisFieldBase::Initialize()
+{
+	
+}
