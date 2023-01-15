@@ -102,6 +102,58 @@ protected:
 		Super::BeginPlay();
 	}
 
+	virtual void Tick(float DeltaTime)
+	{
+		Super::Tick(DeltaTime);
+
+		static int32 TestValue = 0;
+		if (TestValue % 2 == 0)
+		{
+			for (int i = 0; i < RowMax; i++)
+			{
+				for (int j = 0; j < ColumnMax; j++)
+				{
+					ATestTetrominoCube* TestActor = Cast<ATestTetrominoCube>(CubeBuffer[i][j]);
+
+					if (i == 0 || i == 19 ||
+						j == 0 || j == 9)
+						TestActor->SetVitibility(true);
+					else
+						TestActor->SetVitibility(false);
+
+					if (j == 0)
+						TestActor->SetTetrominoType(ETetrominoType::J);
+
+					if (j == 9)
+						TestActor->SetTetrominoType(ETetrominoType::Z);
+
+					if (i == 0)
+						TestActor->SetTetrominoType(ETetrominoType::I);
+
+					if (i == 19)
+						TestActor->SetTetrominoType(ETetrominoType::O);
+				}
+			}
+		}
+		else
+		{
+			for (int i = 0; i < RowMax; i++)
+			{
+				for (int j = 0; j < ColumnMax; j++)
+				{
+					ATestTetrominoCube* TestActor = Cast<ATestTetrominoCube>(CubeBuffer[i][j]);
+
+					TestActor->SetTetrominoType(ETetrominoType::Obstacle);
+					TestActor->SetVitibility(true);
+				}
+			}
+		}
+
+		TestValue++;
+		if (TestValue > 5)
+			TestValue = 0;
+	}
+
 public:
 
 	virtual void Initialize()
@@ -114,10 +166,10 @@ public:
 			{
 				ATestTetrominoCube* TestActor = Cast<ATestTetrominoCube>(CubeBuffer[i][j]);
 				
-				/*TestActor->SetTetrominoType(ETetrominoType::Obstacle);
-				TestActor->SetVitibility(true);*/
+				TestActor->SetTetrominoType(ETetrominoType::Obstacle);
+				TestActor->SetVitibility(true);
 
-				if (i == 0 || i == 19 ||
+				/*if (i == 0 || i == 19 ||
 					j == 0 || j == 9)
 					TestActor->SetVitibility(true);
 
@@ -131,7 +183,7 @@ public:
 					TestActor->SetTetrominoType(ETetrominoType::I);
 
 				if (i == 19)
-					TestActor->SetTetrominoType(ETetrominoType::O);
+					TestActor->SetTetrominoType(ETetrominoType::O);*/
 			}
 		}
 	}
