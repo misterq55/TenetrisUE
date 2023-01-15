@@ -4,11 +4,13 @@
 #include "TenetrisGameModeBase.h"
 #include "Tenetris/TenetrisPawn.h"
 #include "Tenetris/Field/TenetrisFieldBase.h"
+#include "Tenetris/PlayerController/TenetrisPlayerController.h"
 
 ATenetrisGameModeBase::ATenetrisGameModeBase(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	DefaultPawnClass = ATenetrisPawn::StaticClass();
+	PlayerControllerClass = ATenetrisPlayerController::StaticClass();
 }
 
 void ATenetrisGameModeBase::Initialize()

@@ -2,7 +2,7 @@
 
 
 #include "PlayerTenetrisField.h"
-#include "GameFramework/PlayerInput.h"
+#include "Tenetris/PlayerController/TenetrisPlayerController.h"
 #include "Tenetris/Field/Tetromino/TetrominoBase.h"
 
 // Sets default values
@@ -16,31 +16,20 @@ APlayerTenetrisField::APlayerTenetrisField()
 
 APlayerTenetrisField::~APlayerTenetrisField()
 {
-	if (CurrentTetromino)
-		delete CurrentTetromino;
 
-	if (PrevTetromino)
-		delete PrevTetromino;
 }
 
 // Called when the game starts or when spawned
 void APlayerTenetrisField::BeginPlay()
 {
 	Super::BeginPlay();
+	RegisterActions();
+}
 
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("MoveLeft", EKeys::Left));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("MoveRight", EKeys::Right));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("MoveDown", EKeys::Down));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("RotateClockWise", EKeys::Up));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("RotateCounterClockWise", EKeys::LeftControl));
-
-	APlayerController* PlayerController = GetWorld()->GetGameInstance()->GetFirstLocalPlayerController(GetWorld());
-	PlayerController->InputComponent->BindAction("MoveLeft", EInputEvent::IE_Pressed, this, &APlayerTenetrisField::MoveLeft);
-	PlayerController->InputComponent->BindAction("MoveRight", EInputEvent::IE_Pressed, this, &APlayerTenetrisField::MoveRight);
-	PlayerController->InputComponent->BindAction("MoveDown", EInputEvent::IE_Pressed, this, &APlayerTenetrisField::MoveDown);
-	PlayerController->InputComponent->BindAction("RotateClockWise", EInputEvent::IE_Pressed, this, &APlayerTenetrisField::RotateClockWise);
-	PlayerController->InputComponent->BindAction("RotateCounterClockWise", EInputEvent::IE_Pressed, this, &APlayerTenetrisField::RotateCounterClockWise);
-
+void APlayerTenetrisField::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	UnRegisterActions();
 }
 
 // Called every frame
@@ -55,32 +44,43 @@ void APlayerTenetrisField::Initialize()
 	
 }
 
-void APlayerTenetrisField::MoveLeft()
+void APlayerTenetrisField::MoveTetromino(ETetrominoDirection InTetrominoDirection)
 {
 	if (CurrentTetromino)
-		CurrentTetromino->Move(ETetrominoDirection::Left);
+		CurrentTetromino->Move(InTetrominoDirection);
 }
 
-void APlayerTenetrisField::MoveRight()
+void APlayerTenetrisField::RotateTetromino(ETetrominoRotation InTetrominoRotation)
 {
 	if (CurrentTetromino)
-		CurrentTetromino->Move(ETetrominoDirection::Right);
+		CurrentTetromino->Rotate(InTetrominoRotation);
 }
 
-void APlayerTenetrisField::MoveDown()
+void APlayerTenetrisField::HardDrop()
 {
-	if (CurrentTetromino)
-		CurrentTetromino->Move(ETetrominoDirection::Down);
+
 }
 
-void APlayerTenetrisField::RotateClockWise()
+void APlayerTenetrisField::RegisterActions()
 {
-	if (CurrentTetromino)
-		CurrentTetromino->Rotate(ETetrominoRotation::ClockWise);
+	ATenetrisPlayerController* PlayerController = Cast<ATenetrisPlayerController>(GetWorld()->GetGameInstance()->GetFirstLocalPlayerController(GetWorld()));
+
+	if (PlayerController)
+	{
+		PlayerController->OnTetrominoMove.BindUObject(this, &APlayerTenetrisField::MoveTetromino);
+		PlayerController->OnTetrominoRotate.BindUObject(this, &APlayerTenetrisField::RotateTetromino);
+		PlayerController->OnTetrominoHardDrop.BindUObject(this, &APlayerTenetrisField::HardDrop);
+	}
 }
 
-void APlayerTenetrisField::RotateCounterClockWise()
+void APlayerTenetrisField::UnRegisterActions()
 {
-	if (CurrentTetromino)
-		CurrentTetromino->Rotate(ETetrominoRotation::CounterClockWise);
+	ATenetrisPlayerController* PlayerController = Cast<ATenetrisPlayerController>(GetWorld()->GetGameInstance()->GetFirstLocalPlayerController(GetWorld()));
+
+	if (PlayerController)
+	{
+		PlayerController->OnTetrominoMove.Unbind();
+		PlayerController->OnTetrominoRotate.Unbind();
+		PlayerController->OnTetrominoHardDrop.Unbind();
+	}
 }

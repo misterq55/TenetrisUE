@@ -21,6 +21,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:	
 	// Called every frame
@@ -28,11 +29,13 @@ public:
 
 	virtual	void Initialize();
 
-	void MoveLeft();
-	void MoveRight();
-	void MoveDown();
-	void RotateClockWise();
-	void RotateCounterClockWise();
+	void MoveTetromino(ETetrominoDirection InTetrominoDirection);
+	void RotateTetromino(ETetrominoRotation InTetrominoRotation);
+	void HardDrop();
+
+private:
+	void RegisterActions();
+	void UnRegisterActions();
 
 protected:
 	FTetrominoBase* CurrentTetromino;
