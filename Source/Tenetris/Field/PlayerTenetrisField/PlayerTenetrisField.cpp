@@ -41,7 +41,7 @@ void APlayerTenetrisField::Tick(float DeltaTime)
 
 void APlayerTenetrisField::Initialize()
 {
-	
+	Super::Initialize();
 }
 
 void APlayerTenetrisField::MoveTetromino(ETetrominoDirection InTetrominoDirection)

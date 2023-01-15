@@ -8,6 +8,7 @@
 #include "TenetrisFieldBase.generated.h"
 
 class FTetrominoBase;
+class ATetrominoCubeBase;
 
 UCLASS()
 class TENETRIS_API ATenetrisFieldBase : public AActor
@@ -29,4 +30,12 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "TenetrisField")
 		virtual	void Initialize();
+
+protected:
+	const int32 RowMax = 20;
+	const int32 ColumnMax = 10;
+
+	TArray<TArray<ATetrominoCubeBase*>> CubeBuffer;
+
+	TSubclassOf<ATetrominoCubeBase> TetrominoCubeClass;
 };
