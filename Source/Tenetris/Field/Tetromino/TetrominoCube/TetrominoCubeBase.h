@@ -27,7 +27,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void SetVitibility(bool InNewVisibility);
-	void SetTetrominoType(ETetrominoType InTetrominoType);
+	virtual void SetTetrominoType(ETetrominoType InTetrominoType);
 	void SetTetrominoCubePosition(int32 X, int32 Y);
 
 protected:

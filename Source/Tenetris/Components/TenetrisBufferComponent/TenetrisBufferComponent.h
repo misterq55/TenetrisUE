@@ -3,44 +3,39 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Components/SceneComponent.h"
 #include "Tenetris/TenetrisDefine.h"
-#include "TenetrisFieldBase.generated.h"
+#include "TenetrisBufferComponent.generated.h"
 
-class FTetrominoBase;
 class ATetrominoCubeBase;
-class UTenetrisBufferComponent;
 
-UCLASS()
-class TENETRIS_API ATenetrisFieldBase : public AActor
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+class TENETRIS_API UTenetrisBufferComponent : public USceneComponent
 {
 	GENERATED_BODY()
-	
+
 public:	
-	// Sets default values for this actor's properties
-	ATenetrisFieldBase();
-	virtual ~ATenetrisFieldBase();
+	// Sets default values for this component's properties
+	UTenetrisBufferComponent();
 
 protected:
-	// Called when the game starts or when spawned
+	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:	
 	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-	
-	UFUNCTION(BlueprintCallable, Category = "TenetrisField")
-		virtual	void Initialize();
-
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual	void Initialize();
 	void SetTetrominoCubeClassType(TSubclassOf<ATetrominoCubeBase> InTetrominoCubeClass);
-
-protected:
 	void SetBackgroundCubeType(int32 X, int32 Y, ETetrominoType InTetrominoType);
 	void SetVisibilityBackgroundCube(int32 X, int32 Y, bool InVisible);
 	void SetTetrominoCubeType(int32 X, int32 Y, ETetrominoType InTetrominoType);
 	void SetVisibilityTetrominoCube(int32 X, int32 Y, bool InVisible);
 
 protected:
+	TArray<TArray<ATetrominoCubeBase*>> BackgroundCubeBuffer;
+	TArray<TArray<ATetrominoCubeBase*>> TetrominoCubeBuffer;
+	USceneComponent* BackGroundCubeBufferPivot;
+	USceneComponent* TetrominoCubeBufferPivot;
 	TSubclassOf<ATetrominoCubeBase> TetrominoCubeClass;
-	UTenetrisBufferComponent* TenetrisBufferComponent;
 };

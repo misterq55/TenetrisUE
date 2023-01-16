@@ -4,6 +4,7 @@
 #include "TenetrisFieldBase.h"
 #include "Tenetris/Field/Tetromino/TetrominoBase.h"
 #include "Tenetris/Field/Tetromino/TetrominoCube/TetrominoCubeBase.h"
+#include "Tenetris/Components/TenetrisBufferComponent/TenetrisBufferComponent.h"
 
 // Sets default values
 ATenetrisFieldBase::ATenetrisFieldBase()
@@ -11,16 +12,15 @@ ATenetrisFieldBase::ATenetrisFieldBase()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("ROOT_COMPONENT"));
+
+	TenetrisBufferComponent = CreateDefaultSubobject<UTenetrisBufferComponent>(TEXT("BufferComponent"));
+
+	TenetrisBufferComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	TenetrisBufferComponent->SetMobility(EComponentMobility::Movable);
+
 	SetActorTickInterval(1.f);
 	TetrominoCubeClass = ATetrominoCubeBase::StaticClass();
-	
-	for (int32 i = 0; i < RowMax; i++)
-	{
-		TArray<ATetrominoCubeBase*> Buffer;
-		Buffer.Reserve(ColumnMax);
-
-		CubeBuffer.Add(Buffer);
-	}
 }
 
 ATenetrisFieldBase::~ATenetrisFieldBase()
@@ -43,19 +43,36 @@ void ATenetrisFieldBase::Tick(float DeltaTime)
 
 void ATenetrisFieldBase::Initialize()
 {
-	for (int i = 0; i < RowMax; i++)
-	{
-		for (int j = 0; j < ColumnMax; j++)
-		{
-			UChildActorComponent* ChildComponent = NewObject<UChildActorComponent>(this);
-			ChildComponent->SetChildActorClass(TetrominoCubeClass);
-			ChildComponent->SetupAttachment(RootComponent);
-			ChildComponent->CreateChildActor();
-			
-			ATetrominoCubeBase* TetrominoCubeBase = Cast<ATetrominoCubeBase>(ChildComponent->GetChildActor());
-			TetrominoCubeBase->SetTetrominoCubePosition(j, i);
+	if (TenetrisBufferComponent)
+		TenetrisBufferComponent->Initialize();
+}
 
-			CubeBuffer[i].Add(TetrominoCubeBase);
-		}
-	}
+void ATenetrisFieldBase::SetTetrominoCubeClassType(TSubclassOf<ATetrominoCubeBase> InTetrominoCubeClass)
+{
+	if (TenetrisBufferComponent)
+		TenetrisBufferComponent->SetTetrominoCubeClassType(InTetrominoCubeClass);
+}
+
+void ATenetrisFieldBase::SetBackgroundCubeType(int32 X, int32 Y, ETetrominoType InTetrominoType)
+{
+	if (TenetrisBufferComponent)
+		TenetrisBufferComponent->SetBackgroundCubeType(X, Y, InTetrominoType);
+}
+
+void ATenetrisFieldBase::SetVisibilityBackgroundCube(int32 X, int32 Y, bool InVisible)
+{
+	if (TenetrisBufferComponent)
+		TenetrisBufferComponent->SetVisibilityBackgroundCube(X, Y, InVisible);
+}
+
+void ATenetrisFieldBase::SetTetrominoCubeType(int32 X, int32 Y, ETetrominoType InTetrominoType)
+{
+	if (TenetrisBufferComponent)
+		TenetrisBufferComponent->SetTetrominoCubeType(X, Y, InTetrominoType);
+}
+
+void ATenetrisFieldBase::SetVisibilityTetrominoCube(int32 X, int32 Y, bool InVisible)
+{
+	if (TenetrisBufferComponent)
+		TenetrisBufferComponent->SetVisibilityTetrominoCube(X, Y, InVisible);
 }

@@ -8,6 +8,7 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/StaticMeshActor.h"
+#include "Tenetris/Components/TenetrisBufferComponent/TenetrisBufferComponent.h"
 #include "TenetrisTest.generated.h"
 
 UCLASS()
@@ -27,50 +28,50 @@ public:
 	{
 		Super::SetTetrominoType(InTetrominoType);
 
-		if (CubeMeshComponent)
+		if (!CubeMeshComponent)
+			return;
+		
+		FSoftObjectPath DefaultTranslucentMaterialName;
+		switch (InTetrominoType)
 		{
-			FSoftObjectPath DefaultTranslucentMaterialName;
-			switch (InTetrominoType)
-			{
-			case ETetrominoType::I:
-				DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/IMino.IMino'");
-				break;
+		case ETetrominoType::I:
+			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/IMino.IMino'");
+			break;
 
-			case ETetrominoType::J:
-				DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/JMino.JMino'");
-				break;
+		case ETetrominoType::J:
+			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/JMino.JMino'");
+			break;
 
-			case ETetrominoType::L:
-				DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/LMino.LMino'");
-				break;
+		case ETetrominoType::L:
+			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/LMino.LMino'");
+			break;
 
-			case ETetrominoType::O:
-				DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/OMino.OMino'");
-				break;
+		case ETetrominoType::O:
+			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/OMino.OMino'");
+			break;
 
-			case ETetrominoType::S:
-				DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/SMino.SMino'");
-				break;
+		case ETetrominoType::S:
+			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/SMino.SMino'");
+			break;
 
-			case ETetrominoType::T:
-				DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/TMino.TMino'");
-				break;
+		case ETetrominoType::T:
+			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/TMino.TMino'");
+			break;
 
-			case ETetrominoType::Z:
-				DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/ZMino.ZMino'");
-				break;
+		case ETetrominoType::Z:
+			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/ZMino.ZMino'");
+			break;
 
-			case ETetrominoType::Obstacle:
-				DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/ObstacleMino.ObstacleMino'");
-				break;
+		case ETetrominoType::Obstacle:
+			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/ObstacleMino.ObstacleMino'");
+			break;
 
-			default:
-				break;
-			}
-
-			UMaterialInterface* TranslucentMaterial = Cast<UMaterialInterface>(DefaultTranslucentMaterialName.TryLoad());
-			CubeMeshComponent->SetMaterial(0, TranslucentMaterial);
+		default:
+			break;
 		}
+
+		UMaterialInterface* TranslucentMaterial = Cast<UMaterialInterface>(DefaultTranslucentMaterialName.TryLoad());
+		CubeMeshComponent->SetMaterial(0, TranslucentMaterial);
 	}
 };
 
@@ -82,17 +83,12 @@ class TENETRIS_API ATestTenetrisField : public APlayerTenetrisField
 public:
 	// Sets default values for this actor's properties
 	ATestTenetrisField()
+		: APlayerTenetrisField()
 	{
 		// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 		PrimaryActorTick.bCanEverTick = true;
 
-		static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshObj(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Plane.Shape_Plane'"));
-		UStaticMeshComponent* StaticMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("STATICMESH_COMPONENT"));
-		StaticMeshComponent->SetupAttachment(RootComponent);
-		StaticMeshComponent->SetStaticMesh(MeshObj.Object);
-		// StaticMeshComponent->SetRelativeRotation(FRotator(90.f, 0.f, 0.f));
-
-		TetrominoCubeClass = ATestTetrominoCube::StaticClass();
+		SetTetrominoCubeClassType(ATestTetrominoCube::StaticClass());
 	}
 
 protected:
@@ -113,25 +109,21 @@ protected:
 			{
 				for (int j = 0; j < ColumnMax; j++)
 				{
-					ATestTetrominoCube* TestActor = Cast<ATestTetrominoCube>(CubeBuffer[i][j]);
-
-					if (i == 0 || i == 19 ||
-						j == 0 || j == 9)
-						TestActor->SetVitibility(true);
-					else
-						TestActor->SetVitibility(false);
+					if (!(i == 0 || i == 19 ||
+						j == 0 || j == 9))
+						SetVisibilityBackgroundCube(j, i, false);
 
 					if (j == 0)
-						TestActor->SetTetrominoType(ETetrominoType::J);
+						SetBackgroundCubeType(j, i, ETetrominoType::J);
 
 					if (j == 9)
-						TestActor->SetTetrominoType(ETetrominoType::Z);
+						SetBackgroundCubeType(j, i, ETetrominoType::Z);
 
 					if (i == 0)
-						TestActor->SetTetrominoType(ETetrominoType::I);
+						SetBackgroundCubeType(j, i, ETetrominoType::I);
 
 					if (i == 19)
-						TestActor->SetTetrominoType(ETetrominoType::O);
+						SetBackgroundCubeType(j, i, ETetrominoType::O);
 				}
 			}
 		}
@@ -141,10 +133,7 @@ protected:
 			{
 				for (int j = 0; j < ColumnMax; j++)
 				{
-					ATestTetrominoCube* TestActor = Cast<ATestTetrominoCube>(CubeBuffer[i][j]);
-
-					TestActor->SetTetrominoType(ETetrominoType::Obstacle);
-					TestActor->SetVitibility(true);
+					SetBackgroundCubeType(j, i, ETetrominoType::Obstacle);
 				}
 			}
 		}
@@ -164,27 +153,20 @@ public:
 		{
 			for (int j = 0; j < ColumnMax; j++)
 			{
-				ATestTetrominoCube* TestActor = Cast<ATestTetrominoCube>(CubeBuffer[i][j]);
-				
-				TestActor->SetTetrominoType(ETetrominoType::Obstacle);
-				TestActor->SetVitibility(true);
-
-				/*if (i == 0 || i == 19 ||
-					j == 0 || j == 9)
-					TestActor->SetVitibility(true);
-
 				if (j == 0)
-					TestActor->SetTetrominoType(ETetrominoType::J);
+					TenetrisBufferComponent->SetBackgroundCubeType(j, i, ETetrominoType::J);
 
 				if (j == 9)
-					TestActor->SetTetrominoType(ETetrominoType::Z);
+					TenetrisBufferComponent->SetBackgroundCubeType(j, i, ETetrominoType::Z);
 
 				if (i == 0)
-					TestActor->SetTetrominoType(ETetrominoType::I);
+					TenetrisBufferComponent->SetBackgroundCubeType(j, i, ETetrominoType::I);
 
 				if (i == 19)
-					TestActor->SetTetrominoType(ETetrominoType::O);*/
+					TenetrisBufferComponent->SetBackgroundCubeType(j, i, ETetrominoType::O);
 			}
 		}
+
+		TenetrisBufferComponent->SetTetrominoCubeType(5, 5, ETetrominoType::L);
 	}
 };

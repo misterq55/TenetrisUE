@@ -2,6 +2,9 @@
 
 #pragma once
 
+const int32 RowMax = 20;
+const int32 ColumnMax = 10;
+
 enum class ETetrominoType : uint32
 {
 	I,
@@ -25,4 +28,11 @@ enum class ETetrominoRotation : uint32
 {
 	ClockWise,
 	CounterClockWise,
+};
+
+enum class ETetrominoBufferDataType : uint32
+{
+	Blank,
+	Tetromino,
+	Item,
 };
