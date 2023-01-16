@@ -39,5 +39,4 @@ private:
 
 protected:
 	FTetrominoBase* CurrentTetromino;
-	FTetrominoBase* PrevTetromino;
 };

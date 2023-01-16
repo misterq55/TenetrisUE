@@ -9,6 +9,7 @@
 #include "Engine/StaticMesh.h"
 #include "Engine/StaticMeshActor.h"
 #include "Tenetris/Components/TenetrisBufferComponent/TenetrisBufferComponent.h"
+#include "Tenetris/Field/Tetromino/TetrominoBase.h"
 #include "TenetrisTest.generated.h"
 
 UCLASS()
@@ -75,6 +76,30 @@ public:
 	}
 };
 
+class FTestTetromino : public FTetrominoBase
+{
+public:
+	FTestTetromino()
+		: FTetrominoBase()
+	{
+		
+	}
+
+	FTestTetromino(ATenetrisFieldBase* InCurrentTenetrisField)
+		: FTetrominoBase(InCurrentTenetrisField)
+	{
+		/*TetrominoCoordinate.Add(FVector2D(1.f, 0.f));
+		TetrominoCoordinate.Add(FVector2D(1.f, 1.f));
+		TetrominoCoordinate.Add(FVector2D(2.f, 0.f));
+		TetrominoCoordinate.Add(FVector2D(2.f, 1.f));*/
+
+		TetrominoCoordinate.Add(FVector2D(0.f, 1.f));
+		TetrominoCoordinate.Add(FVector2D(0.f, 0.f));
+		TetrominoCoordinate.Add(FVector2D(1.f, 0.f));
+		TetrominoCoordinate.Add(FVector2D(2.f, 0.f));
+	}
+};
+
 UCLASS()
 class TENETRIS_API ATestTenetrisField : public APlayerTenetrisField
 {
@@ -89,7 +114,10 @@ public:
 		PrimaryActorTick.bCanEverTick = true;
 
 		SetTetrominoCubeClassType(ATestTetrominoCube::StaticClass());
+		CurrentTetromino = new FTestTetromino(this);
 	}
+
+	// friend class FTestTetromino;
 
 protected:
 	// Called when the game starts or when spawned
@@ -102,7 +130,7 @@ protected:
 	{
 		Super::Tick(DeltaTime);
 
-		static int32 TestValue = 0;
+		/*static int32 TestValue = 0;
 		if (TestValue % 2 == 0)
 		{
 			for (int i = 0; i < RowMax; i++)
@@ -140,7 +168,7 @@ protected:
 
 		TestValue++;
 		if (TestValue > 5)
-			TestValue = 0;
+			TestValue = 0;*/
 	}
 
 public:
@@ -153,20 +181,23 @@ public:
 		{
 			for (int j = 0; j < ColumnMax; j++)
 			{
+				// SetBackgroundCubeType(j, i, ETetrominoType::Obstacle);
+
 				if (j == 0)
-					TenetrisBufferComponent->SetBackgroundCubeType(j, i, ETetrominoType::J);
+					SetBackgroundCubeType(j, i, ETetrominoType::J);
 
 				if (j == 9)
-					TenetrisBufferComponent->SetBackgroundCubeType(j, i, ETetrominoType::Z);
+					SetBackgroundCubeType(j, i, ETetrominoType::Z);
 
 				if (i == 0)
-					TenetrisBufferComponent->SetBackgroundCubeType(j, i, ETetrominoType::I);
+					SetBackgroundCubeType(j, i, ETetrominoType::I);
 
 				if (i == 19)
-					TenetrisBufferComponent->SetBackgroundCubeType(j, i, ETetrominoType::O);
+					SetBackgroundCubeType(j, i, ETetrominoType::O);
 			}
 		}
 
-		TenetrisBufferComponent->SetTetrominoCubeType(5, 5, ETetrominoType::L);
+		CurrentTetromino->SetTetrominoType(ETetrominoType::J);
+		CurrentTetromino->SetTetrominoPosition(3, 18);
 	}
 };

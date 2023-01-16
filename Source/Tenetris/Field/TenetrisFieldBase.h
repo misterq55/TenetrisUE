@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Tenetris/TenetrisDefine.h"
+#include "Tenetris/Field/Tetromino/TetrominoBase.h"
 #include "TenetrisFieldBase.generated.h"
 
 class FTetrominoBase;
@@ -15,7 +16,9 @@ UCLASS()
 class TENETRIS_API ATenetrisFieldBase : public AActor
 {
 	GENERATED_BODY()
-	
+
+		friend class FTetrominoBase;
+
 public:	
 	// Sets default values for this actor's properties
 	ATenetrisFieldBase();

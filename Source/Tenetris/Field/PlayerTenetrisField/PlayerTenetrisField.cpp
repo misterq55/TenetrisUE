@@ -9,7 +9,6 @@
 APlayerTenetrisField::APlayerTenetrisField()
 	: ATenetrisFieldBase()
 	, CurrentTetromino(nullptr)
-	, PrevTetromino(nullptr)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -17,7 +16,10 @@ APlayerTenetrisField::APlayerTenetrisField()
 
 APlayerTenetrisField::~APlayerTenetrisField()
 {
-
+	if (!CurrentTetromino)
+	{
+		delete CurrentTetromino;
+	}
 }
 
 // Called when the game starts or when spawned
@@ -43,6 +45,11 @@ void APlayerTenetrisField::Tick(float DeltaTime)
 void APlayerTenetrisField::Initialize()
 {
 	Super::Initialize();
+
+	if (!CurrentTetromino)
+	{
+		CurrentTetromino = new FTetrominoBase();
+	}
 }
 
 void APlayerTenetrisField::MoveTetromino(ETetrominoDirection InTetrominoDirection)
