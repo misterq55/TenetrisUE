@@ -31,7 +31,6 @@ public:
 	void SetTetrominoCubePosition(int32 X, int32 Y);
 
 protected:
-	const float TetrominoCubeRatio = 0.25f;
 	UStaticMeshComponent* CubeMeshComponent;
 	ETetrominoType TetrominoType;
 };

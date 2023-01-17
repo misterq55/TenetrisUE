@@ -12,6 +12,13 @@ UTenetrisBufferComponent::UTenetrisBufferComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshObj(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Plane.Shape_Plane'"));
+	BackgroundMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("STATICMESH_COMPONENT"));
+	BackgroundMeshComponent->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
+	BackgroundMeshComponent->SetStaticMesh(MeshObj.Object);
+	BackgroundMeshComponent->SetRelativeRotation(FRotator(90.f, 0.f, 0.f));
+	
+
 	BackGroundCubeBufferPivot = CreateDefaultSubobject<USceneComponent>(TEXT("BackGroundCubeBufferPivot"));
 	TetrominoCubeBufferPivot = CreateDefaultSubobject<USceneComponent>(TEXT("TetrominoCubeBufferPivot"));
 
@@ -20,22 +27,6 @@ UTenetrisBufferComponent::UTenetrisBufferComponent()
 
 	TetrominoCubeBufferPivot->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
 	TetrominoCubeBufferPivot->SetMobility(EComponentMobility::Movable);
-
-	for (int32 i = 0; i < RowMax; i++)
-	{
-		TArray<ATetrominoCubeBase*> Buffer;
-		Buffer.Reserve(ColumnMax);
-
-		BackgroundCubeBuffer.Add(Buffer);
-	}
-
-	for (int32 i = 0; i < RowMax; i++)
-	{
-		TArray<ATetrominoCubeBase*> Buffer;
-		Buffer.Reserve(ColumnMax);
-
-		TetrominoCubeBuffer.Add(Buffer);
-	}
 }
 
 
@@ -59,9 +50,25 @@ void UTenetrisBufferComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 
 void UTenetrisBufferComponent::Initialize()
 {
-	for (int i = 0; i < RowMax; i++)
+	for (int32 i = 0; i < BufferHeight; i++)
 	{
-		for (int j = 0; j < ColumnMax; j++)
+		TArray<ATetrominoCubeBase*> Buffer;
+		Buffer.Reserve(BufferWidth);
+
+		BackgroundCubeBuffer.Add(Buffer);
+	}
+
+	for (int32 i = 0; i < BufferHeight; i++)
+	{
+		TArray<ATetrominoCubeBase*> Buffer;
+		Buffer.Reserve(BufferWidth);
+
+		TetrominoCubeBuffer.Add(Buffer);
+	}
+
+	for (int i = 0; i < BufferHeight; i++)
+	{
+		for (int j = 0; j < BufferWidth; j++)
 		{
 			UChildActorComponent* ChildComponent = NewObject<UChildActorComponent>(this);
 			ChildComponent->SetChildActorClass(TetrominoCubeClass);
@@ -75,9 +82,9 @@ void UTenetrisBufferComponent::Initialize()
 		}
 	}
 
-	for (int i = 0; i < RowMax; i++)
+	for (int i = 0; i < BufferHeight; i++)
 	{
-		for (int j = 0; j < ColumnMax; j++)
+		for (int j = 0; j < BufferWidth; j++)
 		{
 			UChildActorComponent* ChildComponent = NewObject<UChildActorComponent>(this);
 			ChildComponent->SetChildActorClass(TetrominoCubeClass);
@@ -137,5 +144,13 @@ void UTenetrisBufferComponent::SetVisibilityTetrominoCube(int32 X, int32 Y, bool
 	{
 		TetrominoCube->SetVitibility(InVisible);
 	}
+}
+
+void UTenetrisBufferComponent::SetBufferSize(int32 InBufferHeight, int32 InBufferWidth)
+{
+	BufferHeight = InBufferHeight;
+	BufferWidth = InBufferWidth;
+
+	BackgroundMeshComponent->SetRelativeScale3D(FVector(TetrominoCubeRatio * BufferHeight, TetrominoCubeRatio * BufferWidth, 0.f));
 }
 
