@@ -5,32 +5,32 @@ void FTetrominoBase::Move(ETetrominoDirection InTetrominoDirection)
 {
 	if (CurrentTenetrisField)
 	{
-		for (FVector2D Coord : TetrominoCoordinate)
+		for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
 		{
-			CurrentTenetrisField->SetVisibilityTetrominoCube(Coord.X + TetrominoCurrentPosition.X, Coord.Y + TetrominoCurrentPosition.Y, false);
+			CurrentTenetrisField->SetVisibilityTetrominoCube(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, false);
 		}
 	}
 
 	switch (InTetrominoDirection)
 	{
 	case ETetrominoDirection::Down:
-		TetrominoCurrentPosition.Y -= 1;
+		TetrominoInfo.TetrominoCurrentPosition.Y -= 1;
 		break;
 
 	case ETetrominoDirection::Left:
-		TetrominoCurrentPosition.X -= 1;
+		TetrominoInfo.TetrominoCurrentPosition.X -= 1;
 		break;
 
 	case ETetrominoDirection::Right:
-		TetrominoCurrentPosition.X += 1;
+		TetrominoInfo.TetrominoCurrentPosition.X += 1;
 		break;
 	};
 
 	if (CurrentTenetrisField)
 	{
-		for (FVector2D Coord : TetrominoCoordinate)
+		for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
 		{
-			CurrentTenetrisField->SetTetrominoCubeType(Coord.X + TetrominoCurrentPosition.X, Coord.Y + TetrominoCurrentPosition.Y, CurrentTetrominoType);
+			CurrentTenetrisField->SetTetrominoCubeType(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, TetrominoInfo.CurrentTetrominoType);
 		}
 	}
 }
@@ -41,11 +41,52 @@ void FTetrominoBase::Rotate(ETetrominoRotation InTetrominoRotation)
 
 void FTetrominoBase::SetTetrominoPosition(int32 X, int32 Y)
 {
-	TetrominoCurrentPosition = FVector2D(X, Y);
+	TetrominoInfo.SetPosition(X, Y);
 
 	if (CurrentTenetrisField)
 	{
-		for (FVector2D Coord : TetrominoCoordinate)
-			CurrentTenetrisField->SetTetrominoCubeType(Coord.X + TetrominoCurrentPosition.X, Coord.Y + TetrominoCurrentPosition.Y, CurrentTetrominoType);
+		for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
+		{
+			CurrentTenetrisField->SetTetrominoCubeType(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, TetrominoInfo.CurrentTetrominoType);
+		}
+	}
+}
+
+void FTetrominoBase::SetTetrominoType(ETetrominoType InCurrentTetrominoType)
+{
+	TetrominoInfo.CurrentTetrominoType = InCurrentTetrominoType;
+
+	switch (TetrominoInfo.CurrentTetrominoType)
+	{
+	case ETetrominoType::I:
+		TetrominoInfo.TetrominoCoordinate = IMinoCoordinate;
+		break;
+
+	case ETetrominoType::J:
+		TetrominoInfo.TetrominoCoordinate = JMinoCoordinate;
+		break;
+
+	case ETetrominoType::L:
+		TetrominoInfo.TetrominoCoordinate = LMinoCoordinate;
+		break;
+
+	case ETetrominoType::O:
+		TetrominoInfo.TetrominoCoordinate = OMinoCoordinate;
+		break;
+
+	case ETetrominoType::S:
+		TetrominoInfo.TetrominoCoordinate = SMinoCoordinate;
+		break;
+
+	case ETetrominoType::T:
+		TetrominoInfo.TetrominoCoordinate = TMinoCoordinate;
+		break;
+
+	case ETetrominoType::Z:
+		TetrominoInfo.TetrominoCoordinate = ZMinoCoordinate;
+		break;
+
+	default:
+		break;
 	}
 }

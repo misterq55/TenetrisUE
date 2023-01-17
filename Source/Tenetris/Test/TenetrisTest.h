@@ -85,6 +85,8 @@ public:
 		
 	}
 
+
+
 	FTestTetromino(ATenetrisFieldBase* InCurrentTenetrisField)
 		: FTetrominoBase(InCurrentTenetrisField)
 	{
@@ -93,10 +95,10 @@ public:
 		TetrominoCoordinate.Add(FVector2D(2.f, 0.f));
 		TetrominoCoordinate.Add(FVector2D(2.f, 1.f));*/
 
-		TetrominoCoordinate.Add(FVector2D(0.f, 1.f));
-		TetrominoCoordinate.Add(FVector2D(0.f, 0.f));
-		TetrominoCoordinate.Add(FVector2D(1.f, 0.f));
-		TetrominoCoordinate.Add(FVector2D(2.f, 0.f));
+		/*TetrominoInfo.TetrominoCoordinate.Add(FVector2D(0.f, 1.f));
+		TetrominoInfo.TetrominoCoordinate.Add(FVector2D(0.f, 0.f));
+		TetrominoInfo.TetrominoCoordinate.Add(FVector2D(1.f, 0.f));
+		TetrominoInfo.TetrominoCoordinate.Add(FVector2D(2.f, 0.f));*/
 	}
 };
 
@@ -197,7 +199,7 @@ public:
 			}
 		}
 
-		CurrentTetromino->SetTetrominoType(ETetrominoType::J);
+		CurrentTetromino->SetTetrominoType(ETetrominoType::Z);
 		CurrentTetromino->SetTetrominoPosition(3, 18);
 	}
 };
