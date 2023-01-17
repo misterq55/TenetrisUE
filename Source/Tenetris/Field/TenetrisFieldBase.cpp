@@ -15,7 +15,7 @@ ATenetrisFieldBase::ATenetrisFieldBase()
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("ROOT_COMPONENT"));
 
 	TenetrisBufferComponent = CreateDefaultSubobject<UTenetrisBufferComponent>(TEXT("BufferComponent"));
-
+	TenetrisBufferComponent->SetBufferSize(RowMax, ColumnMax);
 	TenetrisBufferComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	TenetrisBufferComponent->SetMobility(EComponentMobility::Movable);
 

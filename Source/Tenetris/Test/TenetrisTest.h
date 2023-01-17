@@ -179,27 +179,27 @@ public:
 	{
 		Super::Initialize();
 
-		for (int i = 0; i < RowMax; i++)
-		{
-			for (int j = 0; j < ColumnMax; j++)
-			{
-				// SetBackgroundCubeType(j, i, ETetrominoType::Obstacle);
+		//for (int i = 0; i < RowMax; i++)
+		//{
+		//	for (int j = 0; j < ColumnMax; j++)
+		//	{
+		//		// SetBackgroundCubeType(j, i, ETetrominoType::Obstacle);
 
-				if (j == 0)
-					SetBackgroundCubeType(j, i, ETetrominoType::J);
+		//		if (j == 0)
+		//			SetBackgroundCubeType(j, i, ETetrominoType::J);
 
-				if (j == 9)
-					SetBackgroundCubeType(j, i, ETetrominoType::Z);
+		//		if (j == 9)
+		//			SetBackgroundCubeType(j, i, ETetrominoType::Z);
 
-				if (i == 0)
-					SetBackgroundCubeType(j, i, ETetrominoType::I);
+		//		if (i == 0)
+		//			SetBackgroundCubeType(j, i, ETetrominoType::I);
 
-				if (i == 19)
-					SetBackgroundCubeType(j, i, ETetrominoType::O);
-			}
-		}
+		//		if (i == 19)
+		//			SetBackgroundCubeType(j, i, ETetrominoType::O);
+		//	}
+		//}
 
-		CurrentTetromino->SetTetrominoType(ETetrominoType::Z);
+		CurrentTetromino->SetTetrominoType(ETetrominoType::I);
 		CurrentTetromino->SetTetrominoPosition(3, 18);
 	}
 };

@@ -5,6 +5,8 @@
 const int32 RowMax = 20;
 const int32 ColumnMax = 10;
 
+const float TetrominoCubeRatio = 0.25f;
+
 enum class ETetrominoType : uint32
 {
 	I,
