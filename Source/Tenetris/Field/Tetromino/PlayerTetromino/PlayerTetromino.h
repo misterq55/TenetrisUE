@@ -19,4 +19,7 @@ public:
 	virtual void Move(ETetrominoDirection InTetrominoDirection) override;
 	virtual void Rotate(ETetrominoRotation InTetrominoRotation) override;
 	virtual void LockDown() override;
+
+private:
+	FVector2D SimulatePosition(ETetrominoDirection InTetrominoDirection);
 };
