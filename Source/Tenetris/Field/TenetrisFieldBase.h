@@ -42,6 +42,7 @@ protected:
 	void SetVisibilityBackgroundCube(int32 X, int32 Y, bool InVisible);
 	void SetTetrominoCubeType(int32 X, int32 Y, ETetrominoType InTetrominoType);
 	void SetVisibilityTetrominoCube(int32 X, int32 Y, bool InVisible);
+	bool CheckTetrominoCube(int32 X, int32 Y);
 
 protected:
 	TSubclassOf<ATetrominoCubeBase> TetrominoCubeClass;

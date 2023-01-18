@@ -54,8 +54,9 @@ public:
 	{}
 
 	virtual ~FTetrominoBase() {}
-	virtual void Move(ETetrominoDirection InTetrominoDirection);
-	virtual void Rotate(ETetrominoRotation InTetrominoRotation);
+	virtual void Move(ETetrominoDirection InTetrominoDirection) {}
+	virtual void Rotate(ETetrominoRotation InTetrominoRotation) {}
+	virtual void LockDown() {}
 	
 	void SetTenetrisField(ATenetrisFieldBase* InTenetrisField)
 	{
@@ -63,11 +64,29 @@ public:
 	}
 
 	void SetTetrominoPosition(int32 X, int32 Y);
-
 	void SetTetrominoType(ETetrominoType InCurrentTetrominoType);
+
+	void SetStartingLocation(int32 X, int32 Y)
+	{
+		StartingLocation = FVector2D(X, Y);
+	}
+
+	FVector2D GetStaringLocation()
+	{
+		return StartingLocation;
+	}
+
+	void Spawn();
+
+protected:
+	bool CheckTetrominoCube(FVector2D InSimulationPosition);
+	void HideTetromino();
+	void SetTetromino();
+	void SetTetrominoBackground();
 
 protected:
 	ATenetrisFieldBase* CurrentTenetrisField;
 	FTetrominoInfo TetrominoInfo;
 	FTetrominoInfo PrevTetrominoInfo;
+	FVector2D StartingLocation;
 };

@@ -4,11 +4,19 @@
 
 #include "Tenetris/Field/Tetromino/TetrominoBase.h"
 
-class FPlayerTetromino
+class FPlayerTetromino : public FTetrominoBase
 {
 public:
-	FPlayerTetromino() {}
+	FPlayerTetromino() 
+		: FTetrominoBase()
+	{}
+
+	FPlayerTetromino(ATenetrisFieldBase* InCurrentTenetrisField) 
+		: FTetrominoBase(InCurrentTenetrisField)
+	{}
+
 	virtual ~FPlayerTetromino() {}
-	virtual void Move(ETetrominoDirection InTetrominoDirection);
-	virtual void Rotate(ETetrominoRotation InTetrominoRotation);
+	virtual void Move(ETetrominoDirection InTetrominoDirection) override;
+	virtual void Rotate(ETetrominoRotation InTetrominoRotation) override;
+	virtual void LockDown() override;
 };
