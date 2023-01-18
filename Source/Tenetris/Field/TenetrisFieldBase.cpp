@@ -59,28 +59,3 @@ void ATenetrisFieldBase::SetBackgroundCubeType(int32 X, int32 Y, ETetrominoType 
 		TenetrisBufferComponent->SetBackgroundCubeType(X, Y, InTetrominoType);
 }
 
-void ATenetrisFieldBase::SetVisibilityBackgroundCube(int32 X, int32 Y, bool InVisible)
-{
-	if (TenetrisBufferComponent)
-		TenetrisBufferComponent->SetVisibilityBackgroundCube(X, Y, InVisible);
-}
-
-void ATenetrisFieldBase::SetTetrominoCubeType(int32 X, int32 Y, ETetrominoType InTetrominoType)
-{
-	if (TenetrisBufferComponent)
-		TenetrisBufferComponent->SetTetrominoCubeType(X, Y, InTetrominoType);
-}
-
-void ATenetrisFieldBase::SetVisibilityTetrominoCube(int32 X, int32 Y, bool InVisible)
-{
-	if (TenetrisBufferComponent)
-		TenetrisBufferComponent->SetVisibilityTetrominoCube(X, Y, InVisible);
-}
-
-bool ATenetrisFieldBase::CheckTetrominoCube(int32 X, int32 Y)
-{
-	if (TenetrisBufferComponent)
-		return TenetrisBufferComponent->CheckTetrominoCube(X, Y);
-		
-	return false;
-}
