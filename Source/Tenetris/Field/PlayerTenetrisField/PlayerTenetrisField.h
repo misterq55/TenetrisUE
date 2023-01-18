@@ -38,5 +38,8 @@ private:
 	void UnRegisterActions();
 
 protected:
+	void BindTetrominoToBuffer(FTetrominoBase* InTetromino, UTenetrisBufferComponent* InBuffer);
+
+protected:
 	FTetrominoBase* CurrentTetromino;
 };

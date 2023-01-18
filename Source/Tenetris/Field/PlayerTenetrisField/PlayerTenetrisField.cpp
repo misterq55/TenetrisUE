@@ -4,6 +4,7 @@
 #include "PlayerTenetrisField.h"
 #include "Tenetris/PlayerController/TenetrisPlayerController.h"
 #include "Tenetris/Field/Tetromino/TetrominoBase.h"
+#include "Tenetris/Components/TenetrisBufferComponent/TenetrisBufferComponent.h"
 
 // Sets default values
 APlayerTenetrisField::APlayerTenetrisField()
@@ -40,6 +41,8 @@ void APlayerTenetrisField::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (CurrentTetromino)
+		CurrentTetromino->Move(ETetrominoDirection::Down);
 }
 
 void APlayerTenetrisField::Initialize()
@@ -91,4 +94,13 @@ void APlayerTenetrisField::UnRegisterActions()
 		PlayerController->OnTetrominoRotate.Unbind();
 		PlayerController->OnTetrominoHardDrop.Unbind();
 	}
+}
+
+void APlayerTenetrisField::BindTetrominoToBuffer(FTetrominoBase* InTetromino, UTenetrisBufferComponent* InBuffer)
+{
+	InTetromino->OnBackgroundCubeType.BindUObject(InBuffer, &UTenetrisBufferComponent::SetBackgroundCubeType);
+	InTetromino->OnVisibilityBackgroundCubeType.BindUObject(InBuffer, &UTenetrisBufferComponent::SetVisibilityBackgroundCube);
+	InTetromino->OnTetrominoCubeType.BindUObject(InBuffer, &UTenetrisBufferComponent::SetTetrominoCubeType);
+	InTetromino->OnVisibilityTetrominoCubeType.BindUObject(InBuffer, &UTenetrisBufferComponent::SetVisibilityTetrominoCube);
+	InTetromino->OnCheckTetrominoCube.BindUObject(InBuffer, &UTenetrisBufferComponent::CheckTetrominoCube);
 }

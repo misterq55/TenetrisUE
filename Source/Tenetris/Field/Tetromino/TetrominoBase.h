@@ -4,6 +4,20 @@
 
 #include "Tenetris/TenetrisDefine.h"
 
+/*
+* void SetBackgroundCubeType(int32 X, int32 Y, ETetrominoType InTetrominoType);
+	void SetVisibilityBackgroundCube(int32 X, int32 Y, bool InVisible);
+	void SetTetrominoCubeType(int32 X, int32 Y, ETetrominoType InTetrominoType);
+	void SetVisibilityTetrominoCube(int32 X, int32 Y, bool InVisible);
+	bool CheckTetrominoCube(int32 X, int32 Y);
+*/
+
+DECLARE_DELEGATE_ThreeParams(FSetBackgroundCubeTypeDelegate, int32, int32, ETetrominoType);
+DECLARE_DELEGATE_ThreeParams(FSetVisibilityBackgroundCubeTypeDelegate, int32, int32, bool);
+DECLARE_DELEGATE_ThreeParams(FSetTetrominoCubeTypeDelegate, int32, int32, ETetrominoType);
+DECLARE_DELEGATE_ThreeParams(FSetVisibilityTetrominoCubeTypeDelegate, int32, int32, bool);
+DECLARE_DELEGATE_RetVal_TwoParams(bool, FCheckTetrominoCubeDelegate, int32, int32);
+
 class ATenetrisFieldBase;
 
 class FTetrominoBase
@@ -83,6 +97,13 @@ protected:
 	void HideTetromino();
 	void SetTetromino();
 	void SetTetrominoBackground();
+	
+public:
+	FSetBackgroundCubeTypeDelegate OnBackgroundCubeType;
+	FSetVisibilityBackgroundCubeTypeDelegate OnVisibilityBackgroundCubeType;
+	FSetTetrominoCubeTypeDelegate OnTetrominoCubeType;
+	FSetVisibilityTetrominoCubeTypeDelegate OnVisibilityTetrominoCubeType;
+	FCheckTetrominoCubeDelegate OnCheckTetrominoCube;
 
 protected:
 	ATenetrisFieldBase* CurrentTenetrisField;

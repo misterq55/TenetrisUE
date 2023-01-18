@@ -116,6 +116,7 @@ public:
 		SetTetrominoCubeClassType(ATestTetrominoCube::StaticClass());
 		CurrentTetromino = new FTestTetromino(this);
 
+		BindTetrominoToBuffer(CurrentTetromino, TenetrisBufferComponent);
 		CurrentTetromino->SetStartingLocation(3, 20);
 	}
 
