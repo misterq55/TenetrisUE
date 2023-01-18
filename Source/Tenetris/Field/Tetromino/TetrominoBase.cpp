@@ -1,44 +1,6 @@
 #include "TetrominoBase.h"
 #include "Tenetris/Field/TenetrisFieldBase.h"
 
-void FTetrominoBase::Move(ETetrominoDirection InTetrominoDirection)
-{
-	if (CurrentTenetrisField)
-	{
-		for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
-		{
-			CurrentTenetrisField->SetVisibilityTetrominoCube(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, false);
-		}
-	}
-
-	switch (InTetrominoDirection)
-	{
-	case ETetrominoDirection::Down:
-		TetrominoInfo.TetrominoCurrentPosition.Y -= 1;
-		break;
-
-	case ETetrominoDirection::Left:
-		TetrominoInfo.TetrominoCurrentPosition.X -= 1;
-		break;
-
-	case ETetrominoDirection::Right:
-		TetrominoInfo.TetrominoCurrentPosition.X += 1;
-		break;
-	};
-
-	if (CurrentTenetrisField)
-	{
-		for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
-		{
-			CurrentTenetrisField->SetTetrominoCubeType(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, TetrominoInfo.CurrentTetrominoType);
-		}
-	}
-}
-
-void FTetrominoBase::Rotate(ETetrominoRotation InTetrominoRotation)
-{
-}
-
 void FTetrominoBase::SetTetrominoPosition(int32 X, int32 Y)
 {
 	TetrominoInfo.SetPosition(X, Y);
@@ -88,5 +50,70 @@ void FTetrominoBase::SetTetrominoType(ETetrominoType InCurrentTetrominoType)
 
 	default:
 		break;
+	}
+}
+
+void FTetrominoBase::Spawn()
+{
+	TetrominoInfo.SetPosition(StartingLocation.X, StartingLocation.Y);
+
+	if (CurrentTenetrisField)
+	{
+		for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
+		{
+			CurrentTenetrisField->SetTetrominoCubeType(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, TetrominoInfo.CurrentTetrominoType);
+		}
+	}
+}
+
+bool FTetrominoBase::CheckTetrominoCube(FVector2D InSimulationPosition)
+{
+	bool TetrominoCheck = false;
+
+	if (CurrentTenetrisField)
+	{
+		for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
+		{
+			if (CurrentTenetrisField->CheckTetrominoCube(Coord.X + InSimulationPosition.X, Coord.Y + InSimulationPosition.Y))
+			{
+				TetrominoCheck = true;
+				break;
+			}
+		}
+	}
+
+	return TetrominoCheck;
+}
+
+void FTetrominoBase::HideTetromino()
+{
+	if (CurrentTenetrisField)
+	{
+		for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
+		{
+			CurrentTenetrisField->SetVisibilityTetrominoCube(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, false);
+		}
+	}
+}
+
+void FTetrominoBase::SetTetromino()
+{
+	if (CurrentTenetrisField)
+	{
+		for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
+		{
+			CurrentTenetrisField->SetTetrominoCubeType(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, TetrominoInfo.CurrentTetrominoType);
+		}
+	}
+}
+
+void FTetrominoBase::SetTetrominoBackground()
+{
+	if (CurrentTenetrisField)
+	{
+		for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
+		{
+			CurrentTenetrisField->SetBackgroundCubeType(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, TetrominoInfo.CurrentTetrominoType);
+		}
 	}
 }

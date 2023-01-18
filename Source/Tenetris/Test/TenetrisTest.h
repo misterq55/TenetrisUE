@@ -2,14 +2,14 @@
 
 #pragma once
 
-// #include "Tenetris/Field/TenetrisFieldBase.h"
 #include "Tenetris/Field/PlayerTenetrisField/PlayerTenetrisField.h"
 #include "Tenetris/Field/Tetromino/TetrominoCube/TetrominoCubeBase.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/StaticMeshActor.h"
 #include "Tenetris/Components/TenetrisBufferComponent/TenetrisBufferComponent.h"
-#include "Tenetris/Field/Tetromino/TetrominoBase.h"
+// #include "Tenetris/Field/Tetromino/TetrominoBase.h"
+#include "Tenetris/Field/Tetromino/PlayerTetromino/PlayerTetromino.h"
 #include "TenetrisTest.generated.h"
 
 UCLASS()
@@ -76,19 +76,17 @@ public:
 	}
 };
 
-class FTestTetromino : public FTetrominoBase
+class FTestTetromino : public FPlayerTetromino
 {
 public:
 	FTestTetromino()
-		: FTetrominoBase()
+		: FPlayerTetromino()
 	{
 		
 	}
 
-
-
 	FTestTetromino(ATenetrisFieldBase* InCurrentTenetrisField)
-		: FTetrominoBase(InCurrentTenetrisField)
+		: FPlayerTetromino(InCurrentTenetrisField)
 	{
 		/*TetrominoCoordinate.Add(FVector2D(1.f, 0.f));
 		TetrominoCoordinate.Add(FVector2D(1.f, 1.f));
@@ -117,6 +115,8 @@ public:
 
 		SetTetrominoCubeClassType(ATestTetrominoCube::StaticClass());
 		CurrentTetromino = new FTestTetromino(this);
+
+		CurrentTetromino->SetStartingLocation(3, 20);
 	}
 
 	// friend class FTestTetromino;
@@ -185,21 +185,25 @@ public:
 		//	{
 		//		// SetBackgroundCubeType(j, i, ETetrominoType::Obstacle);
 
-		//		if (j == 0)
+		//		/*if (j == 0)
 		//			SetBackgroundCubeType(j, i, ETetrominoType::J);
 
-		//		if (j == 9)
-		//			SetBackgroundCubeType(j, i, ETetrominoType::Z);
+		//		if (j == 7)
+		//			SetBackgroundCubeType(j, i, ETetrominoType::Z);*/
 
-		//		if (i == 0)
-		//			SetBackgroundCubeType(j, i, ETetrominoType::I);
+		//		if (i == 2)
+		//			SetBackgroundCubeType(j, i, ETetrominoType::Obstacle);
 
-		//		if (i == 19)
-		//			SetBackgroundCubeType(j, i, ETetrominoType::O);
+		//		/*if (i == 19)
+		//			SetBackgroundCubeType(j, i, ETetrominoType::O);*/
 		//	}
 		//}
 
-		CurrentTetromino->SetTetrominoType(ETetrominoType::I);
-		CurrentTetromino->SetTetrominoPosition(3, 18);
+		SetBackgroundCubeType(5, 3, ETetrominoType::Obstacle);
+		SetBackgroundCubeType(4, 3, ETetrominoType::Obstacle);
+		SetBackgroundCubeType(5, 4, ETetrominoType::Obstacle);
+
+		CurrentTetromino->SetTetrominoType(ETetrominoType::T);
+		CurrentTetromino->Spawn();
 	}
 };

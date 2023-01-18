@@ -31,6 +31,7 @@ public:
 	void SetVisibilityBackgroundCube(int32 X, int32 Y, bool InVisible);
 	void SetTetrominoCubeType(int32 X, int32 Y, ETetrominoType InTetrominoType);
 	void SetVisibilityTetrominoCube(int32 X, int32 Y, bool InVisible);
+	bool CheckTetrominoCube(int32 X, int32 Y);
 	void SetBufferSize(int32 InBufferHeight, int32 InBufferWidth);
 
 protected:
@@ -40,6 +41,7 @@ protected:
 	USceneComponent* BackGroundCubeBufferPivot;
 	USceneComponent* TetrominoCubeBufferPivot;
 	TSubclassOf<ATetrominoCubeBase> TetrominoCubeClass;
+	TArray<TArray<int32>> CheckBuffer;
 	int32 BufferHeight = 0;
 	int32 BufferWidth = 0;
 };

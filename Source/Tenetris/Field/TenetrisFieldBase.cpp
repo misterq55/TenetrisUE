@@ -76,3 +76,11 @@ void ATenetrisFieldBase::SetVisibilityTetrominoCube(int32 X, int32 Y, bool InVis
 	if (TenetrisBufferComponent)
 		TenetrisBufferComponent->SetVisibilityTetrominoCube(X, Y, InVisible);
 }
+
+bool ATenetrisFieldBase::CheckTetrominoCube(int32 X, int32 Y)
+{
+	if (TenetrisBufferComponent)
+		return TenetrisBufferComponent->CheckTetrominoCube(X, Y);
+		
+	return false;
+}
