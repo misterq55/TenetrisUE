@@ -42,7 +42,14 @@ void APlayerTenetrisField::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	if (CurrentTetromino)
-		CurrentTetromino->Move(ETetrominoDirection::Down);
+	{
+		if (CurrentTetromino->Move(ETetrominoDirection::Down))
+		{
+			CurrentTetromino->LockDown();
+			CurrentTetromino->SetTetrominoType(ETetrominoType::Z);
+			CurrentTetromino->Spawn();
+		}
+	}
 }
 
 void APlayerTenetrisField::Initialize()
@@ -58,7 +65,13 @@ void APlayerTenetrisField::Initialize()
 void APlayerTenetrisField::MoveTetromino(ETetrominoDirection InTetrominoDirection)
 {
 	if (CurrentTetromino)
-		CurrentTetromino->Move(InTetrominoDirection);
+	{
+		if (CurrentTetromino->Move(InTetrominoDirection) && InTetrominoDirection == ETetrominoDirection::Down)
+		{
+			CurrentTetromino->LockDown();
+			CurrentTetromino->Spawn();
+		}
+	}
 }
 
 void APlayerTenetrisField::RotateTetromino(ETetrominoRotation InTetrominoRotation)

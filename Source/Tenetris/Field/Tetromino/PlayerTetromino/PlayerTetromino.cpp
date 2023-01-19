@@ -2,7 +2,7 @@
 
 // 이 함수를 필드로 올릴지 고민
 // Lock Down은 필드의 영역인가, 테트로미노의 영역인가?
-void FPlayerTetromino::Move(ETetrominoDirection InTetrominoDirection)
+bool FPlayerTetromino::Move(ETetrominoDirection InTetrominoDirection)
 {
 	FVector2D SimulationPosition = SimulatePosition(InTetrominoDirection);
 
@@ -11,24 +11,26 @@ void FPlayerTetromino::Move(ETetrominoDirection InTetrominoDirection)
 		HideTetromino();
 		TetrominoInfo.TetrominoCurrentPosition = SimulationPosition;
 		SetTetromino();
+
+		return false;
 	}
-	else
-	{
-		if (InTetrominoDirection == ETetrominoDirection::Down)
-			LockDown();
-	}
+	
+	/*if (InTetrominoDirection == ETetrominoDirection::Down)
+		LockDown();*/
+
+	return true;
 }
 
-void FPlayerTetromino::Rotate(ETetrominoRotation InTetrominoRotation)
+bool FPlayerTetromino::Rotate(ETetrominoRotation InTetrominoRotation)
 {
-
+	return true;
 }
 
 void FPlayerTetromino::LockDown()
 {
 	HideTetromino();
 	SetTetrominoBackground();
-	Spawn();
+	// Spawn();
 }
 
 FVector2D FPlayerTetromino::SimulatePosition(ETetrominoDirection InTetrominoDirection)

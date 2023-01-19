@@ -16,8 +16,8 @@ public:
 	{}
 
 	virtual ~FPlayerTetromino() {}
-	virtual void Move(ETetrominoDirection InTetrominoDirection) override;
-	virtual void Rotate(ETetrominoRotation InTetrominoRotation) override;
+	virtual bool Move(ETetrominoDirection InTetrominoDirection) override;
+	virtual bool Rotate(ETetrominoRotation InTetrominoRotation) override;
 	virtual void LockDown() override;
 
 private:
