@@ -42,4 +42,6 @@ protected:
 
 protected:
 	FTetrominoBase* CurrentTetromino;
+	TArray<FTetrominoBase*> PreviewTetrominos;
+	UTenetrisBufferComponent* PreviewBufferComponent;
 };
