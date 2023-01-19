@@ -60,8 +60,8 @@ public:
 	{}
 
 	virtual ~FTetrominoBase() {}
-	virtual void Move(ETetrominoDirection InTetrominoDirection) {}
-	virtual void Rotate(ETetrominoRotation InTetrominoRotation) {}
+	virtual bool Move(ETetrominoDirection InTetrominoDirection) { return true; }
+	virtual bool Rotate(ETetrominoRotation InTetrominoRotation) { return true; }
 	virtual void LockDown() {}
 	
 	void SetTenetrisField(ATenetrisFieldBase* InTenetrisField)
