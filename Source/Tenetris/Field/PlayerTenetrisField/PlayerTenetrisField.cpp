@@ -4,6 +4,7 @@
 #include "PlayerTenetrisField.h"
 #include "Tenetris/PlayerController/TenetrisPlayerController.h"
 #include "Tenetris/Field/Tetromino/TetrominoBase.h"
+#include "Tenetris/Field/Tetromino/PreviewTetromino/PreviewTetromino.h"
 #include "Tenetris/Components/TenetrisBufferComponent/TenetrisBufferComponent.h"
 
 // Sets default values
@@ -13,6 +14,20 @@ APlayerTenetrisField::APlayerTenetrisField()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	PreviewBufferComponent = CreateDefaultSubobject<UTenetrisBufferComponent>(TEXT("PreviewBufferComponent"));
+	PreviewBufferComponent->SetBufferSize(12, 5);
+	PreviewBufferComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	PreviewBufferComponent->SetMobility(EComponentMobility::Movable);
+	PreviewBufferComponent->SetRelativeLocation(FVector(0.f, 200.f, 0.f));
+
+	for (int32 i = 0; i < 5; i++)
+	{
+		FTetrominoBase* PreviewTetromino = new FPreviewTetromino(this);
+		PreviewTetrominos.Add(PreviewTetromino);
+		BindTetrominoToBuffer(PreviewTetromino, PreviewBufferComponent);
+		PreviewTetromino->SetStartingLocation(0, i * 3);
+	}
 }
 
 APlayerTenetrisField::~APlayerTenetrisField()
@@ -59,6 +74,14 @@ void APlayerTenetrisField::Initialize()
 	if (!CurrentTetromino)
 	{
 		CurrentTetromino = new FTetrominoBase();
+	}
+
+	PreviewBufferComponent->Initialize();
+
+	for (FTetrominoBase* PreviewTetromino : PreviewTetrominos)
+	{
+		PreviewTetromino->SetTetrominoType(ETetrominoType::J);
+		PreviewTetromino->Spawn();
 	}
 }
 

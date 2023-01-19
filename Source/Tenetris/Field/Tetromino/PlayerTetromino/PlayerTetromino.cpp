@@ -1,7 +1,5 @@
 #include "PlayerTetromino.h"
 
-// 이 함수를 필드로 올릴지 고민
-// Lock Down은 필드의 영역인가, 테트로미노의 영역인가?
 bool FPlayerTetromino::Move(ETetrominoDirection InTetrominoDirection)
 {
 	FVector2D SimulationPosition = SimulatePosition(InTetrominoDirection);
@@ -14,9 +12,6 @@ bool FPlayerTetromino::Move(ETetrominoDirection InTetrominoDirection)
 
 		return false;
 	}
-	
-	/*if (InTetrominoDirection == ETetrominoDirection::Down)
-		LockDown();*/
 
 	return true;
 }
@@ -30,7 +25,6 @@ void FPlayerTetromino::LockDown()
 {
 	HideTetromino();
 	SetTetrominoBackground();
-	// Spawn();
 }
 
 FVector2D FPlayerTetromino::SimulatePosition(ETetrominoDirection InTetrominoDirection)

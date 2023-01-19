@@ -118,6 +118,8 @@ public:
 
 		BindTetrominoToBuffer(CurrentTetromino, TenetrisBufferComponent);
 		CurrentTetromino->SetStartingLocation(3, 20);
+
+		PreviewBufferComponent->SetTetrominoCubeClassType(ATestTetrominoCube::StaticClass());
 	}
 
 	// friend class FTestTetromino;
