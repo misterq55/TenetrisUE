@@ -1,13 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TenetrisFieldBase.h"
+#include "FieldBase.h"
 #include "Tenetris/Field/Tetromino/TetrominoBase.h"
-#include "Tenetris/Field/Tetromino/TetrominoCube/TetrominoCubeBase.h"
+#include "Tenetris/Field/Tetromino/Mino/MinoBase.h"
 #include "Tenetris/Components/TenetrisBufferComponent/TenetrisBufferComponent.h"
 
 // Sets default values
-ATenetrisFieldBase::ATenetrisFieldBase()
+AFieldBase::AFieldBase()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -20,40 +20,40 @@ ATenetrisFieldBase::ATenetrisFieldBase()
 	TenetrisBufferComponent->SetMobility(EComponentMobility::Movable);
 
 	SetActorTickInterval(1.f);
-	TetrominoCubeClass = ATetrominoCubeBase::StaticClass();
+	MinoClass = AMinoBase::StaticClass();
 }
 
-ATenetrisFieldBase::~ATenetrisFieldBase()
+AFieldBase::~AFieldBase()
 {
 
 }
 
 // Called when the game starts or when spawned
-void ATenetrisFieldBase::BeginPlay()
+void AFieldBase::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
 // Called every frame
-void ATenetrisFieldBase::Tick(float DeltaTime)
+void AFieldBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-void ATenetrisFieldBase::Initialize()
+void AFieldBase::Initialize()
 {
 	if (TenetrisBufferComponent)
 		TenetrisBufferComponent->Initialize();
 }
 
-void ATenetrisFieldBase::SetTetrominoCubeClassType(TSubclassOf<ATetrominoCubeBase> InTetrominoCubeClass)
+void AFieldBase::SetMinoClassType(TSubclassOf<AMinoBase> InMinoClass)
 {
 	if (TenetrisBufferComponent)
-		TenetrisBufferComponent->SetTetrominoCubeClassType(InTetrominoCubeClass);
+		TenetrisBufferComponent->SetMinoClassType(InMinoClass);
 }
 
-void ATenetrisFieldBase::SetBackgroundCubeType(int32 X, int32 Y, ETetrominoType InTetrominoType)
+void AFieldBase::SetBackgroundCubeType(int32 X, int32 Y, ETetrominoType InTetrominoType)
 {
 	if (TenetrisBufferComponent)
 		TenetrisBufferComponent->SetBackgroundCubeType(X, Y, InTetrominoType);

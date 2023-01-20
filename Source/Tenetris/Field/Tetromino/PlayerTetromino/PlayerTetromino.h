@@ -11,10 +11,6 @@ public:
 		: FTetrominoBase()
 	{}
 
-	FPlayerTetromino(ATenetrisFieldBase* InCurrentTenetrisField) 
-		: FTetrominoBase(InCurrentTenetrisField)
-	{}
-
 	virtual ~FPlayerTetromino() {}
 	virtual bool Move(ETetrominoDirection InTetrominoDirection) override;
 	virtual bool Rotate(ETetrominoRotation InTetrominoRotation) override;

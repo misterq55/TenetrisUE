@@ -3,20 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Tenetris/Field/TenetrisFieldBase.h"
-#include "PlayerTenetrisField.generated.h"
+#include "Tenetris/Field/FieldBase.h"
+#include "PlayerField.generated.h"
 
 class FTetrominoBase;
 
 UCLASS()
-class TENETRIS_API APlayerTenetrisField : public ATenetrisFieldBase
+class TENETRIS_API APlayerField : public AFieldBase
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	APlayerTenetrisField();
-	virtual ~APlayerTenetrisField();
+	APlayerField();
+	virtual ~APlayerField();
 
 protected:
 	// Called when the game starts or when spawned

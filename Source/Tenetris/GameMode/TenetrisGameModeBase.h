@@ -10,7 +10,7 @@
  * 
  */
 
-class ATenetrisFieldBase;
+class AFieldBase;
 
 UCLASS(Blueprintable)
 class TENETRIS_API ATenetrisGameModeBase : public AGameModeBase
@@ -22,15 +22,15 @@ public:
 	void Initialize();
 	
 	UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
-	void AddTenetrisFields(ATenetrisFieldBase* InTenetrisField);
+	void AddFields(AFieldBase* InField);
 	
 	UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
-	void SetPlayerTenetrisField(ATenetrisFieldBase* InPlayerTenetrisField);
+	void SetPlayerField(AFieldBase* InPlayerField);
 
 	UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
-		ATenetrisFieldBase* GetPlayerTenetrisField();
+		AFieldBase* GetPlayerField();
 
 private:
-	TArray<ATenetrisFieldBase*> TenetrisFields;
-	ATenetrisFieldBase* PlayerTenetrisField;
+	TArray<AFieldBase*> Fields;
+	AFieldBase* PlayerField;
 };

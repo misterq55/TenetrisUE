@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "Tenetris/Field/PlayerTenetrisField/PlayerTenetrisField.h"
-#include "Tenetris/Field/Tetromino/TetrominoCube/TetrominoCubeBase.h"
+#include "Tenetris/Field/PlayerField/PlayerField.h"
+#include "Tenetris/Field/Tetromino/Mino/MinoBase.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/StaticMeshActor.h"
@@ -13,13 +13,13 @@
 #include "TenetrisTest.generated.h"
 
 UCLASS()
-class TENETRIS_API ATestTetrominoCube : public ATetrominoCubeBase
+class TENETRIS_API ATestMino : public AMinoBase
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	ATestTetrominoCube()
+	ATestMino()
 	{
 		// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 		PrimaryActorTick.bCanEverTick = true;
@@ -84,42 +84,29 @@ public:
 	{
 		
 	}
-
-	FTestTetromino(ATenetrisFieldBase* InCurrentTenetrisField)
-		: FPlayerTetromino(InCurrentTenetrisField)
-	{
-		/*TetrominoCoordinate.Add(FVector2D(1.f, 0.f));
-		TetrominoCoordinate.Add(FVector2D(1.f, 1.f));
-		TetrominoCoordinate.Add(FVector2D(2.f, 0.f));
-		TetrominoCoordinate.Add(FVector2D(2.f, 1.f));*/
-
-		/*TetrominoInfo.TetrominoCoordinate.Add(FVector2D(0.f, 1.f));
-		TetrominoInfo.TetrominoCoordinate.Add(FVector2D(0.f, 0.f));
-		TetrominoInfo.TetrominoCoordinate.Add(FVector2D(1.f, 0.f));
-		TetrominoInfo.TetrominoCoordinate.Add(FVector2D(2.f, 0.f));*/
-	}
 };
 
 UCLASS()
-class TENETRIS_API ATestTenetrisField : public APlayerTenetrisField
+class TENETRIS_API ATestField : public APlayerField
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
-	ATestTenetrisField()
-		: APlayerTenetrisField()
+	ATestField()
+		: APlayerField()
 	{
 		// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 		PrimaryActorTick.bCanEverTick = true;
 
-		SetTetrominoCubeClassType(ATestTetrominoCube::StaticClass());
-		CurrentTetromino = new FTestTetromino(this);
+		SetMinoClassType(ATestMino::StaticClass());
+		// CurrentTetromino = new FTestTetromino(this);
+		CurrentTetromino = new FTestTetromino();
 
 		BindTetrominoToBuffer(CurrentTetromino, TenetrisBufferComponent);
 		CurrentTetromino->SetStartingLocation(3, 20);
 
-		PreviewBufferComponent->SetTetrominoCubeClassType(ATestTetrominoCube::StaticClass());
+		PreviewBufferComponent->SetMinoClassType(ATestMino::StaticClass());
 	}
 
 	// friend class FTestTetromino;

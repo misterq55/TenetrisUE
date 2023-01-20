@@ -1,15 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "PlayerTenetrisField.h"
+#include "PlayerField.h"
 #include "Tenetris/PlayerController/TenetrisPlayerController.h"
 #include "Tenetris/Field/Tetromino/TetrominoBase.h"
 #include "Tenetris/Field/Tetromino/PreviewTetromino/PreviewTetromino.h"
 #include "Tenetris/Components/TenetrisBufferComponent/TenetrisBufferComponent.h"
 
 // Sets default values
-APlayerTenetrisField::APlayerTenetrisField()
-	: ATenetrisFieldBase()
+APlayerField::APlayerField()
+	: AFieldBase()
 	, CurrentTetromino(nullptr)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -23,14 +23,14 @@ APlayerTenetrisField::APlayerTenetrisField()
 
 	for (int32 i = 0; i < 5; i++)
 	{
-		FTetrominoBase* PreviewTetromino = new FPreviewTetromino(this);
+		FTetrominoBase* PreviewTetromino = new FPreviewTetromino();
 		PreviewTetrominos.Add(PreviewTetromino);
 		BindTetrominoToBuffer(PreviewTetromino, PreviewBufferComponent);
 		PreviewTetromino->SetStartingLocation(0, i * 3);
 	}
 }
 
-APlayerTenetrisField::~APlayerTenetrisField()
+APlayerField::~APlayerField()
 {
 	if (!CurrentTetromino)
 	{
@@ -39,20 +39,20 @@ APlayerTenetrisField::~APlayerTenetrisField()
 }
 
 // Called when the game starts or when spawned
-void APlayerTenetrisField::BeginPlay()
+void APlayerField::BeginPlay()
 {
 	Super::BeginPlay();
 	RegisterActions();
 }
 
-void APlayerTenetrisField::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void APlayerField::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 	UnRegisterActions();
 }
 
 // Called every frame
-void APlayerTenetrisField::Tick(float DeltaTime)
+void APlayerField::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
@@ -67,7 +67,7 @@ void APlayerTenetrisField::Tick(float DeltaTime)
 	}
 }
 
-void APlayerTenetrisField::Initialize()
+void APlayerField::Initialize()
 {
 	Super::Initialize();
 
@@ -85,7 +85,7 @@ void APlayerTenetrisField::Initialize()
 	}
 }
 
-void APlayerTenetrisField::MoveTetromino(ETetrominoDirection InTetrominoDirection)
+void APlayerField::MoveTetromino(ETetrominoDirection InTetrominoDirection)
 {
 	if (CurrentTetromino)
 	{
@@ -97,30 +97,30 @@ void APlayerTenetrisField::MoveTetromino(ETetrominoDirection InTetrominoDirectio
 	}
 }
 
-void APlayerTenetrisField::RotateTetromino(ETetrominoRotation InTetrominoRotation)
+void APlayerField::RotateTetromino(ETetrominoRotation InTetrominoRotation)
 {
 	if (CurrentTetromino)
 		CurrentTetromino->Rotate(InTetrominoRotation);
 }
 
-void APlayerTenetrisField::HardDrop()
+void APlayerField::HardDrop()
 {
 
 }
 
-void APlayerTenetrisField::RegisterActions()
+void APlayerField::RegisterActions()
 {
 	ATenetrisPlayerController* PlayerController = Cast<ATenetrisPlayerController>(GetWorld()->GetGameInstance()->GetFirstLocalPlayerController(GetWorld()));
 
 	if (PlayerController)
 	{
-		PlayerController->OnTetrominoMove.BindUObject(this, &APlayerTenetrisField::MoveTetromino);
-		PlayerController->OnTetrominoRotate.BindUObject(this, &APlayerTenetrisField::RotateTetromino);
-		PlayerController->OnTetrominoHardDrop.BindUObject(this, &APlayerTenetrisField::HardDrop);
+		PlayerController->OnTetrominoMove.BindUObject(this, &APlayerField::MoveTetromino);
+		PlayerController->OnTetrominoRotate.BindUObject(this, &APlayerField::RotateTetromino);
+		PlayerController->OnTetrominoHardDrop.BindUObject(this, &APlayerField::HardDrop);
 	}
 }
 
-void APlayerTenetrisField::UnRegisterActions()
+void APlayerField::UnRegisterActions()
 {
 	ATenetrisPlayerController* PlayerController = Cast<ATenetrisPlayerController>(GetWorld()->GetGameInstance()->GetFirstLocalPlayerController(GetWorld()));
 
@@ -132,11 +132,11 @@ void APlayerTenetrisField::UnRegisterActions()
 	}
 }
 
-void APlayerTenetrisField::BindTetrominoToBuffer(FTetrominoBase* InTetromino, UTenetrisBufferComponent* InBuffer)
+void APlayerField::BindTetrominoToBuffer(FTetrominoBase* InTetromino, UTenetrisBufferComponent* InBuffer)
 {
 	InTetromino->OnBackgroundCubeType.BindUObject(InBuffer, &UTenetrisBufferComponent::SetBackgroundCubeType);
 	InTetromino->OnVisibilityBackgroundCubeType.BindUObject(InBuffer, &UTenetrisBufferComponent::SetVisibilityBackgroundCube);
-	InTetromino->OnTetrominoCubeType.BindUObject(InBuffer, &UTenetrisBufferComponent::SetTetrominoCubeType);
-	InTetromino->OnVisibilityTetrominoCubeType.BindUObject(InBuffer, &UTenetrisBufferComponent::SetVisibilityTetrominoCube);
-	InTetromino->OnCheckTetrominoCube.BindUObject(InBuffer, &UTenetrisBufferComponent::CheckTetrominoCube);
+	InTetromino->OnMinoType.BindUObject(InBuffer, &UTenetrisBufferComponent::SetMinoType);
+	InTetromino->OnVisibilityMinoType.BindUObject(InBuffer, &UTenetrisBufferComponent::SetVisibilityMino);
+	InTetromino->OnCheckMino.BindUObject(InBuffer, &UTenetrisBufferComponent::CheckMino);
 }

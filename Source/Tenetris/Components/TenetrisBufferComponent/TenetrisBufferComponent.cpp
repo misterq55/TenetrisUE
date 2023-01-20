@@ -2,7 +2,7 @@
 
 
 #include "TenetrisBufferComponent.h"
-#include "Tenetris/Field/Tetromino/TetrominoCube/TetrominoCubeBase.h"
+#include "Tenetris/Field/Tetromino/Mino/MinoBase.h"
 
 // Sets default values for this component's properties
 UTenetrisBufferComponent::UTenetrisBufferComponent()
@@ -19,13 +19,13 @@ UTenetrisBufferComponent::UTenetrisBufferComponent()
 	BackgroundMeshComponent->SetRelativeRotation(FRotator(90.f, 0.f, 0.f));
 
 	BackGroundCubeBufferPivot = CreateDefaultSubobject<USceneComponent>(TEXT("BackGroundCubeBufferPivot"));
-	TetrominoCubeBufferPivot = CreateDefaultSubobject<USceneComponent>(TEXT("TetrominoCubeBufferPivot"));
+	MinoBufferPivot = CreateDefaultSubobject<USceneComponent>(TEXT("MinoBufferPivot"));
 
 	BackGroundCubeBufferPivot->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
 	BackGroundCubeBufferPivot->SetMobility(EComponentMobility::Movable);
 
-	TetrominoCubeBufferPivot->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
-	TetrominoCubeBufferPivot->SetMobility(EComponentMobility::Movable);
+	MinoBufferPivot->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
+	MinoBufferPivot->SetMobility(EComponentMobility::Movable);
 }
 
 
@@ -54,14 +54,14 @@ void UTenetrisBufferComponent::Initialize()
 		for (int j = 0; j < BufferWidth; j++)
 		{
 			UChildActorComponent* ChildComponent = NewObject<UChildActorComponent>(this);
-			ChildComponent->SetChildActorClass(TetrominoCubeClass);
+			ChildComponent->SetChildActorClass(MinoClass);
 			ChildComponent->AttachToComponent(BackGroundCubeBufferPivot, FAttachmentTransformRules::KeepRelativeTransform);
 			ChildComponent->CreateChildActor();
 
-			ATetrominoCubeBase* TetrominoCubeBase = Cast<ATetrominoCubeBase>(ChildComponent->GetChildActor());
-			TetrominoCubeBase->SetTetrominoCubePosition(j, i);
+			AMinoBase* MinoBase = Cast<AMinoBase>(ChildComponent->GetChildActor());
+			MinoBase->SetMinoPosition(j, i);
 
-			BackgroundCubeBuffer[i].Add(TetrominoCubeBase);
+			BackgroundCubeBuffer[i].Add(MinoBase);
 		}
 	}
 
@@ -70,31 +70,31 @@ void UTenetrisBufferComponent::Initialize()
 		for (int j = 0; j < BufferWidth; j++)
 		{
 			UChildActorComponent* ChildComponent = NewObject<UChildActorComponent>(this);
-			ChildComponent->SetChildActorClass(TetrominoCubeClass);
-			ChildComponent->AttachToComponent(TetrominoCubeBufferPivot, FAttachmentTransformRules::KeepRelativeTransform);
+			ChildComponent->SetChildActorClass(MinoClass);
+			ChildComponent->AttachToComponent(MinoBufferPivot, FAttachmentTransformRules::KeepRelativeTransform);
 			ChildComponent->CreateChildActor();
 
-			ATetrominoCubeBase* TetrominoCubeBase = Cast<ATetrominoCubeBase>(ChildComponent->GetChildActor());
-			TetrominoCubeBase->SetTetrominoCubePosition(j, i);
+			AMinoBase* MinoBase = Cast<AMinoBase>(ChildComponent->GetChildActor());
+			MinoBase->SetMinoPosition(j, i);
 
-			TetrominoCubeBuffer[i].Add(TetrominoCubeBase);
+			MinoBuffer[i].Add(MinoBase);
 		}
 	}
 }
 
-void UTenetrisBufferComponent::SetTetrominoCubeClassType(TSubclassOf<ATetrominoCubeBase> InTetrominoCubeClass)
+void UTenetrisBufferComponent::SetMinoClassType(TSubclassOf<AMinoBase> InMinoClass)
 {
-	TetrominoCubeClass = InTetrominoCubeClass;
+	MinoClass = InMinoClass;
 }
 
 void UTenetrisBufferComponent::SetBackgroundCubeType(int32 X, int32 Y, ETetrominoType InTetrominoType)
 {
-	ATetrominoCubeBase* TetrominoCube = BackgroundCubeBuffer[Y][X];
+	AMinoBase* Mino = BackgroundCubeBuffer[Y][X];
 
-	if (TetrominoCube)
+	if (Mino)
 	{
-		TetrominoCube->SetVitibility(true);
-		TetrominoCube->SetTetrominoType(InTetrominoType);
+		Mino->SetVitibility(true);
+		Mino->SetTetrominoType(InTetrominoType);
 	}
 
 	CheckBuffer[Y + 1][X + 1] = 1;
@@ -102,38 +102,38 @@ void UTenetrisBufferComponent::SetBackgroundCubeType(int32 X, int32 Y, ETetromin
 
 void UTenetrisBufferComponent::SetVisibilityBackgroundCube(int32 X, int32 Y, bool InVisible)
 {
-	ATetrominoCubeBase* TetrominoCube = BackgroundCubeBuffer[Y][X];
+	AMinoBase* Mino = BackgroundCubeBuffer[Y][X];
 
-	if (TetrominoCube)
+	if (Mino)
 	{
-		TetrominoCube->SetVitibility(InVisible);
+		Mino->SetVitibility(InVisible);
 	}
 
 	CheckBuffer[Y + 1][X + 1] = 0;
 }
 
-void UTenetrisBufferComponent::SetTetrominoCubeType(int32 X, int32 Y, ETetrominoType InTetrominoType)
+void UTenetrisBufferComponent::SetMinoType(int32 X, int32 Y, ETetrominoType InTetrominoType)
 {
-	ATetrominoCubeBase* TetrominoCube = TetrominoCubeBuffer[Y][X];
+	AMinoBase* Mino = MinoBuffer[Y][X];
 
-	if (TetrominoCube)
+	if (Mino)
 	{
-		TetrominoCube->SetVitibility(true);
-		TetrominoCube->SetTetrominoType(InTetrominoType);
+		Mino->SetVitibility(true);
+		Mino->SetTetrominoType(InTetrominoType);
 	}
 }
 
-void UTenetrisBufferComponent::SetVisibilityTetrominoCube(int32 X, int32 Y, bool InVisible)
+void UTenetrisBufferComponent::SetVisibilityMino(int32 X, int32 Y, bool InVisible)
 {
-	ATetrominoCubeBase* TetrominoCube = TetrominoCubeBuffer[Y][X];
+	AMinoBase* Mino = MinoBuffer[Y][X];
 
-	if (TetrominoCube)
+	if (Mino)
 	{
-		TetrominoCube->SetVitibility(InVisible);
+		Mino->SetVitibility(InVisible);
 	}
 }
 
-bool UTenetrisBufferComponent::CheckTetrominoCube(int32 X, int32 Y)
+bool UTenetrisBufferComponent::CheckMino(int32 X, int32 Y)
 {
 	return CheckBuffer[Y + 1][X + 1] == 1;
 }
@@ -145,7 +145,7 @@ void UTenetrisBufferComponent::SetBufferSize(int32 InBufferHeight, int32 InBuffe
 
 	for (int32 i = 0; i < BufferHeight + 2; i++)
 	{
-		TArray<ATetrominoCubeBase*> Buffer;
+		TArray<AMinoBase*> Buffer;
 		Buffer.Reserve(BufferWidth);
 
 		BackgroundCubeBuffer.Add(Buffer);
@@ -153,10 +153,10 @@ void UTenetrisBufferComponent::SetBufferSize(int32 InBufferHeight, int32 InBuffe
 
 	for (int32 i = 0; i < BufferHeight + 2; i++)
 	{
-		TArray<ATetrominoCubeBase*> Buffer;
+		TArray<AMinoBase*> Buffer;
 		Buffer.Reserve(BufferWidth);
 
-		TetrominoCubeBuffer.Add(Buffer);
+		MinoBuffer.Add(Buffer);
 	}
 
 	for (int32 i = 0; i < BufferHeight * 2 + 2; i++)
@@ -173,6 +173,6 @@ void UTenetrisBufferComponent::SetBufferSize(int32 InBufferHeight, int32 InBuffe
 		CheckBuffer.Add(Buffer);
 	}
 
-	BackgroundMeshComponent->SetRelativeScale3D(FVector(TetrominoCubeRatio * BufferHeight, TetrominoCubeRatio * BufferWidth, 0.f));
+	BackgroundMeshComponent->SetRelativeScale3D(FVector(MinoRatio * BufferHeight, MinoRatio * BufferWidth, 0.f));
 }
 
