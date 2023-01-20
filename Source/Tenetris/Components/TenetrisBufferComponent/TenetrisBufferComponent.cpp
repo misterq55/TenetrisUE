@@ -176,3 +176,22 @@ void UTenetrisBufferComponent::SetBufferSize(int32 InBufferHeight, int32 InBuffe
 	BackgroundMeshComponent->SetRelativeScale3D(FVector(MinoRatio * BufferHeight, MinoRatio * BufferWidth, 0.f));
 }
 
+int32 UTenetrisBufferComponent::CalculateGuideMinoHeight(int32 X, int32 Y)
+{
+	int32 Result = 0;
+	int32 Height = 0;
+
+	for (int32 i = Y; i >= 0; i--)
+	{
+		if (CheckBuffer[i + 1][X + 1] == 1)
+		{
+			Height = i;
+			break;
+		}
+	}
+
+	Result = Y - Height;
+
+	return Result;
+}
+

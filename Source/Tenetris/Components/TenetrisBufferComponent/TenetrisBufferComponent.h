@@ -33,6 +33,7 @@ public:
 	void SetVisibilityMino(int32 X, int32 Y, bool InVisible);
 	bool CheckMino(int32 X, int32 Y);
 	void SetBufferSize(int32 InBufferHeight, int32 InBufferWidth);
+	int32 CalculateGuideMinoHeight(int32 X, int32 Y);
 
 protected:
 	TArray<TArray<AMinoBase*>> BackgroundCubeBuffer;

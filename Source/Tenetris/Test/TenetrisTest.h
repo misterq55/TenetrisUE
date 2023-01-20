@@ -8,8 +8,9 @@
 #include "Engine/StaticMesh.h"
 #include "Engine/StaticMeshActor.h"
 #include "Tenetris/Components/TenetrisBufferComponent/TenetrisBufferComponent.h"
-// #include "Tenetris/Field/Tetromino/TetrominoBase.h"
 #include "Tenetris/Field/Tetromino/PlayerTetromino/PlayerTetromino.h"
+#include "Tenetris/Field/Tetromino/PreviewTetromino/PreviewTetromino.h"
+#include "Tenetris/Field/TetrominoSpawner/TetrominoSpawner.h"
 #include "TenetrisTest.generated.h"
 
 UCLASS()
@@ -100,7 +101,6 @@ public:
 		PrimaryActorTick.bCanEverTick = true;
 
 		SetMinoClassType(ATestMino::StaticClass());
-		// CurrentTetromino = new FTestTetromino(this);
 		CurrentTetromino = new FTestTetromino();
 
 		BindTetrominoToBuffer(CurrentTetromino, TenetrisBufferComponent);
@@ -189,11 +189,10 @@ public:
 		//	}
 		//}
 
-		SetBackgroundCubeType(5, 3, ETetrominoType::Obstacle);
+		/*SetBackgroundCubeType(5, 3, ETetrominoType::Obstacle);
 		SetBackgroundCubeType(4, 3, ETetrominoType::Obstacle);
-		SetBackgroundCubeType(5, 4, ETetrominoType::Obstacle);
+		SetBackgroundCubeType(5, 4, ETetrominoType::Obstacle);*/
 
-		 CurrentTetromino->SetTetrominoType(ETetrominoType::T);
-		 CurrentTetromino->Spawn();
+		Spawn();
 	}
 };

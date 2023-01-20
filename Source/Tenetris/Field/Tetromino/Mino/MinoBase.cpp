@@ -16,6 +16,8 @@ AMinoBase::AMinoBase()
 	CubeMeshComponent->SetRelativeScale3D(FVector(MinoRatio, MinoRatio, MinoRatio));
 
 	CubeMeshComponent->SetVisibility(false);
+
+	RootComponent = CubeMeshComponent;
 }
 
 // Called when the game starts or when spawned

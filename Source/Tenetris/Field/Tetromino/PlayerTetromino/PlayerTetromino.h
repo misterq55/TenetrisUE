@@ -15,6 +15,8 @@ public:
 	virtual bool Move(ETetrominoDirection InTetrominoDirection) override;
 	virtual bool Rotate(ETetrominoRotation InTetrominoRotation) override;
 	virtual void LockDown() override;
+	virtual void Spawn() override;
+	virtual void SetGuideTetromino() override;
 
 private:
 	FVector2D SimulatePosition(ETetrominoDirection InTetrominoDirection);

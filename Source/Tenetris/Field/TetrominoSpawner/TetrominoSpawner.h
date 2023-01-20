@@ -20,6 +20,7 @@ public:
 
 private:
 	void ShuffleTetrominoBag(TArray<ETetrominoType>& InBag);
+	void RefillTetrominoArray(int32 InTetrominoArrayResetCounter);
 
 private:
 	TArray<ETetrominoType> TetrominoArray;
