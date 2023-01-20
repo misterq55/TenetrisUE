@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TetrominoCubeBase.h"
+#include "MinoBase.h"
 
 // Sets default values
-ATetrominoCubeBase::ATetrominoCubeBase()
+AMinoBase::AMinoBase()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -13,25 +13,25 @@ ATetrominoCubeBase::ATetrominoCubeBase()
 	CubeMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CUBEMESH_COMPONENT"));
 	CubeMeshComponent->SetupAttachment(RootComponent);
 	CubeMeshComponent->SetStaticMesh(MeshObj.Object);
-	CubeMeshComponent->SetRelativeScale3D(FVector(TetrominoCubeRatio, TetrominoCubeRatio, TetrominoCubeRatio));
+	CubeMeshComponent->SetRelativeScale3D(FVector(MinoRatio, MinoRatio, MinoRatio));
 
 	CubeMeshComponent->SetVisibility(false);
 }
 
 // Called when the game starts or when spawned
-void ATetrominoCubeBase::BeginPlay()
+void AMinoBase::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
 // Called every frame
-void ATetrominoCubeBase::Tick(float DeltaTime)
+void AMinoBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-void ATetrominoCubeBase::SetVitibility(bool InNewVisibility)
+void AMinoBase::SetVitibility(bool InNewVisibility)
 {
 	if (CubeMeshComponent)
 	{
@@ -39,13 +39,13 @@ void ATetrominoCubeBase::SetVitibility(bool InNewVisibility)
 	}
 }
 
-void ATetrominoCubeBase::SetTetrominoType(ETetrominoType InTetrominoType)
+void AMinoBase::SetTetrominoType(ETetrominoType InTetrominoType)
 {
 	TetrominoType = InTetrominoType;
 }
 
-void ATetrominoCubeBase::SetTetrominoCubePosition(int32 X, int32 Y)
+void AMinoBase::SetMinoPosition(int32 X, int32 Y)
 {
-	SetActorRelativeLocation(FVector(0.f, X * 100.f * TetrominoCubeRatio - TetrominoCubeRatio * 900 * 0.5f, Y * 100.f * TetrominoCubeRatio - (TetrominoCubeRatio * 1000.f)));
+	SetActorRelativeLocation(FVector(0.f, X * 100.f * MinoRatio - MinoRatio * 900 * 0.5f, Y * 100.f * MinoRatio - (MinoRatio * 1000.f)));
 }
 

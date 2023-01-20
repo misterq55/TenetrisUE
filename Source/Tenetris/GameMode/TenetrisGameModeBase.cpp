@@ -3,7 +3,7 @@
 
 #include "TenetrisGameModeBase.h"
 #include "Tenetris/TenetrisPawn.h"
-#include "Tenetris/Field/TenetrisFieldBase.h"
+#include "Tenetris/Field/FieldBase.h"
 #include "Tenetris/PlayerController/TenetrisPlayerController.h"
 
 ATenetrisGameModeBase::ATenetrisGameModeBase(const FObjectInitializer& ObjectInitializer)
@@ -15,24 +15,24 @@ ATenetrisGameModeBase::ATenetrisGameModeBase(const FObjectInitializer& ObjectIni
 
 void ATenetrisGameModeBase::Initialize()
 {
-	for (ATenetrisFieldBase* Field : TenetrisFields)
+	for (AFieldBase* Field : Fields)
 	{
 		Field->Initialize();
 	}
 }
 
-void ATenetrisGameModeBase::AddTenetrisFields(ATenetrisFieldBase* InTenetrisField)
+void ATenetrisGameModeBase::AddFields(AFieldBase* InField)
 {
-	TenetrisFields.Add(InTenetrisField);
+	Fields.Add(InField);
 }
 
-void ATenetrisGameModeBase::SetPlayerTenetrisField(ATenetrisFieldBase* InPlayerTenetrisField)
+void ATenetrisGameModeBase::SetPlayerField(AFieldBase* InPlayerField)
 {
-	AddTenetrisFields(InPlayerTenetrisField);
-	PlayerTenetrisField = InPlayerTenetrisField;
+	AddFields(InPlayerField);
+	PlayerField = InPlayerField;
 }
 
-ATenetrisFieldBase* ATenetrisGameModeBase::GetPlayerTenetrisField()
+AFieldBase* ATenetrisGameModeBase::GetPlayerField()
 {
-	return PlayerTenetrisField;
+	return PlayerField;
 }

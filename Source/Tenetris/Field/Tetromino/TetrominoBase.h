@@ -6,11 +6,11 @@
 
 DECLARE_DELEGATE_ThreeParams(FSetBackgroundCubeTypeDelegate, int32, int32, ETetrominoType);
 DECLARE_DELEGATE_ThreeParams(FSetVisibilityBackgroundCubeTypeDelegate, int32, int32, bool);
-DECLARE_DELEGATE_ThreeParams(FSetTetrominoCubeTypeDelegate, int32, int32, ETetrominoType);
-DECLARE_DELEGATE_ThreeParams(FSetVisibilityTetrominoCubeTypeDelegate, int32, int32, bool);
-DECLARE_DELEGATE_RetVal_TwoParams(bool, FCheckTetrominoCubeDelegate, int32, int32);
+DECLARE_DELEGATE_ThreeParams(FSetMinoTypeDelegate, int32, int32, ETetrominoType);
+DECLARE_DELEGATE_ThreeParams(FSetVisibilityMinoTypeDelegate, int32, int32, bool);
+DECLARE_DELEGATE_RetVal_TwoParams(bool, FCheckMinoDelegate, int32, int32);
 
-class ATenetrisFieldBase;
+class AFieldBase;
 
 class FTetrominoBase
 {
@@ -51,23 +51,12 @@ class FTetrominoBase
 	}FTetrominoInfo;
 
 public:
-	FTetrominoBase() 
-		: CurrentTenetrisField(nullptr)
-	{}
-
-	FTetrominoBase(ATenetrisFieldBase* InCurrentTenetrisField)
-		: CurrentTenetrisField(InCurrentTenetrisField)
-	{}
+	FTetrominoBase() {}
 
 	virtual ~FTetrominoBase() {}
 	virtual bool Move(ETetrominoDirection InTetrominoDirection) { return true; }
 	virtual bool Rotate(ETetrominoRotation InTetrominoRotation) { return true; }
 	virtual void LockDown() {}
-	
-	void SetTenetrisField(ATenetrisFieldBase* InTenetrisField)
-	{
-		CurrentTenetrisField = InTenetrisField;
-	}
 
 	void SetTetrominoPosition(int32 X, int32 Y);
 	void SetTetrominoType(ETetrominoType InCurrentTetrominoType);
@@ -85,7 +74,7 @@ public:
 	void Spawn();
 
 protected:
-	bool CheckTetrominoCube(FVector2D InSimulationPosition);
+	bool CheckMino(FVector2D InSimulationPosition);
 	void HideTetromino();
 	void SetTetromino();
 	void SetTetrominoBackground();
@@ -93,12 +82,11 @@ protected:
 public:
 	FSetBackgroundCubeTypeDelegate OnBackgroundCubeType;
 	FSetVisibilityBackgroundCubeTypeDelegate OnVisibilityBackgroundCubeType;
-	FSetTetrominoCubeTypeDelegate OnTetrominoCubeType;
-	FSetVisibilityTetrominoCubeTypeDelegate OnVisibilityTetrominoCubeType;
-	FCheckTetrominoCubeDelegate OnCheckTetrominoCube;
+	FSetMinoTypeDelegate OnMinoType;
+	FSetVisibilityMinoTypeDelegate OnVisibilityMinoType;
+	FCheckMinoDelegate OnCheckMino;
 
 protected:
-	ATenetrisFieldBase* CurrentTenetrisField;
 	FTetrominoInfo TetrominoInfo;
 	FTetrominoInfo PrevTetrominoInfo;
 	FVector2D StartingLocation;

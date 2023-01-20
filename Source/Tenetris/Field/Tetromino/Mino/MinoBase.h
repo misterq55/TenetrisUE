@@ -5,18 +5,18 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Tenetris/TenetrisDefine.h"
-#include "TetrominoCubeBase.generated.h"
+#include "MinoBase.generated.h"
 
 class UStaticMeshComponent;
 
 UCLASS()
-class TENETRIS_API ATetrominoCubeBase : public AActor
+class TENETRIS_API AMinoBase : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ATetrominoCubeBase();
+	AMinoBase();
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,7 +28,7 @@ public:
 
 	void SetVitibility(bool InNewVisibility);
 	virtual void SetTetrominoType(ETetrominoType InTetrominoType);
-	void SetTetrominoCubePosition(int32 X, int32 Y);
+	void SetMinoPosition(int32 X, int32 Y);
 
 protected:
 	UStaticMeshComponent* CubeMeshComponent;

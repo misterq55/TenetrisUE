@@ -4,12 +4,9 @@ void FTetrominoBase::SetTetrominoPosition(int32 X, int32 Y)
 {
 	TetrominoInfo.SetPosition(X, Y);
 
-	if (CurrentTenetrisField)
+	for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
 	{
-		for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
-		{
-			OnTetrominoCubeType.ExecuteIfBound(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, TetrominoInfo.CurrentTetrominoType);
-		}
+		OnMinoType.ExecuteIfBound(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, TetrominoInfo.CurrentTetrominoType);
 	}
 }
 
@@ -56,31 +53,25 @@ void FTetrominoBase::Spawn()
 {
 	TetrominoInfo.SetPosition(StartingLocation.X, StartingLocation.Y);
 
-	if (CurrentTenetrisField)
+	for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
 	{
-		for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
-		{
-			OnTetrominoCubeType.ExecuteIfBound(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, TetrominoInfo.CurrentTetrominoType);
-		}
+		OnMinoType.ExecuteIfBound(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, TetrominoInfo.CurrentTetrominoType);
 	}
 }
 
-bool FTetrominoBase::CheckTetrominoCube(FVector2D InSimulationPosition)
+bool FTetrominoBase::CheckMino(FVector2D InSimulationPosition)
 {
-	if (!OnCheckTetrominoCube.IsBound())
+	if (!OnCheckMino.IsBound())
 		return false;
 
 	bool TetrominoCheck = false;
 
-	if (CurrentTenetrisField)
+	for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
 	{
-		for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
+		if (OnCheckMino.Execute(Coord.X + InSimulationPosition.X, Coord.Y + InSimulationPosition.Y))
 		{
-			if (OnCheckTetrominoCube.Execute(Coord.X + InSimulationPosition.X, Coord.Y + InSimulationPosition.Y))
-			{
-				TetrominoCheck = true;
-				break;
-			}
+			TetrominoCheck = true;
+			break;
 		}
 	}
 
@@ -89,33 +80,24 @@ bool FTetrominoBase::CheckTetrominoCube(FVector2D InSimulationPosition)
 
 void FTetrominoBase::HideTetromino()
 {
-	if (CurrentTenetrisField)
+	for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
 	{
-		for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
-		{
-			OnVisibilityTetrominoCubeType.ExecuteIfBound(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, false);
-		}
+		OnVisibilityMinoType.ExecuteIfBound(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, false);
 	}
 }
 
 void FTetrominoBase::SetTetromino()
 {
-	if (CurrentTenetrisField)
+	for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
 	{
-		for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
-		{
-			OnTetrominoCubeType.ExecuteIfBound(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, TetrominoInfo.CurrentTetrominoType);
-		}
+		OnMinoType.ExecuteIfBound(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, TetrominoInfo.CurrentTetrominoType);
 	}
 }
 
 void FTetrominoBase::SetTetrominoBackground()
 {
-	if (CurrentTenetrisField)
+	for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
 	{
-		for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
-		{
-			OnBackgroundCubeType.ExecuteIfBound(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, TetrominoInfo.CurrentTetrominoType);
-		}
+		OnBackgroundCubeType.ExecuteIfBound(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, TetrominoInfo.CurrentTetrominoType);
 	}
 }

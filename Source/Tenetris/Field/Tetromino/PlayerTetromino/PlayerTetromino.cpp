@@ -4,7 +4,7 @@ bool FPlayerTetromino::Move(ETetrominoDirection InTetrominoDirection)
 {
 	FVector2D SimulationPosition = SimulatePosition(InTetrominoDirection);
 
-	if (!CheckTetrominoCube(SimulationPosition))
+	if (!CheckMino(SimulationPosition))
 	{
 		HideTetromino();
 		TetrominoInfo.TetrominoCurrentPosition = SimulationPosition;

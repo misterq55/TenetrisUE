@@ -6,14 +6,14 @@
 #include "GameFramework/Actor.h"
 #include "Tenetris/TenetrisDefine.h"
 #include "Tenetris/Field/Tetromino/TetrominoBase.h"
-#include "TenetrisFieldBase.generated.h"
+#include "FieldBase.generated.h"
 
 class FTetrominoBase;
-class ATetrominoCubeBase;
+class AMinoBase;
 class UTenetrisBufferComponent;
 
 UCLASS()
-class TENETRIS_API ATenetrisFieldBase : public AActor
+class TENETRIS_API AFieldBase : public AActor
 {
 	GENERATED_BODY()
 
@@ -21,8 +21,8 @@ class TENETRIS_API ATenetrisFieldBase : public AActor
 
 public:	
 	// Sets default values for this actor's properties
-	ATenetrisFieldBase();
-	virtual ~ATenetrisFieldBase();
+	AFieldBase();
+	virtual ~AFieldBase();
 
 protected:
 	// Called when the game starts or when spawned
@@ -32,15 +32,15 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 	
-	UFUNCTION(BlueprintCallable, Category = "TenetrisField")
+	UFUNCTION(BlueprintCallable, Category = "Field")
 		virtual	void Initialize();
 
-	void SetTetrominoCubeClassType(TSubclassOf<ATetrominoCubeBase> InTetrominoCubeClass);
+	void SetMinoClassType(TSubclassOf<AMinoBase> InMinoClass);
 
 protected:
 	void SetBackgroundCubeType(int32 X, int32 Y, ETetrominoType InTetrominoType);
 
 protected:
-	TSubclassOf<ATetrominoCubeBase> TetrominoCubeClass;
+	TSubclassOf<AMinoBase> MinoClass;
 	UTenetrisBufferComponent* TenetrisBufferComponent;
 };
