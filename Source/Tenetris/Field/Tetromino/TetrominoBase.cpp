@@ -49,6 +49,16 @@ void FTetrominoBase::SetTetrominoType(ETetrominoType InCurrentTetrominoType)
 	}
 }
 
+void FTetrominoBase::SetStartingLocation(int32 X, int32 Y)
+{
+	StartingLocation = FVector2D(X, Y);
+}
+
+FVector2D FTetrominoBase::GetStaringLocation()
+{
+	return StartingLocation;
+}
+
 void FTetrominoBase::Spawn()
 {
 	TetrominoInfo.SetPosition(StartingLocation.X, StartingLocation.Y);

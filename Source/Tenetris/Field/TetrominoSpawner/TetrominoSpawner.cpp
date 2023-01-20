@@ -5,18 +5,18 @@ void FTetrominoSpawner::Initialize()
   TetrominoLimitCounter = 7;
   TetrominoArrayResetCounter = 5;
 
-  for (int32 i = 0; i < TetrominoArrayResetCounter; i++)
-  {
-    TArray<ETetrominoType> Bag = { ETetrominoType::I, ETetrominoType::J, ETetrominoType::L, ETetrominoType::O, ETetrominoType::S, ETetrominoType::T, ETetrominoType::Z };
-    ShuffleTetrominoBag(Bag);
-    TetrominoArray.Append(Bag);
-  }
+  RefillTetrominoArray(TetrominoArrayResetCounter);
 }
 
 ETetrominoType FTetrominoSpawner::GetTop()
 {
 	ETetrominoType TopType = TetrominoArray[0];
   TetrominoArray.RemoveAt(0);
+
+  if (TetrominoArray.Num() <= TetrominoLimitCounter)
+  {
+    RefillTetrominoArray(TetrominoArrayResetCounter);
+  }
 
 	return TopType;
 }
@@ -36,5 +36,15 @@ void FTetrominoSpawner::ShuffleTetrominoBag(TArray<ETetrominoType>& InBag)
     {
       InBag.Swap(i, Index);
     }
+  }
+}
+
+void FTetrominoSpawner::RefillTetrominoArray(int32 InTetrominoArrayResetCounter)
+{
+  for (int32 i = 0; i < InTetrominoArrayResetCounter; i++)
+  {
+    TArray<ETetrominoType> Bag = { ETetrominoType::I, ETetrominoType::J, ETetrominoType::L, ETetrominoType::O, ETetrominoType::S, ETetrominoType::T, ETetrominoType::Z };
+    ShuffleTetrominoBag(Bag);
+    TetrominoArray.Append(Bag);
   }
 }

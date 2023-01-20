@@ -80,8 +80,7 @@ void APlayerField::Tick(float DeltaTime)
 		if (CurrentTetromino->Move(ETetrominoDirection::Down))
 		{
 			CurrentTetromino->LockDown();
-			CurrentTetromino->SetTetrominoType(ETetrominoType::Z);
-			CurrentTetromino->Spawn();
+			Spawn();
 		}
 	}
 }
@@ -97,11 +96,7 @@ void APlayerField::Initialize()
 
 	PreviewBufferComponent->Initialize();
 
-	for (FTetrominoBase* PreviewTetromino : PreviewTetrominos)
-	{
-		// PreviewTetromino->SetTetrominoType(ETetrominoType::J);
-		PreviewTetromino->Spawn();
-	}
+	TetrominoSpawner->Initialize();
 }
 
 void APlayerField::MoveTetromino(ETetrominoDirection InTetrominoDirection)
@@ -111,7 +106,7 @@ void APlayerField::MoveTetromino(ETetrominoDirection InTetrominoDirection)
 		if (CurrentTetromino->Move(InTetrominoDirection) && InTetrominoDirection == ETetrominoDirection::Down)
 		{
 			CurrentTetromino->LockDown();
-			CurrentTetromino->Spawn();
+			Spawn();
 		}
 	}
 }
@@ -158,4 +153,22 @@ void APlayerField::BindTetrominoToBuffer(FTetrominoBase* InTetromino, UTenetrisB
 	InTetromino->OnMinoType.BindUObject(InBuffer, &UTenetrisBufferComponent::SetMinoType);
 	InTetromino->OnVisibilityMinoType.BindUObject(InBuffer, &UTenetrisBufferComponent::SetVisibilityMino);
 	InTetromino->OnCheckMino.BindUObject(InBuffer, &UTenetrisBufferComponent::CheckMino);
+	InTetromino->OnCalulateGuideMino.BindUObject(InBuffer, &UTenetrisBufferComponent::CalculateGuideMinoHeight);
+}
+
+void APlayerField::Spawn()
+{
+	if (CurrentTetromino)
+	{
+		CurrentTetromino->SetTetrominoType(TetrominoSpawner->GetTop());
+		CurrentTetromino->Spawn();
+	}
+
+	for (int32 i = 0; i < PreviewTetrominos.Num(); i++)
+	{
+		FTetrominoBase* PreviewTetromino = PreviewTetrominos[i];
+		PreviewTetromino->HideTetromino();
+		PreviewTetromino->SetTetrominoType(TetrominoSpawner->GetAt(i));
+		PreviewTetromino->Spawn();
+	}
 }

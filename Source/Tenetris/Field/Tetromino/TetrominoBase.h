@@ -9,6 +9,8 @@ DECLARE_DELEGATE_ThreeParams(FSetVisibilityBackgroundCubeTypeDelegate, int32, in
 DECLARE_DELEGATE_ThreeParams(FSetMinoTypeDelegate, int32, int32, ETetrominoType);
 DECLARE_DELEGATE_ThreeParams(FSetVisibilityMinoTypeDelegate, int32, int32, bool);
 DECLARE_DELEGATE_RetVal_TwoParams(bool, FCheckMinoDelegate, int32, int32);
+DECLARE_DELEGATE_RetVal_TwoParams(int32, FCalculateGuideMinoHeightDelegate, int32, int32);
+
 
 class AFieldBase;
 
@@ -41,8 +43,6 @@ class FTetrominoBase
 		{
 			TetrominoCurrentPosition = FVector2D(X, Y);
 		}
-
-		void SetType(ETetrominoType InCurrentTetrominoType);
 		
 		ETetrominoType CurrentTetrominoType;
 		TTetrominoCoordinate TetrominoCoordinate;
@@ -53,29 +53,30 @@ class FTetrominoBase
 public:
 	FTetrominoBase() {}
 
-	virtual ~FTetrominoBase() {}
+	virtual ~FTetrominoBase() 
+	{
+		OnBackgroundCubeType.Unbind();
+		OnVisibilityBackgroundCubeType.Unbind();
+		OnMinoType.Unbind();
+		OnVisibilityMinoType.Unbind();
+		OnCheckMino.Unbind();
+		OnCalulateGuideMino.Unbind();
+	}
+
 	virtual bool Move(ETetrominoDirection InTetrominoDirection) { return true; }
 	virtual bool Rotate(ETetrominoRotation InTetrominoRotation) { return true; }
 	virtual void LockDown() {}
+	virtual void Spawn();
+	virtual void SetGuideTetromino() {}
 
 	void SetTetrominoPosition(int32 X, int32 Y);
 	void SetTetrominoType(ETetrominoType InCurrentTetrominoType);
-
-	void SetStartingLocation(int32 X, int32 Y)
-	{
-		StartingLocation = FVector2D(X, Y);
-	}
-
-	FVector2D GetStaringLocation()
-	{
-		return StartingLocation;
-	}
-
-	void Spawn();
+	void SetStartingLocation(int32 X, int32 Y);
+	FVector2D GetStaringLocation();
+	void HideTetromino();
 
 protected:
 	bool CheckMino(FVector2D InSimulationPosition);
-	void HideTetromino();
 	void SetTetromino();
 	void SetTetrominoBackground();
 	
@@ -85,6 +86,7 @@ public:
 	FSetMinoTypeDelegate OnMinoType;
 	FSetVisibilityMinoTypeDelegate OnVisibilityMinoType;
 	FCheckMinoDelegate OnCheckMino;
+	FCalculateGuideMinoHeightDelegate OnCalulateGuideMino;
 
 protected:
 	FTetrominoInfo TetrominoInfo;

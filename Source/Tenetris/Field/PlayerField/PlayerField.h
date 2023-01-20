@@ -40,6 +40,7 @@ private:
 
 protected:
 	void BindTetrominoToBuffer(FTetrominoBase* InTetromino, UTenetrisBufferComponent* InBuffer);
+	void Spawn();
 
 protected:
 	FTetrominoBase* CurrentTetromino;

@@ -16,7 +16,8 @@ ATenetrisPawn::ATenetrisPawn()
 	Camera->SetProjectionMode(ECameraProjectionMode::Orthographic);
 	Camera->SetOrthoWidth(1024.f);
 	Camera->bUsePawnControlRotation = true;
-	// SetActorLocation(FVector::ZeroVector);
+
+	RootComponent = Camera;
 }
 
 // Called when the game starts or when spawned
