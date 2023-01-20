@@ -38,7 +38,7 @@ protected:
 	TArray<TArray<AMinoBase*>> BackgroundCubeBuffer;
 	TArray<TArray<AMinoBase*>> MinoBuffer;
 	UStaticMeshComponent* BackgroundMeshComponent;
-	USceneComponent* BackGroundCubeBufferPivot;
+	USceneComponent* BackGroundMinoBufferPivot;
 	USceneComponent* MinoBufferPivot;
 	TSubclassOf<AMinoBase> MinoClass;
 	TArray<TArray<int32>> CheckBuffer;

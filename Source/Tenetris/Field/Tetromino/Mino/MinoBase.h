@@ -28,7 +28,6 @@ public:
 
 	void SetVitibility(bool InNewVisibility);
 	virtual void SetTetrominoType(ETetrominoType InTetrominoType);
-	void SetMinoPosition(int32 X, int32 Y);
 
 protected:
 	UStaticMeshComponent* CubeMeshComponent;
