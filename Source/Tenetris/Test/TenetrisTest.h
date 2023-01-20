@@ -193,7 +193,7 @@ public:
 		SetBackgroundCubeType(4, 3, ETetrominoType::Obstacle);
 		SetBackgroundCubeType(5, 4, ETetrominoType::Obstacle);
 
-		CurrentTetromino->SetTetrominoType(ETetrominoType::T);
-		CurrentTetromino->Spawn();
+		 CurrentTetromino->SetTetrominoType(ETetrominoType::T);
+		 CurrentTetromino->Spawn();
 	}
 };

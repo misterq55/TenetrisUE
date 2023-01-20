@@ -6,35 +6,54 @@
 #include "Tenetris/Field/Tetromino/TetrominoBase.h"
 #include "Tenetris/Field/Tetromino/PreviewTetromino/PreviewTetromino.h"
 #include "Tenetris/Components/TenetrisBufferComponent/TenetrisBufferComponent.h"
+#include "Tenetris/Field/TetrominoSpawner/TetrominoSpawner.h"
 
 // Sets default values
 APlayerField::APlayerField()
 	: AFieldBase()
 	, CurrentTetromino(nullptr)
+	, PreviewTetrominoNum(0)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	PreviewBufferComponent = CreateDefaultSubobject<UTenetrisBufferComponent>(TEXT("PreviewBufferComponent"));
-	PreviewBufferComponent->SetBufferSize(12, 5);
+	PreviewBufferComponent->SetBufferSize(16, 5);
 	PreviewBufferComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	PreviewBufferComponent->SetMobility(EComponentMobility::Movable);
-	PreviewBufferComponent->SetRelativeLocation(FVector(0.f, 200.f, 0.f));
+	PreviewBufferComponent->SetRelativeLocation(FVector(0.f, 200.f, 50.f));
+	PreviewBufferComponent->SetRelativeScale3D(FVector(0.75f, 0.75f, 0.75f));
 
-	for (int32 i = 0; i < 5; i++)
+	PreviewTetrominoNum = 5;
+
+	for (int32 i = 0; i < PreviewTetrominoNum; i++)
 	{
 		FTetrominoBase* PreviewTetromino = new FPreviewTetromino();
 		PreviewTetrominos.Add(PreviewTetromino);
 		BindTetrominoToBuffer(PreviewTetromino, PreviewBufferComponent);
-		PreviewTetromino->SetStartingLocation(0, i * 3);
+		PreviewTetromino->SetTetrominoType(ETetrominoType(i));
+		PreviewTetromino->SetStartingLocation(1, (PreviewTetrominoNum - i - 1) * 3 + 1);
 	}
+
+	TetrominoSpawner = new FTetrominoSpawner();
 }
 
 APlayerField::~APlayerField()
 {
-	if (!CurrentTetromino)
+	if (CurrentTetromino)
 	{
 		delete CurrentTetromino;
+	}
+
+	while (PreviewTetrominos.Num() != 0)
+	{
+		FTetrominoBase* PreviewTetrominoToDelete = PreviewTetrominos.Pop();
+		delete PreviewTetrominoToDelete;
+	}
+
+	if (TetrominoSpawner)
+	{
+		delete TetrominoSpawner;
 	}
 }
 
@@ -80,7 +99,7 @@ void APlayerField::Initialize()
 
 	for (FTetrominoBase* PreviewTetromino : PreviewTetrominos)
 	{
-		PreviewTetromino->SetTetrominoType(ETetrominoType::J);
+		// PreviewTetromino->SetTetrominoType(ETetrominoType::J);
 		PreviewTetromino->Spawn();
 	}
 }

@@ -44,8 +44,3 @@ void AMinoBase::SetTetrominoType(ETetrominoType InTetrominoType)
 	TetrominoType = InTetrominoType;
 }
 
-void AMinoBase::SetMinoPosition(int32 X, int32 Y)
-{
-	SetActorRelativeLocation(FVector(0.f, X * 100.f * MinoRatio - MinoRatio * 900 * 0.5f, Y * 100.f * MinoRatio - (MinoRatio * 1000.f)));
-}
-

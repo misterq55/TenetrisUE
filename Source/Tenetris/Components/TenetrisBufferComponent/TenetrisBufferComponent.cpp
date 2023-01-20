@@ -18,11 +18,11 @@ UTenetrisBufferComponent::UTenetrisBufferComponent()
 	BackgroundMeshComponent->SetStaticMesh(MeshObj.Object);
 	BackgroundMeshComponent->SetRelativeRotation(FRotator(90.f, 0.f, 0.f));
 
-	BackGroundCubeBufferPivot = CreateDefaultSubobject<USceneComponent>(TEXT("BackGroundCubeBufferPivot"));
+	BackGroundMinoBufferPivot = CreateDefaultSubobject<USceneComponent>(TEXT("BackGroundMinoBufferPivot"));
 	MinoBufferPivot = CreateDefaultSubobject<USceneComponent>(TEXT("MinoBufferPivot"));
 
-	BackGroundCubeBufferPivot->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
-	BackGroundCubeBufferPivot->SetMobility(EComponentMobility::Movable);
+	BackGroundMinoBufferPivot->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
+	BackGroundMinoBufferPivot->SetMobility(EComponentMobility::Movable);
 
 	MinoBufferPivot->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
 	MinoBufferPivot->SetMobility(EComponentMobility::Movable);
@@ -55,11 +55,11 @@ void UTenetrisBufferComponent::Initialize()
 		{
 			UChildActorComponent* ChildComponent = NewObject<UChildActorComponent>(this);
 			ChildComponent->SetChildActorClass(MinoClass);
-			ChildComponent->AttachToComponent(BackGroundCubeBufferPivot, FAttachmentTransformRules::KeepRelativeTransform);
+			ChildComponent->AttachToComponent(BackGroundMinoBufferPivot, FAttachmentTransformRules::KeepRelativeTransform);
 			ChildComponent->CreateChildActor();
 
 			AMinoBase* MinoBase = Cast<AMinoBase>(ChildComponent->GetChildActor());
-			MinoBase->SetMinoPosition(j, i);
+			MinoBase->SetActorRelativeLocation(FVector(0.f, MinoRatio * 100.f * (j - (BufferWidth - 1) * 0.5f), MinoRatio * 100.f * (i - BufferHeight * 0.5f)));
 
 			BackgroundCubeBuffer[i].Add(MinoBase);
 		}
@@ -75,7 +75,7 @@ void UTenetrisBufferComponent::Initialize()
 			ChildComponent->CreateChildActor();
 
 			AMinoBase* MinoBase = Cast<AMinoBase>(ChildComponent->GetChildActor());
-			MinoBase->SetMinoPosition(j, i);
+			MinoBase->SetActorRelativeLocation(FVector(0.f, MinoRatio * 100.f * (j - (BufferWidth - 1) * 0.5f), MinoRatio * 100.f * (i - BufferHeight * 0.5f)));
 
 			MinoBuffer[i].Add(MinoBase);
 		}
