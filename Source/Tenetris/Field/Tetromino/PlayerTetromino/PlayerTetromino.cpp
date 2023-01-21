@@ -8,6 +8,11 @@ bool FPlayerTetromino::Move(ETetrominoDirection InTetrominoDirection)
 	{
 		HideTetromino();
 		TetrominoInfo.TetrominoCurrentPosition = SimulationPosition;
+
+		if (InTetrominoDirection == ETetrominoDirection::Left ||
+			InTetrominoDirection == ETetrominoDirection::Right)
+			SetGuideTetromino();
+
 		SetTetromino();
 
 		return false;
@@ -38,15 +43,41 @@ void FPlayerTetromino::SetGuideTetromino()
 	if (!OnCalulateGuideMino.IsBound())
 		return;
 
-	TArray<int32> TempCheckHeight;
+	for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
+	{
+		OnVisibilityMinoType.ExecuteIfBound(Coord.X + GuideTetrominoPosition.X, Coord.Y + GuideTetrominoPosition.Y, false);
+	}
+
+	TArray<int32> CheckHeightArray;
 
 	for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
 	{
 		int32 Height = OnCalulateGuideMino.Execute(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y);
-		TempCheckHeight.Add(Height);
+		CheckHeightArray.Add(Height);
 	}
 
-	int32 temp = 0;
+	int32 MinHeight = MAX_int32;
+	
+	for (int32 Height : CheckHeightArray)
+	{
+		if (MinHeight > Height)
+			MinHeight = Height;
+	}
+
+	GuideTetrominoPosition = FVector2D(TetrominoInfo.TetrominoCurrentPosition.X, TetrominoInfo.TetrominoCurrentPosition.Y - MinHeight);
+
+	for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
+	{
+		OnMinoType.ExecuteIfBound(Coord.X + GuideTetrominoPosition.X, Coord.Y + GuideTetrominoPosition.Y, ETetrominoType::Guide);
+	}
+}
+
+void FPlayerTetromino::HardDrop()
+{
+	HideTetromino();
+	TetrominoInfo.TetrominoCurrentPosition = GuideTetrominoPosition;
+	SetGuideTetromino();
+	SetTetromino();
 }
 
 FVector2D FPlayerTetromino::SimulatePosition(ETetrominoDirection InTetrominoDirection)
@@ -66,6 +97,9 @@ FVector2D FPlayerTetromino::SimulatePosition(ETetrominoDirection InTetrominoDire
 		SimulationPosition.X += 1;
 		break;
 	};
+
+	if (SimulationPosition.X < 0)
+		int32 Temp = 0;
 
 	return SimulationPosition;
 }

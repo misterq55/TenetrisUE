@@ -64,6 +64,10 @@ public:
 			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/ZMino.ZMino'");
 			break;
 
+		case ETetrominoType::Guide:
+			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/Guide.Guide'");
+			break;
+
 		case ETetrominoType::Obstacle:
 			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/ObstacleMino.ObstacleMino'");
 			break;
@@ -189,9 +193,9 @@ public:
 		//	}
 		//}
 
-		/*SetBackgroundCubeType(5, 3, ETetrominoType::Obstacle);
+		SetBackgroundCubeType(5, 3, ETetrominoType::Obstacle);
 		SetBackgroundCubeType(4, 3, ETetrominoType::Obstacle);
-		SetBackgroundCubeType(5, 4, ETetrominoType::Obstacle);*/
+		SetBackgroundCubeType(5, 4, ETetrominoType::Obstacle);
 
 		Spawn();
 	}

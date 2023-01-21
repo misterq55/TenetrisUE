@@ -16,6 +16,7 @@ enum class ETetrominoType : uint32
 	S,
 	T,
 	Z,
+	Guide,
 	Obstacle,
 	None,
 };
