@@ -31,12 +31,12 @@ class FTetrominoBase
 	public:
 		FTetrominoInfo()
 			: CurrentTetrominoType(ETetrominoType::None)
-			, TetrominoCurrentPosition(FVector2D())
+			, TetrominoCurrentPosition(FVector2D(0, 0))
 		{}
 
 		FTetrominoInfo(ETetrominoType InCurrentTetrominoType)
 			: CurrentTetrominoType(InCurrentTetrominoType)
-			, TetrominoCurrentPosition(FVector2D())
+			, TetrominoCurrentPosition(FVector2D(0, 0))
 		{}
 
 		void SetPosition(int32 X, int32 Y)
@@ -68,6 +68,7 @@ public:
 	virtual void LockDown() {}
 	virtual void Spawn();
 	virtual void SetGuideTetromino() {}
+	virtual void HardDrop() {}
 
 	void SetTetrominoPosition(int32 X, int32 Y);
 	void SetTetrominoType(ETetrominoType InCurrentTetrominoType);

@@ -181,7 +181,7 @@ int32 UTenetrisBufferComponent::CalculateGuideMinoHeight(int32 X, int32 Y)
 	int32 Result = 0;
 	int32 Height = 0;
 
-	for (int32 i = Y; i >= 0; i--)
+	for (int32 i = Y; i >= -1; i--)
 	{
 		if (CheckBuffer[i + 1][X + 1] == 1)
 		{
@@ -190,7 +190,7 @@ int32 UTenetrisBufferComponent::CalculateGuideMinoHeight(int32 X, int32 Y)
 		}
 	}
 
-	Result = Y - Height;
+	Result = Y - Height - 1;
 
 	return Result;
 }

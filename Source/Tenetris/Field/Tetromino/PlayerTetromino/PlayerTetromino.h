@@ -9,6 +9,7 @@ class FPlayerTetromino : public FTetrominoBase
 public:
 	FPlayerTetromino() 
 		: FTetrominoBase()
+		, GuideTetrominoPosition(FVector2D(0, 0))
 	{}
 
 	virtual ~FPlayerTetromino() {}
@@ -17,7 +18,11 @@ public:
 	virtual void LockDown() override;
 	virtual void Spawn() override;
 	virtual void SetGuideTetromino() override;
+	virtual void HardDrop() override;
 
 private:
 	FVector2D SimulatePosition(ETetrominoDirection InTetrominoDirection);
+
+private:
+	FVector2D GuideTetrominoPosition;
 };

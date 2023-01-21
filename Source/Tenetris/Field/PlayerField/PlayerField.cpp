@@ -119,7 +119,12 @@ void APlayerField::RotateTetromino(ETetrominoRotation InTetrominoRotation)
 
 void APlayerField::HardDrop()
 {
-
+	if (CurrentTetromino)
+	{
+		CurrentTetromino->HardDrop();
+		CurrentTetromino->LockDown();
+		Spawn();
+	}
 }
 
 void APlayerField::RegisterActions()
