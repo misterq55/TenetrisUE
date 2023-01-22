@@ -7,11 +7,15 @@ bool FPlayerTetromino::Move(ETetrominoDirection InTetrominoDirection)
 	if (!CheckMino(SimulationPosition))
 	{
 		HideTetromino();
-		TetrominoInfo.TetrominoCurrentPosition = SimulationPosition;
+		
+		TetrominoInfo.CurrentPosition = SimulationPosition;
 
 		if (InTetrominoDirection == ETetrominoDirection::Left ||
 			InTetrominoDirection == ETetrominoDirection::Right)
+		{
+			HideGuideTetromino();
 			SetGuideTetromino();
+		}
 
 		SetTetromino();
 
@@ -23,6 +27,38 @@ bool FPlayerTetromino::Move(ETetrominoDirection InTetrominoDirection)
 
 bool FPlayerTetromino::Rotate(ETetrominoRotation InTetrominoRotation)
 {
+	HideTetromino();
+	HideGuideTetromino();
+
+	TArray<FVector2D> SimulationCoordinates = TetrominoInfo.Coordinate;
+	FVector2D RotateMatrix[2];
+
+	if (InTetrominoRotation == ETetrominoRotation::ClockWise)
+	{
+		RotateMatrix[0] = FVector2D(0, -1);
+		RotateMatrix[1] = FVector2D(1, 0);
+	}
+	else if (InTetrominoRotation == ETetrominoRotation::CounterClockWise)
+	{
+		RotateMatrix[0] = FVector2D(0, 1);
+		RotateMatrix[1] = FVector2D(-1, 0);
+	}
+
+	for (FVector2D &Coord : SimulationCoordinates)
+	{
+		Coord.X -= 1;
+		int32 NewX = (RotateMatrix[0].X * Coord.X) + (RotateMatrix[1].X * Coord.Y);
+		int32 NewY = (RotateMatrix[0].Y * Coord.X) + (RotateMatrix[1].Y * Coord.Y);
+
+		Coord = FVector2D(NewX, NewY);
+		Coord.X += 1;
+	}
+
+	TetrominoInfo.Coordinate = SimulationCoordinates;
+
+	SetGuideTetromino();
+	SetTetromino();
+
 	return true;
 }
 
@@ -35,6 +71,7 @@ void FPlayerTetromino::LockDown()
 void FPlayerTetromino::Spawn()
 {
 	FTetrominoBase::Spawn();
+	HideGuideTetromino();
 	SetGuideTetromino();
 }
 
@@ -43,16 +80,11 @@ void FPlayerTetromino::SetGuideTetromino()
 	if (!OnCalulateGuideMino.IsBound())
 		return;
 
-	for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
-	{
-		OnVisibilityMinoType.ExecuteIfBound(Coord.X + GuideTetrominoPosition.X, Coord.Y + GuideTetrominoPosition.Y, false);
-	}
-
 	TArray<int32> CheckHeightArray;
 
-	for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
+	for (FVector2D Coord : TetrominoInfo.Coordinate)
 	{
-		int32 Height = OnCalulateGuideMino.Execute(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y);
+		int32 Height = OnCalulateGuideMino.Execute(Coord.X + TetrominoInfo.CurrentPosition.X, Coord.Y + TetrominoInfo.CurrentPosition.Y);
 		CheckHeightArray.Add(Height);
 	}
 
@@ -64,9 +96,9 @@ void FPlayerTetromino::SetGuideTetromino()
 			MinHeight = Height;
 	}
 
-	GuideTetrominoPosition = FVector2D(TetrominoInfo.TetrominoCurrentPosition.X, TetrominoInfo.TetrominoCurrentPosition.Y - MinHeight);
+	GuideTetrominoPosition = FVector2D(TetrominoInfo.CurrentPosition.X, TetrominoInfo.CurrentPosition.Y - MinHeight);
 
-	for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
+	for (FVector2D Coord : TetrominoInfo.Coordinate)
 	{
 		OnMinoType.ExecuteIfBound(Coord.X + GuideTetrominoPosition.X, Coord.Y + GuideTetrominoPosition.Y, ETetrominoType::Guide);
 	}
@@ -75,14 +107,16 @@ void FPlayerTetromino::SetGuideTetromino()
 void FPlayerTetromino::HardDrop()
 {
 	HideTetromino();
-	TetrominoInfo.TetrominoCurrentPosition = GuideTetrominoPosition;
+	TetrominoInfo.CurrentPosition = GuideTetrominoPosition;
+	HideGuideTetromino();
 	SetGuideTetromino();
+	GuideTetrominoPosition = FVector2D(0, 0);
 	SetTetromino();
 }
 
 FVector2D FPlayerTetromino::SimulatePosition(ETetrominoDirection InTetrominoDirection)
 {
-	FVector2D SimulationPosition = TetrominoInfo.TetrominoCurrentPosition;
+	FVector2D SimulationPosition = TetrominoInfo.CurrentPosition;
 	switch (InTetrominoDirection)
 	{
 	case ETetrominoDirection::Down:
@@ -98,8 +132,13 @@ FVector2D FPlayerTetromino::SimulatePosition(ETetrominoDirection InTetrominoDire
 		break;
 	};
 
-	if (SimulationPosition.X < 0)
-		int32 Temp = 0;
-
 	return SimulationPosition;
+}
+
+void FPlayerTetromino::HideGuideTetromino()
+{
+	for (FVector2D Coord : TetrominoInfo.Coordinate)
+	{
+		OnVisibilityMinoType.ExecuteIfBound(Coord.X + GuideTetrominoPosition.X, Coord.Y + GuideTetrominoPosition.Y, false);
+	}
 }
