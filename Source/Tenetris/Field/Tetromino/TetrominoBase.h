@@ -25,29 +25,46 @@ class FTetrominoBase
 	const TTetrominoCoordinate SMinoCoordinate = { FVector2D(0.f, 0.f) , FVector2D(1.f, 0.f), FVector2D(1.f, 1.f), FVector2D(2.f, 1.f) };
 	const TTetrominoCoordinate TMinoCoordinate = { FVector2D(1.f, 1.f) , FVector2D(0.f, 0.f), FVector2D(1.f, 0.f), FVector2D(2.f, 0.f) };
 	const TTetrominoCoordinate ZMinoCoordinate = { FVector2D(0.f, 1.f) , FVector2D(1.f, 0.f), FVector2D(1.f, 1.f), FVector2D(2.f, 0.f) };
+
+	/*const TTetrominoCoordinate IMinoCoordinate = { FVector2D(-1.f, 0.f) , FVector2D(0.f, 0.f), FVector2D(1.f, 0.f), FVector2D(2.f, 0.f) };
+	const TTetrominoCoordinate JMinoCoordinate = { FVector2D(-1.f, 0.f) , FVector2D(-1.f, 1.f), FVector2D(0.f, 0.f), FVector2D(1.f, 0.f) };
+	const TTetrominoCoordinate LMinoCoordinate = { FVector2D(-1.f, 0.f) , FVector2D(1.f, 1.f), FVector2D(0.f, 0.f), FVector2D(1.f, 0.f) };
+	const TTetrominoCoordinate OMinoCoordinate = { FVector2D(0.f, 0.f) , FVector2D(0.f, 1.f), FVector2D(1.f, 0.f), FVector2D(1.f, 1.f) };
+	const TTetrominoCoordinate SMinoCoordinate = { FVector2D(-1.f, 0.f) , FVector2D(0.f, 0.f), FVector2D(0.f, 1.f), FVector2D(1.f, 1.f) };
+	const TTetrominoCoordinate TMinoCoordinate = { FVector2D(0.f, 1.f) , FVector2D(-1.f, 0.f), FVector2D(0.f, 0.f), FVector2D(1.f, 0.f) };
+	const TTetrominoCoordinate ZMinoCoordinate = { FVector2D(-1.f, 1.f) , FVector2D(0.f, 0.f), FVector2D(0.f, 1.f), FVector2D(1.f, 0.f) };*/
 	
+	enum class ETetrominoFacingState : uint32
+	{
+		North,
+		East,
+		South,
+		West,
+	};
+
 	typedef struct FTetrominoInfo
 	{
 	public:
 		FTetrominoInfo()
-			: CurrentTetrominoType(ETetrominoType::None)
-			, TetrominoCurrentPosition(FVector2D(0, 0))
+			: CurrentType(ETetrominoType::None)
+			, CurrentPosition(FVector2D(0, 0))
 		{}
 
 		FTetrominoInfo(ETetrominoType InCurrentTetrominoType)
-			: CurrentTetrominoType(InCurrentTetrominoType)
-			, TetrominoCurrentPosition(FVector2D(0, 0))
+			: CurrentType(InCurrentTetrominoType)
+			, CurrentPosition(FVector2D(0, 0))
 		{}
 
 		void SetPosition(int32 X, int32 Y)
 		{
-			TetrominoCurrentPosition = FVector2D(X, Y);
+			CurrentPosition = FVector2D(X, Y);
 		}
 		
-		ETetrominoType CurrentTetrominoType;
-		TTetrominoCoordinate TetrominoCoordinate;
-		FVector2D TetrominoCurrentPosition;
+		ETetrominoType CurrentType;
+		TTetrominoCoordinate Coordinate;
+		FVector2D CurrentPosition;
 		TArray<TTetrominoCoordinate> History;
+		ETetrominoFacingState FacingState;
 	}FTetrominoInfo;
 
 public:

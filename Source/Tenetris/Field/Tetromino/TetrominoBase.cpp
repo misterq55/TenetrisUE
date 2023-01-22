@@ -4,44 +4,44 @@ void FTetrominoBase::SetTetrominoPosition(int32 X, int32 Y)
 {
 	TetrominoInfo.SetPosition(X, Y);
 
-	for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
+	for (FVector2D Coord : TetrominoInfo.Coordinate)
 	{
-		OnMinoType.ExecuteIfBound(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, TetrominoInfo.CurrentTetrominoType);
+		OnMinoType.ExecuteIfBound(Coord.X + TetrominoInfo.CurrentPosition.X, Coord.Y + TetrominoInfo.CurrentPosition.Y, TetrominoInfo.CurrentType);
 	}
 }
 
 void FTetrominoBase::SetTetrominoType(ETetrominoType InCurrentTetrominoType)
 {
-	TetrominoInfo.CurrentTetrominoType = InCurrentTetrominoType;
+	TetrominoInfo.CurrentType = InCurrentTetrominoType;
 
-	switch (TetrominoInfo.CurrentTetrominoType)
+	switch (TetrominoInfo.CurrentType)
 	{
 	case ETetrominoType::I:
-		TetrominoInfo.TetrominoCoordinate = IMinoCoordinate;
+		TetrominoInfo.Coordinate = IMinoCoordinate;
 		break;
 
 	case ETetrominoType::J:
-		TetrominoInfo.TetrominoCoordinate = JMinoCoordinate;
+		TetrominoInfo.Coordinate = JMinoCoordinate;
 		break;
 
 	case ETetrominoType::L:
-		TetrominoInfo.TetrominoCoordinate = LMinoCoordinate;
+		TetrominoInfo.Coordinate = LMinoCoordinate;
 		break;
 
 	case ETetrominoType::O:
-		TetrominoInfo.TetrominoCoordinate = OMinoCoordinate;
+		TetrominoInfo.Coordinate = OMinoCoordinate;
 		break;
 
 	case ETetrominoType::S:
-		TetrominoInfo.TetrominoCoordinate = SMinoCoordinate;
+		TetrominoInfo.Coordinate = SMinoCoordinate;
 		break;
 
 	case ETetrominoType::T:
-		TetrominoInfo.TetrominoCoordinate = TMinoCoordinate;
+		TetrominoInfo.Coordinate = TMinoCoordinate;
 		break;
 
 	case ETetrominoType::Z:
-		TetrominoInfo.TetrominoCoordinate = ZMinoCoordinate;
+		TetrominoInfo.Coordinate = ZMinoCoordinate;
 		break;
 
 	default:
@@ -63,9 +63,9 @@ void FTetrominoBase::Spawn()
 {
 	TetrominoInfo.SetPosition(StartingLocation.X, StartingLocation.Y);
 
-	for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
+	for (FVector2D Coord : TetrominoInfo.Coordinate)
 	{
-		OnMinoType.ExecuteIfBound(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, TetrominoInfo.CurrentTetrominoType);
+		OnMinoType.ExecuteIfBound(Coord.X + TetrominoInfo.CurrentPosition.X, Coord.Y + TetrominoInfo.CurrentPosition.Y, TetrominoInfo.CurrentType);
 	}
 }
 
@@ -76,7 +76,7 @@ bool FTetrominoBase::CheckMino(FVector2D InSimulationPosition)
 
 	bool TetrominoCheck = false;
 
-	for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
+	for (FVector2D Coord : TetrominoInfo.Coordinate)
 	{
 		if (OnCheckMino.Execute(Coord.X + InSimulationPosition.X, Coord.Y + InSimulationPosition.Y))
 		{
@@ -90,24 +90,24 @@ bool FTetrominoBase::CheckMino(FVector2D InSimulationPosition)
 
 void FTetrominoBase::HideTetromino()
 {
-	for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
+	for (FVector2D Coord : TetrominoInfo.Coordinate)
 	{
-		OnVisibilityMinoType.ExecuteIfBound(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, false);
+		OnVisibilityMinoType.ExecuteIfBound(Coord.X + TetrominoInfo.CurrentPosition.X, Coord.Y + TetrominoInfo.CurrentPosition.Y, false);
 	}
 }
 
 void FTetrominoBase::SetTetromino()
 {
-	for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
+	for (FVector2D Coord : TetrominoInfo.Coordinate)
 	{
-		OnMinoType.ExecuteIfBound(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, TetrominoInfo.CurrentTetrominoType);
+		OnMinoType.ExecuteIfBound(Coord.X + TetrominoInfo.CurrentPosition.X, Coord.Y + TetrominoInfo.CurrentPosition.Y, TetrominoInfo.CurrentType);
 	}
 }
 
 void FTetrominoBase::SetTetrominoBackground()
 {
-	for (FVector2D Coord : TetrominoInfo.TetrominoCoordinate)
+	for (FVector2D Coord : TetrominoInfo.Coordinate)
 	{
-		OnBackgroundCubeType.ExecuteIfBound(Coord.X + TetrominoInfo.TetrominoCurrentPosition.X, Coord.Y + TetrominoInfo.TetrominoCurrentPosition.Y, TetrominoInfo.CurrentTetrominoType);
+		OnBackgroundCubeType.ExecuteIfBound(Coord.X + TetrominoInfo.CurrentPosition.X, Coord.Y + TetrominoInfo.CurrentPosition.Y, TetrominoInfo.CurrentType);
 	}
 }

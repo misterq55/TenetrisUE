@@ -22,6 +22,7 @@ public:
 
 private:
 	FVector2D SimulatePosition(ETetrominoDirection InTetrominoDirection);
+	void HideGuideTetromino();
 
 private:
 	FVector2D GuideTetrominoPosition;
