@@ -108,7 +108,7 @@ public:
 		CurrentTetromino = new FTestTetromino();
 
 		BindTetrominoToBuffer(CurrentTetromino, TenetrisBufferComponent);
-		CurrentTetromino->SetStartingLocation(3, 18);
+		CurrentTetromino->SetStartingLocation(4, 18);
 
 		PreviewBufferComponent->SetMinoClassType(ATestMino::StaticClass());
 	}

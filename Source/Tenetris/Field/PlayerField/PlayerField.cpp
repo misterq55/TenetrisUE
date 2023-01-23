@@ -32,7 +32,7 @@ APlayerField::APlayerField()
 		PreviewTetrominos.Add(PreviewTetromino);
 		BindTetrominoToBuffer(PreviewTetromino, PreviewBufferComponent);
 		PreviewTetromino->SetTetrominoType(ETetrominoType(i));
-		PreviewTetromino->SetStartingLocation(1, (PreviewTetrominoNum - i - 1) * 3 + 1);
+		PreviewTetromino->SetStartingLocation(2, (PreviewTetrominoNum - i - 1) * 3 + 1);
 	}
 
 	TetrominoSpawner = new FTetrominoSpawner();
@@ -75,14 +75,14 @@ void APlayerField::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (CurrentTetromino)
+	/*if (CurrentTetromino)
 	{
 		if (CurrentTetromino->Move(ETetrominoDirection::Down))
 		{
 			CurrentTetromino->LockDown();
 			Spawn();
 		}
-	}
+	}*/
 }
 
 void APlayerField::Initialize()
