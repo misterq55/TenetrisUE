@@ -62,6 +62,7 @@ FVector2D FTetrominoBase::GetStaringLocation()
 void FTetrominoBase::Spawn()
 {
 	TetrominoInfo.SetPosition(StartingLocation.X, StartingLocation.Y);
+	TetrominoInfo.RotationState = 0;
 
 	for (FVector2D Coord : TetrominoInfo.Coordinate)
 	{

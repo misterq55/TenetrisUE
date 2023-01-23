@@ -4,14 +4,14 @@
 
 #include "Tenetris/TenetrisDefine.h"
 
-class FTetrominoSpawner
+class FTetrominoGenerator
 {
 public:
-	FTetrominoSpawner()
+	FTetrominoGenerator()
 		: TetrominoArrayResetCounter(0)
 	{}
 
-	~FTetrominoSpawner() {}
+	~FTetrominoGenerator() {}
 
 	void Initialize();
 
