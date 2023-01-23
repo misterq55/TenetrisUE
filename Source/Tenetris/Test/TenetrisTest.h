@@ -10,7 +10,7 @@
 #include "Tenetris/Components/TenetrisBufferComponent/TenetrisBufferComponent.h"
 #include "Tenetris/Field/Tetromino/PlayerTetromino/PlayerTetromino.h"
 #include "Tenetris/Field/Tetromino/PreviewTetromino/PreviewTetromino.h"
-#include "Tenetris/Field/TetrominoSpawner/TetrominoSpawner.h"
+#include "Tenetris/Field/TetrominoGenerator/TetrominoGenerator.h"
 #include "TenetrisTest.generated.h"
 
 UCLASS()

@@ -6,7 +6,7 @@
 #include "Tenetris/Field/Tetromino/TetrominoBase.h"
 #include "Tenetris/Field/Tetromino/PreviewTetromino/PreviewTetromino.h"
 #include "Tenetris/Components/TenetrisBufferComponent/TenetrisBufferComponent.h"
-#include "Tenetris/Field/TetrominoSpawner/TetrominoSpawner.h"
+#include "Tenetris/Field/TetrominoGenerator/TetrominoGenerator.h"
 
 // Sets default values
 APlayerField::APlayerField()
@@ -35,7 +35,7 @@ APlayerField::APlayerField()
 		PreviewTetromino->SetStartingLocation(2, (PreviewTetrominoNum - i - 1) * 3 + 1);
 	}
 
-	TetrominoSpawner = new FTetrominoSpawner();
+	TetrominoGenerator = new FTetrominoGenerator();
 }
 
 APlayerField::~APlayerField()
@@ -51,9 +51,9 @@ APlayerField::~APlayerField()
 		delete PreviewTetrominoToDelete;
 	}
 
-	if (TetrominoSpawner)
+	if (TetrominoGenerator)
 	{
-		delete TetrominoSpawner;
+		delete TetrominoGenerator;
 	}
 }
 
@@ -75,14 +75,14 @@ void APlayerField::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	/*if (CurrentTetromino)
+	if (CurrentTetromino)
 	{
 		if (CurrentTetromino->Move(ETetrominoDirection::Down))
 		{
 			CurrentTetromino->LockDown();
 			Spawn();
 		}
-	}*/
+	}
 }
 
 void APlayerField::Initialize()
@@ -96,7 +96,7 @@ void APlayerField::Initialize()
 
 	PreviewBufferComponent->Initialize();
 
-	TetrominoSpawner->Initialize();
+	TetrominoGenerator->Initialize();
 }
 
 void APlayerField::MoveTetromino(ETetrominoDirection InTetrominoDirection)
@@ -165,7 +165,7 @@ void APlayerField::Spawn()
 {
 	if (CurrentTetromino)
 	{
-		CurrentTetromino->SetTetrominoType(TetrominoSpawner->GetTop());
+		CurrentTetromino->SetTetrominoType(TetrominoGenerator->GetTop());
 		CurrentTetromino->Spawn();
 	}
 
@@ -173,7 +173,7 @@ void APlayerField::Spawn()
 	{
 		FTetrominoBase* PreviewTetromino = PreviewTetrominos[i];
 		PreviewTetromino->HideTetromino();
-		PreviewTetromino->SetTetrominoType(TetrominoSpawner->GetAt(i));
+		PreviewTetromino->SetTetrominoType(TetrominoGenerator->GetAt(i));
 		PreviewTetromino->Spawn();
 	}
 }

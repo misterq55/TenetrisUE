@@ -7,7 +7,7 @@
 #include "PlayerField.generated.h"
 
 class FTetrominoBase;
-class FTetrominoSpawner;
+class FTetrominoGenerator;
 
 UCLASS()
 class TENETRIS_API APlayerField : public AFieldBase
@@ -44,7 +44,7 @@ protected:
 
 protected:
 	FTetrominoBase* CurrentTetromino;
-	FTetrominoSpawner* TetrominoSpawner;
+	FTetrominoGenerator* TetrominoGenerator;
 	TArray<FTetrominoBase*> PreviewTetrominos;
 	UTenetrisBufferComponent* PreviewBufferComponent;
 	int32 PreviewTetrominoNum;

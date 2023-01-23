@@ -1,6 +1,6 @@
-#include "TetrominoSpawner.h"
+#include "TetrominoGenerator.h"
 
-void FTetrominoSpawner::Initialize()
+void FTetrominoGenerator::Initialize()
 {
   TetrominoLimitCounter = 7;
   TetrominoArrayResetCounter = 5;
@@ -8,7 +8,7 @@ void FTetrominoSpawner::Initialize()
   RefillTetrominoArray(TetrominoArrayResetCounter);
 }
 
-ETetrominoType FTetrominoSpawner::GetTop()
+ETetrominoType FTetrominoGenerator::GetTop()
 {
 	ETetrominoType TopType = TetrominoArray[0];
   TetrominoArray.RemoveAt(0);
@@ -21,12 +21,12 @@ ETetrominoType FTetrominoSpawner::GetTop()
 	return TopType;
 }
 
-ETetrominoType FTetrominoSpawner::GetAt(int32 InIndex)
+ETetrominoType FTetrominoGenerator::GetAt(int32 InIndex)
 {
 	return TetrominoArray[InIndex];
 }
 
-void FTetrominoSpawner::ShuffleTetrominoBag(TArray<ETetrominoType>& InBag)
+void FTetrominoGenerator::ShuffleTetrominoBag(TArray<ETetrominoType>& InBag)
 {
   const int32 LastIndex = InBag.Num() - 1;
   for (int32 i = 0; i < LastIndex; ++i)
@@ -39,13 +39,11 @@ void FTetrominoSpawner::ShuffleTetrominoBag(TArray<ETetrominoType>& InBag)
   }
 }
 
-void FTetrominoSpawner::RefillTetrominoArray(int32 InTetrominoArrayResetCounter)
+void FTetrominoGenerator::RefillTetrominoArray(int32 InTetrominoArrayResetCounter)
 {
   for (int32 i = 0; i < InTetrominoArrayResetCounter; i++)
   {
-    /*TArray<ETetrominoType> Bag = { ETetrominoType::I, ETetrominoType::J, ETetrominoType::L, ETetrominoType::O, ETetrominoType::S, ETetrominoType::T, ETetrominoType::Z };
-    ShuffleTetrominoBag(Bag);*/
-    TArray<ETetrominoType> Bag = { ETetrominoType::I, ETetrominoType::I, ETetrominoType::I, ETetrominoType::I, ETetrominoType::I, ETetrominoType::I, ETetrominoType::I };
+    TArray<ETetrominoType> Bag = { ETetrominoType::I, ETetrominoType::J, ETetrominoType::L, ETetrominoType::O, ETetrominoType::S, ETetrominoType::T, ETetrominoType::Z };
     ShuffleTetrominoBag(Bag);
     TetrominoArray.Append(Bag);
   }
