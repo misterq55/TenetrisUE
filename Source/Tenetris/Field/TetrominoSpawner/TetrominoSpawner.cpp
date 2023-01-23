@@ -43,7 +43,9 @@ void FTetrominoSpawner::RefillTetrominoArray(int32 InTetrominoArrayResetCounter)
 {
   for (int32 i = 0; i < InTetrominoArrayResetCounter; i++)
   {
-    TArray<ETetrominoType> Bag = { ETetrominoType::I, ETetrominoType::J, ETetrominoType::L, ETetrominoType::O, ETetrominoType::S, ETetrominoType::T, ETetrominoType::Z };
+    /*TArray<ETetrominoType> Bag = { ETetrominoType::I, ETetrominoType::J, ETetrominoType::L, ETetrominoType::O, ETetrominoType::S, ETetrominoType::T, ETetrominoType::Z };
+    ShuffleTetrominoBag(Bag);*/
+    TArray<ETetrominoType> Bag = { ETetrominoType::I, ETetrominoType::I, ETetrominoType::I, ETetrominoType::I, ETetrominoType::I, ETetrominoType::I, ETetrominoType::I };
     ShuffleTetrominoBag(Bag);
     TetrominoArray.Append(Bag);
   }

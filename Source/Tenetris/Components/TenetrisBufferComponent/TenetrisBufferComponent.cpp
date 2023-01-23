@@ -135,6 +135,9 @@ void UTenetrisBufferComponent::SetVisibilityMino(int32 X, int32 Y, bool InVisibl
 
 bool UTenetrisBufferComponent::CheckMino(int32 X, int32 Y)
 {
+	if (Y < 0 || X < 0) return true;
+	if (Y >= BufferHeight || X >= BufferWidth) return true;
+
 	return CheckBuffer[Y + 1][X + 1] == 1;
 }
 
