@@ -32,7 +32,7 @@ class FPlayerTetromino : public FTetrominoBase
 public:
 	FPlayerTetromino() 
 		: FTetrominoBase()
-		, GuideTetrominoPosition(FVector2D(1, 1))
+		, GuideTetrominoPosition(FVector2D(0, 0))
 	{}
 
 	virtual ~FPlayerTetromino() {}
