@@ -26,14 +26,7 @@ APlayerField::APlayerField()
 
 	PreviewTetrominoNum = 5;
 
-	for (int32 i = 0; i < PreviewTetrominoNum; i++)
-	{
-		FTetrominoBase* PreviewTetromino = new FPreviewTetromino();
-		PreviewTetrominos.Add(PreviewTetromino);
-		BindTetrominoToBuffer(PreviewTetromino, PreviewBufferComponent);
-		PreviewTetromino->SetTetrominoType(ETetrominoType(i));
-		PreviewTetromino->SetStartingLocation(2, (PreviewTetrominoNum - i - 1) * 3 + 1);
-	}
+	InitializePreviewTetrominos();
 
 	TetrominoGenerator = new FTetrominoGenerator();
 }
@@ -151,6 +144,18 @@ void APlayerField::UnRegisterActions()
 	}
 }
 
+void APlayerField::InitializePreviewTetrominos()
+{
+	for (int32 i = 0; i < PreviewTetrominoNum; i++)
+	{
+		FTetrominoBase* PreviewTetromino = new FPreviewTetromino();
+		PreviewTetrominos.Add(PreviewTetromino);
+		BindTetrominoToBuffer(PreviewTetromino, PreviewBufferComponent);
+		PreviewTetromino->SetTetrominoType(ETetrominoType(i));
+		PreviewTetromino->SetStartingLocation(2, (PreviewTetrominoNum - i - 1) * 3 + 1);
+	}
+}
+
 void APlayerField::BindTetrominoToBuffer(FTetrominoBase* InTetromino, UTenetrisBufferComponent* InBuffer)
 {
 	InTetromino->OnBackgroundCubeType.BindUObject(InBuffer, &UTenetrisBufferComponent::SetBackgroundCubeType);
@@ -163,12 +168,21 @@ void APlayerField::BindTetrominoToBuffer(FTetrominoBase* InTetromino, UTenetrisB
 
 void APlayerField::Spawn()
 {
+	SpawnNextTetromino();
+	RenewPreviewTetromino();
+}
+
+void APlayerField::SpawnNextTetromino()
+{
 	if (CurrentTetromino)
 	{
 		CurrentTetromino->SetTetrominoType(TetrominoGenerator->GetTop());
 		CurrentTetromino->Spawn();
 	}
+}
 
+void APlayerField::RenewPreviewTetromino()
+{
 	for (int32 i = 0; i < PreviewTetrominos.Num(); i++)
 	{
 		FTetrominoBase* PreviewTetromino = PreviewTetrominos[i];

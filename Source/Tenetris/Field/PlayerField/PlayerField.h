@@ -37,6 +37,9 @@ public:
 private:
 	void RegisterActions();
 	void UnRegisterActions();
+	void InitializePreviewTetrominos();
+	void SpawnNextTetromino();
+	void RenewPreviewTetromino();
 
 protected:
 	void BindTetrominoToBuffer(FTetrominoBase* InTetromino, UTenetrisBufferComponent* InBuffer);
