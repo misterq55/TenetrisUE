@@ -17,14 +17,14 @@ APlayerField::APlayerField()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	PreviewTetrominoNum = 5;
+
 	PreviewBufferComponent = CreateDefaultSubobject<UTenetrisBufferComponent>(TEXT("PreviewBufferComponent"));
-	PreviewBufferComponent->SetBufferSize(16, 5);
+	PreviewBufferComponent->SetBufferSize(PreviewTetrominoNum * 3 + 1, 5);
 	PreviewBufferComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	PreviewBufferComponent->SetMobility(EComponentMobility::Movable);
 	PreviewBufferComponent->SetRelativeLocation(FVector(0.f, 200.f, 50.f));
 	PreviewBufferComponent->SetRelativeScale3D(FVector(0.75f, 0.75f, 0.75f));
-
-	PreviewTetrominoNum = 5;
 
 	InitializePreviewTetrominos();
 
