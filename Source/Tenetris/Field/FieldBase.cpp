@@ -19,7 +19,7 @@ AFieldBase::AFieldBase()
 	TenetrisBufferComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	TenetrisBufferComponent->SetMobility(EComponentMobility::Movable);
 
-	SetActorTickInterval(1.f);
+	// SetActorTickInterval(1.f);
 	MinoClass = AMinoBase::StaticClass();
 }
 

@@ -67,14 +67,20 @@ void APlayerField::EndPlay(const EEndPlayReason::Type EndPlayReason)
 void APlayerField::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (CurrentTetromino)
+	
+	CurrentTime += DeltaTime;
+	if (CurrentTime >= GetFallingSpeed())
 	{
-		if (CurrentTetromino->Move(ETetrominoDirection::Down))
+		if (CurrentTetromino)
 		{
-			CurrentTetromino->LockDown();
-			Spawn();
+			if (CurrentTetromino->Move(ETetrominoDirection::Down))
+			{
+				CurrentTetromino->LockDown();
+				Spawn();
+			}
 		}
+
+		CurrentTime = 0.f;
 	}
 }
 
@@ -88,7 +94,6 @@ void APlayerField::Initialize()
 	}
 
 	PreviewBufferComponent->Initialize();
-
 	TetrominoGenerator->Initialize();
 }
 
@@ -129,6 +134,7 @@ void APlayerField::RegisterActions()
 		PlayerController->OnTetrominoMove.BindUObject(this, &APlayerField::MoveTetromino);
 		PlayerController->OnTetrominoRotate.BindUObject(this, &APlayerField::RotateTetromino);
 		PlayerController->OnTetrominoHardDrop.BindUObject(this, &APlayerField::HardDrop);
+		PlayerController->OnToggleSoftDrop.BindUObject(this, &APlayerField::SetSoftDrop);
 	}
 }
 
@@ -168,6 +174,7 @@ void APlayerField::BindTetrominoToBuffer(FTetrominoBase* InTetromino, UTenetrisB
 
 void APlayerField::Spawn()
 {
+	CurrentTime = 0.f;
 	SpawnNextTetromino();
 	RenewPreviewTetromino();
 }
@@ -190,4 +197,14 @@ void APlayerField::RenewPreviewTetromino()
 		PreviewTetromino->SetTetrominoType(TetrominoGenerator->GetAt(i));
 		PreviewTetromino->Spawn();
 	}
+}
+
+float APlayerField::GetFallingSpeed()
+{
+	float Multiflier = 1.f;
+
+	if (SoftDrop)
+		Multiflier /= 20.f;
+
+	return TetrominoFallingSpeed * Multiflier;
 }
