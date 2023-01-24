@@ -23,6 +23,9 @@ protected:
 	virtual void SetupInputComponent() override;
 
 public:
+	virtual void PlayerTick(float DeltaTime) override;
+
+public:
 	void MoveLeft();
 	void MoveRight();
 	void MoveDown();
