@@ -33,6 +33,8 @@ public:
 	void MoveTetromino(ETetrominoDirection InTetrominoDirection);
 	void RotateTetromino(ETetrominoRotation InTetrominoRotation);
 	void HardDrop();
+	void SetSoftDrop(bool InSoftDrop) { SoftDrop = InSoftDrop; }
+	bool GetSoftDrop() { return SoftDrop; }
 
 private:
 	void RegisterActions();
@@ -40,6 +42,7 @@ private:
 	void InitializePreviewTetrominos();
 	void SpawnNextTetromino();
 	void RenewPreviewTetromino();
+	float GetFallingSpeed();
 
 protected:
 	void BindTetrominoToBuffer(FTetrominoBase* InTetromino, UTenetrisBufferComponent* InBuffer);
@@ -51,4 +54,9 @@ protected:
 	TArray<FTetrominoBase*> PreviewTetrominos;
 	UTenetrisBufferComponent* PreviewBufferComponent;
 	int32 PreviewTetrominoNum;
+	float TetrominoFallingSpeed = 1.f;
+	float CurrentTime = 0.f;
+
+private:
+	bool SoftDrop = false;
 };
