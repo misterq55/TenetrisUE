@@ -13,7 +13,23 @@ UCLASS()
 class TENETRIS_API APlayerField : public AFieldBase
 {
 	GENERATED_BODY()
-	
+
+	typedef struct FMoveDirectionState
+	{
+	public:
+		FMoveDirectionState()
+			: Pressed(false)
+			, PressedTime(0.f)
+			, AutoRepeatKickIn(false)
+			, AutoRepeatTime(0.f)
+		{}
+		
+		bool Pressed;
+		float PressedTime;
+		bool AutoRepeatKickIn;
+		float AutoRepeatTime;
+	}FMoveDirectionState;
+
 public:	
 	// Sets default values for this actor's properties
 	APlayerField();
@@ -35,6 +51,7 @@ public:
 	void HardDrop();
 	void SetSoftDrop(bool InSoftDrop) { SoftDrop = InSoftDrop; }
 	bool GetSoftDrop() { return SoftDrop; }
+	void SetMoveDirection(ETetrominoDirection InTetrominoDirection, bool InPressed);
 
 private:
 	void RegisterActions();
@@ -43,6 +60,8 @@ private:
 	void SpawnNextTetromino();
 	void RenewPreviewTetromino();
 	float GetFallingSpeed();
+	void TetrominoFall(float DeltaTime);
+	void SetMoveState(float DeltaTime, FMoveDirectionState& InMoveState, ETetrominoDirection InTetrominoDirction);
 
 protected:
 	void BindTetrominoToBuffer(FTetrominoBase* InTetromino, UTenetrisBufferComponent* InBuffer);
@@ -59,4 +78,9 @@ protected:
 
 private:
 	bool SoftDrop = false;
+	FMoveDirectionState LeftDirectionState;
+	FMoveDirectionState RightDirectionState;
+	ETetrominoDirection TetrominoMoveDirection = ETetrominoDirection::None;
+	float KickInDelay = 0.3f;
+	float MoveSpeed = 0.05f;
 };
