@@ -26,6 +26,7 @@ enum class ETetrominoDirection : uint32
 	Down,
 	Left,
 	Right,
+	None,
 };
 
 enum class ETetrominoRotation : uint32

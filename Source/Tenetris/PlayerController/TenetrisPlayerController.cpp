@@ -8,9 +8,11 @@ void ATenetrisPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("MoveLeft", EKeys::Left));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("MoveRight", EKeys::Right));
-	// UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("MoveDown", EKeys::Down));
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("StartMoveLeft", EKeys::Left));
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("StopMoveLeft", EKeys::Left));
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("StartMoveRight", EKeys::Right));
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("StopMoveRight", EKeys::Right));
+	
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("StartSoftDrop", EKeys::Down));
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("StopSoftDrop", EKeys::Down));
 
@@ -18,9 +20,11 @@ void ATenetrisPlayerController::SetupInputComponent()
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("RotateCounterClockWise", EKeys::LeftControl));
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("HardDrop", EKeys::SpaceBar));
 
-	InputComponent->BindAction("MoveLeft", EInputEvent::IE_Pressed, this, &ATenetrisPlayerController::MoveLeft);
-	InputComponent->BindAction("MoveRight", EInputEvent::IE_Pressed, this, &ATenetrisPlayerController::MoveRight);
-	// InputComponent->BindAction("MoveDown", EInputEvent::IE_Pressed, this, &ATenetrisPlayerController::MoveDown);
+	InputComponent->BindAction("StartMoveLeft", EInputEvent::IE_Pressed, this, &ATenetrisPlayerController::StartMoveLeft);
+	InputComponent->BindAction("StopMoveLeft", EInputEvent::IE_Released, this, &ATenetrisPlayerController::StopMoveLeft);
+	InputComponent->BindAction("StartMoveRight", EInputEvent::IE_Pressed, this, &ATenetrisPlayerController::StartMoveRight);
+	InputComponent->BindAction("StopMoveRight", EInputEvent::IE_Released, this, &ATenetrisPlayerController::StopMoveRight);
+	
 	InputComponent->BindAction("StartSoftDrop", EInputEvent::IE_Pressed, this, &ATenetrisPlayerController::StartSoftDrop);
 	InputComponent->BindAction("StopSoftDrop", EInputEvent::IE_Released, this, &ATenetrisPlayerController::StopSoftDrop);
 	
@@ -29,34 +33,34 @@ void ATenetrisPlayerController::SetupInputComponent()
 	InputComponent->BindAction("HardDrop", EInputEvent::IE_Pressed, this, &ATenetrisPlayerController::HardDrop);
 }
 
-//void ATenetrisPlayerController::PlayerTick(float DeltaTime)
-//{
-//	Super::PlayerTick(DeltaTime);
-//}
-
-void ATenetrisPlayerController::MoveLeft()
+void ATenetrisPlayerController::StartMoveLeft()
 {
-	OnTetrominoMove.ExecuteIfBound(ETetrominoDirection::Left);
+	OnTetrominoMove.ExecuteIfBound(ETetrominoDirection::Left, true);
 }
 
-void ATenetrisPlayerController::MoveRight()
+void ATenetrisPlayerController::StopMoveLeft()
 {
-	OnTetrominoMove.ExecuteIfBound(ETetrominoDirection::Right);
+	OnTetrominoMove.ExecuteIfBound(ETetrominoDirection::Left, false);
 }
 
-//void ATenetrisPlayerController::MoveDown()
-//{
-//	OnTetrominoMove.ExecuteIfBound(ETetrominoDirection::Down);
-//}
+void ATenetrisPlayerController::StartMoveRight()
+{
+	OnTetrominoMove.ExecuteIfBound(ETetrominoDirection::Right, true);
+}
+
+void ATenetrisPlayerController::StopMoveRight()
+{
+	OnTetrominoMove.ExecuteIfBound(ETetrominoDirection::Right, false);
+}
 
 void ATenetrisPlayerController::StartSoftDrop()
 {
-	OnToggleSoftDrop.ExecuteIfBound(true);
+	OnTetrominoSoftDrop.ExecuteIfBound(true);
 }
 
 void ATenetrisPlayerController::StopSoftDrop()
 {
-	OnToggleSoftDrop.ExecuteIfBound(false);
+	OnTetrominoSoftDrop.ExecuteIfBound(false);
 }
 
 void ATenetrisPlayerController::RotateClockWise()

@@ -68,20 +68,9 @@ void APlayerField::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	CurrentTime += DeltaTime;
-	if (CurrentTime >= GetFallingSpeed())
-	{
-		if (CurrentTetromino)
-		{
-			if (CurrentTetromino->Move(ETetrominoDirection::Down))
-			{
-				CurrentTetromino->LockDown();
-				Spawn();
-			}
-		}
-
-		CurrentTime = 0.f;
-	}
+	TetrominoFall(DeltaTime);
+	SetMoveState(DeltaTime, LeftDirectionState, ETetrominoDirection::Left);
+	SetMoveState(DeltaTime, RightDirectionState, ETetrominoDirection::Right);
 }
 
 void APlayerField::Initialize()
@@ -125,16 +114,53 @@ void APlayerField::HardDrop()
 	}
 }
 
+void APlayerField::SetMoveDirection(ETetrominoDirection InTetrominoDirection, bool InPressed)
+{
+	if (InPressed)
+	{
+		if (InTetrominoDirection == ETetrominoDirection::Left)
+		{
+			LeftDirectionState.Pressed = true;
+		}
+		else if (InTetrominoDirection == ETetrominoDirection::Right)
+		{
+			RightDirectionState.Pressed = true;
+		}
+
+		TetrominoMoveDirection = InTetrominoDirection;
+	}
+	else
+	{
+		if (InTetrominoDirection == ETetrominoDirection::Left)
+		{
+			LeftDirectionState.Pressed = false;
+		}
+		else if (InTetrominoDirection == ETetrominoDirection::Right)
+		{
+			RightDirectionState.Pressed = false;
+		}
+
+		if (LeftDirectionState.Pressed)
+			TetrominoMoveDirection = ETetrominoDirection::Left;
+
+		if (RightDirectionState.Pressed)
+			TetrominoMoveDirection = ETetrominoDirection::Right;
+
+		if (!LeftDirectionState.Pressed && !RightDirectionState.Pressed)
+			TetrominoMoveDirection = ETetrominoDirection::None;
+	}
+}
+
 void APlayerField::RegisterActions()
 {
 	ATenetrisPlayerController* PlayerController = Cast<ATenetrisPlayerController>(GetWorld()->GetGameInstance()->GetFirstLocalPlayerController(GetWorld()));
 
 	if (PlayerController)
 	{
-		PlayerController->OnTetrominoMove.BindUObject(this, &APlayerField::MoveTetromino);
+		PlayerController->OnTetrominoMove.BindUObject(this, &APlayerField::SetMoveDirection);
 		PlayerController->OnTetrominoRotate.BindUObject(this, &APlayerField::RotateTetromino);
 		PlayerController->OnTetrominoHardDrop.BindUObject(this, &APlayerField::HardDrop);
-		PlayerController->OnToggleSoftDrop.BindUObject(this, &APlayerField::SetSoftDrop);
+		PlayerController->OnTetrominoSoftDrop.BindUObject(this, &APlayerField::SetSoftDrop);
 	}
 }
 
@@ -147,6 +173,7 @@ void APlayerField::UnRegisterActions()
 		PlayerController->OnTetrominoMove.Unbind();
 		PlayerController->OnTetrominoRotate.Unbind();
 		PlayerController->OnTetrominoHardDrop.Unbind();
+		PlayerController->OnTetrominoSoftDrop.Unbind();
 	}
 }
 
@@ -199,6 +226,24 @@ void APlayerField::RenewPreviewTetromino()
 	}
 }
 
+void APlayerField::TetrominoFall(float DeltaTime)
+{
+	CurrentTime += DeltaTime;
+	if (CurrentTime >= GetFallingSpeed())
+	{
+		if (CurrentTetromino)
+		{
+			if (CurrentTetromino->Move(ETetrominoDirection::Down))
+			{
+				CurrentTetromino->LockDown();
+				Spawn();
+			}
+		}
+
+		CurrentTime = 0.f;
+	}
+}
+
 float APlayerField::GetFallingSpeed()
 {
 	float Multiflier = 1.f;
@@ -207,4 +252,40 @@ float APlayerField::GetFallingSpeed()
 		Multiflier /= 20.f;
 
 	return TetrominoFallingSpeed * Multiflier;
+}
+
+void APlayerField::SetMoveState(float DeltaTime, FMoveDirectionState& InMoveState, ETetrominoDirection InTetrominoDirction)
+{
+	if (InMoveState.Pressed && TetrominoMoveDirection == InTetrominoDirction)
+	{
+		if (InMoveState.PressedTime == 0.f)
+		{
+			if (CurrentTetromino)
+				CurrentTetromino->Move(InTetrominoDirction);
+		}
+		else if (InMoveState.PressedTime > KickInDelay)
+		{
+			InMoveState.AutoRepeatKickIn = true;
+			InMoveState.PressedTime = KickInDelay;
+		}
+
+		InMoveState.PressedTime += DeltaTime;
+	}
+	else
+	{
+		InMoveState.AutoRepeatKickIn = false;
+		InMoveState.PressedTime = 0.f;
+	}
+
+	if (InMoveState.AutoRepeatKickIn)
+	{
+		if (InMoveState.PressedTime >= MoveSpeed)
+		{
+			if (CurrentTetromino)
+				CurrentTetromino->Move(InTetrominoDirction);
+			InMoveState.PressedTime = 0.f;
+		}
+
+		InMoveState.PressedTime += DeltaTime;
+	}
 }
