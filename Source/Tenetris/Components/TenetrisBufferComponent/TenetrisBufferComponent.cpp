@@ -45,6 +45,57 @@ void UTenetrisBufferComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
+	
+	if (DeletedLines.Num())
+	{
+		for (int32 DeleteLine : DeletedLines)
+		{
+			for (int32 j = 0; j < BufferWidth; j++)
+			{
+				SetValueToCheckBuffer(j, DeleteLine, ETetrominoType::None);
+				SetVisibilityBackgroundCube(j, DeleteLine, false);
+			}
+		}
+
+		DeleteLineCheckTime += DeltaTime;
+
+		if (DeleteLineCheckTime >= 0.5f)
+		{
+			TArray<int32> LineChecker;
+			int32 LineDeleteValue = 0;
+
+			for (int32 i = 0; i < BufferHeight; i++)
+			{
+				if (DeletedLines.Find(i) != -1)
+				{
+					LineChecker.Add(-1);
+					LineDeleteValue++;
+				}
+				else
+					LineChecker.Add(LineDeleteValue);
+			}
+
+			for (int32 i = 0; i < BufferHeight; i++)
+			{
+				if (LineChecker[i] != -1)
+				{
+					for (int32 j = 0; j < BufferWidth; j++)
+					{
+						ETetrominoType Value = GetValueFromCheckBuffer(j, i);
+						SetValueToCheckBuffer(j, i, ETetrominoType::None);
+						SetVisibilityBackgroundCube(j, i, false);
+						if (Value == ETetrominoType::None)
+							SetValueToCheckBuffer(j, i - LineChecker[i], ETetrominoType::None);
+						else
+							SetBackgroundCubeType(j, i - LineChecker[i], Value);
+					}
+				}
+			}
+
+			DeletedLines.Empty();
+			DeleteLineCheckTime = 0.f;
+		}
+	}
 }
 
 void UTenetrisBufferComponent::Initialize()
@@ -97,7 +148,7 @@ void UTenetrisBufferComponent::SetBackgroundCubeType(int32 X, int32 Y, ETetromin
 		Mino->SetTetrominoType(InTetrominoType);
 	}
 
-	CheckBuffer[Y + 1][X + 1] = InTetrominoType;
+	SetValueToCheckBuffer(X, Y, InTetrominoType);
 }
 
 void UTenetrisBufferComponent::SetVisibilityBackgroundCube(int32 X, int32 Y, bool InVisible)
@@ -109,7 +160,7 @@ void UTenetrisBufferComponent::SetVisibilityBackgroundCube(int32 X, int32 Y, boo
 		Mino->SetVitibility(InVisible);
 	}
 
-	CheckBuffer[Y + 1][X + 1] = ETetrominoType::None;
+	SetValueToCheckBuffer(X, Y, ETetrominoType::None);
 }
 
 void UTenetrisBufferComponent::SetMinoType(int32 X, int32 Y, ETetrominoType InTetrominoType)
@@ -138,7 +189,7 @@ bool UTenetrisBufferComponent::CheckMino(int32 X, int32 Y)
 	if (Y < 0 || X < 0) return true;
 	if (Y >= BufferHeight || X >= BufferWidth) return true;
 
-	return CheckBuffer[Y + 1][X + 1] != ETetrominoType::None;
+	return GetValueFromCheckBuffer(X, Y) != ETetrominoType::None;
 }
 
 void UTenetrisBufferComponent::SetBufferSize(int32 InBufferHeight, int32 InBufferWidth)
@@ -186,7 +237,7 @@ int32 UTenetrisBufferComponent::CalculateGuideMinoHeight(int32 X, int32 Y)
 
 	for (int32 i = Y; i >= -1; i--)
 	{
-		if (CheckBuffer[i + 1][X + 1] != ETetrominoType::None)
+		if (GetValueFromCheckBuffer(X, i) != ETetrominoType::None)
 		{
 			Height = i;
 			break;
@@ -196,5 +247,37 @@ int32 UTenetrisBufferComponent::CalculateGuideMinoHeight(int32 X, int32 Y)
 	Result = Y - Height - 1;
 
 	return Result;
+}
+
+void UTenetrisBufferComponent::CheckLineDelete(TArray<int32> Heights)
+{
+	for (int32 Height : Heights)
+	{
+		bool LineDeleted = true;
+
+		for (int32 j = 0; j < BufferWidth; j++)
+		{
+			if (GetValueFromCheckBuffer(j, Height) == ETetrominoType::None)
+			{
+				LineDeleted = false;
+				break;
+			}
+		}
+
+		if (LineDeleted)
+		{
+			DeletedLines.AddUnique(Height);
+		}
+	}
+}
+
+ETetrominoType UTenetrisBufferComponent::GetValueFromCheckBuffer(int32 X, int32 Y)
+{
+	return CheckBuffer[Y + 1][X + 1];
+}
+
+void UTenetrisBufferComponent::SetValueToCheckBuffer(int32 X, int32 Y, ETetrominoType InTetrominoType)
+{
+	CheckBuffer[Y + 1][X + 1] = InTetrominoType;
 }
 

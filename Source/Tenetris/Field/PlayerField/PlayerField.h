@@ -132,6 +132,8 @@ private:
 	void TetrominoFall(float DeltaTime);
 	void SetMoveState(float DeltaTime, FMoveDirectionState& InMoveState, ETetrominoDirection InTetrominoDirction);
 	void UpdateLockDown(float DeltaTime);
+	void DoLockDown();
+	void LineDelete();
 
 protected:
 	void BindTetrominoToBuffer(FTetrominoBase* InTetromino, UTenetrisBufferComponent* InBuffer);
@@ -155,4 +157,5 @@ private:
 	float MoveSpeed = 0.05f;
 
 	FLockDown LockDown;
+	bool WaitForSpawn = false;
 };

@@ -173,6 +173,20 @@ public:
 	{
 		Super::Initialize();
 
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < ColumnMax; j++)
+			{
+				if (j == 5)
+					continue;
+				
+				if (i % 2 == 1 && j == 3)
+					continue;
+
+				SetBackgroundCubeType(j, i, ETetrominoType::Obstacle);
+			}
+		}
+
 		//for (int i = 0; i < RowMax; i++)
 		//{
 		//	for (int j = 0; j < ColumnMax; j++)
@@ -193,9 +207,9 @@ public:
 		//	}
 		//}
 
-		SetBackgroundCubeType(5, 3, ETetrominoType::Obstacle);
+		/*SetBackgroundCubeType(5, 3, ETetrominoType::Obstacle);
 		SetBackgroundCubeType(4, 3, ETetrominoType::Obstacle);
-		SetBackgroundCubeType(5, 4, ETetrominoType::Obstacle);
+		SetBackgroundCubeType(5, 4, ETetrominoType::Obstacle);*/
 
 		Spawn();
 	}
