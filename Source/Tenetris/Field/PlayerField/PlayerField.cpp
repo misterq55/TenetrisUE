@@ -118,8 +118,7 @@ void APlayerField::HardDrop()
 	if (CurrentTetromino)
 	{
 		CurrentTetromino->HardDrop();
-		CurrentTetromino->LockDown();
-		Spawn();
+		DoLockDown();
 	}
 }
 
@@ -297,10 +296,24 @@ void APlayerField::UpdateLockDown(float DeltaTime)
 {
 	if (LockDown.UpdateLockDown(DeltaTime))
 	{
-		if (CurrentTetromino)
-		{
-			CurrentTetromino->LockDown();
-			Spawn();
-		}
+		DoLockDown();
+	}
+}
+
+void APlayerField::DoLockDown()
+{
+	if (CurrentTetromino)
+	{
+		CurrentTetromino->LockDown();
+		LineDelete();
+		Spawn();
+	}
+}
+
+void APlayerField::LineDelete()
+{
+	if (CurrentTetromino && TenetrisBufferComponent)
+	{
+		TenetrisBufferComponent->CheckLineDelete(CurrentTetromino->GetMinoHeights());
 	}
 }

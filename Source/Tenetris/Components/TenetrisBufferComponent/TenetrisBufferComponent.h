@@ -34,6 +34,9 @@ public:
 	bool CheckMino(int32 X, int32 Y);
 	void SetBufferSize(int32 InBufferHeight, int32 InBufferWidth);
 	int32 CalculateGuideMinoHeight(int32 X, int32 Y);
+	void CheckLineDelete(TArray<int32> Heights);
+	ETetrominoType GetValueFromCheckBuffer(int32 X, int32 Y);
+	void SetValueToCheckBuffer(int32 X, int32 Y, ETetrominoType InTetrominoType);
 
 protected:
 	TArray<TArray<AMinoBase*>> BackgroundCubeBuffer;
@@ -45,4 +48,6 @@ protected:
 	TArray<TArray<ETetrominoType>> CheckBuffer;
 	int32 BufferHeight = 0;
 	int32 BufferWidth = 0;
+	TArray<int32> DeletedLines;
+	float DeleteLineCheckTime = 0.f;
 };
