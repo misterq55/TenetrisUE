@@ -71,6 +71,7 @@ void APlayerField::Tick(float DeltaTime)
 	TetrominoFall(DeltaTime);
 	SetMoveState(DeltaTime, LeftDirectionState, ETetrominoDirection::Left);
 	SetMoveState(DeltaTime, RightDirectionState, ETetrominoDirection::Right);
+	UpdateLockDown(DeltaTime);
 }
 
 void APlayerField::Initialize()
@@ -86,22 +87,30 @@ void APlayerField::Initialize()
 	TetrominoGenerator->Initialize();
 }
 
-void APlayerField::MoveTetromino(ETetrominoDirection InTetrominoDirection)
+bool APlayerField::MoveTetromino(ETetrominoDirection InTetrominoDirection)
 {
 	if (CurrentTetromino)
 	{
-		if (CurrentTetromino->Move(InTetrominoDirection) && InTetrominoDirection == ETetrominoDirection::Down)
+		if (!CurrentTetromino->Move(InTetrominoDirection))
 		{
-			CurrentTetromino->LockDown();
-			Spawn();
+			LockDown.CheckRemainCount(InTetrominoDirection);
+
+			return false;
 		}
 	}
+
+	return true;
 }
 
 void APlayerField::RotateTetromino(ETetrominoRotation InTetrominoRotation)
 {
 	if (CurrentTetromino)
-		CurrentTetromino->Rotate(InTetrominoRotation);
+	{
+		if (!CurrentTetromino->Rotate(InTetrominoRotation))
+		{
+			LockDown.CheckRemainCount();
+		}
+	}
 }
 
 void APlayerField::HardDrop()
@@ -231,13 +240,9 @@ void APlayerField::TetrominoFall(float DeltaTime)
 	CurrentTime += DeltaTime;
 	if (CurrentTime >= GetFallingSpeed())
 	{
-		if (CurrentTetromino)
+		if (MoveTetromino(ETetrominoDirection::Down))
 		{
-			if (CurrentTetromino->Move(ETetrominoDirection::Down))
-			{
-				CurrentTetromino->LockDown();
-				Spawn();
-			}
+			LockDown.StartLockDown();
 		}
 
 		CurrentTime = 0.f;
@@ -260,8 +265,7 @@ void APlayerField::SetMoveState(float DeltaTime, FMoveDirectionState& InMoveStat
 	{
 		if (InMoveState.PressedTime == 0.f)
 		{
-			if (CurrentTetromino)
-				CurrentTetromino->Move(InTetrominoDirction);
+			MoveTetromino(InTetrominoDirction);
 		}
 		else if (InMoveState.PressedTime > KickInDelay)
 		{
@@ -281,11 +285,22 @@ void APlayerField::SetMoveState(float DeltaTime, FMoveDirectionState& InMoveStat
 	{
 		if (InMoveState.PressedTime >= MoveSpeed)
 		{
-			if (CurrentTetromino)
-				CurrentTetromino->Move(InTetrominoDirction);
+			MoveTetromino(InTetrominoDirction);
 			InMoveState.PressedTime = 0.f;
 		}
 
 		InMoveState.PressedTime += DeltaTime;
+	}
+}
+
+void APlayerField::UpdateLockDown(float DeltaTime)
+{
+	if (LockDown.UpdateLockDown(DeltaTime))
+	{
+		if (CurrentTetromino)
+		{
+			CurrentTetromino->LockDown();
+			Spawn();
+		}
 	}
 }
