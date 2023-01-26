@@ -42,7 +42,7 @@ protected:
 	USceneComponent* BackGroundMinoBufferPivot;
 	USceneComponent* MinoBufferPivot;
 	TSubclassOf<AMinoBase> MinoClass;
-	TArray<TArray<int32>> CheckBuffer;
+	TArray<TArray<ETetrominoType>> CheckBuffer;
 	int32 BufferHeight = 0;
 	int32 BufferWidth = 0;
 };

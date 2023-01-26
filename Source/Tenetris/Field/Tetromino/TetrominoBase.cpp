@@ -1,5 +1,17 @@
 #include "TetrominoBase.h"
 
+TArray<int32> FTetrominoBase::GetMinoHeights()
+{
+	TArray<int32> Result;
+
+	for (FVector2D Coord : TetrominoInfo.Coordinate)
+	{
+		Result.AddUnique(Coord.Y + TetrominoInfo.CurrentPosition.Y);
+	}
+
+	return Result;
+}
+
 void FTetrominoBase::SetTetrominoPosition(int32 X, int32 Y)
 {
 	TetrominoInfo.SetPosition(X, Y);

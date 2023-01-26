@@ -9,6 +9,75 @@
 class FTetrominoBase;
 class FTetrominoGenerator;
 
+class FLockDown
+{
+public:
+	FLockDown() 
+	{
+		LockDownRemainCount = MaxLockDownRemainCount;
+	}
+
+	~FLockDown() {}
+	void StartLockDown() 
+	{
+		LockDownStart = true;
+	}
+
+	bool UpdateLockDown(float DeltaTime) 
+	{ 
+		if (LockDownStart)
+		{
+			LockDownTime += DeltaTime;
+
+			if (LockDownTime >= LockDownDelay || LockDownRemainCount <= 0)
+			{
+				LockDownTime = 0.f;
+				LockDownStart = false;
+				LockDownRemainCount = MaxLockDownRemainCount;
+
+				return true;
+			}
+		}
+
+		return false; 
+	}
+
+	void CheckRemainCount(ETetrominoDirection InTetrominoDirection)
+	{
+		if (!LockDownStart)
+			return;
+
+		if (InTetrominoDirection == ETetrominoDirection::Left
+			|| InTetrominoDirection == ETetrominoDirection::Right)
+		{
+			LockDownRemainCount--;
+		}
+		else if (InTetrominoDirection == ETetrominoDirection::Down)
+		{
+			LockDownRemainCount = MaxLockDownRemainCount;
+			LockDownStart = false;
+		}
+
+		LockDownTime = 0.f;
+	}
+
+	void CheckRemainCount()
+	{
+		if (!LockDownStart)
+			return;
+
+		LockDownRemainCount--;
+		LockDownTime = 0.f;
+	}
+
+private:
+	float LockDownDelay = 0.5f;
+	float LockDownTime = 0.f;
+	bool LockDownStart = false;
+	const int32 MaxLockDownRemainCount = 15;
+	int32 LockDownRemainCount = 0;
+};
+
 UCLASS()
 class TENETRIS_API APlayerField : public AFieldBase
 {
@@ -46,7 +115,7 @@ public:
 
 	virtual	void Initialize();
 
-	void MoveTetromino(ETetrominoDirection InTetrominoDirection);
+	bool MoveTetromino(ETetrominoDirection InTetrominoDirection);
 	void RotateTetromino(ETetrominoRotation InTetrominoRotation);
 	void HardDrop();
 	void SetSoftDrop(bool InSoftDrop) { SoftDrop = InSoftDrop; }
@@ -62,6 +131,7 @@ private:
 	float GetFallingSpeed();
 	void TetrominoFall(float DeltaTime);
 	void SetMoveState(float DeltaTime, FMoveDirectionState& InMoveState, ETetrominoDirection InTetrominoDirction);
+	void UpdateLockDown(float DeltaTime);
 
 protected:
 	void BindTetrominoToBuffer(FTetrominoBase* InTetromino, UTenetrisBufferComponent* InBuffer);
@@ -83,4 +153,6 @@ private:
 	ETetrominoDirection TetrominoMoveDirection = ETetrominoDirection::None;
 	float KickInDelay = 0.3f;
 	float MoveSpeed = 0.05f;
+
+	FLockDown LockDown;
 };

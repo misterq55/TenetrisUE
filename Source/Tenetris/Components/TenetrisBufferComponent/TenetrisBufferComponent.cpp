@@ -97,7 +97,7 @@ void UTenetrisBufferComponent::SetBackgroundCubeType(int32 X, int32 Y, ETetromin
 		Mino->SetTetrominoType(InTetrominoType);
 	}
 
-	CheckBuffer[Y + 1][X + 1] = 1;
+	CheckBuffer[Y + 1][X + 1] = InTetrominoType;
 }
 
 void UTenetrisBufferComponent::SetVisibilityBackgroundCube(int32 X, int32 Y, bool InVisible)
@@ -109,7 +109,7 @@ void UTenetrisBufferComponent::SetVisibilityBackgroundCube(int32 X, int32 Y, boo
 		Mino->SetVitibility(InVisible);
 	}
 
-	CheckBuffer[Y + 1][X + 1] = 0;
+	CheckBuffer[Y + 1][X + 1] = ETetrominoType::None;
 }
 
 void UTenetrisBufferComponent::SetMinoType(int32 X, int32 Y, ETetrominoType InTetrominoType)
@@ -138,7 +138,7 @@ bool UTenetrisBufferComponent::CheckMino(int32 X, int32 Y)
 	if (Y < 0 || X < 0) return true;
 	if (Y >= BufferHeight || X >= BufferWidth) return true;
 
-	return CheckBuffer[Y + 1][X + 1] == 1;
+	return CheckBuffer[Y + 1][X + 1] != ETetrominoType::None;
 }
 
 void UTenetrisBufferComponent::SetBufferSize(int32 InBufferHeight, int32 InBufferWidth)
@@ -164,13 +164,13 @@ void UTenetrisBufferComponent::SetBufferSize(int32 InBufferHeight, int32 InBuffe
 
 	for (int32 i = 0; i < BufferHeight * 2 + 2; i++)
 	{
-		TArray<int32> Buffer;
+		TArray<ETetrominoType> Buffer;
 		for (int32 j = 0; j < BufferWidth + 2; j++)
 		{
 			if (i == 0 || j == 0 || j == BufferWidth + 2 - 1)
-				Buffer.Add(1);
+				Buffer.Add(ETetrominoType::Obstacle);
 			else
-				Buffer.Add(0);
+				Buffer.Add(ETetrominoType::None);
 		}
 
 		CheckBuffer.Add(Buffer);
@@ -186,7 +186,7 @@ int32 UTenetrisBufferComponent::CalculateGuideMinoHeight(int32 X, int32 Y)
 
 	for (int32 i = Y; i >= -1; i--)
 	{
-		if (CheckBuffer[i + 1][X + 1] == 1)
+		if (CheckBuffer[i + 1][X + 1] != ETetrominoType::None)
 		{
 			Height = i;
 			break;

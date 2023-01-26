@@ -114,6 +114,8 @@ bool FPlayerTetromino::Rotate(ETetrominoRotation InTetrominoRotation)
 
 		SetGuideTetromino();
 		SetTetromino();
+
+		return false;
 	}
 
 	return true;
