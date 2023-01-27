@@ -42,10 +42,11 @@ public:
 	virtual void Spawn() override;
 	virtual void SetGuideTetromino() override;
 	virtual void HardDrop() override;
+	virtual void HideGuideTetromino() override;
 
 private:
 	FVector2D SimulatePosition(ETetrominoDirection InTetrominoDirection);
-	void HideGuideTetromino();
+	
 	int32 Mod(int32 N, int32 M) { return ((N % M) + M) % M; }
 
 private:

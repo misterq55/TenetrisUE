@@ -72,10 +72,12 @@ public:
 	virtual void Spawn();
 	virtual void SetGuideTetromino() {}
 	virtual void HardDrop() {}
+	virtual void HideGuideTetromino() {}
+	
 	TArray<int32> GetMinoHeights();
-
 	void SetTetrominoPosition(int32 X, int32 Y);
 	void SetTetrominoType(ETetrominoType InCurrentTetrominoType);
+	ETetrominoType GetTetrominoType() { return TetrominoInfo.CurrentType; }
 	void SetStartingLocation(int32 X, int32 Y);
 	FVector2D GetStaringLocation();
 	void HideTetromino();

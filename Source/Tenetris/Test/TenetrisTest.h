@@ -115,6 +115,7 @@ public:
 		CurrentTetromino->SetStartingLocation(4, 18);
 
 		PreviewBufferComponent->SetMinoClassType(ATestMino::StaticClass());
+		HoldBufferComponent->SetMinoClassType(ATestMino::StaticClass());
 	}
 
 protected:
