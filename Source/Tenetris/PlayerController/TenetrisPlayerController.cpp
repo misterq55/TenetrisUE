@@ -19,6 +19,7 @@ void ATenetrisPlayerController::SetupInputComponent()
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("RotateClockWise", EKeys::Up));
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("RotateCounterClockWise", EKeys::LeftControl));
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("HardDrop", EKeys::SpaceBar));
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Hold", EKeys::LeftShift));
 
 	InputComponent->BindAction("StartMoveLeft", EInputEvent::IE_Pressed, this, &ATenetrisPlayerController::StartMoveLeft);
 	InputComponent->BindAction("StopMoveLeft", EInputEvent::IE_Released, this, &ATenetrisPlayerController::StopMoveLeft);
@@ -31,6 +32,8 @@ void ATenetrisPlayerController::SetupInputComponent()
 	InputComponent->BindAction("RotateClockWise", EInputEvent::IE_Pressed, this, &ATenetrisPlayerController::RotateClockWise);
 	InputComponent->BindAction("RotateCounterClockWise", EInputEvent::IE_Pressed, this, &ATenetrisPlayerController::RotateCounterClockWise);
 	InputComponent->BindAction("HardDrop", EInputEvent::IE_Pressed, this, &ATenetrisPlayerController::HardDrop);
+
+	InputComponent->BindAction("Hold", EInputEvent::IE_Pressed, this, &ATenetrisPlayerController::Hold);
 }
 
 void ATenetrisPlayerController::StartMoveLeft()
@@ -76,4 +79,8 @@ void ATenetrisPlayerController::RotateCounterClockWise()
 void ATenetrisPlayerController::HardDrop()
 {
 	OnTetrominoHardDrop.ExecuteIfBound();
+}
+
+void ATenetrisPlayerController::Hold()
+{
 }

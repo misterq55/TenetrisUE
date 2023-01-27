@@ -37,6 +37,7 @@ public:
 	void CheckLineDelete(TArray<int32> Heights);
 	ETetrominoType GetValueFromCheckBuffer(int32 X, int32 Y);
 	void SetValueToCheckBuffer(int32 X, int32 Y, ETetrominoType InTetrominoType);
+	bool GetLineDeleting() { return bLineDeleting; }
 
 protected:
 	TArray<TArray<AMinoBase*>> BackgroundCubeBuffer;
@@ -50,4 +51,5 @@ protected:
 	int32 BufferWidth = 0;
 	TArray<int32> DeletedLines;
 	float DeleteLineCheckTime = 0.f;
+	bool bLineDeleting = false;
 };

@@ -38,6 +38,7 @@ public:
 	void RotateCounterClockWise();
 	
 	void HardDrop();
+	void Hold();
 
 public:
 	FTetrominoMoveDelegate OnTetrominoMove;

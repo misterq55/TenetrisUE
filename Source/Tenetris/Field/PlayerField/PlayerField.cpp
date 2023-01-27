@@ -17,16 +17,10 @@ APlayerField::APlayerField()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	PreviewTetrominoNum = 5;
-
-	PreviewBufferComponent = CreateDefaultSubobject<UTenetrisBufferComponent>(TEXT("PreviewBufferComponent"));
-	PreviewBufferComponent->SetBufferSize(PreviewTetrominoNum * 3 + 1, 5);
-	PreviewBufferComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
-	PreviewBufferComponent->SetMobility(EComponentMobility::Movable);
-	PreviewBufferComponent->SetRelativeLocation(FVector(0.f, 200.f, 50.f));
-	PreviewBufferComponent->SetRelativeScale3D(FVector(0.75f, 0.75f, 0.75f));
-
+	InitializePreviewBuffer();
 	InitializePreviewTetrominos();
+	InitializeHoldBuffer();
+	InitializeHoldTetromino();
 
 	TetrominoGenerator = new FTetrominoGenerator();
 }
@@ -72,6 +66,7 @@ void APlayerField::Tick(float DeltaTime)
 	SetMoveState(DeltaTime, LeftDirectionState, ETetrominoDirection::Left);
 	SetMoveState(DeltaTime, RightDirectionState, ETetrominoDirection::Right);
 	UpdateLockDown(DeltaTime);
+	WaitForSpawn();
 }
 
 void APlayerField::Initialize()
@@ -185,6 +180,18 @@ void APlayerField::UnRegisterActions()
 	}
 }
 
+void APlayerField::InitializePreviewBuffer()
+{
+	PreviewTetrominoNum = 5;
+
+	PreviewBufferComponent = CreateDefaultSubobject<UTenetrisBufferComponent>(TEXT("PreviewBufferComponent"));
+	PreviewBufferComponent->SetBufferSize(PreviewTetrominoNum * 3 + 1, 5);
+	PreviewBufferComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	PreviewBufferComponent->SetMobility(EComponentMobility::Movable);
+	PreviewBufferComponent->SetRelativeLocation(FVector(0.f, 200.f, 50.f));
+	PreviewBufferComponent->SetRelativeScale3D(FVector(0.75f, 0.75f, 0.75f));
+}
+
 void APlayerField::InitializePreviewTetrominos()
 {
 	for (int32 i = 0; i < PreviewTetrominoNum; i++)
@@ -192,9 +199,25 @@ void APlayerField::InitializePreviewTetrominos()
 		FTetrominoBase* PreviewTetromino = new FPreviewTetromino();
 		PreviewTetrominos.Add(PreviewTetromino);
 		BindTetrominoToBuffer(PreviewTetromino, PreviewBufferComponent);
-		PreviewTetromino->SetTetrominoType(ETetrominoType(i));
 		PreviewTetromino->SetStartingLocation(2, (PreviewTetrominoNum - i - 1) * 3 + 1);
 	}
+}
+
+void APlayerField::InitializeHoldBuffer()
+{
+	HoldBufferComponent = CreateDefaultSubobject<UTenetrisBufferComponent>(TEXT("HoldBufferComponent"));
+	HoldBufferComponent->SetBufferSize(4, 5);
+	HoldBufferComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
+	HoldBufferComponent->SetMobility(EComponentMobility::Movable);
+	HoldBufferComponent->SetRelativeLocation(FVector(0.f, -200.f, 150.f));
+	HoldBufferComponent->SetRelativeScale3D(FVector(0.75f, 0.75f, 0.75f));
+}
+
+void APlayerField::InitializeHoldTetromino()
+{
+	HoldTetromino = new FPreviewTetromino();
+	BindTetrominoToBuffer(HoldTetromino, HoldBufferComponent);
+	HoldTetromino->SetStartingLocation(2, 1);
 }
 
 void APlayerField::BindTetrominoToBuffer(FTetrominoBase* InTetromino, UTenetrisBufferComponent* InBuffer)
@@ -236,6 +259,9 @@ void APlayerField::RenewPreviewTetromino()
 
 void APlayerField::TetrominoFall(float DeltaTime)
 {
+	if (bWaitForSpawn)
+		return;
+
 	CurrentTime += DeltaTime;
 	if (CurrentTime >= GetFallingSpeed())
 	{
@@ -252,7 +278,7 @@ float APlayerField::GetFallingSpeed()
 {
 	float Multiflier = 1.f;
 
-	if (SoftDrop)
+	if (bSoftDrop)
 		Multiflier /= 20.f;
 
 	return TetrominoFallingSpeed * Multiflier;
@@ -260,6 +286,9 @@ float APlayerField::GetFallingSpeed()
 
 void APlayerField::SetMoveState(float DeltaTime, FMoveDirectionState& InMoveState, ETetrominoDirection InTetrominoDirction)
 {
+	if (bWaitForSpawn)
+		return;
+
 	if (InMoveState.Pressed && TetrominoMoveDirection == InTetrominoDirction)
 	{
 		if (InMoveState.PressedTime == 0.f)
@@ -294,6 +323,9 @@ void APlayerField::SetMoveState(float DeltaTime, FMoveDirectionState& InMoveStat
 
 void APlayerField::UpdateLockDown(float DeltaTime)
 {
+	if (bWaitForSpawn)
+		return;
+
 	if (LockDown.UpdateLockDown(DeltaTime))
 	{
 		DoLockDown();
@@ -306,7 +338,8 @@ void APlayerField::DoLockDown()
 	{
 		CurrentTetromino->LockDown();
 		LineDelete();
-		Spawn();
+		bWaitForSpawn = true;
+		// Spawn();
 	}
 }
 
@@ -315,5 +348,15 @@ void APlayerField::LineDelete()
 	if (CurrentTetromino && TenetrisBufferComponent)
 	{
 		TenetrisBufferComponent->CheckLineDelete(CurrentTetromino->GetMinoHeights());
+	}
+}
+
+void APlayerField::WaitForSpawn()
+{
+	if (bWaitForSpawn && !TenetrisBufferComponent->GetLineDeleting())
+	// if (!TenetrisBufferComponent->GetLineDeleting())
+	{
+		Spawn();
+		bWaitForSpawn = false;
 	}
 }
