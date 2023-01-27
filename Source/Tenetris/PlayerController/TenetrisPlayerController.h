@@ -10,11 +10,6 @@
 /**
  * 
  */
-DECLARE_DELEGATE_TwoParams(FTetrominoMoveDelegate, ETetrominoDirection, bool);
-DECLARE_DELEGATE_OneParam(FTetrominoRotateDelegate, ETetrominoRotation);
-
-DECLARE_DELEGATE_OneParam(FTetrominoSoftDropDelegate, bool);
-DECLARE_DELEGATE(FTetrominoHardDropDelegate);
 
 UCLASS()
 class TENETRIS_API ATenetrisPlayerController : public APlayerController
@@ -23,26 +18,4 @@ class TENETRIS_API ATenetrisPlayerController : public APlayerController
 	
 protected:
 	virtual void SetupInputComponent() override;
-
-public:
-	void StartMoveLeft();
-	void StopMoveLeft();
-	
-	void StartMoveRight();
-	void StopMoveRight();
-	
-	void StartSoftDrop();
-	void StopSoftDrop();
-	
-	void RotateClockWise();
-	void RotateCounterClockWise();
-	
-	void HardDrop();
-	void Hold();
-
-public:
-	FTetrominoMoveDelegate OnTetrominoMove;
-	FTetrominoRotateDelegate OnTetrominoRotate;
-	FTetrominoHardDropDelegate OnTetrominoHardDrop;
-	FTetrominoSoftDropDelegate OnTetrominoSoftDrop;
 };
