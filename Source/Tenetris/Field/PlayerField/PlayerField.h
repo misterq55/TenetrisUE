@@ -176,6 +176,7 @@ private:
 	ETetrominoDirection TetrominoMoveDirection = ETetrominoDirection::None;
 	float KickInDelay = 0.3f;
 	float MoveSpeed = 0.05f;
-FLockDown LockDown;
+	FLockDown LockDown;
 	bool bWaitForSpawn = false;
+	bool bCanHold = true;
 };

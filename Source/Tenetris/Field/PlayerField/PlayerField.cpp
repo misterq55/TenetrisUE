@@ -78,6 +78,7 @@ void APlayerField::Initialize()
 	}
 
 	PreviewBufferComponent->Initialize();
+	HoldBufferComponent->Initialize();
 	TetrominoGenerator->Initialize();
 }
 
@@ -118,6 +119,33 @@ void APlayerField::HardDrop()
 
 void APlayerField::Hold()
 {
+	if (!bCanHold || !HoldTetromino || !CurrentTetromino)
+		return;
+
+	ETetrominoType HoldTetrominoType = HoldTetromino->GetTetrominoType();
+	ETetrominoType CurrentTetrominoType = CurrentTetromino->GetTetrominoType();
+
+	CurrentTetromino->HideTetromino();
+	CurrentTetromino->HideGuideTetromino();
+
+	HoldTetromino->HideTetromino();
+	HoldTetromino->SetTetrominoType(CurrentTetrominoType);
+	HoldTetromino->Spawn();
+
+	if (HoldTetrominoType != ETetrominoType::None)
+	{
+		CurrentTime = 0.f;
+		CurrentTetromino->SetTetrominoType(HoldTetrominoType);
+		CurrentTetromino->Spawn();
+	}
+	else
+	{
+		CurrentTime = 0.f;
+		SpawnNextTetromino();
+		RenewPreviewTetromino();
+	}
+
+	bCanHold = false;
 }
 
 void APlayerField::SetMoveDirection(ETetrominoDirection InTetrominoDirection, bool InPressed)
@@ -241,6 +269,7 @@ void APlayerField::Spawn()
 	CurrentTime = 0.f;
 	SpawnNextTetromino();
 	RenewPreviewTetromino();
+	bCanHold = true;
 }
 
 void APlayerField::StartMoveLeft()
