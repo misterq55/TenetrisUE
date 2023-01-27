@@ -7,6 +7,7 @@
 #include "Tenetris/TenetrisDefine.h"
 #include "MinoBase.generated.h"
 
+class UStaticMesh;
 class UStaticMeshComponent;
 
 UCLASS()
@@ -21,6 +22,7 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	void InitailizeMesh(UStaticMesh* StaticMesh);
 
 public:	
 	// Called every frame
@@ -30,6 +32,6 @@ public:
 	virtual void SetTetrominoType(ETetrominoType InTetrominoType);
 
 protected:
-	UStaticMeshComponent* CubeMeshComponent;
+	UStaticMeshComponent* MinoMeshComponent;
 	ETetrominoType TetrominoType;
 };

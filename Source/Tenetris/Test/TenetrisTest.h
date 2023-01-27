@@ -24,13 +24,17 @@ public:
 	{
 		// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 		PrimaryActorTick.bCanEverTick = true;
+
+		static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshObj(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Cube.Shape_Cube'"));
+		
+		InitailizeMesh(MeshObj.Object);
 	}
 
 	void SetTetrominoType(ETetrominoType InTetrominoType)
 	{
 		Super::SetTetrominoType(InTetrominoType);
 
-		if (!CubeMeshComponent)
+		if (!MinoMeshComponent)
 			return;
 		
 		FSoftObjectPath DefaultTranslucentMaterialName;
@@ -77,7 +81,7 @@ public:
 		}
 
 		UMaterialInterface* TranslucentMaterial = Cast<UMaterialInterface>(DefaultTranslucentMaterialName.TryLoad());
-		CubeMeshComponent->SetMaterial(0, TranslucentMaterial);
+		MinoMeshComponent->SetMaterial(0, TranslucentMaterial);
 	}
 };
 
@@ -112,8 +116,6 @@ public:
 
 		PreviewBufferComponent->SetMinoClassType(ATestMino::StaticClass());
 	}
-
-	// friend class FTestTetromino;
 
 protected:
 	// Called when the game starts or when spawned

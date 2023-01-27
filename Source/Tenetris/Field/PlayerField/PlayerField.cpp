@@ -2,7 +2,6 @@
 
 
 #include "PlayerField.h"
-#include "Tenetris/PlayerController/TenetrisPlayerController.h"
 #include "Tenetris/Field/Tetromino/TetrominoBase.h"
 #include "Tenetris/Field/Tetromino/PreviewTetromino/PreviewTetromino.h"
 #include "Tenetris/Components/TenetrisBufferComponent/TenetrisBufferComponent.h"
@@ -117,6 +116,10 @@ void APlayerField::HardDrop()
 	}
 }
 
+void APlayerField::Hold()
+{
+}
+
 void APlayerField::SetMoveDirection(ETetrominoDirection InTetrominoDirection, bool InPressed)
 {
 	if (InPressed)
@@ -156,28 +159,31 @@ void APlayerField::SetMoveDirection(ETetrominoDirection InTetrominoDirection, bo
 
 void APlayerField::RegisterActions()
 {
-	ATenetrisPlayerController* PlayerController = Cast<ATenetrisPlayerController>(GetWorld()->GetGameInstance()->GetFirstLocalPlayerController(GetWorld()));
+	APlayerController* PlayerController = GetWorld()->GetGameInstance()->GetFirstLocalPlayerController(GetWorld());
+	EnableInput(PlayerController);
 
-	if (PlayerController)
+	if (InputComponent)
 	{
-		PlayerController->OnTetrominoMove.BindUObject(this, &APlayerField::SetMoveDirection);
-		PlayerController->OnTetrominoRotate.BindUObject(this, &APlayerField::RotateTetromino);
-		PlayerController->OnTetrominoHardDrop.BindUObject(this, &APlayerField::HardDrop);
-		PlayerController->OnTetrominoSoftDrop.BindUObject(this, &APlayerField::SetSoftDrop);
+		InputComponent->BindAction("StartMoveLeft", EInputEvent::IE_Pressed, this, &APlayerField::StartMoveLeft);
+		InputComponent->BindAction("StopMoveLeft", EInputEvent::IE_Released, this, &APlayerField::StopMoveLeft);
+		InputComponent->BindAction("StartMoveRight", EInputEvent::IE_Pressed, this, &APlayerField::StartMoveRight);
+		InputComponent->BindAction("StopMoveRight", EInputEvent::IE_Released, this, &APlayerField::StopMoveRight);
+
+		InputComponent->BindAction("StartSoftDrop", EInputEvent::IE_Pressed, this, &APlayerField::StartSoftDrop);
+		InputComponent->BindAction("StopSoftDrop", EInputEvent::IE_Released, this, &APlayerField::StopSoftDrop);
+
+		InputComponent->BindAction("RotateClockWise", EInputEvent::IE_Pressed, this, &APlayerField::RotateClockWise);
+		InputComponent->BindAction("RotateCounterClockWise", EInputEvent::IE_Pressed, this, &APlayerField::RotateCounterClockWise);
+		InputComponent->BindAction("HardDrop", EInputEvent::IE_Pressed, this, &APlayerField::HardDrop);
+
+		InputComponent->BindAction("Hold", EInputEvent::IE_Pressed, this, &APlayerField::Hold);
 	}
 }
 
 void APlayerField::UnRegisterActions()
 {
-	ATenetrisPlayerController* PlayerController = Cast<ATenetrisPlayerController>(GetWorld()->GetGameInstance()->GetFirstLocalPlayerController(GetWorld()));
-
-	if (PlayerController)
-	{
-		PlayerController->OnTetrominoMove.Unbind();
-		PlayerController->OnTetrominoRotate.Unbind();
-		PlayerController->OnTetrominoHardDrop.Unbind();
-		PlayerController->OnTetrominoSoftDrop.Unbind();
-	}
+	APlayerController* PlayerController = GetWorld()->GetGameInstance()->GetFirstLocalPlayerController(GetWorld());
+	DisableInput(PlayerController);
 }
 
 void APlayerField::InitializePreviewBuffer()
@@ -235,6 +241,46 @@ void APlayerField::Spawn()
 	CurrentTime = 0.f;
 	SpawnNextTetromino();
 	RenewPreviewTetromino();
+}
+
+void APlayerField::StartMoveLeft()
+{
+	SetMoveDirection(ETetrominoDirection::Left, true);
+}
+
+void APlayerField::StopMoveLeft()
+{
+	SetMoveDirection(ETetrominoDirection::Left, false);
+}
+
+void APlayerField::StartMoveRight()
+{
+	SetMoveDirection(ETetrominoDirection::Right, true);
+}
+
+void APlayerField::StopMoveRight()
+{
+	SetMoveDirection(ETetrominoDirection::Right, false);
+}
+
+void APlayerField::StartSoftDrop()
+{
+	SetSoftDrop(true);
+}
+
+void APlayerField::StopSoftDrop()
+{
+	SetSoftDrop(false);
+}
+
+void APlayerField::RotateClockWise()
+{
+	RotateTetromino(ETetrominoRotation::ClockWise);
+}
+
+void APlayerField::RotateCounterClockWise()
+{
+	RotateTetromino(ETetrominoRotation::CounterClockWise);
 }
 
 void APlayerField::SpawnNextTetromino()
@@ -339,7 +385,6 @@ void APlayerField::DoLockDown()
 		CurrentTetromino->LockDown();
 		LineDelete();
 		bWaitForSpawn = true;
-		// Spawn();
 	}
 }
 
@@ -354,7 +399,6 @@ void APlayerField::LineDelete()
 void APlayerField::WaitForSpawn()
 {
 	if (bWaitForSpawn && !TenetrisBufferComponent->GetLineDeleting())
-	// if (!TenetrisBufferComponent->GetLineDeleting())
 	{
 		Spawn();
 		bWaitForSpawn = false;

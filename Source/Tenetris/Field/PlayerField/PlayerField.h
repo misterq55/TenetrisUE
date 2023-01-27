@@ -143,6 +143,20 @@ protected:
 	void BindTetrominoToBuffer(FTetrominoBase* InTetromino, UTenetrisBufferComponent* InBuffer);
 	void Spawn();
 
+	void StartMoveLeft();
+	void StopMoveLeft();
+
+	void StartMoveRight();
+	void StopMoveRight();
+
+	void StartSoftDrop();
+	void StopSoftDrop();
+
+	void RotateClockWise();
+	void RotateCounterClockWise();
+
+	void Hold();
+
 protected:
 	FTetrominoBase* CurrentTetromino;
 	FTetrominoGenerator* TetrominoGenerator;
