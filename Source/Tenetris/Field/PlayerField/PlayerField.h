@@ -118,14 +118,17 @@ public:
 	bool MoveTetromino(ETetrominoDirection InTetrominoDirection);
 	void RotateTetromino(ETetrominoRotation InTetrominoRotation);
 	void HardDrop();
-	void SetSoftDrop(bool InSoftDrop) { SoftDrop = InSoftDrop; }
-	bool GetSoftDrop() { return SoftDrop; }
+	void SetSoftDrop(bool InSoftDrop) { bSoftDrop = InSoftDrop; }
+	bool GetSoftDrop() { return bSoftDrop; }
 	void SetMoveDirection(ETetrominoDirection InTetrominoDirection, bool InPressed);
 
 private:
 	void RegisterActions();
 	void UnRegisterActions();
+	void InitializePreviewBuffer();
 	void InitializePreviewTetrominos();
+	void InitializeHoldBuffer();
+	void InitializeHoldTetromino();
 	void SpawnNextTetromino();
 	void RenewPreviewTetromino();
 	float GetFallingSpeed();
@@ -134,6 +137,7 @@ private:
 	void UpdateLockDown(float DeltaTime);
 	void DoLockDown();
 	void LineDelete();
+	void WaitForSpawn();
 
 protected:
 	void BindTetrominoToBuffer(FTetrominoBase* InTetromino, UTenetrisBufferComponent* InBuffer);
@@ -148,14 +152,16 @@ protected:
 	float TetrominoFallingSpeed = 1.f;
 	float CurrentTime = 0.f;
 
+	UTenetrisBufferComponent* HoldBufferComponent;
+	FTetrominoBase* HoldTetromino;
+
 private:
-	bool SoftDrop = false;
+	bool bSoftDrop = false;
 	FMoveDirectionState LeftDirectionState;
 	FMoveDirectionState RightDirectionState;
 	ETetrominoDirection TetrominoMoveDirection = ETetrominoDirection::None;
 	float KickInDelay = 0.3f;
 	float MoveSpeed = 0.05f;
-
-	FLockDown LockDown;
-	bool WaitForSpawn = false;
+FLockDown LockDown;
+	bool bWaitForSpawn = false;
 };

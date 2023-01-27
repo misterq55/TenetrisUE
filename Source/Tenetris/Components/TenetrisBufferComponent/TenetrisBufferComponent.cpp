@@ -46,7 +46,7 @@ void UTenetrisBufferComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 
 	// ...
 	
-	if (DeletedLines.Num())
+	if (bLineDeleting)
 	{
 		for (int32 DeleteLine : DeletedLines)
 		{
@@ -56,8 +56,6 @@ void UTenetrisBufferComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 				SetVisibilityBackgroundCube(j, DeleteLine, false);
 			}
 		}
-
-		DeleteLineCheckTime += DeltaTime;
 
 		if (DeleteLineCheckTime >= 0.5f)
 		{
@@ -94,7 +92,10 @@ void UTenetrisBufferComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 
 			DeletedLines.Empty();
 			DeleteLineCheckTime = 0.f;
+			bLineDeleting = false;
 		}
+
+		DeleteLineCheckTime += DeltaTime;
 	}
 }
 
@@ -269,6 +270,9 @@ void UTenetrisBufferComponent::CheckLineDelete(TArray<int32> Heights)
 			DeletedLines.AddUnique(Height);
 		}
 	}
+
+	if (DeletedLines.Num())
+		bLineDeleting = true;
 }
 
 ETetrominoType UTenetrisBufferComponent::GetValueFromCheckBuffer(int32 X, int32 Y)
