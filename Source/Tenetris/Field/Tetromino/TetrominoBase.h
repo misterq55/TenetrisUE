@@ -73,6 +73,11 @@ public:
 	virtual void SetGuideTetromino() {}
 	virtual void HardDrop() {}
 	virtual void HideGuideTetromino() {}
+	virtual void ResetGuideTetromino()
+	{
+		HideGuideTetromino();
+		SetGuideTetromino();
+	}
 	
 	TArray<int32> GetMinoHeights();
 	void SetTetrominoPosition(int32 X, int32 Y);

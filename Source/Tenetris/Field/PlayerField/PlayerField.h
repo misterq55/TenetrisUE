@@ -156,6 +156,7 @@ protected:
 	void RotateCounterClockWise();
 
 	void Hold();
+	void ToggleSpaceInversion();
 
 protected:
 	FTetrominoBase* CurrentTetromino;
