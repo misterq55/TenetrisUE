@@ -148,6 +148,15 @@ void APlayerField::Hold()
 	bCanHold = false;
 }
 
+void APlayerField::ToggleSpaceInversion()
+{
+	if (TenetrisBufferComponent)
+		TenetrisBufferComponent->ToggleSpaceInversion();
+
+	if (CurrentTetromino)
+		CurrentTetromino->ResetGuideTetromino();
+}
+
 void APlayerField::SetMoveDirection(ETetrominoDirection InTetrominoDirection, bool InPressed)
 {
 	if (InPressed)
@@ -205,6 +214,7 @@ void APlayerField::RegisterActions()
 		InputComponent->BindAction("HardDrop", EInputEvent::IE_Pressed, this, &APlayerField::HardDrop);
 
 		InputComponent->BindAction("Hold", EInputEvent::IE_Pressed, this, &APlayerField::Hold);
+		InputComponent->BindAction("SpaceInversion", EInputEvent::IE_Pressed, this, &APlayerField::ToggleSpaceInversion);
 	}
 }
 

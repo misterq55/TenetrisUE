@@ -21,6 +21,8 @@ void ATenetrisPlayerController::SetupInputComponent()
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("HardDrop", EKeys::SpaceBar));
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Hold", EKeys::LeftShift));
 
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("SpaceInversion", EKeys::Z));
+
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("StartMoveLeft", EKeys::Gamepad_DPad_Left));
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("StopMoveLeft", EKeys::Gamepad_DPad_Left));
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("StartMoveRight", EKeys::Gamepad_DPad_Right));
@@ -33,4 +35,6 @@ void ATenetrisPlayerController::SetupInputComponent()
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("RotateCounterClockWise", EKeys::Gamepad_FaceButton_Bottom));
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("HardDrop", EKeys::Gamepad_DPad_Up));
 	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Hold", EKeys::Gamepad_LeftShoulder));
+
+	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("SpaceInversion", EKeys::Gamepad_FaceButton_Top));
 }

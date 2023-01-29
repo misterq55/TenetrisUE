@@ -23,6 +23,7 @@ UTenetrisBufferComponent::UTenetrisBufferComponent()
 
 	BackGroundMinoBufferPivot->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
 	BackGroundMinoBufferPivot->SetMobility(EComponentMobility::Movable);
+	// BackGroundMinoBufferPivot->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
 
 	MinoBufferPivot->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
 	MinoBufferPivot->SetMobility(EComponentMobility::Movable);
@@ -117,6 +118,8 @@ void UTenetrisBufferComponent::Initialize()
 		}
 	}
 
+	// BackGroundMinoBufferPivot->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
+
 	for (int i = 0; i < BufferHeight + 2; i++)
 	{
 		for (int j = 0; j < BufferWidth; j++)
@@ -141,7 +144,12 @@ void UTenetrisBufferComponent::SetMinoClassType(TSubclassOf<AMinoBase> InMinoCla
 
 void UTenetrisBufferComponent::SetBackgroundCubeType(int32 X, int32 Y, ETetrominoType InTetrominoType)
 {
-	AMinoBase* Mino = BackgroundCubeBuffer[Y][X];
+	int32 NewX = X;
+
+	if (bSpaceInverted)
+		NewX = BufferWidth - X - 1;
+
+	AMinoBase* Mino = BackgroundCubeBuffer[Y][NewX];
 
 	if (Mino)
 	{
@@ -154,7 +162,12 @@ void UTenetrisBufferComponent::SetBackgroundCubeType(int32 X, int32 Y, ETetromin
 
 void UTenetrisBufferComponent::SetVisibilityBackgroundCube(int32 X, int32 Y, bool InVisible)
 {
-	AMinoBase* Mino = BackgroundCubeBuffer[Y][X];
+	int32 NewX = X;
+
+	if (bSpaceInverted)
+		NewX = BufferWidth - X - 1;
+
+	AMinoBase* Mino = BackgroundCubeBuffer[Y][NewX];
 
 	if (Mino)
 	{
@@ -277,11 +290,35 @@ void UTenetrisBufferComponent::CheckLineDelete(TArray<int32> Heights)
 
 ETetrominoType UTenetrisBufferComponent::GetValueFromCheckBuffer(int32 X, int32 Y)
 {
-	return CheckBuffer[Y + 1][X + 1];
+	int32 NewX = X;
+	
+	if (bSpaceInverted)
+		NewX = BufferWidth - X - 1;
+
+	return CheckBuffer[Y + 1][NewX + 1];
 }
 
 void UTenetrisBufferComponent::SetValueToCheckBuffer(int32 X, int32 Y, ETetrominoType InTetrominoType)
 {
-	CheckBuffer[Y + 1][X + 1] = InTetrominoType;
+	int32 NewX = X;
+
+	if (bSpaceInverted)
+		NewX = BufferWidth - X - 1;
+
+	CheckBuffer[Y + 1][NewX + 1] = InTetrominoType;
+}
+
+void UTenetrisBufferComponent::ToggleSpaceInversion()
+{
+	bSpaceInverted = !bSpaceInverted;
+
+	if (bSpaceInverted)
+	{
+		BackGroundMinoBufferPivot->SetRelativeRotation(FRotator(0.f, 180.f, 0.f));
+	}
+	else
+	{
+		BackGroundMinoBufferPivot->SetRelativeRotation(FRotator(0.f, 0.f, 0.f));
+	}
 }
 

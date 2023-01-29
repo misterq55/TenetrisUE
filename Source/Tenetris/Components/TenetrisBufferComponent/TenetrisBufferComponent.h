@@ -38,6 +38,7 @@ public:
 	ETetrominoType GetValueFromCheckBuffer(int32 X, int32 Y);
 	void SetValueToCheckBuffer(int32 X, int32 Y, ETetrominoType InTetrominoType);
 	bool GetLineDeleting() { return bLineDeleting; }
+	void ToggleSpaceInversion();
 
 protected:
 	TArray<TArray<AMinoBase*>> BackgroundCubeBuffer;
@@ -52,4 +53,5 @@ protected:
 	TArray<int32> DeletedLines;
 	float DeleteLineCheckTime = 0.f;
 	bool bLineDeleting = false;
+	bool bSpaceInverted = false;
 };
