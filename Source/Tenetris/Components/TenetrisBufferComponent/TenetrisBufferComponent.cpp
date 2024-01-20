@@ -107,11 +107,19 @@ void UTenetrisBufferComponent::Initialize()
 		for (int j = 0; j < BufferWidth; j++)
 		{
 			UChildActorComponent* ChildComponent = NewObject<UChildActorComponent>(this);
+			
+			if (!IsValid(ChildComponent))
+				continue; 
+
 			ChildComponent->SetChildActorClass(MinoClass);
 			ChildComponent->AttachToComponent(BackGroundMinoBufferPivot, FAttachmentTransformRules::KeepRelativeTransform);
 			ChildComponent->CreateChildActor();
 
 			AMinoBase* MinoBase = Cast<AMinoBase>(ChildComponent->GetChildActor());
+
+			if (!IsValid(MinoBase))
+				continue;
+
 			MinoBase->SetActorRelativeLocation(FVector(0.f, MinoRatio * 100.f * (j - (BufferWidth - 1) * 0.5f), MinoRatio * 100.f * (i - BufferHeight * 0.5f)));
 
 			BackgroundCubeBuffer[i].Add(MinoBase);
@@ -125,11 +133,19 @@ void UTenetrisBufferComponent::Initialize()
 		for (int j = 0; j < BufferWidth; j++)
 		{
 			UChildActorComponent* ChildComponent = NewObject<UChildActorComponent>(this);
+
+			if (!IsValid(ChildComponent))
+				continue;
+
 			ChildComponent->SetChildActorClass(MinoClass);
 			ChildComponent->AttachToComponent(MinoBufferPivot, FAttachmentTransformRules::KeepRelativeTransform);
 			ChildComponent->CreateChildActor();
 
 			AMinoBase* MinoBase = Cast<AMinoBase>(ChildComponent->GetChildActor());
+
+			if (!IsValid(MinoBase))
+				continue;
+
 			MinoBase->SetActorRelativeLocation(FVector(0.f, MinoRatio * 100.f * (j - (BufferWidth - 1) * 0.5f), MinoRatio * 100.f * (i - BufferHeight * 0.5f)));
 
 			MinoBuffer[i].Add(MinoBase);
@@ -151,7 +167,7 @@ void UTenetrisBufferComponent::SetBackgroundCubeType(int32 X, int32 Y, ETetromin
 
 	AMinoBase* Mino = BackgroundCubeBuffer[Y][NewX];
 
-	if (Mino)
+	if (IsValid(Mino))
 	{
 		Mino->SetVitibility(true);
 		Mino->SetTetrominoType(InTetrominoType);
@@ -169,7 +185,7 @@ void UTenetrisBufferComponent::SetVisibilityBackgroundCube(int32 X, int32 Y, boo
 
 	AMinoBase* Mino = BackgroundCubeBuffer[Y][NewX];
 
-	if (Mino)
+	if (IsValid(Mino))
 	{
 		Mino->SetVitibility(InVisible);
 	}
@@ -181,7 +197,7 @@ void UTenetrisBufferComponent::SetMinoType(int32 X, int32 Y, ETetrominoType InTe
 {
 	AMinoBase* Mino = MinoBuffer[Y][X];
 
-	if (Mino)
+	if (IsValid(Mino))
 	{
 		Mino->SetVitibility(true);
 		Mino->SetTetrominoType(InTetrominoType);
@@ -192,7 +208,7 @@ void UTenetrisBufferComponent::SetVisibilityMino(int32 X, int32 Y, bool InVisibl
 {
 	AMinoBase* Mino = MinoBuffer[Y][X];
 
-	if (Mino)
+	if (IsValid(Mino))
 	{
 		Mino->SetVitibility(InVisible);
 	}
