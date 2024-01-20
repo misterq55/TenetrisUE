@@ -77,9 +77,20 @@ void APlayerField::Initialize()
 		CurrentTetromino = new FTetrominoBase();
 	}
 
-	PreviewBufferComponent->Initialize();
-	HoldBufferComponent->Initialize();
-	TetrominoGenerator->Initialize();
+	if (IsValid(PreviewBufferComponent))
+	{
+		PreviewBufferComponent->Initialize();
+	}
+
+	if (IsValid(HoldBufferComponent))
+	{
+		HoldBufferComponent->Initialize();
+	}
+
+	if (TetrominoGenerator)
+	{
+		TetrominoGenerator->Initialize();
+	}
 }
 
 bool APlayerField::MoveTetromino(ETetrominoDirection InTetrominoDirection)
