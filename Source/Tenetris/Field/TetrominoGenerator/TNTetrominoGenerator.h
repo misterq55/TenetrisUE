@@ -4,26 +4,26 @@
 
 #include "Tenetris/TenetrisDefine.h"
 
-class FTetrominoGenerator
+class FTNTetrominoGenerator
 {
 public:
-	FTetrominoGenerator()
+	FTNTetrominoGenerator()
 		: TetrominoArrayResetCounter(0)
 	{}
 
-	~FTetrominoGenerator() {}
+	~FTNTetrominoGenerator() {}
 
 	void Initialize();
 
-	ETetrominoType GetTop();
-	ETetrominoType GetAt(int32 InIndex);
+	E_TNTetrominoType GetTop();
+	E_TNTetrominoType GetAt(int32 InIndex);
 
 private:
-	void ShuffleTetrominoBag(TArray<ETetrominoType>& bag);
+	void ShuffleTetrominoBag(TArray<E_TNTetrominoType>& bag);
 	void RefillTetrominoArray(int32 tetrominoArrayResetCounter);
 
 private:
-	TArray<ETetrominoType> TetrominoArray;
+	TArray<E_TNTetrominoType> TetrominoArray;
 	int32 TetrominoLimitCounter;
 	int32 TetrominoArrayResetCounter;
 };

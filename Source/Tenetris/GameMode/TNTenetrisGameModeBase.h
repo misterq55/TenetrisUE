@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "TenetrisGameModeBase.generated.h"
+#include "TNTenetrisGameModeBase.generated.h"
 
 /**
  * 
  */
 
-class AFieldBase;
+class ATNFieldBase;
 
 UCLASS(Blueprintable)
-class TENETRIS_API ATenetrisGameModeBase : public AGameModeBase
+class TENETRIS_API ATNTenetrisGameModeBase : public AGameModeBase
 {
 	GENERATED_UCLASS_BODY()
 
@@ -22,15 +22,15 @@ public:
 	void Initialize();
 	
 	UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
-	void AddFields(AFieldBase* field);
+	void AddFields(ATNFieldBase* field);
 	
 	UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
-	void SetPlayerField(AFieldBase* playerField);
+	void SetPlayerField(ATNFieldBase* playerField);
 
 	UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
-		AFieldBase* GetPlayerField();
+		ATNFieldBase* GetPlayerField();
 
 private:
-	TArray<AFieldBase*> Fields;
-	AFieldBase* PlayerField;
+	TArray<ATNFieldBase*> Fields;
+	ATNFieldBase* PlayerField;
 };

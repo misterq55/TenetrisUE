@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
-#include "TenetrisPawn.generated.h"
+#include "TNTenetrisPawn.generated.h"
 
 UCLASS()
-class TENETRIS_API ATenetrisPawn : public APawn
+class TENETRIS_API ATNTenetrisPawn : public APawn
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this pawn's properties
-	ATenetrisPawn();
+	ATNTenetrisPawn();
 
 protected:
 	// Called when the game starts or when spawned

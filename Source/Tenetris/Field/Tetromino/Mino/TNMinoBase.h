@@ -5,19 +5,19 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Tenetris/TenetrisDefine.h"
-#include "MinoBase.generated.h"
+#include "TNMinoBase.generated.h"
 
 class UStaticMesh;
 class UStaticMeshComponent;
 
 UCLASS()
-class TENETRIS_API AMinoBase : public AActor
+class TENETRIS_API ATNMinoBase : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	AMinoBase();
+	ATNMinoBase();
 
 protected:
 	// Called when the game starts or when spawned
@@ -29,9 +29,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void SetVitibility(bool newVisibility);
-	virtual void SetTetrominoType(ETetrominoType tetrominoType);
+	virtual void SetTetrominoType(E_TNTetrominoType tetrominoType);
 
 protected:
 	UStaticMeshComponent* MinoMeshComponent;
-	ETetrominoType TetrominoType;
+	E_TNTetrominoType TetrominoType;
 };

@@ -4,17 +4,17 @@
 
 #include "Tenetris/TenetrisDefine.h"
 
-DECLARE_DELEGATE_ThreeParams(FSetBackgroundCubeTypeDelegate, int32, int32, ETetrominoType);
+DECLARE_DELEGATE_ThreeParams(FSetBackgroundCubeTypeDelegate, int32, int32, E_TNTetrominoType);
 DECLARE_DELEGATE_ThreeParams(FSetVisibilityBackgroundCubeTypeDelegate, int32, int32, bool);
-DECLARE_DELEGATE_ThreeParams(FSetMinoTypeDelegate, int32, int32, ETetrominoType);
+DECLARE_DELEGATE_ThreeParams(FSetMinoTypeDelegate, int32, int32, E_TNTetrominoType);
 DECLARE_DELEGATE_ThreeParams(FSetVisibilityMinoTypeDelegate, int32, int32, bool);
 DECLARE_DELEGATE_RetVal_TwoParams(bool, FCheckMinoDelegate, int32, int32);
 DECLARE_DELEGATE_RetVal_TwoParams(int32, FCalculateGuideMinoHeightDelegate, int32, int32);
 
 
-class AFieldBase;
+class ATNFieldBase;
 
-class FTetrominoBase
+class FTNTetrominoBase
 {
 	typedef TArray<FVector2D> TTetrominoCoordinate;
 	
@@ -26,16 +26,16 @@ class FTetrominoBase
 	const TTetrominoCoordinate TMinoCoordinate = { FVector2D(0.f, 1.f) , FVector2D(-1.f, 0.f), FVector2D(0.f, 0.f), FVector2D(1.f, 0.f) };
 	const TTetrominoCoordinate ZMinoCoordinate = { FVector2D(-1.f, 1.f) , FVector2D(0.f, 0.f), FVector2D(0.f, 1.f), FVector2D(1.f, 0.f) };
 
-	struct FTetrominoInfo
+	struct FTNTetrominoInfo
 	{
 	public:
-		FTetrominoInfo()
-			: CurrentType(ETetrominoType::None)
+		FTNTetrominoInfo()
+			: CurrentType(E_TNTetrominoType::None)
 			, CurrentPosition(FVector2D(1, 1))
 			, RotationState(0)
 		{}
 
-		FTetrominoInfo(ETetrominoType currentTetrominoType)
+		FTNTetrominoInfo(E_TNTetrominoType currentTetrominoType)
 			: CurrentType(currentTetrominoType)
 			, CurrentPosition(FVector2D(1, 1))
 			, RotationState(0)
@@ -46,7 +46,7 @@ class FTetrominoBase
 			CurrentPosition = FVector2D(x, y);
 		}
 		
-		ETetrominoType CurrentType;
+		E_TNTetrominoType CurrentType;
 		TTetrominoCoordinate Coordinate;
 		FVector2D CurrentPosition;
 		TArray<TTetrominoCoordinate> History;
@@ -54,9 +54,9 @@ class FTetrominoBase
 	};
 
 public:
-	FTetrominoBase() {}
+	FTNTetrominoBase() {}
 
-	virtual ~FTetrominoBase() 
+	virtual ~FTNTetrominoBase() 
 	{
 		OnBackgroundCubeType.Unbind();
 		OnVisibilityBackgroundCubeType.Unbind();
@@ -66,8 +66,8 @@ public:
 		OnCalulateGuideMino.Unbind();
 	}
 
-	virtual bool Move(ETetrominoDirection tetrominoDirection) { return true; }
-	virtual bool Rotate(ETetrominoRotation tetrominoRotation) { return true; }
+	virtual bool Move(E_TNTetrominoDirection tetrominoDirection) { return true; }
+	virtual bool Rotate(E_TNTetrominoRotation tetrominoRotation) { return true; }
 	virtual void LockDown() {}
 	virtual void Spawn();
 	virtual void SetGuideTetromino() {}
@@ -81,8 +81,8 @@ public:
 	
 	TArray<int32> GetMinoHeights();
 	void SetTetrominoPosition(int32 x, int32 y);
-	void SetTetrominoType(ETetrominoType currentTetrominoType);
-	ETetrominoType GetTetrominoType() { return TetrominoInfo.CurrentType; }
+	void SetTetrominoType(E_TNTetrominoType currentTetrominoType);
+	E_TNTetrominoType GetTetrominoType() { return TetrominoInfo.CurrentType; }
 	void SetStartingLocation(int32 x, int32 y);
 	FVector2D GetStaringLocation();
 	void HideTetromino();
@@ -101,7 +101,7 @@ public:
 	FCalculateGuideMinoHeightDelegate OnCalulateGuideMino;
 
 protected:
-	FTetrominoInfo TetrominoInfo;
-	FTetrominoInfo PrevTetrominoInfo;
+	FTNTetrominoInfo TetrominoInfo;
+	FTNTetrominoInfo PrevTetrominoInfo;
 	FVector2D StartingLocation;
 };
