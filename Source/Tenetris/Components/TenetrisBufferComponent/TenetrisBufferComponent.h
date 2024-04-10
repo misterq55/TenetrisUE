@@ -29,14 +29,14 @@ public:
 	void SetMinoClassType(TSubclassOf<AMinoBase> minoClass);
 	void SetBackgroundCubeType(int32 x, int32 y, ETetrominoType tetrominoType);
 	void SetVisibilityBackgroundCube(int32 x, int32 y, bool visible);
-	void SetMinoType(int32 x, int32 y, ETetrominoType InTetrominoType);
-	void SetVisibilityMino(int32 x, int32 y, bool InVisible);
+	void SetMinoType(int32 x, int32 y, ETetrominoType tetrominoType);
+	void SetVisibilityMino(int32 x, int32 y, bool visible);
 	bool CheckMino(int32 x, int32 y);
-	void SetBufferSize(int32 InBufferHeight, int32 InBufferWidth);
+	void SetBufferSize(int32 bufferHeight, int32 bufferWidth);
 	int32 CalculateGuideMinoHeight(int32 x, int32 y);
-	void CheckLineDelete(TArray<int32> Heights);
+	void CheckLineDelete(TArray<int32> heights);
 	ETetrominoType GetValueFromCheckBuffer(int32 x, int32 y);
-	void SetValueToCheckBuffer(int32 x, int32 y, ETetrominoType InTetrominoType);
+	void SetValueToCheckBuffer(int32 x, int32 y, ETetrominoType tetrominoType);
 	bool GetLineDeleting() { return bLineDeleting; }
 	void ToggleSpaceInversion();
 

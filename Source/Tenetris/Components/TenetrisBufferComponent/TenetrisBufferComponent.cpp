@@ -200,24 +200,24 @@ void UTenetrisBufferComponent::SetVisibilityBackgroundCube(int32 x, int32 y, boo
 	SetValueToCheckBuffer(x, y, ETetrominoType::None);
 }
 
-void UTenetrisBufferComponent::SetMinoType(int32 x, int32 y, ETetrominoType InTetrominoType)
+void UTenetrisBufferComponent::SetMinoType(int32 x, int32 y, ETetrominoType tetrominoType)
 {
 	AMinoBase* Mino = MinoBuffer[y][x];
 
 	if (IsValid(Mino))
 	{
 		Mino->SetVitibility(true);
-		Mino->SetTetrominoType(InTetrominoType);
+		Mino->SetTetrominoType(tetrominoType);
 	}
 }
 
-void UTenetrisBufferComponent::SetVisibilityMino(int32 x, int32 y, bool InVisible)
+void UTenetrisBufferComponent::SetVisibilityMino(int32 x, int32 y, bool visible)
 {
 	AMinoBase* Mino = MinoBuffer[y][x];
 
 	if (IsValid(Mino))
 	{
-		Mino->SetVitibility(InVisible);
+		Mino->SetVitibility(visible);
 	}
 }
 
@@ -229,10 +229,10 @@ bool UTenetrisBufferComponent::CheckMino(int32 x, int32 y)
 	return GetValueFromCheckBuffer(x, y) != ETetrominoType::None;
 }
 
-void UTenetrisBufferComponent::SetBufferSize(int32 InBufferHeight, int32 InBufferWidth)
+void UTenetrisBufferComponent::SetBufferSize(int32 bufferHeight, int32 bufferWidth)
 {
-	BufferHeight = InBufferHeight;
-	BufferWidth = InBufferWidth;
+	BufferHeight = bufferHeight;
+	BufferWidth = bufferWidth;
 
 	for (int32 i = 0; i < BufferHeight + 2; i++)
 	{
@@ -264,7 +264,10 @@ void UTenetrisBufferComponent::SetBufferSize(int32 InBufferHeight, int32 InBuffe
 		CheckBuffer.Add(Buffer);
 	}
 
-	BackgroundMeshComponent->SetRelativeScale3D(FVector(MinoRatio * BufferHeight, MinoRatio * BufferWidth, 0.f));
+	if (IsValid(BackgroundMeshComponent))
+	{
+		BackgroundMeshComponent->SetRelativeScale3D(FVector(MinoRatio * BufferHeight, MinoRatio * BufferWidth, 0.f));
+	}
 }
 
 int32 UTenetrisBufferComponent::CalculateGuideMinoHeight(int32 x, int32 y)
@@ -286,9 +289,9 @@ int32 UTenetrisBufferComponent::CalculateGuideMinoHeight(int32 x, int32 y)
 	return Result;
 }
 
-void UTenetrisBufferComponent::CheckLineDelete(TArray<int32> Heights)
+void UTenetrisBufferComponent::CheckLineDelete(TArray<int32> heights)
 {
-	for (int32 Height : Heights)
+	for (const int32& Height : heights)
 	{
 		bool LineDeleted = true;
 
@@ -323,7 +326,7 @@ ETetrominoType UTenetrisBufferComponent::GetValueFromCheckBuffer(int32 x, int32 
 	return CheckBuffer[y + 1][NewX + 1];
 }
 
-void UTenetrisBufferComponent::SetValueToCheckBuffer(int32 x, int32 y, ETetrominoType InTetrominoType)
+void UTenetrisBufferComponent::SetValueToCheckBuffer(int32 x, int32 y, ETetrominoType tetrominoType)
 {
 	int32 NewX = x;
 
@@ -332,7 +335,7 @@ void UTenetrisBufferComponent::SetValueToCheckBuffer(int32 x, int32 y, ETetromin
 		NewX = BufferWidth - x - 1;
 	}
 
-	CheckBuffer[y + 1][NewX + 1] = InTetrominoType;
+	CheckBuffer[y + 1][NewX + 1] = tetrominoType;
 }
 
 void UTenetrisBufferComponent::ToggleSpaceInversion()
