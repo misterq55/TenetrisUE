@@ -23,11 +23,11 @@ public:
 		LockDownStart = true;
 	}
 
-	bool UpdateLockDown(float DeltaTime) 
+	bool UpdateLockDown(float deltaTime) 
 	{ 
 		if (LockDownStart)
 		{
-			LockDownTime += DeltaTime;
+			LockDownTime += deltaTime;
 
 			if (LockDownTime >= LockDownDelay || LockDownRemainCount <= 0)
 			{
@@ -42,17 +42,17 @@ public:
 		return false; 
 	}
 
-	void CheckRemainCount(ETetrominoDirection InTetrominoDirection)
+	void CheckRemainCount(ETetrominoDirection tetrominoDirection)
 	{
 		if (!LockDownStart)
 			return;
 
-		if (InTetrominoDirection == ETetrominoDirection::Left
-			|| InTetrominoDirection == ETetrominoDirection::Right)
+		if (tetrominoDirection == ETetrominoDirection::Left
+			|| tetrominoDirection == ETetrominoDirection::Right)
 		{
 			LockDownRemainCount--;
 		}
-		else if (InTetrominoDirection == ETetrominoDirection::Down)
+		else if (tetrominoDirection == ETetrominoDirection::Down)
 		{
 			LockDownRemainCount = MaxLockDownRemainCount;
 			LockDownStart = false;
@@ -115,32 +115,32 @@ public:
 
 	virtual	void Initialize();
 
-	bool MoveTetromino(ETetrominoDirection InTetrominoDirection);
-	void RotateTetromino(ETetrominoRotation InTetrominoRotation);
+	bool MoveTetromino(ETetrominoDirection tetrominoDirection);
+	void RotateTetromino(ETetrominoRotation tetrominoRotation);
 	void HardDrop();
-	void SetSoftDrop(bool InSoftDrop) { bSoftDrop = InSoftDrop; }
+	void SetSoftDrop(bool softDrop) { bSoftDrop = softDrop; }
 	bool GetSoftDrop() { return bSoftDrop; }
-	void SetMoveDirection(ETetrominoDirection InTetrominoDirection, bool InPressed);
+	void SetMoveDirection(ETetrominoDirection tetrominoDirection, bool pressed);
 
 private:
-	void RegisterActions();
-	void UnRegisterActions();
-	void InitializePreviewBuffer();
-	void InitializePreviewTetrominos();
-	void InitializeHoldBuffer();
-	void InitializeHoldTetromino();
-	void SpawnNextTetromino();
-	void RenewPreviewTetromino();
-	float GetFallingSpeed();
-	void TetrominoFall(float DeltaTime);
-	void SetMoveState(float DeltaTime, FMoveDirectionState& InMoveState, ETetrominoDirection InTetrominoDirction);
-	void UpdateLockDown(float DeltaTime);
-	void DoLockDown();
-	void LineDelete();
-	void WaitForSpawn();
+	void registerActions();
+	void unRegisterActions();
+	void initializePreviewBuffer();
+	void initializePreviewTetrominos();
+	void initializeHoldBuffer();
+	void initializeHoldTetromino();
+	void spawnNextTetromino();
+	void renewPreviewTetromino();
+	float getFallingSpeed();
+	void tetrominoFall(float deltaTime);
+	void setMoveState(float deltaTime, FMoveDirectionState& moveState, ETetrominoDirection tetrominoDirction);
+	void updateLockDown(float deltaTime);
+	void doLockDown();
+	void lineDelete();
+	void waitForSpawn();
 
 protected:
-	void BindTetrominoToBuffer(FTetrominoBase* InTetromino, UTenetrisBufferComponent* InBuffer);
+	void BindTetrominoToBuffer(FTetrominoBase* tetromino, UTenetrisBufferComponent* buffer);
 	void Spawn();
 
 	void StartMoveLeft();

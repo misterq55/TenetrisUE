@@ -35,10 +35,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Field")
 		virtual	void Initialize();
 
-	void SetMinoClassType(TSubclassOf<AMinoBase> InMinoClass);
+	void SetMinoClassType(TSubclassOf<AMinoBase> minoClass);
 
 protected:
-	void SetBackgroundCubeType(int32 X, int32 Y, ETetrominoType InTetrominoType);
+	void setBackgroundCubeType(int32 x, int32 y, ETetrominoType tetrominoType);
 
 protected:
 	TSubclassOf<AMinoBase> MinoClass;

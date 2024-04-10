@@ -26,7 +26,7 @@ class FTetrominoBase
 	const TTetrominoCoordinate TMinoCoordinate = { FVector2D(0.f, 1.f) , FVector2D(-1.f, 0.f), FVector2D(0.f, 0.f), FVector2D(1.f, 0.f) };
 	const TTetrominoCoordinate ZMinoCoordinate = { FVector2D(-1.f, 1.f) , FVector2D(0.f, 0.f), FVector2D(0.f, 1.f), FVector2D(1.f, 0.f) };
 
-	typedef struct FTetrominoInfo
+	struct FTetrominoInfo
 	{
 	public:
 		FTetrominoInfo()
@@ -35,15 +35,15 @@ class FTetrominoBase
 			, RotationState(0)
 		{}
 
-		FTetrominoInfo(ETetrominoType InCurrentTetrominoType)
-			: CurrentType(InCurrentTetrominoType)
+		FTetrominoInfo(ETetrominoType currentTetrominoType)
+			: CurrentType(currentTetrominoType)
 			, CurrentPosition(FVector2D(1, 1))
 			, RotationState(0)
 		{}
 
-		void SetPosition(int32 X, int32 Y)
+		void SetPosition(int32 x, int32 y)
 		{
-			CurrentPosition = FVector2D(X, Y);
+			CurrentPosition = FVector2D(x, y);
 		}
 		
 		ETetrominoType CurrentType;
@@ -51,7 +51,7 @@ class FTetrominoBase
 		FVector2D CurrentPosition;
 		TArray<TTetrominoCoordinate> History;
 		int32 RotationState;
-	}FTetrominoInfo;
+	};
 
 public:
 	FTetrominoBase() {}
@@ -66,8 +66,8 @@ public:
 		OnCalulateGuideMino.Unbind();
 	}
 
-	virtual bool Move(ETetrominoDirection InTetrominoDirection) { return true; }
-	virtual bool Rotate(ETetrominoRotation InTetrominoRotation) { return true; }
+	virtual bool Move(ETetrominoDirection tetrominoDirection) { return true; }
+	virtual bool Rotate(ETetrominoRotation tetrominoRotation) { return true; }
 	virtual void LockDown() {}
 	virtual void Spawn();
 	virtual void SetGuideTetromino() {}
@@ -80,17 +80,17 @@ public:
 	}
 	
 	TArray<int32> GetMinoHeights();
-	void SetTetrominoPosition(int32 X, int32 Y);
-	void SetTetrominoType(ETetrominoType InCurrentTetrominoType);
+	void SetTetrominoPosition(int32 x, int32 y);
+	void SetTetrominoType(ETetrominoType currentTetrominoType);
 	ETetrominoType GetTetrominoType() { return TetrominoInfo.CurrentType; }
-	void SetStartingLocation(int32 X, int32 Y);
+	void SetStartingLocation(int32 x, int32 y);
 	FVector2D GetStaringLocation();
 	void HideTetromino();
 
 protected:
-	bool CheckMino(FVector2D InSimulationPosition);
-	void SetTetromino();
-	void SetTetrominoBackground();
+	bool checkMino(const FVector2D& simulationPosition);
+	void setTetromino();
+	void setTetrominoBackground();
 	
 public:
 	FSetBackgroundCubeTypeDelegate OnBackgroundCubeType;

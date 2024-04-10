@@ -1,23 +1,23 @@
 #include "PlayerTetromino.h"
 
-bool FPlayerTetromino::Move(ETetrominoDirection InTetrominoDirection)
+bool FPlayerTetromino::Move(ETetrominoDirection tetrominoDirection)
 {
-	FVector2D SimulationPosition = SimulatePosition(InTetrominoDirection);
+	FVector2D SimulationPosition = simulatePosition(tetrominoDirection);
 
-	if (!CheckMino(SimulationPosition))
+	if (!checkMino(SimulationPosition))
 	{
 		HideTetromino();
 		
 		TetrominoInfo.CurrentPosition = SimulationPosition;
 
-		if (InTetrominoDirection == ETetrominoDirection::Left ||
-			InTetrominoDirection == ETetrominoDirection::Right)
+		if (tetrominoDirection == ETetrominoDirection::Left ||
+			tetrominoDirection == ETetrominoDirection::Right)
 		{
 			HideGuideTetromino();
 			SetGuideTetromino();
 		}
 
-		SetTetromino();
+		setTetromino();
 
 		return false;
 	}
@@ -25,7 +25,7 @@ bool FPlayerTetromino::Move(ETetrominoDirection InTetrominoDirection)
 	return true;
 }
 
-bool FPlayerTetromino::Rotate(ETetrominoRotation InTetrominoRotation)
+bool FPlayerTetromino::Rotate(ETetrominoRotation tetrominoRotation)
 {
 	// Super Rotation System
 	// 추후 따로 클래스로 분리할 계획
@@ -34,13 +34,13 @@ bool FPlayerTetromino::Rotate(ETetrominoRotation InTetrominoRotation)
 
 	int32 OldRotationState = TetrominoInfo.RotationState;
 
-	if (InTetrominoRotation == ETetrominoRotation::ClockWise)
+	if (tetrominoRotation == ETetrominoRotation::ClockWise)
 	{
 		RotateMatrix[0] = FVector2D(0, -1);
 		RotateMatrix[1] = FVector2D(1, 0);
 		TetrominoInfo.RotationState += 1;
 	}
-	else if (InTetrominoRotation == ETetrominoRotation::CounterClockWise)
+	else if (tetrominoRotation == ETetrominoRotation::CounterClockWise)
 	{
 		RotateMatrix[0] = FVector2D(0, 1);
 		RotateMatrix[1] = FVector2D(-1, 0);
@@ -113,7 +113,7 @@ bool FPlayerTetromino::Rotate(ETetrominoRotation InTetrominoRotation)
 		TetrominoInfo.Coordinate = SimulationCoordinates;
 
 		SetGuideTetromino();
-		SetTetromino();
+		setTetromino();
 
 		return false;
 	}
@@ -125,7 +125,7 @@ void FPlayerTetromino::LockDown()
 {
 	HideGuideTetromino();
 	HideTetromino();
-	SetTetrominoBackground();
+	setTetrominoBackground();
 }
 
 void FPlayerTetromino::Spawn()
@@ -169,28 +169,28 @@ void FPlayerTetromino::HardDrop()
 	TetrominoInfo.CurrentPosition = GuideTetrominoPosition;
 	HideGuideTetromino();
 	SetGuideTetromino();
-	SetTetromino();
+	setTetromino();
 }
 
-FVector2D FPlayerTetromino::SimulatePosition(ETetrominoDirection InTetrominoDirection)
+FVector2D FPlayerTetromino::simulatePosition(ETetrominoDirection tetrominoDirection)
 {
-	FVector2D SimulationPosition = TetrominoInfo.CurrentPosition;
-	switch (InTetrominoDirection)
+	FVector2D simulationPosition = TetrominoInfo.CurrentPosition;
+	switch (tetrominoDirection)
 	{
 	case ETetrominoDirection::Down:
-		SimulationPosition.Y -= 1;
+		simulationPosition.Y -= 1;
 		break;
 
 	case ETetrominoDirection::Left:
-		SimulationPosition.X -= 1;
+		simulationPosition.X -= 1;
 		break;
 
 	case ETetrominoDirection::Right:
-		SimulationPosition.X += 1;
+		simulationPosition.X += 1;
 		break;
 	};
 
-	return SimulationPosition;
+	return simulationPosition;
 }
 
 void FPlayerTetromino::HideGuideTetromino()

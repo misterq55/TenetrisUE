@@ -21,15 +21,15 @@ void ATenetrisGameModeBase::Initialize()
 	}
 }
 
-void ATenetrisGameModeBase::AddFields(AFieldBase* InField)
+void ATenetrisGameModeBase::AddFields(AFieldBase* field)
 {
-	Fields.Add(InField);
+	Fields.Add(field);
 }
 
-void ATenetrisGameModeBase::SetPlayerField(AFieldBase* InPlayerField)
+void ATenetrisGameModeBase::SetPlayerField(AFieldBase* playerField)
 {
-	AddFields(InPlayerField);
-	PlayerField = InPlayerField;
+	AddFields(playerField);
+	PlayerField = playerField;
 }
 
 AFieldBase* ATenetrisGameModeBase::GetPlayerField()

@@ -22,10 +22,10 @@ public:
 	void Initialize();
 	
 	UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
-	void AddFields(AFieldBase* InField);
+	void AddFields(AFieldBase* field);
 	
 	UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
-	void SetPlayerField(AFieldBase* InPlayerField);
+	void SetPlayerField(AFieldBase* playerField);
 
 	UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
 		AFieldBase* GetPlayerField();

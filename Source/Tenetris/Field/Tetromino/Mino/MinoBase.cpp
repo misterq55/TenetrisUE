@@ -35,16 +35,16 @@ void AMinoBase::Tick(float DeltaTime)
 
 }
 
-void AMinoBase::SetVitibility(bool InNewVisibility)
+void AMinoBase::SetVitibility(bool newVisibility)
 {
-	if (MinoMeshComponent)
+	if (IsValid(MinoMeshComponent))
 	{
-		MinoMeshComponent->SetVisibility(InNewVisibility);
+		MinoMeshComponent->SetVisibility(newVisibility);
 	}
 }
 
-void AMinoBase::SetTetrominoType(ETetrominoType InTetrominoType)
+void AMinoBase::SetTetrominoType(ETetrominoType tetrominoType)
 {
-	TetrominoType = InTetrominoType;
+	TetrominoType = tetrominoType;
 }
 

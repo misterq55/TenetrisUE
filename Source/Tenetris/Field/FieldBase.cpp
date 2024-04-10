@@ -43,19 +43,25 @@ void AFieldBase::Tick(float DeltaTime)
 
 void AFieldBase::Initialize()
 {
-	if (TenetrisBufferComponent)
+	if (IsValid(TenetrisBufferComponent))
+	{
 		TenetrisBufferComponent->Initialize();
+	}
 }
 
-void AFieldBase::SetMinoClassType(TSubclassOf<AMinoBase> InMinoClass)
+void AFieldBase::SetMinoClassType(TSubclassOf<AMinoBase> minoClass)
 {
-	if (TenetrisBufferComponent)
-		TenetrisBufferComponent->SetMinoClassType(InMinoClass);
+	if (IsValid(TenetrisBufferComponent))
+	{
+		TenetrisBufferComponent->SetMinoClassType(minoClass);
+	}
 }
 
-void AFieldBase::SetBackgroundCubeType(int32 X, int32 Y, ETetrominoType InTetrominoType)
+void AFieldBase::setBackgroundCubeType(int32 x, int32 y, ETetrominoType tetrominoType)
 {
-	if (TenetrisBufferComponent)
-		TenetrisBufferComponent->SetBackgroundCubeType(X, Y, InTetrominoType);
+	if (IsValid(TenetrisBufferComponent))
+	{
+		TenetrisBufferComponent->SetBackgroundCubeType(x, y, tetrominoType);
+	}
 }
 
