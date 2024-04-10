@@ -1,22 +1,22 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MinoBase.h"
+#include "TNMinoBase.h"
 
 // Sets default values
-AMinoBase::AMinoBase()
+ATNMinoBase::ATNMinoBase()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 }
 
 // Called when the game starts or when spawned
-void AMinoBase::BeginPlay()
+void ATNMinoBase::BeginPlay()
 {
 	Super::BeginPlay();
 }
 
-void AMinoBase::InitailizeMesh(UStaticMesh* StaticMesh)
+void ATNMinoBase::InitailizeMesh(UStaticMesh* StaticMesh)
 {
 	MinoMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CUBEMESH_COMPONENT"));
 	MinoMeshComponent->SetupAttachment(RootComponent);
@@ -29,13 +29,13 @@ void AMinoBase::InitailizeMesh(UStaticMesh* StaticMesh)
 }
 
 // Called every frame
-void AMinoBase::Tick(float DeltaTime)
+void ATNMinoBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-void AMinoBase::SetVitibility(bool newVisibility)
+void ATNMinoBase::SetVitibility(bool newVisibility)
 {
 	if (IsValid(MinoMeshComponent))
 	{
@@ -43,7 +43,7 @@ void AMinoBase::SetVitibility(bool newVisibility)
 	}
 }
 
-void AMinoBase::SetTetrominoType(ETetrominoType tetrominoType)
+void ATNMinoBase::SetTetrominoType(E_TNTetrominoType tetrominoType)
 {
 	TetrominoType = tetrominoType;
 }

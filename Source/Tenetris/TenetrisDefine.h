@@ -7,7 +7,7 @@ const int32 ColumnMax = 10;
 
 const float MinoRatio = 0.25f;
 
-enum class ETetrominoType : uint32
+enum class E_TNTetrominoType : uint32
 {
 	I,
 	J,
@@ -21,7 +21,7 @@ enum class ETetrominoType : uint32
 	None,
 };
 
-enum class ETetrominoDirection : uint32
+enum class E_TNTetrominoDirection : uint32
 {
 	Down,
 	Left,
@@ -29,13 +29,13 @@ enum class ETetrominoDirection : uint32
 	None,
 };
 
-enum class ETetrominoRotation : uint32
+enum class E_TNTetrominoRotation : uint32
 {
 	ClockWise,
 	CounterClockWise,
 };
 
-enum class ETetrominoBufferDataType : uint32
+enum class E_TNTetrominoBufferDataType : uint32
 {
 	Blank,
 	Tetromino,

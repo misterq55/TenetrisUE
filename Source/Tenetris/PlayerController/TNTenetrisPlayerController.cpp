@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TenetrisPlayerController.h"
+#include "TNTenetrisPlayerController.h"
 #include "GameFramework/PlayerInput.h"
 
-void ATenetrisPlayerController::SetupInputComponent()
+void ATNTenetrisPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 

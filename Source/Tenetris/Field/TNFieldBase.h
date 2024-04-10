@@ -5,24 +5,24 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Tenetris/TenetrisDefine.h"
-#include "Tenetris/Field/Tetromino/TetrominoBase.h"
-#include "FieldBase.generated.h"
+#include "Tenetris/Field/Tetromino/TNTetrominoBase.h"
+#include "TNFieldBase.generated.h"
 
-class FTetrominoBase;
-class AMinoBase;
-class UTenetrisBufferComponent;
+class FTNTetrominoBase;
+class ATNMinoBase;
+class UTNTenetrisBufferComponent;
 
 UCLASS()
-class TENETRIS_API AFieldBase : public AActor
+class TENETRIS_API ATNFieldBase : public AActor
 {
 	GENERATED_BODY()
 
-		friend class FTetrominoBase;
+		friend class FTNTetrominoBase;
 
 public:	
 	// Sets default values for this actor's properties
-	AFieldBase();
-	virtual ~AFieldBase();
+	ATNFieldBase();
+	virtual ~ATNFieldBase();
 
 protected:
 	// Called when the game starts or when spawned
@@ -35,12 +35,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Field")
 		virtual	void Initialize();
 
-	void SetMinoClassType(TSubclassOf<AMinoBase> minoClass);
+	void SetMinoClassType(TSubclassOf<ATNMinoBase> minoClass);
 
 protected:
-	void setBackgroundCubeType(int32 x, int32 y, ETetrominoType tetrominoType);
+	void setBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType);
 
 protected:
-	TSubclassOf<AMinoBase> MinoClass;
-	UTenetrisBufferComponent* TenetrisBufferComponent;
+	TSubclassOf<ATNMinoBase> MinoClass;
+	UTNTenetrisBufferComponent* TenetrisBufferComponent;
 };

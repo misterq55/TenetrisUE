@@ -2,11 +2,9 @@
 
 #pragma once
 
-#include "Tenetris/Field/Tetromino/TetrominoBase.h"
+#include "Tenetris/Field/Tetromino/TNTetrominoBase.h"
 
-class FRotationSystemBase;
-
-class FPlayerTetromino : public FTetrominoBase
+class FTNPlayerTetromino : public FTNTetrominoBase
 {
 	const TArray<TArray<FVector2D>> JLSTZOffset = {
 		{FVector2D(0,0), FVector2D(0,0), FVector2D(0,0), FVector2D(0,0), FVector2D(0,0)} ,
@@ -30,14 +28,14 @@ class FPlayerTetromino : public FTetrominoBase
 	};
 
 public:
-	FPlayerTetromino() 
-		: FTetrominoBase()
+	FTNPlayerTetromino() 
+		: FTNTetrominoBase()
 		, GuideTetrominoPosition(FVector2D(0, 0))
 	{}
 
-	virtual ~FPlayerTetromino() {}
-	virtual bool Move(ETetrominoDirection tetrominoDirection) override;
-	virtual bool Rotate(ETetrominoRotation tetrominoRotation) override;
+	virtual ~FTNPlayerTetromino() {}
+	virtual bool Move(E_TNTetrominoDirection tetrominoDirection) override;
+	virtual bool Rotate(E_TNTetrominoRotation tetrominoRotation) override;
 	virtual void LockDown() override;
 	virtual void Spawn() override;
 	virtual void SetGuideTetromino() override;
@@ -45,11 +43,10 @@ public:
 	virtual void HideGuideTetromino() override;
 
 private:
-	FVector2D simulatePosition(ETetrominoDirection tetrominoDirection);
+	FVector2D simulatePosition(E_TNTetrominoDirection tetrominoDirection);
 	
 	int32 Mod(int32 n, int32 m) { return ((n % m) + m) % m; }
 
 private:
 	FVector2D GuideTetrominoPosition;
-	FRotationSystemBase* RotationSystem;
 };

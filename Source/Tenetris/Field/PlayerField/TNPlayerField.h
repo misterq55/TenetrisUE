@@ -3,21 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Tenetris/Field/FieldBase.h"
-#include "PlayerField.generated.h"
+#include "Tenetris/Field/TNFieldBase.h"
+#include "TNPlayerField.generated.h"
 
-class FTetrominoBase;
-class FTetrominoGenerator;
+class FTNTetrominoBase;
+class FTNTetrominoGenerator;
 
-class FLockDown
+class FTNLockDown
 {
 public:
-	FLockDown() 
+	FTNLockDown() 
 	{
 		LockDownRemainCount = MaxLockDownRemainCount;
 	}
 
-	~FLockDown() {}
+	~FTNLockDown() {}
 	void StartLockDown() 
 	{
 		LockDownStart = true;
@@ -42,17 +42,19 @@ public:
 		return false; 
 	}
 
-	void CheckRemainCount(ETetrominoDirection tetrominoDirection)
+	void CheckRemainCount(E_TNTetrominoDirection tetrominoDirection)
 	{
 		if (!LockDownStart)
+		{
 			return;
+		}
 
-		if (tetrominoDirection == ETetrominoDirection::Left
-			|| tetrominoDirection == ETetrominoDirection::Right)
+		if (tetrominoDirection == E_TNTetrominoDirection::Left
+			|| tetrominoDirection == E_TNTetrominoDirection::Right)
 		{
 			LockDownRemainCount--;
 		}
-		else if (tetrominoDirection == ETetrominoDirection::Down)
+		else if (tetrominoDirection == E_TNTetrominoDirection::Down)
 		{
 			LockDownRemainCount = MaxLockDownRemainCount;
 			LockDownStart = false;
@@ -64,7 +66,9 @@ public:
 	void CheckRemainCount()
 	{
 		if (!LockDownStart)
+		{
 			return;
+		}
 
 		LockDownRemainCount--;
 		LockDownTime = 0.f;
@@ -79,14 +83,14 @@ private:
 };
 
 UCLASS()
-class TENETRIS_API APlayerField : public AFieldBase
+class TENETRIS_API ATNPlayerField : public ATNFieldBase
 {
 	GENERATED_BODY()
 
-	typedef struct FMoveDirectionState
+	struct FTNMoveDirectionState
 	{
 	public:
-		FMoveDirectionState()
+		FTNMoveDirectionState()
 			: Pressed(false)
 			, PressedTime(0.f)
 			, AutoRepeatKickIn(false)
@@ -97,12 +101,12 @@ class TENETRIS_API APlayerField : public AFieldBase
 		float PressedTime;
 		bool AutoRepeatKickIn;
 		float AutoRepeatTime;
-	}FMoveDirectionState;
+	};
 
 public:	
 	// Sets default values for this actor's properties
-	APlayerField();
-	virtual ~APlayerField();
+	ATNPlayerField();
+	virtual ~ATNPlayerField();
 
 protected:
 	// Called when the game starts or when spawned
@@ -115,12 +119,12 @@ public:
 
 	virtual	void Initialize();
 
-	bool MoveTetromino(ETetrominoDirection tetrominoDirection);
-	void RotateTetromino(ETetrominoRotation tetrominoRotation);
+	bool MoveTetromino(E_TNTetrominoDirection tetrominoDirection);
+	void RotateTetromino(E_TNTetrominoRotation tetrominoRotation);
 	void HardDrop();
 	void SetSoftDrop(bool softDrop) { bSoftDrop = softDrop; }
 	bool GetSoftDrop() { return bSoftDrop; }
-	void SetMoveDirection(ETetrominoDirection tetrominoDirection, bool pressed);
+	void SetMoveDirection(E_TNTetrominoDirection tetrominoDirection, bool pressed);
 
 private:
 	void registerActions();
@@ -133,14 +137,14 @@ private:
 	void renewPreviewTetromino();
 	float getFallingSpeed();
 	void tetrominoFall(float deltaTime);
-	void setMoveState(float deltaTime, FMoveDirectionState& moveState, ETetrominoDirection tetrominoDirction);
+	void setMoveState(float deltaTime, FTNMoveDirectionState& moveState, E_TNTetrominoDirection tetrominoDirction);
 	void updateLockDown(float deltaTime);
 	void doLockDown();
 	void lineDelete();
 	void waitForSpawn();
 
 protected:
-	void BindTetrominoToBuffer(FTetrominoBase* tetromino, UTenetrisBufferComponent* buffer);
+	void BindTetrominoToBuffer(FTNTetrominoBase* tetromino, UTNTenetrisBufferComponent* buffer);
 	void Spawn();
 
 	void StartMoveLeft();
@@ -159,25 +163,25 @@ protected:
 	void ToggleSpaceInversion();
 
 protected:
-	FTetrominoBase* CurrentTetromino;
-	FTetrominoGenerator* TetrominoGenerator;
-	TArray<FTetrominoBase*> PreviewTetrominos;
-	UTenetrisBufferComponent* PreviewBufferComponent;
+	FTNTetrominoBase* CurrentTetromino;
+	FTNTetrominoGenerator* TetrominoGenerator;
+	TArray<FTNTetrominoBase*> PreviewTetrominos;
+	UTNTenetrisBufferComponent* PreviewBufferComponent;
 	int32 PreviewTetrominoNum;
 	float TetrominoFallingSpeed = 1.f;
 	float CurrentTime = 0.f;
 
-	UTenetrisBufferComponent* HoldBufferComponent;
-	FTetrominoBase* HoldTetromino;
+	UTNTenetrisBufferComponent* HoldBufferComponent;
+	FTNTetrominoBase* HoldTetromino;
 
 private:
 	bool bSoftDrop = false;
-	FMoveDirectionState LeftDirectionState;
-	FMoveDirectionState RightDirectionState;
-	ETetrominoDirection TetrominoMoveDirection = ETetrominoDirection::None;
+	FTNMoveDirectionState LeftDirectionState;
+	FTNMoveDirectionState RightDirectionState;
+	E_TNTetrominoDirection TetrominoMoveDirection = E_TNTetrominoDirection::None;
 	float KickInDelay = 0.3f;
 	float MoveSpeed = 0.05f;
-	FLockDown LockDown;
+	FTNLockDown LockDown;
 	bool bWaitForSpawn = false;
 	bool bCanHold = true;
 };

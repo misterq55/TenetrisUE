@@ -1,6 +1,6 @@
-#include "PlayerTetromino.h"
+#include "TNPlayerTetromino.h"
 
-bool FPlayerTetromino::Move(ETetrominoDirection tetrominoDirection)
+bool FTNPlayerTetromino::Move(E_TNTetrominoDirection tetrominoDirection)
 {
 	FVector2D SimulationPosition = simulatePosition(tetrominoDirection);
 
@@ -10,8 +10,8 @@ bool FPlayerTetromino::Move(ETetrominoDirection tetrominoDirection)
 		
 		TetrominoInfo.CurrentPosition = SimulationPosition;
 
-		if (tetrominoDirection == ETetrominoDirection::Left ||
-			tetrominoDirection == ETetrominoDirection::Right)
+		if (tetrominoDirection == E_TNTetrominoDirection::Left ||
+			tetrominoDirection == E_TNTetrominoDirection::Right)
 		{
 			HideGuideTetromino();
 			SetGuideTetromino();
@@ -25,7 +25,7 @@ bool FPlayerTetromino::Move(ETetrominoDirection tetrominoDirection)
 	return true;
 }
 
-bool FPlayerTetromino::Rotate(ETetrominoRotation tetrominoRotation)
+bool FTNPlayerTetromino::Rotate(E_TNTetrominoRotation tetrominoRotation)
 {
 	// Super Rotation System
 	// 추후 따로 클래스로 분리할 계획
@@ -34,13 +34,13 @@ bool FPlayerTetromino::Rotate(ETetrominoRotation tetrominoRotation)
 
 	int32 OldRotationState = TetrominoInfo.RotationState;
 
-	if (tetrominoRotation == ETetrominoRotation::ClockWise)
+	if (tetrominoRotation == E_TNTetrominoRotation::ClockWise)
 	{
 		RotateMatrix[0] = FVector2D(0, -1);
 		RotateMatrix[1] = FVector2D(1, 0);
 		TetrominoInfo.RotationState += 1;
 	}
-	else if (tetrominoRotation == ETetrominoRotation::CounterClockWise)
+	else if (tetrominoRotation == E_TNTetrominoRotation::CounterClockWise)
 	{
 		RotateMatrix[0] = FVector2D(0, 1);
 		RotateMatrix[1] = FVector2D(-1, 0);
@@ -59,11 +59,11 @@ bool FPlayerTetromino::Rotate(ETetrominoRotation tetrominoRotation)
 
 	TArray<TArray<FVector2D>> Offset;
 
-	if (TetrominoInfo.CurrentType == ETetrominoType::I)
+	if (TetrominoInfo.CurrentType == E_TNTetrominoType::I)
 	{
 		Offset = IOffset;
 	}
-	else if (TetrominoInfo.CurrentType == ETetrominoType::O)
+	else if (TetrominoInfo.CurrentType == E_TNTetrominoType::O)
 	{
 		Offset = OOffset;
 	}
@@ -121,20 +121,20 @@ bool FPlayerTetromino::Rotate(ETetrominoRotation tetrominoRotation)
 	return true;
 }
 
-void FPlayerTetromino::LockDown()
+void FTNPlayerTetromino::LockDown()
 {
 	HideGuideTetromino();
 	HideTetromino();
 	setTetrominoBackground();
 }
 
-void FPlayerTetromino::Spawn()
+void FTNPlayerTetromino::Spawn()
 {
-	FTetrominoBase::Spawn();
+	FTNTetrominoBase::Spawn();
 	SetGuideTetromino();
 }
 
-void FPlayerTetromino::SetGuideTetromino()
+void FTNPlayerTetromino::SetGuideTetromino()
 {
 	if (!OnCalulateGuideMino.IsBound())
 		return;
@@ -159,11 +159,11 @@ void FPlayerTetromino::SetGuideTetromino()
 
 	for (FVector2D Coord : TetrominoInfo.Coordinate)
 	{
-		OnMinoType.ExecuteIfBound(Coord.X + GuideTetrominoPosition.X, Coord.Y + GuideTetrominoPosition.Y, ETetrominoType::Guide);
+		OnMinoType.ExecuteIfBound(Coord.X + GuideTetrominoPosition.X, Coord.Y + GuideTetrominoPosition.Y, E_TNTetrominoType::Guide);
 	}
 }
 
-void FPlayerTetromino::HardDrop()
+void FTNPlayerTetromino::HardDrop()
 {
 	HideTetromino();
 	TetrominoInfo.CurrentPosition = GuideTetrominoPosition;
@@ -172,20 +172,20 @@ void FPlayerTetromino::HardDrop()
 	setTetromino();
 }
 
-FVector2D FPlayerTetromino::simulatePosition(ETetrominoDirection tetrominoDirection)
+FVector2D FTNPlayerTetromino::simulatePosition(E_TNTetrominoDirection tetrominoDirection)
 {
 	FVector2D simulationPosition = TetrominoInfo.CurrentPosition;
 	switch (tetrominoDirection)
 	{
-	case ETetrominoDirection::Down:
+	case E_TNTetrominoDirection::Down:
 		simulationPosition.Y -= 1;
 		break;
 
-	case ETetrominoDirection::Left:
+	case E_TNTetrominoDirection::Left:
 		simulationPosition.X -= 1;
 		break;
 
-	case ETetrominoDirection::Right:
+	case E_TNTetrominoDirection::Right:
 		simulationPosition.X += 1;
 		break;
 	};
@@ -193,7 +193,7 @@ FVector2D FPlayerTetromino::simulatePosition(ETetrominoDirection tetrominoDirect
 	return simulationPosition;
 }
 
-void FPlayerTetromino::HideGuideTetromino()
+void FTNPlayerTetromino::HideGuideTetromino()
 {
 	for (FVector2D Coord : TetrominoInfo.Coordinate)
 	{

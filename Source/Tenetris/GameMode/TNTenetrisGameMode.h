@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TenetrisGameModeBase.h"
-#include "TenetrisGameMode.generated.h"
+#include "TNTenetrisGameModeBase.h"
+#include "TNTenetrisGameMode.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TENETRIS_API ATenetrisGameMode : public ATenetrisGameModeBase
+class TENETRIS_API ATNTenetrisGameMode : public ATNTenetrisGameModeBase
 {
 	GENERATED_BODY()	
 };

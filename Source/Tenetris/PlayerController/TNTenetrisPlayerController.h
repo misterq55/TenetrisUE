@@ -5,14 +5,14 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "Tenetris/TenetrisDefine.h"
-#include "TenetrisPlayerController.generated.h"
+#include "TNTenetrisPlayerController.generated.h"
 
 /**
  * 
  */
 
 UCLASS()
-class TENETRIS_API ATenetrisPlayerController : public APlayerController
+class TENETRIS_API ATNTenetrisPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
