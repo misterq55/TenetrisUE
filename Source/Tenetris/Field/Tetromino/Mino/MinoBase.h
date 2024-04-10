@@ -28,8 +28,8 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void SetVitibility(bool InNewVisibility);
-	virtual void SetTetrominoType(ETetrominoType InTetrominoType);
+	void SetVitibility(bool newVisibility);
+	virtual void SetTetrominoType(ETetrominoType tetrominoType);
 
 protected:
 	UStaticMeshComponent* MinoMeshComponent;

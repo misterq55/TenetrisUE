@@ -26,17 +26,17 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	virtual	void Initialize();
-	void SetMinoClassType(TSubclassOf<AMinoBase> InMinoClass);
-	void SetBackgroundCubeType(int32 X, int32 Y, ETetrominoType InTetrominoType);
-	void SetVisibilityBackgroundCube(int32 X, int32 Y, bool InVisible);
-	void SetMinoType(int32 X, int32 Y, ETetrominoType InTetrominoType);
-	void SetVisibilityMino(int32 X, int32 Y, bool InVisible);
-	bool CheckMino(int32 X, int32 Y);
+	void SetMinoClassType(TSubclassOf<AMinoBase> minoClass);
+	void SetBackgroundCubeType(int32 x, int32 y, ETetrominoType tetrominoType);
+	void SetVisibilityBackgroundCube(int32 x, int32 y, bool visible);
+	void SetMinoType(int32 x, int32 y, ETetrominoType InTetrominoType);
+	void SetVisibilityMino(int32 x, int32 y, bool InVisible);
+	bool CheckMino(int32 x, int32 y);
 	void SetBufferSize(int32 InBufferHeight, int32 InBufferWidth);
-	int32 CalculateGuideMinoHeight(int32 X, int32 Y);
+	int32 CalculateGuideMinoHeight(int32 x, int32 y);
 	void CheckLineDelete(TArray<int32> Heights);
-	ETetrominoType GetValueFromCheckBuffer(int32 X, int32 Y);
-	void SetValueToCheckBuffer(int32 X, int32 Y, ETetrominoType InTetrominoType);
+	ETetrominoType GetValueFromCheckBuffer(int32 x, int32 y);
+	void SetValueToCheckBuffer(int32 x, int32 y, ETetrominoType InTetrominoType);
 	bool GetLineDeleting() { return bLineDeleting; }
 	void ToggleSpaceInversion();
 

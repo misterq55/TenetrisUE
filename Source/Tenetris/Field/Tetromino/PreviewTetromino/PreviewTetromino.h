@@ -12,6 +12,6 @@ public:
 	{}
 
 	virtual ~FPreviewTetromino() {}
-	virtual bool Move(ETetrominoDirection InTetrominoDirection) override;
-	virtual bool Rotate(ETetrominoRotation InTetrominoRotation) override;
+	virtual bool Move(ETetrominoDirection tetrominoDirection) override;
+	virtual bool Rotate(ETetrominoRotation tetrominoRotation) override;
 };

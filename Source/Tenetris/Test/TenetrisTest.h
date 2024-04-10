@@ -30,15 +30,15 @@ public:
 		InitailizeMesh(MeshObj.Object);
 	}
 
-	void SetTetrominoType(ETetrominoType InTetrominoType)
+	void SetTetrominoType(ETetrominoType tetrominoType)
 	{
-		Super::SetTetrominoType(InTetrominoType);
+		Super::SetTetrominoType(tetrominoType);
 
 		if (!MinoMeshComponent)
 			return;
 		
 		FSoftObjectPath DefaultTranslucentMaterialName;
-		switch (InTetrominoType)
+		switch (tetrominoType)
 		{
 		case ETetrominoType::I:
 			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/IMino.IMino'");
@@ -141,16 +141,16 @@ protected:
 						SetVisibilityBackgroundCube(j, i, false);
 
 					if (j == 0)
-						SetBackgroundCubeType(j, i, ETetrominoType::J);
+						setBackgroundCubeType(j, i, ETetrominoType::J);
 
 					if (j == 9)
-						SetBackgroundCubeType(j, i, ETetrominoType::Z);
+						setBackgroundCubeType(j, i, ETetrominoType::Z);
 
 					if (i == 0)
-						SetBackgroundCubeType(j, i, ETetrominoType::I);
+						setBackgroundCubeType(j, i, ETetrominoType::I);
 
 					if (i == 19)
-						SetBackgroundCubeType(j, i, ETetrominoType::O);
+						setBackgroundCubeType(j, i, ETetrominoType::O);
 				}
 			}
 		}
@@ -160,7 +160,7 @@ protected:
 			{
 				for (int j = 0; j < ColumnMax; j++)
 				{
-					SetBackgroundCubeType(j, i, ETetrominoType::Obstacle);
+					setBackgroundCubeType(j, i, ETetrominoType::Obstacle);
 				}
 			}
 		}
@@ -186,7 +186,7 @@ public:
 				if (i % 2 == 1 && j == 3)
 					continue;
 
-				SetBackgroundCubeType(j, i, ETetrominoType::Obstacle);
+				setBackgroundCubeType(j, i, ETetrominoType::Obstacle);
 			}
 		}
 
@@ -194,25 +194,25 @@ public:
 		//{
 		//	for (int j = 0; j < ColumnMax; j++)
 		//	{
-		//		// SetBackgroundCubeType(j, i, ETetrominoType::Obstacle);
+		//		// setBackgroundCubeType(j, i, ETetrominoType::Obstacle);
 
 		//		/*if (j == 0)
-		//			SetBackgroundCubeType(j, i, ETetrominoType::J);
+		//			setBackgroundCubeType(j, i, ETetrominoType::J);
 
 		//		if (j == 7)
-		//			SetBackgroundCubeType(j, i, ETetrominoType::Z);*/
+		//			setBackgroundCubeType(j, i, ETetrominoType::Z);*/
 
 		//		if (i == 2)
-		//			SetBackgroundCubeType(j, i, ETetrominoType::Obstacle);
+		//			setBackgroundCubeType(j, i, ETetrominoType::Obstacle);
 
 		//		/*if (i == 19)
-		//			SetBackgroundCubeType(j, i, ETetrominoType::O);*/
+		//			setBackgroundCubeType(j, i, ETetrominoType::O);*/
 		//	}
 		//}
 
-		/*SetBackgroundCubeType(5, 3, ETetrominoType::Obstacle);
-		SetBackgroundCubeType(4, 3, ETetrominoType::Obstacle);
-		SetBackgroundCubeType(5, 4, ETetrominoType::Obstacle);*/
+		/*setBackgroundCubeType(5, 3, ETetrominoType::Obstacle);
+		setBackgroundCubeType(4, 3, ETetrominoType::Obstacle);
+		setBackgroundCubeType(5, 4, ETetrominoType::Obstacle);*/
 
 		Spawn();
 	}
