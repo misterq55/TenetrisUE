@@ -17,7 +17,7 @@ void ATNTenetrisGameModeBase::Initialize()
 {
 	for (ATNFieldBase* Field : Fields)
 	{
-		if (IsValid(Field))
+		if (!IsValid(Field))
 		{
 			continue;
 		}
