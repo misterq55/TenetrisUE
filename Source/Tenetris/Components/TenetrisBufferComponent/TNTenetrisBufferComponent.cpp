@@ -13,18 +13,17 @@ UTNTenetrisBufferComponent::UTNTenetrisBufferComponent()
 
 	// ...
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshObj(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Plane.Shape_Plane'"));
-	BackgroundMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("STATICMESH_COMPONENT"));
-	BackgroundMeshComponent->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
+	BackgroundMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BACKGROUNDMESH_COMPONENT"));
 	BackgroundMeshComponent->SetStaticMesh(MeshObj.Object);
+	BackgroundMeshComponent->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
 	BackgroundMeshComponent->SetMobility(EComponentMobility::Movable);
-	// BackgroundMeshComponent->SetRelativeRotation(FRotator(90.f, 0.f, 0.f));
+	BackgroundMeshComponent->SetRelativeRotation(FRotator(90.f, 0.f, 0.f));
 
 	BackGroundMinoBufferPivot = CreateDefaultSubobject<USceneComponent>(TEXT("BackGroundMinoBufferPivot"));
 	MinoBufferPivot = CreateDefaultSubobject<USceneComponent>(TEXT("MinoBufferPivot"));
 
 	BackGroundMinoBufferPivot->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
 	BackGroundMinoBufferPivot->SetMobility(EComponentMobility::Movable);
-	// BackGroundMinoBufferPivot->SetRelativeRotation(FRotator(90.f, 0.f, 0.f));
 
 	MinoBufferPivot->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
 	MinoBufferPivot->SetMobility(EComponentMobility::Movable);
@@ -266,7 +265,7 @@ void UTNTenetrisBufferComponent::SetBufferSize(int32 bufferHeight, int32 bufferW
 
 	if (IsValid(BackgroundMeshComponent))
 	{
-		BackgroundMeshComponent->SetRelativeScale3D(FVector(MinoRatio * BufferHeight, MinoRatio * BufferWidth, 0.f));
+		BackgroundMeshComponent->SetRelativeScale3D(FVector(MinoRatio * BufferHeight, MinoRatio * BufferWidth, 1));
 	}
 }
 
