@@ -8,7 +8,6 @@
 #include "Tenetris/Field/Tetromino/TNTetrominoBase.h"
 #include "TNFieldBase.generated.h"
 
-class FTNTetrominoBase;
 class ATNMinoBase;
 class UTNTenetrisBufferComponent;
 
@@ -16,8 +15,6 @@ UCLASS()
 class TENETRIS_API ATNFieldBase : public AActor
 {
 	GENERATED_BODY()
-
-		friend class FTNTetrominoBase;
 
 public:	
 	// Sets default values for this actor's properties
