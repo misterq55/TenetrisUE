@@ -102,9 +102,9 @@ void UTNTenetrisBufferComponent::TickComponent(float DeltaTime, ELevelTick TickT
 
 void UTNTenetrisBufferComponent::Initialize()
 {
-	for (int i = 0; i < BufferHeight + 2; i++)
+	for (int32 i = 0; i < BufferHeight + 2; i++)
 	{
-		for (int j = 0; j < BufferWidth; j++)
+		for (int32 j = 0; j < BufferWidth; j++)
 		{
 			UChildActorComponent* childComponent = NewObject<UChildActorComponent>(this);
 			
@@ -130,9 +130,9 @@ void UTNTenetrisBufferComponent::Initialize()
 
 	// BackGroundMinoBufferPivot->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
 
-	for (int i = 0; i < BufferHeight + 2; i++)
+	for (int32 i = 0; i < BufferHeight + 2; i++)
 	{
-		for (int j = 0; j < BufferWidth; j++)
+		for (int32 j = 0; j < BufferWidth; j++)
 		{
 			UChildActorComponent* childComponent = NewObject<UChildActorComponent>(this);
 
