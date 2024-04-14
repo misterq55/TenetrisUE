@@ -12,7 +12,7 @@ TArray<int32> FTNTetrominoBase::GetMinoHeights()
 	return result;
 }
 
-void FTNTetrominoBase::SetTetrominoPosition(int32 x, int32 y)
+void FTNTetrominoBase::SetTetrominoPosition(const int32 x, const int32 y)
 {
 	TetrominoInfo.SetPosition(x, y);
 
@@ -22,7 +22,7 @@ void FTNTetrominoBase::SetTetrominoPosition(int32 x, int32 y)
 	}
 }
 
-void FTNTetrominoBase::SetTetrominoType(E_TNTetrominoType currentTetrominoType)
+void FTNTetrominoBase::SetTetrominoType(const E_TNTetrominoType currentTetrominoType)
 {
 	TetrominoInfo.CurrentType = currentTetrominoType;
 
@@ -61,7 +61,7 @@ void FTNTetrominoBase::SetTetrominoType(E_TNTetrominoType currentTetrominoType)
 	}
 }
 
-void FTNTetrominoBase::SetStartingLocation(int32 x, int32 y)
+void FTNTetrominoBase::SetStartingLocation(const int32 x, const int32 y)
 {
 	StartingLocation = FVector2D(x, y);
 }

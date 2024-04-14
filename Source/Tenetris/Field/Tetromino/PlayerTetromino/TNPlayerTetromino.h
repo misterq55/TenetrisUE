@@ -34,8 +34,8 @@ public:
 	{}
 
 	virtual ~FTNPlayerTetromino() {}
-	virtual bool Move(E_TNTetrominoDirection tetrominoDirection) override;
-	virtual bool Rotate(E_TNTetrominoRotation tetrominoRotation) override;
+	virtual bool Move(const E_TNTetrominoDirection tetrominoDirection) override;
+	virtual bool Rotate(const E_TNTetrominoRotation tetrominoRotation) override;
 	virtual void LockDown() override;
 	virtual void Spawn() override;
 	virtual void SetGuideTetromino() override;
@@ -43,7 +43,7 @@ public:
 	virtual void HideGuideTetromino() override;
 
 private:
-	FVector2D simulatePosition(E_TNTetrominoDirection tetrominoDirection);
+	FVector2D simulatePosition(const E_TNTetrominoDirection tetrominoDirection);
 	
 	int32 mod(int32 n, int32 m) { return ((n % m) + m) % m; }
 
