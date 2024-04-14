@@ -1,6 +1,6 @@
 #include "TNPlayerTetromino.h"
 
-bool FTNPlayerTetromino::Move(E_TNTetrominoDirection tetrominoDirection)
+bool FTNPlayerTetromino::Move(const E_TNTetrominoDirection tetrominoDirection)
 {
 	const FVector2D& simulationPosition = simulatePosition(tetrominoDirection);
 
@@ -25,7 +25,7 @@ bool FTNPlayerTetromino::Move(E_TNTetrominoDirection tetrominoDirection)
 	return true;
 }
 
-bool FTNPlayerTetromino::Rotate(E_TNTetrominoRotation tetrominoRotation)
+bool FTNPlayerTetromino::Rotate(const E_TNTetrominoRotation tetrominoRotation)
 {
 	// Super Rotation System
 	// 추후 따로 클래스로 분리할 계획
@@ -178,7 +178,7 @@ void FTNPlayerTetromino::HardDrop()
 	setTetromino();
 }
 
-FVector2D FTNPlayerTetromino::simulatePosition(E_TNTetrominoDirection tetrominoDirection)
+FVector2D FTNPlayerTetromino::simulatePosition(const E_TNTetrominoDirection tetrominoDirection)
 {
 	FVector2D simulationPosition = TetrominoInfo.CurrentPosition;
 	switch (tetrominoDirection)

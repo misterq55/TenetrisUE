@@ -10,7 +10,7 @@ void FTNTetrominoGenerator::Initialize()
 
 E_TNTetrominoType FTNTetrominoGenerator::GetTop()
 {
-	E_TNTetrominoType topType = TetrominoArray[0];
+	const E_TNTetrominoType topType = TetrominoArray[0];
   TetrominoArray.RemoveAt(0);
 
   if (TetrominoArray.Num() <= TetrominoLimitCounter)
@@ -21,9 +21,14 @@ E_TNTetrominoType FTNTetrominoGenerator::GetTop()
 	return topType;
 }
 
-E_TNTetrominoType FTNTetrominoGenerator::GetAt(int32 InIndex)
+E_TNTetrominoType FTNTetrominoGenerator::GetAt(const int32 index)
 {
-	return TetrominoArray[InIndex];
+  if (!TetrominoArray.IsValidIndex(index))
+  {
+    return E_TNTetrominoType::None;
+  }
+
+	return TetrominoArray[index];
 }
 
 void FTNTetrominoGenerator::shuffleTetrominoBag(TArray<E_TNTetrominoType>& bag)
@@ -31,7 +36,7 @@ void FTNTetrominoGenerator::shuffleTetrominoBag(TArray<E_TNTetrominoType>& bag)
   const int32 lastIndex = bag.Num() - 1;
   for (int32 i = 0; i < lastIndex; ++i)
   {
-    int32 index = FMath::RandRange(0, lastIndex);
+    const int32 index = FMath::RandRange(0, lastIndex);
     if (i != index)
     {
       bag.Swap(i, index);
@@ -39,7 +44,7 @@ void FTNTetrominoGenerator::shuffleTetrominoBag(TArray<E_TNTetrominoType>& bag)
   }
 }
 
-void FTNTetrominoGenerator::refillTetrominoArray(int32 tetrominoArrayResetCounter)
+void FTNTetrominoGenerator::refillTetrominoArray(const int32 tetrominoArrayResetCounter)
 {
   for (int32 i = 0; i < tetrominoArrayResetCounter; i++)
   {

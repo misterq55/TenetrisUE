@@ -71,7 +71,9 @@ void UTNTenetrisBufferComponent::TickComponent(float DeltaTime, ELevelTick TickT
 					lineDeleteValue++;
 				}
 				else
+				{
 					lineChecker.Add(lineDeleteValue);
+				}
 			}
 
 			for (int32 i = 0; i < BufferHeight; i++)
@@ -83,10 +85,15 @@ void UTNTenetrisBufferComponent::TickComponent(float DeltaTime, ELevelTick TickT
 						const E_TNTetrominoType value = GetValueFromCheckBuffer(j, i);
 						SetValueToCheckBuffer(j, i, E_TNTetrominoType::None);
 						SetVisibilityBackgroundCube(j, i, false);
+						
 						if (value == E_TNTetrominoType::None)
+						{
 							SetValueToCheckBuffer(j, i - lineChecker[i], E_TNTetrominoType::None);
+						}
 						else
+						{
 							SetBackgroundCubeType(j, i - lineChecker[i], value);
+						}
 					}
 				}
 			}
@@ -109,7 +116,9 @@ void UTNTenetrisBufferComponent::Initialize()
 			UChildActorComponent* childComponent = NewObject<UChildActorComponent>(this);
 			
 			if (!IsValid(childComponent))
-				continue; 
+			{
+				continue;
+			}
 
 			childComponent->SetChildActorClass(MinoClass);
 			childComponent->AttachToComponent(BackGroundMinoBufferPivot, FAttachmentTransformRules::KeepRelativeTransform);
@@ -127,8 +136,6 @@ void UTNTenetrisBufferComponent::Initialize()
 			BackgroundCubeBuffer[i].Add(minoBase);
 		}
 	}
-
-	// BackGroundMinoBufferPivot->SetRelativeRotation(FRotator(0.f, 90.f, 0.f));
 
 	for (int32 i = 0; i < BufferHeight + 2; i++)
 	{
@@ -159,12 +166,12 @@ void UTNTenetrisBufferComponent::Initialize()
 	}
 }
 
-void UTNTenetrisBufferComponent::SetMinoClassType(TSubclassOf<ATNMinoBase> minoClass)
+void UTNTenetrisBufferComponent::SetMinoClassType(const TSubclassOf<ATNMinoBase> minoClass)
 {
 	MinoClass = minoClass;
 }
 
-void UTNTenetrisBufferComponent::SetBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType)
+void UTNTenetrisBufferComponent::SetBackgroundCubeType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
 {
 	int32 newX = x;
 
@@ -184,12 +191,14 @@ void UTNTenetrisBufferComponent::SetBackgroundCubeType(int32 x, int32 y, E_TNTet
 	SetValueToCheckBuffer(x, y, tetrominoType);
 }
 
-void UTNTenetrisBufferComponent::SetVisibilityBackgroundCube(int32 x, int32 y, bool visible)
+void UTNTenetrisBufferComponent::SetVisibilityBackgroundCube(const int32 x, const int32 y, const bool visible)
 {
 	int32 newX = x;
 
 	if (bSpaceInverted)
+	{
 		newX = BufferWidth - x - 1;
+	}
 
 	ATNMinoBase* mino = BackgroundCubeBuffer[y][newX];
 
@@ -201,7 +210,7 @@ void UTNTenetrisBufferComponent::SetVisibilityBackgroundCube(int32 x, int32 y, b
 	SetValueToCheckBuffer(x, y, E_TNTetrominoType::None);
 }
 
-void UTNTenetrisBufferComponent::SetMinoType(int32 x, int32 y, E_TNTetrominoType tetrominoType)
+void UTNTenetrisBufferComponent::SetMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
 {
 	ATNMinoBase* mino = MinoBuffer[y][x];
 
@@ -212,7 +221,7 @@ void UTNTenetrisBufferComponent::SetMinoType(int32 x, int32 y, E_TNTetrominoType
 	}
 }
 
-void UTNTenetrisBufferComponent::SetVisibilityMino(int32 x, int32 y, bool visible)
+void UTNTenetrisBufferComponent::SetVisibilityMino(const int32 x, const int32 y, const bool visible)
 {
 	ATNMinoBase* mino = MinoBuffer[y][x];
 
@@ -222,7 +231,7 @@ void UTNTenetrisBufferComponent::SetVisibilityMino(int32 x, int32 y, bool visibl
 	}
 }
 
-bool UTNTenetrisBufferComponent::CheckMino(int32 x, int32 y)
+bool UTNTenetrisBufferComponent::CheckMino(const int32 x, const int32 y)
 {
 	if (y < 0 || x < 0) return true;
 	if (y >= BufferHeight || x >= BufferWidth) return true;
@@ -230,7 +239,7 @@ bool UTNTenetrisBufferComponent::CheckMino(int32 x, int32 y)
 	return GetValueFromCheckBuffer(x, y) != E_TNTetrominoType::None;
 }
 
-void UTNTenetrisBufferComponent::SetBufferSize(int32 bufferHeight, int32 bufferWidth)
+void UTNTenetrisBufferComponent::SetBufferSize(const int32 bufferHeight, const int32 bufferWidth)
 {
 	BufferHeight = bufferHeight;
 	BufferWidth = bufferWidth;
@@ -271,7 +280,7 @@ void UTNTenetrisBufferComponent::SetBufferSize(int32 bufferHeight, int32 bufferW
 	}
 }
 
-int32 UTNTenetrisBufferComponent::CalculateGuideMinoHeight(int32 x, int32 y)
+int32 UTNTenetrisBufferComponent::CalculateGuideMinoHeight(const int32 x, const int32 y)
 {
 	int32 result = 0;
 	int32 height = 0;
@@ -290,7 +299,7 @@ int32 UTNTenetrisBufferComponent::CalculateGuideMinoHeight(int32 x, int32 y)
 	return result;
 }
 
-void UTNTenetrisBufferComponent::CheckLineDelete(TArray<int32> heights)
+void UTNTenetrisBufferComponent::CheckLineDelete(const TArray<int32> heights)
 {
 	for (const int32& height : heights)
 	{
@@ -317,7 +326,7 @@ void UTNTenetrisBufferComponent::CheckLineDelete(TArray<int32> heights)
 	}
 }
 
-E_TNTetrominoType UTNTenetrisBufferComponent::GetValueFromCheckBuffer(int32 x, int32 y)
+E_TNTetrominoType UTNTenetrisBufferComponent::GetValueFromCheckBuffer(const int32 x, const int32 y)
 {
 	int32 newX = x;
 	
@@ -329,7 +338,7 @@ E_TNTetrominoType UTNTenetrisBufferComponent::GetValueFromCheckBuffer(int32 x, i
 	return CheckBuffer[y + 1][newX + 1];
 }
 
-void UTNTenetrisBufferComponent::SetValueToCheckBuffer(int32 x, int32 y, E_TNTetrominoType tetrominoType)
+void UTNTenetrisBufferComponent::SetValueToCheckBuffer(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
 {
 	int32 newX = x;
 

@@ -16,11 +16,11 @@ public:
 	void Initialize();
 
 	E_TNTetrominoType GetTop();
-	E_TNTetrominoType GetAt(int32 InIndex);
+	E_TNTetrominoType GetAt(const int32 index);
 
 private:
 	void shuffleTetrominoBag(TArray<E_TNTetrominoType>& bag);
-	void refillTetrominoArray(int32 tetrominoArrayResetCounter);
+	void refillTetrominoArray(const int32 tetrominoArrayResetCounter);
 
 private:
 	TArray<E_TNTetrominoType> TetrominoArray;

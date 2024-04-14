@@ -4,12 +4,12 @@
 
 #include "Tenetris/TenetrisDefine.h"
 
-DECLARE_DELEGATE_ThreeParams(FSetBackgroundCubeTypeDelegate, int32, int32, E_TNTetrominoType);
-DECLARE_DELEGATE_ThreeParams(FSetVisibilityBackgroundCubeTypeDelegate, int32, int32, bool);
-DECLARE_DELEGATE_ThreeParams(FSetMinoTypeDelegate, int32, int32, E_TNTetrominoType);
-DECLARE_DELEGATE_ThreeParams(FSetVisibilityMinoTypeDelegate, int32, int32, bool);
-DECLARE_DELEGATE_RetVal_TwoParams(bool, FCheckMinoDelegate, int32, int32);
-DECLARE_DELEGATE_RetVal_TwoParams(int32, FCalculateGuideMinoHeightDelegate, int32, int32);
+DECLARE_DELEGATE_ThreeParams(FSetBackgroundCubeTypeDelegate, const int32, const int32, const E_TNTetrominoType);
+DECLARE_DELEGATE_ThreeParams(FSetVisibilityBackgroundCubeTypeDelegate, const int32, const int32, const bool);
+DECLARE_DELEGATE_ThreeParams(FSetMinoTypeDelegate, const int32, const int32, const E_TNTetrominoType);
+DECLARE_DELEGATE_ThreeParams(FSetVisibilityMinoTypeDelegate, const int32, const int32, const bool);
+DECLARE_DELEGATE_RetVal_TwoParams(bool, FCheckMinoDelegate, const int32, const int32);
+DECLARE_DELEGATE_RetVal_TwoParams(int32, FCalculateGuideMinoHeightDelegate, const int32, const int32);
 
 
 class ATNFieldBase;
@@ -66,8 +66,8 @@ public:
 		OnCalulateGuideMino.Unbind();
 	}
 
-	virtual bool Move(E_TNTetrominoDirection tetrominoDirection) { return true; }
-	virtual bool Rotate(E_TNTetrominoRotation tetrominoRotation) { return true; }
+	virtual bool Move(const E_TNTetrominoDirection tetrominoDirection) { return true; }
+	virtual bool Rotate(const E_TNTetrominoRotation tetrominoRotation) { return true; }
 	virtual void LockDown() {}
 	virtual void Spawn();
 	virtual void SetGuideTetromino() {}
@@ -80,10 +80,10 @@ public:
 	}
 	
 	TArray<int32> GetMinoHeights();
-	void SetTetrominoPosition(int32 x, int32 y);
-	void SetTetrominoType(E_TNTetrominoType currentTetrominoType);
+	void SetTetrominoPosition(const int32 x, const int32 y);
+	void SetTetrominoType(const E_TNTetrominoType currentTetrominoType);
 	E_TNTetrominoType GetTetrominoType() { return TetrominoInfo.CurrentType; }
-	void SetStartingLocation(int32 x, int32 y);
+	void SetStartingLocation(const int32 x, const int32 y);
 	FVector2D GetStaringLocation();
 	void HideTetromino();
 
