@@ -111,7 +111,7 @@ public:
 		SetMinoClassType(ATNTestMino::StaticClass());
 		CurrentTetromino = new FTNTestTetromino();
 
-		BindTetrominoToBuffer(CurrentTetromino, TenetrisBufferComponent);
+		bindTetrominoToBuffer(CurrentTetromino, TenetrisBufferComponent);
 		CurrentTetromino->SetStartingLocation(4, 18);
 
 		PreviewBufferComponent->SetMinoClassType(ATNTestMino::StaticClass());
@@ -214,6 +214,6 @@ public:
 		setBackgroundCubeType(4, 3, E_TNTetrominoType::Obstacle);
 		setBackgroundCubeType(5, 4, E_TNTetrominoType::Obstacle);*/
 
-		Spawn();
+		spawn();
 	}
 };

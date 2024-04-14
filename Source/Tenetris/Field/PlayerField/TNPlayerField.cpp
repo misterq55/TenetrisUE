@@ -128,7 +128,7 @@ void ATNPlayerField::HardDrop()
 	}
 }
 
-void ATNPlayerField::Hold()
+void ATNPlayerField::hold()
 {
 	if (!bCanHold || !HoldTetromino || !CurrentTetromino || !HoldTetromino)
 		return;
@@ -159,7 +159,7 @@ void ATNPlayerField::Hold()
 	bCanHold = false;
 }
 
-void ATNPlayerField::ToggleSpaceInversion()
+void ATNPlayerField::toggleSpaceInversion()
 {
 	if (IsValid(TenetrisBufferComponent))
 	{
@@ -222,20 +222,20 @@ void ATNPlayerField::registerActions()
 
 	if (InputComponent)
 	{
-		InputComponent->BindAction("StartMoveLeft", EInputEvent::IE_Pressed, this, &ATNPlayerField::StartMoveLeft);
-		InputComponent->BindAction("StopMoveLeft", EInputEvent::IE_Released, this, &ATNPlayerField::StopMoveLeft);
-		InputComponent->BindAction("StartMoveRight", EInputEvent::IE_Pressed, this, &ATNPlayerField::StartMoveRight);
-		InputComponent->BindAction("StopMoveRight", EInputEvent::IE_Released, this, &ATNPlayerField::StopMoveRight);
+		InputComponent->BindAction("startMoveLeft", EInputEvent::IE_Pressed, this, &ATNPlayerField::startMoveLeft);
+		InputComponent->BindAction("stopMoveLeft", EInputEvent::IE_Released, this, &ATNPlayerField::stopMoveLeft);
+		InputComponent->BindAction("startMoveRight", EInputEvent::IE_Pressed, this, &ATNPlayerField::startMoveRight);
+		InputComponent->BindAction("stopMoveRight", EInputEvent::IE_Released, this, &ATNPlayerField::stopMoveRight);
 
-		InputComponent->BindAction("StartSoftDrop", EInputEvent::IE_Pressed, this, &ATNPlayerField::StartSoftDrop);
-		InputComponent->BindAction("StopSoftDrop", EInputEvent::IE_Released, this, &ATNPlayerField::StopSoftDrop);
+		InputComponent->BindAction("startSoftDrop", EInputEvent::IE_Pressed, this, &ATNPlayerField::startSoftDrop);
+		InputComponent->BindAction("stopSoftDrop", EInputEvent::IE_Released, this, &ATNPlayerField::stopSoftDrop);
 
-		InputComponent->BindAction("RotateClockWise", EInputEvent::IE_Pressed, this, &ATNPlayerField::RotateClockWise);
-		InputComponent->BindAction("RotateCounterClockWise", EInputEvent::IE_Pressed, this, &ATNPlayerField::RotateCounterClockWise);
+		InputComponent->BindAction("rotateClockWise", EInputEvent::IE_Pressed, this, &ATNPlayerField::rotateClockWise);
+		InputComponent->BindAction("rotateCounterClockWise", EInputEvent::IE_Pressed, this, &ATNPlayerField::rotateCounterClockWise);
 		InputComponent->BindAction("HardDrop", EInputEvent::IE_Pressed, this, &ATNPlayerField::HardDrop);
 
-		InputComponent->BindAction("Hold", EInputEvent::IE_Pressed, this, &ATNPlayerField::Hold);
-		InputComponent->BindAction("SpaceInversion", EInputEvent::IE_Pressed, this, &ATNPlayerField::ToggleSpaceInversion);
+		InputComponent->BindAction("Hold", EInputEvent::IE_Pressed, this, &ATNPlayerField::hold);
+		InputComponent->BindAction("SpaceInversion", EInputEvent::IE_Pressed, this, &ATNPlayerField::toggleSpaceInversion);
 	}
 }
 
@@ -263,7 +263,7 @@ void ATNPlayerField::initializePreviewTetrominos()
 	{
 		FTNTetrominoBase* previewTetromino = new FTNPreviewTetromino();
 		PreviewTetrominos.Add(previewTetromino);
-		BindTetrominoToBuffer(previewTetromino, PreviewBufferComponent);
+		bindTetrominoToBuffer(previewTetromino, PreviewBufferComponent);
 		previewTetromino->SetStartingLocation(2, (PreviewTetrominoNum - i - 1) * 3 + 1);
 	}
 }
@@ -281,11 +281,11 @@ void ATNPlayerField::initializeHoldBuffer()
 void ATNPlayerField::initializeHoldTetromino()
 {
 	HoldTetromino = new FTNPreviewTetromino();
-	BindTetrominoToBuffer(HoldTetromino, HoldBufferComponent);
+	bindTetrominoToBuffer(HoldTetromino, HoldBufferComponent);
 	HoldTetromino->SetStartingLocation(2, 1);
 }
 
-void ATNPlayerField::BindTetrominoToBuffer(FTNTetrominoBase* tetromino, UTNTenetrisBufferComponent* buffer)
+void ATNPlayerField::bindTetrominoToBuffer(FTNTetrominoBase* tetromino, UTNTenetrisBufferComponent* buffer)
 {
 	if (!tetromino || !IsValid(buffer))
 	{
@@ -300,7 +300,7 @@ void ATNPlayerField::BindTetrominoToBuffer(FTNTetrominoBase* tetromino, UTNTenet
 	tetromino->OnCalulateGuideMino.BindUObject(buffer, &UTNTenetrisBufferComponent::CalculateGuideMinoHeight);
 }
 
-void ATNPlayerField::Spawn()
+void ATNPlayerField::spawn()
 {
 	CurrentTime = 0.f;
 	spawnNextTetromino();
@@ -308,42 +308,42 @@ void ATNPlayerField::Spawn()
 	bCanHold = true;
 }
 
-void ATNPlayerField::StartMoveLeft()
+void ATNPlayerField::startMoveLeft()
 {
 	SetMoveDirection(E_TNTetrominoDirection::Left, true);
 }
 
-void ATNPlayerField::StopMoveLeft()
+void ATNPlayerField::stopMoveLeft()
 {
 	SetMoveDirection(E_TNTetrominoDirection::Left, false);
 }
 
-void ATNPlayerField::StartMoveRight()
+void ATNPlayerField::startMoveRight()
 {
 	SetMoveDirection(E_TNTetrominoDirection::Right, true);
 }
 
-void ATNPlayerField::StopMoveRight()
+void ATNPlayerField::stopMoveRight()
 {
 	SetMoveDirection(E_TNTetrominoDirection::Right, false);
 }
 
-void ATNPlayerField::StartSoftDrop()
+void ATNPlayerField::startSoftDrop()
 {
 	SetSoftDrop(true);
 }
 
-void ATNPlayerField::StopSoftDrop()
+void ATNPlayerField::stopSoftDrop()
 {
 	SetSoftDrop(false);
 }
 
-void ATNPlayerField::RotateClockWise()
+void ATNPlayerField::rotateClockWise()
 {
 	RotateTetromino(E_TNTetrominoRotation::ClockWise);
 }
 
-void ATNPlayerField::RotateCounterClockWise()
+void ATNPlayerField::rotateCounterClockWise()
 {
 	RotateTetromino(E_TNTetrominoRotation::CounterClockWise);
 }
@@ -478,7 +478,7 @@ void ATNPlayerField::waitForSpawn()
 {
 	if (bWaitForSpawn && IsValid(TenetrisBufferComponent) && !TenetrisBufferComponent->GetLineDeleting())
 	{
-		Spawn();
+		spawn();
 		bWaitForSpawn = false;
 	}
 }

@@ -144,23 +144,23 @@ private:
 	void waitForSpawn();
 
 protected:
-	void BindTetrominoToBuffer(FTNTetrominoBase* tetromino, UTNTenetrisBufferComponent* buffer);
-	void Spawn();
+	void bindTetrominoToBuffer(FTNTetrominoBase* tetromino, UTNTenetrisBufferComponent* buffer);
+	void spawn();
 
-	void StartMoveLeft();
-	void StopMoveLeft();
+	void startMoveLeft();
+	void stopMoveLeft();
 
-	void StartMoveRight();
-	void StopMoveRight();
+	void startMoveRight();
+	void stopMoveRight();
 
-	void StartSoftDrop();
-	void StopSoftDrop();
+	void startSoftDrop();
+	void stopSoftDrop();
 
-	void RotateClockWise();
-	void RotateCounterClockWise();
+	void rotateClockWise();
+	void rotateCounterClockWise();
 
-	void Hold();
-	void ToggleSpaceInversion();
+	void hold();
+	void toggleSpaceInversion();
 
 protected:
 	FTNTetrominoBase* CurrentTetromino;
