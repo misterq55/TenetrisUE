@@ -2,13 +2,13 @@
 
 bool FTNPlayerTetromino::Move(E_TNTetrominoDirection tetrominoDirection)
 {
-	FVector2D SimulationPosition = simulatePosition(tetrominoDirection);
+	FVector2D simulationPosition = simulatePosition(tetrominoDirection);
 
-	if (!checkMino(SimulationPosition))
+	if (!checkMino(simulationPosition))
 	{
 		HideTetromino();
 		
-		TetrominoInfo.CurrentPosition = SimulationPosition;
+		TetrominoInfo.CurrentPosition = simulationPosition;
 
 		if (tetrominoDirection == E_TNTetrominoDirection::Left ||
 			tetrominoDirection == E_TNTetrominoDirection::Right)
@@ -29,88 +29,88 @@ bool FTNPlayerTetromino::Rotate(E_TNTetrominoRotation tetrominoRotation)
 {
 	// Super Rotation System
 	// 추후 따로 클래스로 분리할 계획
-	TArray<FVector2D> SimulationCoordinates = TetrominoInfo.Coordinate;
-	FVector2D RotateMatrix[2];
+	TArray<FVector2D> simulationCoordinates = TetrominoInfo.Coordinate;
+	FVector2D rotateMatrix[2];
 
-	int32 OldRotationState = TetrominoInfo.RotationState;
+	int32 oldRotationState = TetrominoInfo.RotationState;
 
 	if (tetrominoRotation == E_TNTetrominoRotation::ClockWise)
 	{
-		RotateMatrix[0] = FVector2D(0, -1);
-		RotateMatrix[1] = FVector2D(1, 0);
+		rotateMatrix[0] = FVector2D(0, -1);
+		rotateMatrix[1] = FVector2D(1, 0);
 		TetrominoInfo.RotationState += 1;
 	}
 	else if (tetrominoRotation == E_TNTetrominoRotation::CounterClockWise)
 	{
-		RotateMatrix[0] = FVector2D(0, 1);
-		RotateMatrix[1] = FVector2D(-1, 0);
+		rotateMatrix[0] = FVector2D(0, 1);
+		rotateMatrix[1] = FVector2D(-1, 0);
 		TetrominoInfo.RotationState -= 1;
 	}
 
-	TetrominoInfo.RotationState = Mod(TetrominoInfo.RotationState, 4);
+	TetrominoInfo.RotationState = mod(TetrominoInfo.RotationState, 4);
 
-	for (FVector2D &Coord : SimulationCoordinates)
+	for (FVector2D &coord : simulationCoordinates)
 	{
-		int32 NewX = (RotateMatrix[0].X * Coord.X) + (RotateMatrix[1].X * Coord.Y);
-		int32 NewY = (RotateMatrix[0].Y * Coord.X) + (RotateMatrix[1].Y * Coord.Y);
+		int32 newX = (rotateMatrix[0].X * coord.X) + (rotateMatrix[1].X * coord.Y);
+		int32 newY = (rotateMatrix[0].Y * coord.X) + (rotateMatrix[1].Y * coord.Y);
 
-		Coord = FVector2D(NewX, NewY);
+		coord = FVector2D(newX, newY);
 	}
 
-	TArray<TArray<FVector2D>> Offset;
+	TArray<TArray<FVector2D>> offset;
 
 	if (TetrominoInfo.CurrentType == E_TNTetrominoType::I)
 	{
-		Offset = IOffset;
+		offset = IOffset;
 	}
 	else if (TetrominoInfo.CurrentType == E_TNTetrominoType::O)
 	{
-		Offset = OOffset;
+		offset = OOffset;
 	}
 	else
 	{
-		Offset = JLSTZOffset;
+		offset = JLSTZOffset;
 	}
 
-	TArray<FVector2D> OldOffset = Offset[OldRotationState];
-	TArray<FVector2D> NewOffset = Offset[TetrominoInfo.RotationState];
+	TArray<FVector2D> oldOffset = offset[oldRotationState];
+	TArray<FVector2D> newOffset = offset[TetrominoInfo.RotationState];
 
 	// 킥 오프셋 정하기
-	FVector2D KickOffset(0, 0);
-	bool TetrominoCheck = true;
-	for (int32 i = 0; i < NewOffset.Num(); i++)
+	FVector2D kickOffset(0, 0);
+	bool tetrominoCheck = true;
+	for (int32 i = 0; i < newOffset.Num(); i++)
 	{
-		FVector2D Difference = OldOffset[i] - NewOffset[i];
+		FVector2D difference = oldOffset[i] - newOffset[i];
 
 		// CheckMino 변형
-		bool SimulationCheck = false;
-		FVector2D SimulationPosition = TetrominoInfo.CurrentPosition + Difference;
-		for (FVector2D Coord : SimulationCoordinates)
+		bool simulationCheck = false;
+		FVector2D simulationPosition = TetrominoInfo.CurrentPosition + difference;
+		for (FVector2D coord : simulationCoordinates)
 		{
-			if (OnCheckMino.Execute(Coord.X + SimulationPosition.X, Coord.Y + SimulationPosition.Y))
+			if (OnCheckMino.Execute(coord.X + simulationPosition.X, coord.Y + simulationPosition.Y))
 			{
-				SimulationCheck = true;
+				simulationCheck = true;
 				break;
 			}
 		}
 
-		if (!SimulationCheck)
+		if (!simulationCheck)
 		{
-			TetrominoCheck = false;
-			KickOffset = Difference;
+			tetrominoCheck = false;
+			kickOffset = difference;
 		}
 
-		if (!TetrominoCheck)
+		if (!tetrominoCheck)
 			break;
 	}
 
-	if (!TetrominoCheck)
+	if (!tetrominoCheck)
 	{
 		HideTetromino();
 		HideGuideTetromino();
 
-		TetrominoInfo.CurrentPosition += KickOffset;
-		TetrominoInfo.Coordinate = SimulationCoordinates;
+		TetrominoInfo.CurrentPosition += kickOffset;
+		TetrominoInfo.Coordinate = simulationCoordinates;
 
 		SetGuideTetromino();
 		setTetromino();
@@ -139,27 +139,27 @@ void FTNPlayerTetromino::SetGuideTetromino()
 	if (!OnCalulateGuideMino.IsBound())
 		return;
 
-	TArray<int32> CheckHeightArray;
+	TArray<int32> checkHeightArray;
 
-	for (FVector2D Coord : TetrominoInfo.Coordinate)
+	for (const FVector2D& coord : TetrominoInfo.Coordinate)
 	{
-		int32 Height = OnCalulateGuideMino.Execute(Coord.X + TetrominoInfo.CurrentPosition.X, Coord.Y + TetrominoInfo.CurrentPosition.Y);
-		CheckHeightArray.Add(Height);
+		int32 height = OnCalulateGuideMino.Execute(coord.X + TetrominoInfo.CurrentPosition.X, coord.Y + TetrominoInfo.CurrentPosition.Y);
+		checkHeightArray.Add(height);
 	}
 
-	int32 MinHeight = MAX_int32;
+	int32 minHeight = MAX_int32;
 	
-	for (int32 Height : CheckHeightArray)
+	for (int32 height : checkHeightArray)
 	{
-		if (MinHeight > Height)
-			MinHeight = Height;
+		if (minHeight > height)
+			minHeight = height;
 	}
 
-	GuideTetrominoPosition = FVector2D(TetrominoInfo.CurrentPosition.X, TetrominoInfo.CurrentPosition.Y - MinHeight);
+	GuideTetrominoPosition = FVector2D(TetrominoInfo.CurrentPosition.X, TetrominoInfo.CurrentPosition.Y - minHeight);
 
-	for (FVector2D Coord : TetrominoInfo.Coordinate)
+	for (FVector2D coord : TetrominoInfo.Coordinate)
 	{
-		OnMinoType.ExecuteIfBound(Coord.X + GuideTetrominoPosition.X, Coord.Y + GuideTetrominoPosition.Y, E_TNTetrominoType::Guide);
+		OnMinoType.ExecuteIfBound(coord.X + GuideTetrominoPosition.X, coord.Y + GuideTetrominoPosition.Y, E_TNTetrominoType::Guide);
 	}
 }
 
@@ -195,8 +195,8 @@ FVector2D FTNPlayerTetromino::simulatePosition(E_TNTetrominoDirection tetrominoD
 
 void FTNPlayerTetromino::HideGuideTetromino()
 {
-	for (FVector2D Coord : TetrominoInfo.Coordinate)
+	for (const FVector2D& coord : TetrominoInfo.Coordinate)
 	{
-		OnVisibilityMinoType.ExecuteIfBound(Coord.X + GuideTetrominoPosition.X, Coord.Y + GuideTetrominoPosition.Y, false);
+		OnVisibilityMinoType.ExecuteIfBound(coord.X + GuideTetrominoPosition.X, coord.Y + GuideTetrominoPosition.Y, false);
 	}
 }

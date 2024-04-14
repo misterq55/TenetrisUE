@@ -19,8 +19,8 @@ public:
 	E_TNTetrominoType GetAt(int32 InIndex);
 
 private:
-	void ShuffleTetrominoBag(TArray<E_TNTetrominoType>& bag);
-	void RefillTetrominoArray(int32 tetrominoArrayResetCounter);
+	void shuffleTetrominoBag(TArray<E_TNTetrominoType>& bag);
+	void refillTetrominoArray(int32 tetrominoArrayResetCounter);
 
 private:
 	TArray<E_TNTetrominoType> TetrominoArray;

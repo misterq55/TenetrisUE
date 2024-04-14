@@ -3,7 +3,7 @@
 
 #include "TNPlayerField.h"
 #include "Tenetris/Field/Tetromino/TNTetrominoBase.h"
-#include "Tenetris/Field/Tetromino/PreviewTetromino/TNPreviewTetromino.h"
+#include "Tenetris/Field/Tetromino/previewTetromino/TNPreviewTetromino.h"
 #include "Tenetris/Components/TenetrisBufferComponent/TNTenetrisBufferComponent.h"
 #include "Tenetris/Field/TetrominoGenerator/TNTetrominoGenerator.h"
 
@@ -33,8 +33,8 @@ ATNPlayerField::~ATNPlayerField()
 
 	while (PreviewTetrominos.Num() != 0)
 	{
-		FTNTetrominoBase* PreviewTetrominoToDelete = PreviewTetrominos.Pop();
-		delete PreviewTetrominoToDelete;
+		FTNTetrominoBase* previewTetrominoToDelete = PreviewTetrominos.Pop();
+		delete previewTetrominoToDelete;
 	}
 
 	if (TetrominoGenerator)
@@ -133,20 +133,20 @@ void ATNPlayerField::Hold()
 	if (!bCanHold || !HoldTetromino || !CurrentTetromino || !HoldTetromino)
 		return;
 
-	E_TNTetrominoType HoldTetrominoType = HoldTetromino->GetTetrominoType();
-	E_TNTetrominoType CurrentTetrominoType = CurrentTetromino->GetTetrominoType();
+	E_TNTetrominoType holdTetrominoType = HoldTetromino->GetTetrominoType();
+	E_TNTetrominoType currentTetrominoType = CurrentTetromino->GetTetrominoType();
 
 	CurrentTetromino->HideTetromino();
 	CurrentTetromino->HideGuideTetromino();
 
 	HoldTetromino->HideTetromino();
-	HoldTetromino->SetTetrominoType(CurrentTetrominoType);
+	HoldTetromino->SetTetrominoType(currentTetrominoType);
 	HoldTetromino->Spawn();
 
-	if (HoldTetrominoType != E_TNTetrominoType::None)
+	if (holdTetrominoType != E_TNTetrominoType::None)
 	{
 		CurrentTime = 0.f;
-		CurrentTetromino->SetTetrominoType(HoldTetrominoType);
+		CurrentTetromino->SetTetrominoType(holdTetrominoType);
 		CurrentTetromino->Spawn();
 	}
 	else
@@ -211,8 +211,14 @@ void ATNPlayerField::SetMoveDirection(E_TNTetrominoDirection tetrominoDirection,
 
 void ATNPlayerField::registerActions()
 {
-	APlayerController* PlayerController = GetWorld()->GetGameInstance()->GetFirstLocalPlayerController(GetWorld());
-	EnableInput(PlayerController);
+	APlayerController* playerController = GetWorld()->GetGameInstance()->GetFirstLocalPlayerController(GetWorld());
+
+	if (!IsValid(playerController))
+	{
+		return;
+	}
+
+	EnableInput(playerController);
 
 	if (InputComponent)
 	{
@@ -235,8 +241,8 @@ void ATNPlayerField::registerActions()
 
 void ATNPlayerField::unRegisterActions()
 {
-	APlayerController* PlayerController = GetWorld()->GetGameInstance()->GetFirstLocalPlayerController(GetWorld());
-	DisableInput(PlayerController);
+	APlayerController* playerController = GetWorld()->GetGameInstance()->GetFirstLocalPlayerController(GetWorld());
+	DisableInput(playerController);
 }
 
 void ATNPlayerField::initializePreviewBuffer()
@@ -360,10 +366,10 @@ void ATNPlayerField::renewPreviewTetromino()
 
 	for (int32 i = 0; i < PreviewTetrominos.Num(); i++)
 	{
-		FTNTetrominoBase* PreviewTetromino = PreviewTetrominos[i];
-		PreviewTetromino->HideTetromino();
-		PreviewTetromino->SetTetrominoType(TetrominoGenerator->GetAt(i));
-		PreviewTetromino->Spawn();
+		FTNTetrominoBase* previewTetromino = PreviewTetrominos[i];
+		previewTetromino->HideTetromino();
+		previewTetromino->SetTetrominoType(TetrominoGenerator->GetAt(i));
+		previewTetromino->Spawn();
 	}
 }
 
@@ -388,14 +394,14 @@ void ATNPlayerField::tetrominoFall(float deltaTime)
 
 float ATNPlayerField::getFallingSpeed()
 {
-	float Multiflier = 1.f;
+	float multiflier = 1.f;
 
 	if (bSoftDrop)
 	{
-		Multiflier /= 20.f;
+		multiflier /= 20.f;
 	}
 
-	return TetrominoFallingSpeed * Multiflier;
+	return TetrominoFallingSpeed * multiflier;
 }
 
 void ATNPlayerField::setMoveState(float deltaTime, FTNMoveDirectionState& moveState, E_TNTetrominoDirection tetrominoDirction)
