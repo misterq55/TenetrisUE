@@ -5,20 +5,20 @@ void FTNTetrominoGenerator::Initialize()
   TetrominoLimitCounter = 7;
   TetrominoArrayResetCounter = 5;
 
-  RefillTetrominoArray(TetrominoArrayResetCounter);
+  refillTetrominoArray(TetrominoArrayResetCounter);
 }
 
 E_TNTetrominoType FTNTetrominoGenerator::GetTop()
 {
-	E_TNTetrominoType TopType = TetrominoArray[0];
+	E_TNTetrominoType topType = TetrominoArray[0];
   TetrominoArray.RemoveAt(0);
 
   if (TetrominoArray.Num() <= TetrominoLimitCounter)
   {
-    RefillTetrominoArray(TetrominoArrayResetCounter);
+    refillTetrominoArray(TetrominoArrayResetCounter);
   }
 
-	return TopType;
+	return topType;
 }
 
 E_TNTetrominoType FTNTetrominoGenerator::GetAt(int32 InIndex)
@@ -26,25 +26,25 @@ E_TNTetrominoType FTNTetrominoGenerator::GetAt(int32 InIndex)
 	return TetrominoArray[InIndex];
 }
 
-void FTNTetrominoGenerator::ShuffleTetrominoBag(TArray<E_TNTetrominoType>& bag)
+void FTNTetrominoGenerator::shuffleTetrominoBag(TArray<E_TNTetrominoType>& bag)
 {
-  const int32 LastIndex = bag.Num() - 1;
-  for (int32 i = 0; i < LastIndex; ++i)
+  const int32 lastIndex = bag.Num() - 1;
+  for (int32 i = 0; i < lastIndex; ++i)
   {
-    int32 Index = FMath::RandRange(0, LastIndex);
-    if (i != Index)
+    int32 index = FMath::RandRange(0, lastIndex);
+    if (i != index)
     {
-      bag.Swap(i, Index);
+      bag.Swap(i, index);
     }
   }
 }
 
-void FTNTetrominoGenerator::RefillTetrominoArray(int32 tetrominoArrayResetCounter)
+void FTNTetrominoGenerator::refillTetrominoArray(int32 tetrominoArrayResetCounter)
 {
   for (int32 i = 0; i < tetrominoArrayResetCounter; i++)
   {
-    TArray<E_TNTetrominoType> Bag = { E_TNTetrominoType::I, E_TNTetrominoType::J, E_TNTetrominoType::L, E_TNTetrominoType::O, E_TNTetrominoType::S, E_TNTetrominoType::T, E_TNTetrominoType::Z };
-    ShuffleTetrominoBag(Bag);
-    TetrominoArray.Append(Bag);
+    TArray<E_TNTetrominoType> bag = { E_TNTetrominoType::I, E_TNTetrominoType::J, E_TNTetrominoType::L, E_TNTetrominoType::O, E_TNTetrominoType::S, E_TNTetrominoType::T, E_TNTetrominoType::Z };
+    shuffleTetrominoBag(bag);
+    TetrominoArray.Append(bag);
   }
 }

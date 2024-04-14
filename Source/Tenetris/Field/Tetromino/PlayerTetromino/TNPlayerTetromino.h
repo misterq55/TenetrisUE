@@ -45,7 +45,7 @@ public:
 private:
 	FVector2D simulatePosition(E_TNTetrominoDirection tetrominoDirection);
 	
-	int32 Mod(int32 n, int32 m) { return ((n % m) + m) % m; }
+	int32 mod(int32 n, int32 m) { return ((n % m) + m) % m; }
 
 private:
 	FVector2D GuideTetrominoPosition;

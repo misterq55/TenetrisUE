@@ -37,51 +37,51 @@ public:
 		if (!MinoMeshComponent)
 			return;
 		
-		FSoftObjectPath DefaultTranslucentMaterialName;
+		FSoftObjectPath defaultTranslucentMaterialName;
 		switch (tetrominoType)
 		{
 		case E_TNTetrominoType::I:
-			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/IMino.IMino'");
+			defaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/IMino.IMino'");
 			break;
 
 		case E_TNTetrominoType::J:
-			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/JMino.JMino'");
+			defaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/JMino.JMino'");
 			break;
 
 		case E_TNTetrominoType::L:
-			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/LMino.LMino'");
+			defaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/LMino.LMino'");
 			break;
 
 		case E_TNTetrominoType::O:
-			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/OMino.OMino'");
+			defaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/OMino.OMino'");
 			break;
 
 		case E_TNTetrominoType::S:
-			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/SMino.SMino'");
+			defaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/SMino.SMino'");
 			break;
 
 		case E_TNTetrominoType::T:
-			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/TMino.TMino'");
+			defaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/TMino.TMino'");
 			break;
 
 		case E_TNTetrominoType::Z:
-			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/ZMino.ZMino'");
+			defaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/ZMino.ZMino'");
 			break;
 
 		case E_TNTetrominoType::Guide:
-			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/Guide.Guide'");
+			defaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/Guide.Guide'");
 			break;
 
 		case E_TNTetrominoType::Obstacle:
-			DefaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/ObstacleMino.ObstacleMino'");
+			defaultTranslucentMaterialName = FSoftObjectPath("Material'/Game/TetrominoResources/Test/ObstacleMino.ObstacleMino'");
 			break;
 
 		default:
 			break;
 		}
 
-		UMaterialInterface* TranslucentMaterial = Cast<UMaterialInterface>(DefaultTranslucentMaterialName.TryLoad());
-		MinoMeshComponent->SetMaterial(0, TranslucentMaterial);
+		UMaterialInterface* translucentMaterial = Cast<UMaterialInterface>(defaultTranslucentMaterialName.TryLoad());
+		MinoMeshComponent->SetMaterial(0, translucentMaterial);
 	}
 };
 
