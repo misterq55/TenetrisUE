@@ -13,4 +13,7 @@ UCLASS()
 class TENETRIS_API ATNTenetrisGameMode : public ATNTenetrisGameModeBase
 {
 	GENERATED_BODY()	
+
+public:
+	virtual void StartPlay() override;
 };

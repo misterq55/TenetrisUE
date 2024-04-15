@@ -1,0 +1,6 @@
+
+class ITNView
+{
+private:
+
+};

@@ -1,6 +1,6 @@
-#include "../../Util/Singleton/Singleton.h"
+#include "../../Interface/ITNView.h"
 
-class FTNView : public TTNSingleton<FTNView>
+class FTNView : public ITNView
 {
 private:
 
