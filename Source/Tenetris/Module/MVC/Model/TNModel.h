@@ -1,6 +1,6 @@
-#include "../../Util/Singleton/Singleton.h"
+#include "../../Interface/ITNModel.h"
 
-class FTNModel : public TTNSingleton<FTNModel>
+class FTNModel : public ITNModel
 {
 private:
 
