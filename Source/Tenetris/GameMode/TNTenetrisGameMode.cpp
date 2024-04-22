@@ -20,3 +20,8 @@ void ATNTenetrisGameMode::StartPlay()
 	holder.GetView();
 	holder.GetController();
 }
+
+void ATNTenetrisGameMode::Tick(float deltaSeconds)
+{
+
+}
