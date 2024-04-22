@@ -16,4 +16,5 @@ class TENETRIS_API ATNTenetrisGameMode : public ATNTenetrisGameModeBase
 
 public:
 	virtual void StartPlay() override;
+	virtual void Tick(float deltaSeconds) override;
 };
