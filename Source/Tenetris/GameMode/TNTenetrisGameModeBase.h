@@ -22,7 +22,7 @@ public:
 	void Initialize();
 	
 	UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
-	void AddFields(ATNFieldBase* field);
+	virtual void AddFields(ATNFieldBase* field);
 	
 	UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
 	void SetPlayerField(ATNFieldBase* playerField);
@@ -30,7 +30,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
 		ATNFieldBase* GetPlayerField();
 
-private:
+protected:
 	TArray<ATNFieldBase*> Fields;
 	ATNFieldBase* PlayerField;
 };
