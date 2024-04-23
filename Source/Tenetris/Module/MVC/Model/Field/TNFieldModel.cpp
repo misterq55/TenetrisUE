@@ -153,3 +153,7 @@ TArray<TArray<E_TNTetrominoType>>& FTNFieldModel::GetCheckBuffer()
 {
 	return CheckBuffer;
 }
+
+void FTNFieldModel::AddFieldActor(ATNFieldBase* fieldActor)
+{
+}

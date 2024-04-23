@@ -7,21 +7,66 @@
 #include "Tenetris/Module/MVC/View/TNView.h"
 #include "Tenetris/Module/MVC/Controller/TNController.h"
 
+ATNTenetrisGameMode::ATNTenetrisGameMode()
+{
+	PrimaryActorTick.bStartWithTickEnabled = true;
+	PrimaryActorTick.bCanEverTick = true;
+}
+
+void ATNTenetrisGameMode::AddFields(ATNFieldBase* field)
+{
+	Super::AddFields(field);
+
+	/*FTNMVCHolder& holder = FTNMVCHolder::GetInstance();
+
+	TSharedPtr<ITNModel> tnModel = holder.GetModel();
+	if (tnModel.IsValid())
+	{
+		tnModel->CreateFieldModel(field);
+	}*/
+}
+
 void ATNTenetrisGameMode::StartPlay()
 {
 	Super::StartPlay();
 
 	FTNMVCHolder& holder = FTNMVCHolder::GetInstance();
+
 	holder.SetModel(MakeShareable(new FTNModel()));
 	holder.SetView(MakeShareable(new FTNView()));
 	holder.SetController(MakeShareable(new FTNController()));
 
-	holder.GetModel();
-	holder.GetView();
-	holder.GetController();
+	TSharedPtr<ITNModel> tnModel = holder.GetModel();
+	if (tnModel.IsValid())
+	{
+		tnModel->Init();
+
+		for (const auto& fieldActor : Fields)
+		{
+			tnModel->CreateFieldModel(fieldActor);
+		}
+	}
+
+	TSharedPtr<ITNView> tnView = holder.GetView();
+	if (tnView.IsValid())
+	{
+		tnView->Init();
+	}
+	
+	TSharedPtr<ITNController> tnController = holder.GetController();
+	if (tnController.IsValid())
+	{
+		tnController->Init();
+	}
 }
 
 void ATNTenetrisGameMode::Tick(float deltaSeconds)
 {
+	FTNMVCHolder& holder = FTNMVCHolder::GetInstance();
 
+	TSharedPtr<ITNController> tnController = holder.GetController();
+	if (tnController.IsValid())
+	{
+		tnController->Tick(deltaSeconds);
+	}
 }

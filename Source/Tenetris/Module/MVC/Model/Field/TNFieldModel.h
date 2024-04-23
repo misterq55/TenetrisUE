@@ -1,5 +1,7 @@
 #include <Tenetris/TenetrisDefine.h>
 
+class ATNFieldBase;
+
 class FTNFieldModel
 {
 public:
@@ -11,6 +13,9 @@ public:
 	int32 CalculateGuideMinoHeight(const int32 x, const int32 y);
 	void CheckLineDelete(const TArray<int32> heights);
 	TArray<TArray<E_TNTetrominoType>>& GetCheckBuffer();
+
+public:
+	void AddFieldActor(ATNFieldBase* fieldActor);
 
 private:
 	TArray<TArray<E_TNTetrominoType>> CheckBuffer;
