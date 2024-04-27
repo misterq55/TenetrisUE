@@ -17,3 +17,47 @@ void FTNController::Tick(float deltaTime)
 		tnModel->Tick(deltaTime);
 	}
 }
+
+void FTNController::StartMoveLeft()
+{
+}
+
+void FTNController::StopMoveLeft()
+{
+}
+
+void FTNController::StartMoveRight()
+{
+}
+
+void FTNController::StopMoveRight()
+{
+}
+
+void FTNController::StartSoftDrop()
+{
+}
+
+void FTNController::StopSoftDrop()
+{
+}
+
+void FTNController::RotateClockWise()
+{
+}
+
+void FTNController::RotateCounterClockWise()
+{
+}
+
+void FTNController::Hold()
+{
+}
+
+void FTNController::ToggleSpaceInversion()
+{
+}
+
+void FTNController::HardDrop()
+{
+}

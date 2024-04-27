@@ -220,7 +220,7 @@ void ATNPlayerField::registerActions()
 
 	EnableInput(playerController);
 
-	if (InputComponent)
+	/*if (InputComponent)
 	{
 		InputComponent->BindAction("startMoveLeft", EInputEvent::IE_Pressed, this, &ATNPlayerField::startMoveLeft);
 		InputComponent->BindAction("stopMoveLeft", EInputEvent::IE_Released, this, &ATNPlayerField::stopMoveLeft);
@@ -236,7 +236,7 @@ void ATNPlayerField::registerActions()
 
 		InputComponent->BindAction("Hold", EInputEvent::IE_Pressed, this, &ATNPlayerField::hold);
 		InputComponent->BindAction("SpaceInversion", EInputEvent::IE_Pressed, this, &ATNPlayerField::toggleSpaceInversion);
-	}
+	}*/
 }
 
 void ATNPlayerField::unRegisterActions()

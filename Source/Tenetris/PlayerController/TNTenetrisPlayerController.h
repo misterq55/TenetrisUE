@@ -18,4 +18,21 @@ class TENETRIS_API ATNTenetrisPlayerController : public APlayerController
 	
 protected:
 	virtual void SetupInputComponent() override;
+
+protected:
+	void startMoveLeft();
+	void stopMoveLeft();
+
+	void startMoveRight();
+	void stopMoveRight();
+
+	void startSoftDrop();
+	void stopSoftDrop();
+
+	void rotateClockWise();
+	void rotateCounterClockWise();
+
+	void hold();
+	void toggleSpaceInversion();
+	void HardDrop();
 };
