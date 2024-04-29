@@ -1,4 +1,4 @@
-#include "../../Interface/ITNView.h"
+#include "Tenetris/Module/Interface/ITNView.h"
 
 class FTNFieldView;
 class FTNView : public ITNView
