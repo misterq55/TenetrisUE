@@ -1,7 +1,4 @@
-#include "../../Interface/ITNModel.h"
-
-class FTNFieldModel;
-class ATNFieldBase;
+#include "Tenetris/Module/Interface/ITNModel.h"
 
 class FTNModel : public ITNModel
 {
@@ -10,10 +7,28 @@ public:
 	virtual ~FTNModel() {}
 	virtual void Init() override;
 	virtual void Tick(float deltaTime) override;
-	virtual void CreateFieldModel() override;
-	virtual void CreateFieldModel(ATNFieldBase* fieldActor) override;
+	virtual void CreateFieldModel(FTNFieldInfo fieldInfo) override;
+	virtual void CreateFieldModel(FTNFieldInfo fieldInfo, ATNFieldBase* fieldActor) override;
+	virtual TSharedPtr<FTNFieldModel> GetPlayerFieldModel() override;
+
+	virtual void StartMoveLeft() override;
+	virtual void StopMoveLeft() override;
+
+	virtual void StartMoveRight() override;
+	virtual void StopMoveRight() override;
+
+	virtual void StartSoftDrop() override;
+	virtual void StopSoftDrop() override;
+
+	virtual void RotateClockWise() override;
+	virtual void RotateCounterClockWise() override;
+
+	virtual void Hold() override;
+	virtual void ToggleSpaceInversion() override;
+	virtual void HardDrop() override;
 
 private:
 	TMap<int32, TSharedPtr<FTNFieldModel>> FieldModelMap;
+	TSharedPtr<FTNFieldModel> PlayerFieldModel;
 	int32 ModelKey = 0;
 };

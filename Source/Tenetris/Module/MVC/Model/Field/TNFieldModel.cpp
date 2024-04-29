@@ -1,4 +1,11 @@
 #include "TNFieldModel.h"
+#include "Tenetris/Field/Tetromino/TNTetrominoBase.h"
+
+FTNFieldModel::FTNFieldModel(FTNFieldInfo fieldInfo)
+	: FieldInfo(MoveTemp(fieldInfo))
+{
+
+}
 
 void FTNFieldModel::Tick(float deltaSeconds)
 {
@@ -154,6 +161,147 @@ TArray<TArray<E_TNTetrominoType>>& FTNFieldModel::GetCheckBuffer()
 	return CheckBuffer;
 }
 
+bool FTNFieldModel::moveTetromino(E_TNTetrominoDirection tetrominoDirection)
+{
+	if (CurrentTetromino.IsValid())
+	{
+		if (!CurrentTetromino->Move(tetrominoDirection))
+		{
+			LockDown.CheckRemainCount(tetrominoDirection);
+
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void FTNFieldModel::rotateTetromino(E_TNTetrominoRotation tetrominoRotation)
+{
+	if (CurrentTetromino.IsValid())
+	{
+		if (!CurrentTetromino->Rotate(tetrominoRotation))
+		{
+			LockDown.CheckRemainCount();
+		}
+	}
+}
+
+void FTNFieldModel::setMoveDirection(E_TNTetrominoDirection tetrominoDirection, bool pressed)
+{
+	if (pressed)
+	{
+		if (tetrominoDirection == E_TNTetrominoDirection::Left)
+		{
+			LeftDirectionState.Pressed = true;
+		}
+		else if (tetrominoDirection == E_TNTetrominoDirection::Right)
+		{
+			RightDirectionState.Pressed = true;
+		}
+
+		TetrominoMoveDirection = tetrominoDirection;
+	}
+	else
+	{
+		if (tetrominoDirection == E_TNTetrominoDirection::Left)
+		{
+			LeftDirectionState.Pressed = false;
+		}
+		else if (tetrominoDirection == E_TNTetrominoDirection::Right)
+		{
+			RightDirectionState.Pressed = false;
+		}
+
+		if (LeftDirectionState.Pressed)
+			TetrominoMoveDirection = E_TNTetrominoDirection::Left;
+
+		if (RightDirectionState.Pressed)
+			TetrominoMoveDirection = E_TNTetrominoDirection::Right;
+
+		if (!LeftDirectionState.Pressed && !RightDirectionState.Pressed)
+			TetrominoMoveDirection = E_TNTetrominoDirection::None;
+	}
+}
+
+void FTNFieldModel::lineDelete()
+{
+	if (CurrentTetromino.IsValid())
+	{
+		CheckLineDelete(CurrentTetromino->GetMinoHeights());
+	}
+}
+
+void FTNFieldModel::doLockDown()
+{
+	if (CurrentTetromino.IsValid())
+	{
+		CurrentTetromino->LockDown();
+		lineDelete();
+		bWaitForSpawn = true;
+	}
+}
+
 void FTNFieldModel::AddFieldActor(ATNFieldBase* fieldActor)
 {
+	FieldActor = fieldActor;
+}
+
+void FTNFieldModel::StartMoveLeft()
+{
+	setMoveDirection(E_TNTetrominoDirection::Left, true);
+}
+
+void FTNFieldModel::StopMoveLeft()
+{
+	setMoveDirection(E_TNTetrominoDirection::Left, false);
+}
+
+void FTNFieldModel::StartMoveRight()
+{
+	setMoveDirection(E_TNTetrominoDirection::Right, true);
+}
+
+void FTNFieldModel::StopMoveRight()
+{
+	setMoveDirection(E_TNTetrominoDirection::Right, false);
+}
+
+void FTNFieldModel::StartSoftDrop()
+{
+	setSoftDrop(true);
+}
+
+void FTNFieldModel::StopSoftDrop()
+{
+	setSoftDrop(false);
+}
+
+void FTNFieldModel::RotateClockWise()
+{
+	rotateTetromino(E_TNTetrominoRotation::ClockWise);
+}
+
+void FTNFieldModel::RotateCounterClockWise()
+{
+	rotateTetromino(E_TNTetrominoRotation::CounterClockWise);
+}
+
+void FTNFieldModel::Hold()
+{
+	
+}
+
+void FTNFieldModel::ToggleSpaceInversion()
+{
+	
+}
+
+void FTNFieldModel::HardDrop()
+{
+	if (CurrentTetromino.IsValid())
+	{
+		CurrentTetromino->HardDrop();
+		// doLockDown();
+	}
 }

@@ -1,4 +1,4 @@
-#include "../../Interface/ITNController.h"
+#include "Tenetris/Module/Interface/ITNController.h"
 
 class FTNController : public ITNController
 {

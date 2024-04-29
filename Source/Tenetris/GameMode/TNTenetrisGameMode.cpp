@@ -43,7 +43,7 @@ void ATNTenetrisGameMode::StartPlay()
 
 		for (const auto& fieldActor : Fields)
 		{
-			tnModel->CreateFieldModel(fieldActor);
+			tnModel->CreateFieldModel(FTNFieldInfo(E_TNFieldType::Player), fieldActor);
 		}
 	}
 

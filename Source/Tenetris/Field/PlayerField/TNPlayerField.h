@@ -4,104 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Tenetris/Field/TNFieldBase.h"
+#include "Tenetris/TenetrisDefine.h"
 #include "TNPlayerField.generated.h"
 
 class FTNTetrominoBase;
 class FTNTetrominoGenerator;
 
-class FTNLockDown
-{
-public:
-	FTNLockDown() 
-	{
-		LockDownRemainCount = MaxLockDownRemainCount;
-	}
-
-	~FTNLockDown() {}
-	void StartLockDown() 
-	{
-		LockDownStart = true;
-	}
-
-	bool UpdateLockDown(float deltaTime) 
-	{ 
-		if (LockDownStart)
-		{
-			LockDownTime += deltaTime;
-
-			if (LockDownTime >= LockDownDelay || LockDownRemainCount <= 0)
-			{
-				LockDownTime = 0.f;
-				LockDownStart = false;
-				LockDownRemainCount = MaxLockDownRemainCount;
-
-				return true;
-			}
-		}
-
-		return false; 
-	}
-
-	void CheckRemainCount(E_TNTetrominoDirection tetrominoDirection)
-	{
-		if (!LockDownStart)
-		{
-			return;
-		}
-
-		if (tetrominoDirection == E_TNTetrominoDirection::Left
-			|| tetrominoDirection == E_TNTetrominoDirection::Right)
-		{
-			LockDownRemainCount--;
-		}
-		else if (tetrominoDirection == E_TNTetrominoDirection::Down)
-		{
-			LockDownRemainCount = MaxLockDownRemainCount;
-			LockDownStart = false;
-		}
-
-		LockDownTime = 0.f;
-	}
-
-	void CheckRemainCount()
-	{
-		if (!LockDownStart)
-		{
-			return;
-		}
-
-		LockDownRemainCount--;
-		LockDownTime = 0.f;
-	}
-
-private:
-	float LockDownDelay = 0.5f;
-	float LockDownTime = 0.f;
-	bool LockDownStart = false;
-	const int32 MaxLockDownRemainCount = 15;
-	int32 LockDownRemainCount = 0;
-};
-
 UCLASS()
 class TENETRIS_API ATNPlayerField : public ATNFieldBase
 {
 	GENERATED_BODY()
-
-	struct FTNMoveDirectionState
-	{
-	public:
-		FTNMoveDirectionState()
-			: Pressed(false)
-			, PressedTime(0.f)
-			, AutoRepeatKickIn(false)
-			, AutoRepeatTime(0.f)
-		{}
-		
-		bool Pressed;
-		float PressedTime;
-		bool AutoRepeatKickIn;
-		float AutoRepeatTime;
-	};
 
 public:	
 	// Sets default values for this actor's properties
