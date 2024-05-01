@@ -1,5 +1,5 @@
 #include "TNFieldView.h"
-#include "../../../../Field/TNFieldBase.h"
+#include "Tenetris/Field/TNFieldBase.h"
 #include "Engine/World.h"
 
 void FTNFieldView::SetFieldActor(TObjectPtr<ATNFieldBase> fieldActor)

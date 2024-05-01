@@ -1,4 +1,4 @@
-#include "../../Util/Singleton/Singleton.h"
+#include "Tenetris/Module/Util/Singleton/Singleton.h"
 
 class ITNModel;
 class ITNView;
