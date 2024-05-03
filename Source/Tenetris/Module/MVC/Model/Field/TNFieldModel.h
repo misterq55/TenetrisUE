@@ -14,11 +14,13 @@ public:
 public:
 	void Tick(float deltaSeconds);
 	void SetBufferSize(const int32 bufferHeight, const int32 bufferWidth);
-	E_TNTetrominoType GetValueFromCheckBuffer(const int32 x, const int32 y);
+	E_TNTetrominoType GetValueFromCheckBuffer(const int32 x, const int32 y) const;
 	void SetValueToCheckBuffer(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
 	bool CheckMino(const int32 x, const int32 y);
 	int32 CalculateGuideMinoHeight(const int32 x, const int32 y);
-	void CheckLineDelete(const TArray<int32> heights);
+	void CheckLineDelete(const TArray<int32>& heights);
+	bool IsLineDeleted(int32 height) const;
+	void HandleLineDeletion(const TArray<int32>& linesToDelete);
 	TArray<TArray<E_TNTetrominoType>>& GetCheckBuffer();
 
 	void StartMoveLeft();
