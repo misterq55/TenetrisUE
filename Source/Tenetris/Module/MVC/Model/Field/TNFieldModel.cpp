@@ -78,7 +78,7 @@ void FTNFieldModel::SetBufferSize(const int32 bufferHeight, const int32 bufferWi
 	}
 }
 
-E_TNTetrominoType FTNFieldModel::GetValueFromCheckBuffer(const int32 x, const int32 y)
+E_TNTetrominoType FTNFieldModel::GetValueFromCheckBuffer(const int32 x, const int32 y) const
 {
 	int32 newX = x;
 
@@ -129,31 +129,50 @@ int32 FTNFieldModel::CalculateGuideMinoHeight(const int32 x, const int32 y)
 	return result;
 }
 
-void FTNFieldModel::CheckLineDelete(const TArray<int32> heights)
+void FTNFieldModel::CheckLineDelete(const TArray<int32>& heights)
 {
-	for (const int32& height : heights)
+	TArray<int32> linesToDelete;
+
+	// 각 높이에 대해 줄 삭제 여부를 검사합니다.
+	for (int32 height : heights)
 	{
-		bool lineDeleted = true;
-
-		for (int32 j = 0; j < BufferWidth; j++)
+		if (IsLineDeleted(height))
 		{
-			if (GetValueFromCheckBuffer(j, height) == E_TNTetrominoType::None)
-			{
-				lineDeleted = false;
-				break;
-			}
-		}
-
-		if (lineDeleted)
-		{
-			DeletedLines.AddUnique(height);
+			linesToDelete.AddUnique(height);
 		}
 	}
 
-	if (DeletedLines.Num())
+	// 삭제된 줄이 있는 경우 처리합니다.
+	if (linesToDelete.Num() > 0)
 	{
-		bLineDeleting = true;
+		HandleLineDeletion(linesToDelete);
 	}
+}
+
+bool FTNFieldModel::IsLineDeleted(int32 height) const
+{
+	// 주어진 높이에 대해 해당 줄이 모두 삭제되었는지 확인합니다.
+	for (int32 j = 0; j < BufferWidth; ++j)
+	{
+		if (GetValueFromCheckBuffer(j, height) == E_TNTetrominoType::None)
+		{
+			return false; // 하나라도 블록이 없으면 삭제되지 않은 줄입니다.
+		}
+	}
+
+	return true; // 모든 블록이 존재하여 줄이 삭제되었습니다.
+}
+
+void FTNFieldModel::HandleLineDeletion(const TArray<int32>& linesToDelete)
+{
+	// 삭제된 줄에 대해 처리를 수행합니다.
+	for (int32 height : linesToDelete)
+	{
+		DeletedLines.AddUnique(height);
+	}
+
+	// 줄 삭제 플래그를 설정합니다.
+	bLineDeleting = true;
 }
 
 TArray<TArray<E_TNTetrominoType>>& FTNFieldModel::GetCheckBuffer()
@@ -214,13 +233,19 @@ void FTNFieldModel::setMoveDirection(E_TNTetrominoDirection tetrominoDirection, 
 		}
 
 		if (LeftDirectionState.Pressed)
+		{
 			TetrominoMoveDirection = E_TNTetrominoDirection::Left;
+		}
 
 		if (RightDirectionState.Pressed)
+		{
 			TetrominoMoveDirection = E_TNTetrominoDirection::Right;
+		}
 
 		if (!LeftDirectionState.Pressed && !RightDirectionState.Pressed)
+		{
 			TetrominoMoveDirection = E_TNTetrominoDirection::None;
+		}
 	}
 }
 
