@@ -3,6 +3,9 @@
 class FTNFieldModel;
 class ATNFieldBase;
 
+DECLARE_DELEGATE_TwoParams(FTNCreateFieldViewWithFieldActor, const int32, ATNFieldBase* field);
+
+
 class ITNModel
 {
 public:
@@ -27,4 +30,6 @@ public:
 	virtual void Hold() = 0;
 	virtual void ToggleSpaceInversion() = 0;
 	virtual void HardDrop() = 0;
+
+	virtual FTNCreateFieldViewWithFieldActor& GetCreateFieldViewWithFieldActorDelegate() = 0;
 };

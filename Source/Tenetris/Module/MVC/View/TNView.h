@@ -1,6 +1,5 @@
 #include "Tenetris/Module/Interface/ITNView.h"
 
-class FTNFieldView;
 class FTNView : public ITNView
 {
 public:
@@ -8,6 +7,8 @@ public:
 	virtual ~FTNView() {}
 	virtual void Init() override;
 	virtual void Tick(float deltaTime) override;
+	// virtual void CreateFieldView(const int32 key,
+	virtual void CreateFieldViewWithFieldActor(const int32 key, ATNFieldBase* fieldActor);
 
 private:
 	TMap<int32, TSharedPtr<FTNFieldView>> FieldViewMap;

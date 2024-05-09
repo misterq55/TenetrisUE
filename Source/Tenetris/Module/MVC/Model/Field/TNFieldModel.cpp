@@ -3,6 +3,8 @@
 
 FTNFieldModel::FTNFieldModel(FTNFieldInfo fieldInfo)
 	: FieldInfo(MoveTemp(fieldInfo))
+	, FieldActor(nullptr)
+	, PreviewTetrominoNum(0)
 {
 
 }
