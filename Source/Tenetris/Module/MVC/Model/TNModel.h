@@ -1,5 +1,6 @@
 #include "Tenetris/Module/Interface/ITNModel.h"
 
+
 class FTNModel : public ITNModel
 {
 public:
@@ -27,8 +28,12 @@ public:
 	virtual void ToggleSpaceInversion() override;
 	virtual void HardDrop() override;
 
+	virtual FTNCreateFieldViewWithFieldActor& GetCreateFieldViewWithFieldActorDelegate() { return CreateFieldViewWithFieldActorDelegate; }
+
 private:
 	TMap<int32, TSharedPtr<FTNFieldModel>> FieldModelMap;
 	TSharedPtr<FTNFieldModel> PlayerFieldModel;
 	int32 ModelKey = 0;
+
+	FTNCreateFieldViewWithFieldActor CreateFieldViewWithFieldActorDelegate;
 };

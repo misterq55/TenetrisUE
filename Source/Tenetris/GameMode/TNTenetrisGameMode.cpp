@@ -40,11 +40,6 @@ void ATNTenetrisGameMode::StartPlay()
 	if (tnModel.IsValid())
 	{
 		tnModel->Init();
-
-		for (const auto& fieldActor : Fields)
-		{
-			tnModel->CreateFieldModel(FTNFieldInfo(E_TNFieldType::Player), fieldActor);
-		}
 	}
 
 	TSharedPtr<ITNView> tnView = holder.GetView();
@@ -57,6 +52,14 @@ void ATNTenetrisGameMode::StartPlay()
 	if (tnController.IsValid())
 	{
 		tnController->Init();
+	}
+
+	if (tnModel.IsValid())
+	{
+		for (const auto& fieldActor : Fields)
+		{
+			tnModel->CreateFieldModel(FTNFieldInfo(E_TNFieldType::Player), fieldActor);
+		}
 	}
 }
 
