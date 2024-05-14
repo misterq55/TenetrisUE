@@ -4,7 +4,7 @@ class FTNFieldModel;
 class ATNFieldBase;
 
 DECLARE_DELEGATE_TwoParams(FTNCreateFieldViewWithFieldActor, const int32, ATNFieldBase* field);
-DECLARE_DELEGATE(FTNUpdateFieldView);
+DECLARE_DELEGATE_OneParam(FTNUpdateFieldView, const int32);
 
 class ITNModel
 {
