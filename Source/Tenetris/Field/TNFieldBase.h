@@ -33,6 +33,7 @@ public:
 		virtual	void Initialize();
 
 	void SetMinoClassType(TSubclassOf<ATNMinoBase> minoClass);
+	void SetBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType);
 
 protected:
 	void setBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType);
