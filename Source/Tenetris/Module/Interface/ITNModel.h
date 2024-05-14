@@ -4,7 +4,7 @@ class FTNFieldModel;
 class ATNFieldBase;
 
 DECLARE_DELEGATE_TwoParams(FTNCreateFieldViewWithFieldActor, const int32, ATNFieldBase* field);
-
+DECLARE_DELEGATE(FTNUpdateFieldView);
 
 class ITNModel
 {
@@ -32,4 +32,6 @@ public:
 	virtual void HardDrop() = 0;
 
 	virtual FTNCreateFieldViewWithFieldActor& GetCreateFieldViewWithFieldActorDelegate() = 0;
+	virtual FTNUpdateFieldView& GetUpdateFieldViewDelegate() = 0;
+	virtual TMap<int32, TSharedPtr<FTNFieldModel>>& GetFieldModelMap() = 0;
 };

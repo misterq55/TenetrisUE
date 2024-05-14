@@ -23,6 +23,10 @@ public:
 	void HandleLineDeletion(const TArray<int32>& linesToDelete);
 	TArray<TArray<E_TNTetrominoType>>& GetCheckBuffer();
 
+	const FTNFieldInfo& GetFieldInfo() {
+		return FieldInfo;
+	}
+
 	void StartMoveLeft();
 	void StopMoveLeft();
 

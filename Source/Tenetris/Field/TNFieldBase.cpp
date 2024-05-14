@@ -56,6 +56,11 @@ void ATNFieldBase::SetMinoClassType(TSubclassOf<ATNMinoBase> minoClass)
 	}
 }
 
+void ATNFieldBase::SetBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType)
+{
+	setBackgroundCubeType(x, y, tetrominoType);
+}
+
 void ATNFieldBase::setBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType)
 {
 	if (IsValid(TenetrisBufferComponent))

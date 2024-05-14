@@ -7,8 +7,9 @@ public:
 	virtual ~FTNView() {}
 	virtual void Init() override;
 	virtual void Tick(float deltaTime) override;
-	// virtual void CreateFieldView(const int32 key,
+	virtual void CreateFieldView(const int32 key);
 	virtual void CreateFieldViewWithFieldActor(const int32 key, ATNFieldBase* fieldActor);
+	virtual void UpdateFieldView();
 
 private:
 	TMap<int32, TSharedPtr<FTNFieldView>> FieldViewMap;

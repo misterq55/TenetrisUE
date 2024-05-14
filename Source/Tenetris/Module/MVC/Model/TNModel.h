@@ -28,7 +28,17 @@ public:
 	virtual void ToggleSpaceInversion() override;
 	virtual void HardDrop() override;
 
-	virtual FTNCreateFieldViewWithFieldActor& GetCreateFieldViewWithFieldActorDelegate() { return CreateFieldViewWithFieldActorDelegate; }
+	virtual FTNCreateFieldViewWithFieldActor& GetCreateFieldViewWithFieldActorDelegate() { 
+		return CreateFieldViewWithFieldActorDelegate; 
+	}
+
+	virtual FTNUpdateFieldView& GetUpdateFieldViewDelegate() {
+		return UpdateFieldViewDelegate;
+	}
+
+	virtual TMap<int32, TSharedPtr<FTNFieldModel>>& GetFieldModelMap() {
+		return FieldModelMap;
+	}
 
 private:
 	TMap<int32, TSharedPtr<FTNFieldModel>> FieldModelMap;
@@ -36,4 +46,5 @@ private:
 	int32 ModelKey = 0;
 
 	FTNCreateFieldViewWithFieldActor CreateFieldViewWithFieldActorDelegate;
+	FTNUpdateFieldView UpdateFieldViewDelegate;
 };
