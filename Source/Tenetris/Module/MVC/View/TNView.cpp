@@ -37,7 +37,7 @@ void FTNView::CreateFieldViewWithFieldActor(const int32 key, ATNFieldBase* field
 	}
 }
 
-void FTNView::UpdateFieldView()
+void FTNView::UpdateFieldView(const int32 modelKey)
 {
 	TSharedPtr<ITNModel> tnModel = FTNMVCHolder::GetInstance().GetModel();
 	if (!tnModel.IsValid())
@@ -47,27 +47,33 @@ void FTNView::UpdateFieldView()
 
 	tnModel->GetFieldModelMap();
 
-	for (const auto& [key, fieldModel] : tnModel->GetFieldModelMap())
+	const auto modelMap = tnModel->GetFieldModelMap();
+	const TSharedPtr<FTNFieldModel>* fieldModeltPtr =	modelMap.Find(modelKey);
+	if (!fieldModeltPtr)
 	{
-		if (!fieldModel.IsValid())
-		{
-			continue;
-		}
+		return;
+	}
 
-		TSharedPtr<FTNFieldView>* fieldView = FieldViewMap.Find(key);
-		if (fieldView && fieldView->IsValid())
-		{
-			const FTNFieldInfo& fieldInfo = fieldModel->GetFieldInfo();
-			const int32 bufferHeight = fieldInfo.BufferHeight;
-			const int32 bufferWidth = fieldInfo.BufferWidth;
+	TSharedPtr<FTNFieldModel> fieldModel = *fieldModeltPtr;
+	
+	if (!fieldModel.IsValid())
+	{
+		return;
+	}
 
-			for (int32 i = 0; i < bufferHeight; i++)
+	TSharedPtr<FTNFieldView>* fieldView = FieldViewMap.Find(modelKey);
+	if (fieldView && fieldView->IsValid())
+	{
+		const FTNFieldInfo& fieldInfo = fieldModel->GetFieldInfo();
+		const int32 bufferHeight = fieldInfo.BufferHeight;
+		const int32 bufferWidth = fieldInfo.BufferWidth;
+
+		for (int32 i = 0; i < bufferHeight; i++)
+		{
+			for (int32 j = 0; j < bufferWidth; j++)
 			{
-				for (int32 j = 0; j < bufferWidth; j++)
-				{
-					const E_TNTetrominoType tetrominoType = fieldInfo.CheckBuffer[i][j];
-					(*fieldView)->SetBackgroundCubeType(j, i, tetrominoType);
-				}
+				const E_TNTetrominoType tetrominoType = fieldInfo.CheckBuffer[i][j];
+				(*fieldView)->SetBackgroundCubeType(j, i, tetrominoType);
 			}
 		}
 	}
