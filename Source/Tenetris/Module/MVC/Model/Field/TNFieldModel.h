@@ -64,9 +64,6 @@ private:
 	TSharedPtr<FTNTetrominoGenerator> TetrominoGenerator;
 	TArray<TSharedPtr<FTNTetrominoBase>> PreviewTetrominos;
 
-	TArray<TArray<E_TNTetrominoType>> CheckBuffer;
-	int32 BufferHeight = 0;
-	int32 BufferWidth = 0;
 	TArray<int32> DeletedLines;
 	float DeleteLineCheckTime = 0.f;
 	bool bLineDeleting = false;
