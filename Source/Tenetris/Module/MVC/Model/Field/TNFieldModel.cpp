@@ -15,7 +15,7 @@ void FTNFieldModel::Tick(float deltaSeconds)
 	{
 		for (const int32 deleteLine : DeletedLines)
 		{
-			for (int32 j = 0; j < BufferWidth; j++)
+			for (int32 j = 0; j < FieldInfo.BufferWidth; j++)
 			{
 				SetValueToCheckBuffer(j, deleteLine, E_TNTetrominoType::None);
 			}
@@ -26,7 +26,7 @@ void FTNFieldModel::Tick(float deltaSeconds)
 			TArray<int32> lineChecker;
 			int32 lineDeleteValue = 0;
 
-			for (int32 i = 0; i < BufferHeight; i++)
+			for (int32 i = 0; i < FieldInfo.BufferHeight; i++)
 			{
 				if (DeletedLines.Find(i) != -1)
 				{
@@ -39,11 +39,11 @@ void FTNFieldModel::Tick(float deltaSeconds)
 				}
 			}
 
-			for (int32 i = 0; i < BufferHeight; i++)
+			for (int32 i = 0; i < FieldInfo.BufferHeight; i++)
 			{
 				if (lineChecker[i] != -1)
 				{
-					for (int32 j = 0; j < BufferWidth; j++)
+					for (int32 j = 0; j < FieldInfo.BufferWidth; j++)
 					{
 						const E_TNTetrominoType value = GetValueFromCheckBuffer(j, i);
 						SetValueToCheckBuffer(j, i, E_TNTetrominoType::None);
@@ -62,21 +62,21 @@ void FTNFieldModel::Tick(float deltaSeconds)
 
 void FTNFieldModel::SetBufferSize(const int32 bufferHeight, const int32 bufferWidth)
 {
-	BufferHeight = bufferHeight;
-	BufferWidth = bufferWidth;
+	FieldInfo.BufferHeight = bufferHeight;
+	FieldInfo.BufferWidth = bufferWidth;
 
-	for (int32 i = 0; i < BufferHeight * 2 + 2; i++)
+	for (int32 i = 0; i < FieldInfo.BufferHeight * 2 + 2; i++)
 	{
 		TArray<E_TNTetrominoType> buffer;
-		for (int32 j = 0; j < BufferWidth + 2; j++)
+		for (int32 j = 0; j < FieldInfo.BufferWidth + 2; j++)
 		{
-			if (i == 0 || j == 0 || j == BufferWidth + 2 - 1)
+			if (i == 0 || j == 0 || j == FieldInfo.BufferWidth + 2 - 1)
 				buffer.Add(E_TNTetrominoType::Obstacle);
 			else
 				buffer.Add(E_TNTetrominoType::None);
 		}
 
-		CheckBuffer.Add(buffer);
+		FieldInfo.CheckBuffer.Add(buffer);
 	}
 }
 
@@ -86,10 +86,10 @@ E_TNTetrominoType FTNFieldModel::GetValueFromCheckBuffer(const int32 x, const in
 
 	if (bSpaceInverted)
 	{
-		newX = BufferWidth - x - 1;
+		newX = FieldInfo.BufferWidth - x - 1;
 	}
 
-	return CheckBuffer[y + 1][newX + 1];
+	return FieldInfo.CheckBuffer[y + 1][newX + 1];
 }
 
 void FTNFieldModel::SetValueToCheckBuffer(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
@@ -98,16 +98,16 @@ void FTNFieldModel::SetValueToCheckBuffer(const int32 x, const int32 y, const E_
 
 	if (bSpaceInverted)
 	{
-		newX = BufferWidth - x - 1;
+		newX = FieldInfo.BufferWidth - x - 1;
 	}
 
-	CheckBuffer[y + 1][newX + 1] = tetrominoType;
+	FieldInfo.CheckBuffer[y + 1][newX + 1] = tetrominoType;
 }
 
 bool FTNFieldModel::CheckMino(const int32 x, const int32 y)
 {
 	if (y < 0 || x < 0) return true;
-	if (y >= BufferHeight || x >= BufferWidth) return true;
+	if (y >= FieldInfo.BufferHeight || x >= FieldInfo.BufferWidth) return true;
 
 	return GetValueFromCheckBuffer(x, y) != E_TNTetrominoType::None;
 }
@@ -154,7 +154,7 @@ void FTNFieldModel::CheckLineDelete(const TArray<int32>& heights)
 bool FTNFieldModel::IsLineDeleted(int32 height) const
 {
 	// 주어진 높이에 대해 해당 줄이 모두 삭제되었는지 확인합니다.
-	for (int32 j = 0; j < BufferWidth; ++j)
+	for (int32 j = 0; j < FieldInfo.BufferWidth; ++j)
 	{
 		if (GetValueFromCheckBuffer(j, height) == E_TNTetrominoType::None)
 		{
@@ -179,7 +179,7 @@ void FTNFieldModel::HandleLineDeletion(const TArray<int32>& linesToDelete)
 
 TArray<TArray<E_TNTetrominoType>>& FTNFieldModel::GetCheckBuffer()
 {
-	return CheckBuffer;
+	return FieldInfo.CheckBuffer;
 }
 
 bool FTNFieldModel::moveTetromino(E_TNTetrominoDirection tetrominoDirection)
