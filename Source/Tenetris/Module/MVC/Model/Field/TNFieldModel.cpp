@@ -1,5 +1,5 @@
 #include "TNFieldModel.h"
-#include "Tenetris/Field/Tetromino/TNTetrominoBase.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Field/Tetromino/TNTetrominoBase.h"
 
 FTNFieldModel::FTNFieldModel(FTNFieldInfo fieldInfo)
 	: FieldInfo(MoveTemp(fieldInfo))

@@ -2,8 +2,8 @@
 
 
 #include "TNFieldBase.h"
-#include "Tenetris/Field/Tetromino/Mino/TNMinoBase.h"
-#include "Tenetris/Components/TenetrisBufferComponent/TNTenetrisBufferComponent.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Field/Tetromino/Mino/TNMinoBase.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Components/TenetrisBufferComponent/TNTenetrisBufferComponent.h"
 
 // Sets default values
 ATNFieldBase::ATNFieldBase()

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Tenetris/Field/Tetromino/TNTetrominoBase.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Field/Tetromino/TNTetrominoBase.h"
 
 class FTNPreviewTetromino : public FTNTetrominoBase
 {

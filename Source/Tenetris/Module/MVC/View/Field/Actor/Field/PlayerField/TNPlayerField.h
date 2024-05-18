@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Tenetris/Field/TNFieldBase.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Field/TNFieldBase.h"
 #include "Tenetris/TenetrisDefine.h"
 #include "TNPlayerField.generated.h"
 

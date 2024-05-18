@@ -2,15 +2,15 @@
 
 #pragma once
 
-#include "Tenetris/Field/PlayerField/TNPlayerField.h"
-#include "Tenetris/Field/Tetromino/Mino/TNMinoBase.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Field/PlayerField/TNPlayerField.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Field/Tetromino/Mino/TNMinoBase.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/StaticMeshActor.h"
-#include "Tenetris/Components/TenetrisBufferComponent/TNTenetrisBufferComponent.h"
-#include "Tenetris/Field/Tetromino/PlayerTetromino/TNPlayerTetromino.h"
-#include "Tenetris/Field/Tetromino/PreviewTetromino/TNPreviewTetromino.h"
-#include "Tenetris/Field/TetrominoGenerator/TNTetrominoGenerator.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Components/TenetrisBufferComponent/TNTenetrisBufferComponent.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Field/Tetromino/PlayerTetromino/TNPlayerTetromino.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Field/Tetromino/PreviewTetromino/TNPreviewTetromino.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Field/TetrominoGenerator/TNTetrominoGenerator.h"
 #include "TenetrisTest.generated.h"
 
 UCLASS()

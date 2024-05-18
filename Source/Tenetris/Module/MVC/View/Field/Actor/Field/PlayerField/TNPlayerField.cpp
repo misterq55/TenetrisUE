@@ -2,10 +2,10 @@
 
 
 #include "TNPlayerField.h"
-#include "Tenetris/Field/Tetromino/TNTetrominoBase.h"
-#include "Tenetris/Field/Tetromino/previewTetromino/TNPreviewTetromino.h"
-#include "Tenetris/Components/TenetrisBufferComponent/TNTenetrisBufferComponent.h"
-#include "Tenetris/Field/TetrominoGenerator/TNTetrominoGenerator.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Field/Tetromino/TNTetrominoBase.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Field/Tetromino/PreviewTetromino/TNPreviewTetromino.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Components/TenetrisBufferComponent/TNTenetrisBufferComponent.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Field/TetrominoGenerator/TNTetrominoGenerator.h"
 
 // Sets default values
 ATNPlayerField::ATNPlayerField()
