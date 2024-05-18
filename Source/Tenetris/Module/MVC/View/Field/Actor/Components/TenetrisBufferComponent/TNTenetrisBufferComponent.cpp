@@ -2,7 +2,7 @@
 
 
 #include "TNTenetrisBufferComponent.h"
-#include "Tenetris/Field/Tetromino/mino/TNMinoBase.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Field/Tetromino/Mino/TNMinoBase.h"
 
 // Sets default values for this component's properties
 UTNTenetrisBufferComponent::UTNTenetrisBufferComponent()

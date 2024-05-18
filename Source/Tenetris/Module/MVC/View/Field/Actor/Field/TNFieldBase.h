@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Tenetris/TenetrisDefine.h"
-#include "Tenetris/Field/Tetromino/TNTetrominoBase.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Field/Tetromino/TNTetrominoBase.h"
 #include "TNFieldBase.generated.h"
 
 class ATNMinoBase;
