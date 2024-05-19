@@ -29,7 +29,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	virtual	void Initialize();
+	virtual	void Initialize() override;
 
 	bool MoveTetromino(E_TNTetrominoDirection tetrominoDirection);
 	void RotateTetromino(E_TNTetrominoRotation tetrominoRotation);
