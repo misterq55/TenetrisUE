@@ -9,7 +9,7 @@
 #include "TNFieldBase.generated.h"
 
 class ATNMinoBase;
-class UTNTenetrisBufferComponent;
+class UTNOldTenetrisBufferComponent;
 
 UCLASS()
 class TENETRIS_API ATNFieldBase : public AActor
@@ -40,5 +40,5 @@ protected:
 
 protected:
 	TSubclassOf<ATNMinoBase> MinoClass;
-	UTNTenetrisBufferComponent* TenetrisBufferComponent;
+	UTNOldTenetrisBufferComponent* TenetrisBufferComponent;
 };

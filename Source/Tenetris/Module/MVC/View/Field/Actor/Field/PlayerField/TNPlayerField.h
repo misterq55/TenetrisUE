@@ -56,7 +56,7 @@ private:
 	void waitForSpawn();
 
 protected:
-	void bindTetrominoToBuffer(FTNTetrominoBase* tetromino, UTNTenetrisBufferComponent* buffer);
+	void bindTetrominoToBuffer(FTNTetrominoBase* tetromino, UTNOldTenetrisBufferComponent* buffer);
 	void spawn();
 
 	void startMoveLeft();
@@ -78,12 +78,12 @@ protected:
 	FTNTetrominoBase* CurrentTetromino;
 	FTNTetrominoGenerator* TetrominoGenerator;
 	TArray<FTNTetrominoBase*> PreviewTetrominos;
-	UTNTenetrisBufferComponent* PreviewBufferComponent;
+	UTNOldTenetrisBufferComponent* PreviewBufferComponent;
 	int32 PreviewTetrominoNum;
 	float TetrominoFallingSpeed = 1.f;
 	float CurrentTime = 0.f;
 
-	UTNTenetrisBufferComponent* HoldBufferComponent;
+	UTNOldTenetrisBufferComponent* HoldBufferComponent;
 	FTNTetrominoBase* HoldTetromino;
 
 private:

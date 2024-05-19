@@ -4,7 +4,7 @@
 #include "TNPlayerField.h"
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/TNTetrominoBase.h"
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/PreviewTetromino/TNPreviewTetromino.h"
-#include "Tenetris/Module/MVC/View/Field/Actor/Components/TenetrisBufferComponent/TNTenetrisBufferComponent.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Components/TenetrisBufferComponent/TNOldTenetrisBufferComponent.h"
 #include "Tenetris/Module/MVC/Model/Field/TetrominoGenerator/TNTetrominoGenerator.h"
 
 // Sets default values
@@ -249,7 +249,7 @@ void ATNPlayerField::initializePreviewBuffer()
 {
 	PreviewTetrominoNum = 5;
 
-	PreviewBufferComponent = CreateDefaultSubobject<UTNTenetrisBufferComponent>(TEXT("PreviewBufferComponent"));
+	PreviewBufferComponent = CreateDefaultSubobject<UTNOldTenetrisBufferComponent>(TEXT("PreviewBufferComponent"));
 	PreviewBufferComponent->SetBufferSize(PreviewTetrominoNum * 3 + 1, 5);
 	PreviewBufferComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	PreviewBufferComponent->SetMobility(EComponentMobility::Movable);
@@ -270,7 +270,7 @@ void ATNPlayerField::initializePreviewTetrominos()
 
 void ATNPlayerField::initializeHoldBuffer()
 {
-	HoldBufferComponent = CreateDefaultSubobject<UTNTenetrisBufferComponent>(TEXT("HoldBufferComponent"));
+	HoldBufferComponent = CreateDefaultSubobject<UTNOldTenetrisBufferComponent>(TEXT("HoldBufferComponent"));
 	HoldBufferComponent->SetBufferSize(4, 5);
 	HoldBufferComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	HoldBufferComponent->SetMobility(EComponentMobility::Movable);
@@ -285,19 +285,19 @@ void ATNPlayerField::initializeHoldTetromino()
 	HoldTetromino->SetStartingLocation(2, 1);
 }
 
-void ATNPlayerField::bindTetrominoToBuffer(FTNTetrominoBase* tetromino, UTNTenetrisBufferComponent* buffer)
+void ATNPlayerField::bindTetrominoToBuffer(FTNTetrominoBase* tetromino, UTNOldTenetrisBufferComponent* buffer)
 {
 	if (!tetromino || !IsValid(buffer))
 	{
 		return;
 	}
 
-	tetromino->OnBackgroundCubeType.BindUObject(buffer, &UTNTenetrisBufferComponent::SetBackgroundCubeType);
-	tetromino->OnVisibilityBackgroundCubeType.BindUObject(buffer, &UTNTenetrisBufferComponent::SetVisibilityBackgroundCube);
-	tetromino->OnMinoType.BindUObject(buffer, &UTNTenetrisBufferComponent::SetMinoType);
-	tetromino->OnVisibilityMinoType.BindUObject(buffer, &UTNTenetrisBufferComponent::SetVisibilityMino);
-	tetromino->OnCheckMino.BindUObject(buffer, &UTNTenetrisBufferComponent::CheckMino);
-	tetromino->OnCalulateGuideMino.BindUObject(buffer, &UTNTenetrisBufferComponent::CalculateGuideMinoHeight);
+	tetromino->OnBackgroundCubeType.BindUObject(buffer, &UTNOldTenetrisBufferComponent::SetBackgroundCubeType);
+	tetromino->OnVisibilityBackgroundCubeType.BindUObject(buffer, &UTNOldTenetrisBufferComponent::SetVisibilityBackgroundCube);
+	tetromino->OnMinoType.BindUObject(buffer, &UTNOldTenetrisBufferComponent::SetMinoType);
+	tetromino->OnVisibilityMinoType.BindUObject(buffer, &UTNOldTenetrisBufferComponent::SetVisibilityMino);
+	tetromino->OnCheckMino.BindUObject(buffer, &UTNOldTenetrisBufferComponent::CheckMino);
+	tetromino->OnCalulateGuideMino.BindUObject(buffer, &UTNOldTenetrisBufferComponent::CalculateGuideMinoHeight);
 }
 
 void ATNPlayerField::spawn()
