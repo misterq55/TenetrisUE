@@ -2,7 +2,7 @@
 
 
 #include "TNField.h"
-#include "Module/MVC/View/Field/Actor/Components/TenetrisBufferComponent/TNTenetrisBufferComponent.h"
+#include "Module/MVC/View/Field/Actor/Components/TenetrisBufferComponent/TNOldTenetrisBufferComponent.h"
 
 ATNField::ATNField()
 	: ATNFieldBase()
@@ -32,7 +32,7 @@ void ATNField::initializePreviewBuffer()
 {
 	PreviewTetrominoNum = 5;
 
-	PreviewBufferComponent = CreateDefaultSubobject<UTNTenetrisBufferComponent>(TEXT("PreviewBufferComponent"));
+	PreviewBufferComponent = CreateDefaultSubobject<UTNOldTenetrisBufferComponent>(TEXT("PreviewBufferComponent"));
 	PreviewBufferComponent->SetBufferSize(PreviewTetrominoNum * 3 + 1, 5);
 	PreviewBufferComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	PreviewBufferComponent->SetMobility(EComponentMobility::Movable);
@@ -42,7 +42,7 @@ void ATNField::initializePreviewBuffer()
 
 void ATNField::initializeHoldBuffer()
 {
-	HoldBufferComponent = CreateDefaultSubobject<UTNTenetrisBufferComponent>(TEXT("HoldBufferComponent"));
+	HoldBufferComponent = CreateDefaultSubobject<UTNOldTenetrisBufferComponent>(TEXT("HoldBufferComponent"));
 	HoldBufferComponent->SetBufferSize(4, 5);
 	HoldBufferComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	HoldBufferComponent->SetMobility(EComponentMobility::Movable);

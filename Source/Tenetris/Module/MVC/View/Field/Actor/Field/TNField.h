@@ -10,7 +10,7 @@
  * 
  */
 
-class UTNTenetrisBufferComponent;
+class UTNOldTenetrisBufferComponent;
 
 UCLASS()
 class TENETRIS_API ATNField : public ATNFieldBase
@@ -27,6 +27,6 @@ private:
 
 private:
 	int32 PreviewTetrominoNum;
-	UTNTenetrisBufferComponent* PreviewBufferComponent;
-	UTNTenetrisBufferComponent* HoldBufferComponent;
+	UTNOldTenetrisBufferComponent* PreviewBufferComponent;
+	UTNOldTenetrisBufferComponent* HoldBufferComponent;
 };
