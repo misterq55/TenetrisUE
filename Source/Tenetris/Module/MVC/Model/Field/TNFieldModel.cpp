@@ -3,27 +3,39 @@
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/PlayerTetromino/TNPlayerTetromino.h"
 #include "Tenetris/Module/MVC/Model/Field/TetrominoGenerator/TNTetrominoGenerator.h"
 
-FTNFieldModel::FTNFieldModel(FTNFieldContext fieldInfo)
-	: FieldContext(MoveTemp(fieldInfo))
+FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
+	: FieldContext(MoveTemp(fieldContext))
 	, FieldActor(nullptr)
 	, PreviewTetrominoNum(0)
 {
+	if (!CurrentTetromino.IsValid())
+	{
+		// TODO 테트로미노를 di할 수 있도록 수정해야함 [05/21/2024]
+		switch (FieldContext.FieldType)
+		{
+		case E_TNFieldType::Player:
+			CurrentTetromino = MakeShareable(new FTNPlayerTetromino());
+			break;
+		default:
+			break;
+		}
+	}
 
+	if (!TetrominoGenerator.IsValid())
+	{
+		TetrominoGenerator = MakeShareable(new FTNTetrominoGenerator());
+		TetrominoGenerator->Initialize();
+	}
 }
 
 void FTNFieldModel::Initialize()
 {
 	if (!CurrentTetromino.IsValid())
 	{
-		CurrentTetromino = MakeShareable(new FTNPlayerTetromino());
 		CurrentTetromino->SetStartingLocation(4, 18);
-		CurrentTetromino->Spawn();
 	}
 
-	if (TetrominoGenerator.IsValid())
-	{
-		TetrominoGenerator->Initialize();
-	}
+	spawn();
 }
 
 void FTNFieldModel::Tick(float deltaTime)

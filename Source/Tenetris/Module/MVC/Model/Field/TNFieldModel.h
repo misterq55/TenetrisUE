@@ -7,9 +7,7 @@ class FTNTetrominoGenerator;
 class FTNFieldModel
 {
 public:
-	FTNFieldModel() {}
 	FTNFieldModel(FTNFieldContext fieldContext);
-		
 
 public:
 	void Initialize();
