@@ -51,14 +51,13 @@ enum class E_TNFieldType : uint32
 struct FTNFieldContext
 {
 public:
-	FTNFieldContext()
-	{}
-
 	FTNFieldContext(E_TNFieldType fieldType)
 		: FieldType(fieldType)
 		, BufferHeight(ColumnMax)
 		, BufferWidth(RowMax)
-	{}
+	{
+		createBuffer();
+	}
 
 	FTNFieldContext(E_TNFieldType fieldType, TArray<TArray<E_TNTetrominoType>> initialBuffer, int32 height = ColumnMax, int32 width = RowMax)
 		: FieldType(fieldType)
@@ -71,6 +70,27 @@ public:
 	int32 BufferHeight = 0;
 	int32 BufferWidth = 0;
 	TArray<TArray<E_TNTetrominoType>> CheckBuffer;
+
+	void createBuffer()
+	{
+		for (int32 i = 0; i < BufferHeight * 2 + 2; i++)
+		{
+			TArray<E_TNTetrominoType> buffer;
+			for (int32 j = 0; j < BufferWidth + 2; j++)
+			{
+				if (i == 0 || j == 0 || j == BufferWidth + 2 - 1)
+				{
+					buffer.Add(E_TNTetrominoType::Obstacle);
+				}
+				else
+				{
+					buffer.Add(E_TNTetrominoType::None);
+				}
+			}
+
+			CheckBuffer.Add(buffer);
+		}
+	}
 };
 
 struct FTNMoveDirectionState

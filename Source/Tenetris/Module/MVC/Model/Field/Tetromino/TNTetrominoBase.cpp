@@ -66,6 +66,11 @@ void FTNTetrominoBase::SetStartingLocation(const int32 x, const int32 y)
 	StartingLocation = FVector2D(x, y);
 }
 
+void FTNTetrominoBase::SetStartingLocation(const FVector2D& startingLocation)
+{
+	StartingLocation = startingLocation;
+}
+
 FVector2D FTNTetrominoBase::GetStaringLocation()
 {
 	return StartingLocation;
