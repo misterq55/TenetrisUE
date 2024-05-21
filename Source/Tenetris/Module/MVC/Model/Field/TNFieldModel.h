@@ -46,6 +46,9 @@ public:
 	void AddFieldActor(ATNFieldBase* fieldActor);
 
 private:
+	void initializePreviewTetrominos();
+	void initializeHoldTetromino();
+
 	void spawn();
 
 	bool moveTetromino(E_TNTetrominoDirection tetrominoDirection);

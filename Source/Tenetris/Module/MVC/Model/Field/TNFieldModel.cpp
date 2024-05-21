@@ -1,6 +1,9 @@
 #include "TNFieldModel.h"
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/TNTetrominoBase.h"
+
+// TODO 테트로미노 팩토리로 분리 [05/21/2024]
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/PlayerTetromino/TNPlayerTetromino.h"
+#include "Tenetris/Module/MVC/Model/Field/Tetromino/PreviewTetromino/TNPreviewTetromino.h"
 #include "Tenetris/Module/MVC/Model/Field/TetrominoGenerator/TNTetrominoGenerator.h"
 
 FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
@@ -26,11 +29,14 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
 		TetrominoGenerator = MakeShareable(new FTNTetrominoGenerator());
 		TetrominoGenerator->Initialize();
 	}
+
+	initializePreviewTetrominos();
+	initializeHoldTetromino();
 }
 
 void FTNFieldModel::Initialize()
 {
-	if (!CurrentTetromino.IsValid())
+	if (CurrentTetromino.IsValid())
 	{
 		CurrentTetromino->SetStartingLocation(4, 18);
 	}
@@ -441,6 +447,22 @@ float FTNFieldModel::getFallingSpeed()
 void FTNFieldModel::AddFieldActor(ATNFieldBase* fieldActor)
 {
 	FieldActor = fieldActor;
+}
+
+void FTNFieldModel::initializePreviewTetrominos()
+{
+	for (int32 i = 0; i < PreviewTetrominoNum; i++)
+	{
+		TSharedPtr<FTNTetrominoBase> previewTetromino = MakeShareable(new FTNPreviewTetromino());
+		PreviewTetrominos.Add(previewTetromino);
+		previewTetromino->SetStartingLocation(2, (PreviewTetrominoNum - i - 1) * 3 + 1);
+	}
+}
+
+void FTNFieldModel::initializeHoldTetromino()
+{
+	HoldTetromino = MakeShareable(new FTNPreviewTetromino());
+	HoldTetromino->SetStartingLocation(2, 1);
 }
 
 void FTNFieldModel::StartMoveLeft()

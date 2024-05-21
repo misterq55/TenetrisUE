@@ -84,6 +84,7 @@ public:
 	void SetTetrominoType(const E_TNTetrominoType currentTetrominoType);
 	E_TNTetrominoType GetTetrominoType() { return TetrominoInfo.CurrentType; }
 	void SetStartingLocation(const int32 x, const int32 y);
+	void SetStartingLocation(const FVector2D& startingLocation);
 	FVector2D GetStaringLocation();
 	void HideTetromino();
 
