@@ -13,19 +13,6 @@ ATNTenetrisGameMode::ATNTenetrisGameMode()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void ATNTenetrisGameMode::AddFields(ATNFieldBase* field)
-{
-	Super::AddFields(field);
-
-	/*FTNMVCHolder& holder = FTNMVCHolder::GetInstance();
-
-	TSharedPtr<ITNModel> tnModel = holder.GetModel();
-	if (tnModel.IsValid())
-	{
-		tnModel->CreateFieldModel(field);
-	}*/
-}
-
 void ATNTenetrisGameMode::StartPlay()
 {
 	Super::StartPlay();

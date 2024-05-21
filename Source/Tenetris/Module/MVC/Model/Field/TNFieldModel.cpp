@@ -1,5 +1,6 @@
 #include "TNFieldModel.h"
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/TNTetrominoBase.h"
+#include "Tenetris/Module/MVC/Model/Field/Tetromino/PlayerTetromino/TNPlayerTetromino.h"
 #include "Tenetris/Module/MVC/Model/Field/TetrominoGenerator/TNTetrominoGenerator.h"
 
 FTNFieldModel::FTNFieldModel(FTNFieldContext fieldInfo)
@@ -8,6 +9,21 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldInfo)
 	, PreviewTetrominoNum(0)
 {
 
+}
+
+void FTNFieldModel::Initialize()
+{
+	if (!CurrentTetromino.IsValid())
+	{
+		CurrentTetromino = MakeShareable(new FTNPlayerTetromino());
+		CurrentTetromino->SetStartingLocation(4, 18);
+		CurrentTetromino->Spawn();
+	}
+
+	if (TetrominoGenerator.IsValid())
+	{
+		TetrominoGenerator->Initialize();
+	}
 }
 
 void FTNFieldModel::Tick(float deltaTime)

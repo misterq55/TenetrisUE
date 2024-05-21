@@ -16,7 +16,6 @@ class TENETRIS_API ATNTenetrisGameMode : public ATNTenetrisGameModeBase
 
 public:
 	ATNTenetrisGameMode();
-	virtual void AddFields(ATNFieldBase* field) override;
 
 	virtual void StartPlay() override;
 	virtual void Tick(float deltaSeconds) override;

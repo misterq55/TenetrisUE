@@ -13,19 +13,6 @@ ATNTenetrisGameModeBase::ATNTenetrisGameModeBase(const FObjectInitializer& Objec
 	PlayerControllerClass = ATNTenetrisPlayerController::StaticClass();
 }
 
-void ATNTenetrisGameModeBase::Initialize()
-{
-	for (ATNFieldBase* Field : Fields)
-	{
-		if (!IsValid(Field))
-		{
-			continue;
-		}
-
-		Field->Initialize();
-	}
-}
-
 void ATNTenetrisGameModeBase::AddFields(ATNFieldBase* field)
 {
 	Fields.Add(field);
@@ -34,10 +21,4 @@ void ATNTenetrisGameModeBase::AddFields(ATNFieldBase* field)
 void ATNTenetrisGameModeBase::SetPlayerField(ATNFieldBase* playerField)
 {
 	AddFields(playerField);
-	PlayerField = playerField;
-}
-
-ATNFieldBase* ATNTenetrisGameModeBase::GetPlayerField()
-{
-	return PlayerField;
 }

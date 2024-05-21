@@ -12,6 +12,7 @@ public:
 		
 
 public:
+	void Initialize();
 	void Tick(float deltaTime);
 	void SetBufferSize(const int32 bufferHeight, const int32 bufferWidth);
 	E_TNTetrominoType GetValueFromCheckBuffer(const int32 x, const int32 y) const;

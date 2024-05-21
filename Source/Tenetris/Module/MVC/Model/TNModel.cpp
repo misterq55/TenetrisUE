@@ -21,6 +21,7 @@ void FTNModel::Tick(float deltaTime)
 void FTNModel::CreateFieldModel(FTNFieldContext fieldContext)
 {
 	TSharedPtr<FTNFieldModel> fieldModel = MakeShareable(new FTNFieldModel(fieldContext));
+	fieldModel->Initialize();
 	FieldModelMap.Emplace(ModelKey, fieldModel);
 
 	if (fieldContext.FieldType == E_TNFieldType::Player)
@@ -35,6 +36,7 @@ void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, ATNFieldBase* fiel
 {
 	TSharedPtr<FTNFieldModel> fieldModel = MakeShareable(new FTNFieldModel(fieldContext));
 	fieldModel->AddFieldActor(fieldActor); // TODO »èÁ¦
+	fieldModel->Initialize();
 	FieldModelMap.Emplace(ModelKey, fieldModel);
 
 	if (fieldContext.FieldType == E_TNFieldType::Player)
