@@ -65,7 +65,7 @@ void FTNModel::StopMoveLeft()
 {
 	if (PlayerFieldModel.IsValid())
 	{
-		PlayerFieldModel->StartMoveLeft();
+		PlayerFieldModel->StopMoveLeft();
 	}
 }
 
