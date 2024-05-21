@@ -47,6 +47,8 @@ public:
 	void AddFieldActor(ATNFieldBase* fieldActor);
 
 private:
+	void spawn();
+
 	bool moveTetromino(E_TNTetrominoDirection tetrominoDirection);
 	void rotateTetromino(E_TNTetrominoRotation tetrominoRotation);
 	void setMoveDirection(E_TNTetrominoDirection tetrominoDirection, bool pressed);
@@ -56,6 +58,7 @@ private:
 	void tetrominoFall(float deltaTime);
 	void setMoveState(float deltaTime, FTNMoveDirectionState& moveState, E_TNTetrominoDirection tetrominoDirction);
 	void updateLockDown(float deltaTime);
+	void updateLineDelete(float deltaTime);
 
 	void lineDelete();
 	void doLockDown();
