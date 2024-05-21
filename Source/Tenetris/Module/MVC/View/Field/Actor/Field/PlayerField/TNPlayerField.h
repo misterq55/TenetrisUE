@@ -9,6 +9,7 @@
 
 class FTNTetrominoBase;
 class FTNTetrominoGenerator;
+class UTNOldTenetrisBufferComponent;
 
 UCLASS()
 class TENETRIS_API ATNPlayerField : public ATNFieldBase

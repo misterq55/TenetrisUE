@@ -18,12 +18,12 @@ void FTNModel::Tick(float deltaTime)
 	}
 }
 
-void FTNModel::CreateFieldModel(FTNFieldInfo fieldInfo)
+void FTNModel::CreateFieldModel(FTNFieldContext fieldContext)
 {
-	TSharedPtr<FTNFieldModel> fieldModel = MakeShareable(new FTNFieldModel(fieldInfo));
+	TSharedPtr<FTNFieldModel> fieldModel = MakeShareable(new FTNFieldModel(fieldContext));
 	FieldModelMap.Emplace(ModelKey, fieldModel);
 
-	if (fieldInfo.FieldType == E_TNFieldType::Player)
+	if (fieldContext.FieldType == E_TNFieldType::Player)
 	{
 		PlayerFieldModel = fieldModel;
 	}
@@ -31,13 +31,13 @@ void FTNModel::CreateFieldModel(FTNFieldInfo fieldInfo)
 	ModelKey++;
 }
 
-void FTNModel::CreateFieldModel(FTNFieldInfo fieldInfo, ATNFieldBase* fieldActor)
+void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, ATNFieldBase* fieldActor)
 {
-	TSharedPtr<FTNFieldModel> fieldModel = MakeShareable(new FTNFieldModel(fieldInfo));
+	TSharedPtr<FTNFieldModel> fieldModel = MakeShareable(new FTNFieldModel(fieldContext));
 	fieldModel->AddFieldActor(fieldActor); // TODO ªË¡¶
 	FieldModelMap.Emplace(ModelKey, fieldModel);
 
-	if (fieldInfo.FieldType == E_TNFieldType::Player)
+	if (fieldContext.FieldType == E_TNFieldType::Player)
 	{
 		PlayerFieldModel = fieldModel;
 	}

@@ -3,7 +3,7 @@
 
 #include "TNFieldBase.h"
 #include "Tenetris/Module/MVC/View/Field/Actor/Mino/TNMinoBase.h"
-#include "Tenetris/Module/MVC/View/Field/Actor/Components/TenetrisBufferComponent/TNOldTenetrisBufferComponent.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Components/TenetrisBufferComponent/TNTenetrisBufferComponent.h"
 
 // Sets default values
 ATNFieldBase::ATNFieldBase()
@@ -13,7 +13,7 @@ ATNFieldBase::ATNFieldBase()
 
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("ROOT_COMPONENT"));
 
-	TenetrisBufferComponent = CreateDefaultSubobject<UTNOldTenetrisBufferComponent>(TEXT("BufferComponent"));
+	TenetrisBufferComponent = CreateDefaultSubobject<UTNTenetrisBufferComponent>(TEXT("BufferComponent"));
 	TenetrisBufferComponent->SetBufferSize(RowMax, ColumnMax);
 	TenetrisBufferComponent->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 	TenetrisBufferComponent->SetMobility(EComponentMobility::Movable);

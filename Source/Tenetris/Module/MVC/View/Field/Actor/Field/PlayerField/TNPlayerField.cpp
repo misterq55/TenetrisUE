@@ -161,10 +161,10 @@ void ATNPlayerField::hold()
 
 void ATNPlayerField::toggleSpaceInversion()
 {
-	if (IsValid(TenetrisBufferComponent))
+	/*if (IsValid(TenetrisBufferComponent))
 	{
 		TenetrisBufferComponent->ToggleSpaceInversion();
-	}
+	}*/
 
 	if (CurrentTetromino)
 	{
@@ -468,17 +468,17 @@ void ATNPlayerField::doLockDown()
 
 void ATNPlayerField::lineDelete()
 {
-	if (CurrentTetromino && IsValid(TenetrisBufferComponent))
+	/*if (CurrentTetromino && IsValid(TenetrisBufferComponent))
 	{
 		TenetrisBufferComponent->CheckLineDelete(CurrentTetromino->GetMinoHeights());
-	}
+	}*/
 }
 
 void ATNPlayerField::waitForSpawn()
 {
-	if (bWaitForSpawn && IsValid(TenetrisBufferComponent) && !TenetrisBufferComponent->GetLineDeleting())
+	/*if (bWaitForSpawn && IsValid(TenetrisBufferComponent) && !TenetrisBufferComponent->GetLineDeleting())
 	{
 		spawn();
 		bWaitForSpawn = false;
-	}
+	}*/
 }

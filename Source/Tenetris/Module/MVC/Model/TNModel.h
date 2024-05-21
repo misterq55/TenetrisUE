@@ -8,8 +8,8 @@ public:
 	virtual ~FTNModel() {}
 	virtual void Init() override;
 	virtual void Tick(float deltaTime) override;
-	virtual void CreateFieldModel(FTNFieldInfo fieldInfo) override;
-	virtual void CreateFieldModel(FTNFieldInfo fieldInfo, ATNFieldBase* fieldActor) override;
+	virtual void CreateFieldModel(FTNFieldContext fieldContext) override;
+	virtual void CreateFieldModel(FTNFieldContext fieldContext, ATNFieldBase* fieldActor) override;
 	virtual TSharedPtr<FTNFieldModel> GetPlayerFieldModel() override;
 
 	virtual void StartMoveLeft() override;
