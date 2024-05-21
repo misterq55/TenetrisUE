@@ -64,15 +64,15 @@ void FTNView::UpdateFieldView(const int32 modelKey)
 	TSharedPtr<FTNFieldView>* fieldView = FieldViewMap.Find(modelKey);
 	if (fieldView && fieldView->IsValid())
 	{
-		const FTNFieldInfo& fieldInfo = fieldModel->GetFieldInfo();
-		const int32 bufferHeight = fieldInfo.BufferHeight;
-		const int32 bufferWidth = fieldInfo.BufferWidth;
+		const FTNFieldContext& fieldContext = fieldModel->GetFieldContext();
+		const int32 bufferHeight = fieldContext.BufferHeight;
+		const int32 bufferWidth = fieldContext.BufferWidth;
 
 		for (int32 i = 0; i < bufferHeight; i++)
 		{
 			for (int32 j = 0; j < bufferWidth; j++)
 			{
-				const E_TNTetrominoType tetrominoType = fieldInfo.CheckBuffer[i][j];
+				const E_TNTetrominoType tetrominoType = fieldContext.CheckBuffer[i][j];
 				(*fieldView)->SetBackgroundCubeType(j, i, tetrominoType);
 			}
 		}

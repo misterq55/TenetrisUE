@@ -1,21 +1,28 @@
 #include "TNFieldModel.h"
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/TNTetrominoBase.h"
+#include "Tenetris/Module/MVC/Model/Field/TetrominoGenerator/TNTetrominoGenerator.h"
 
-FTNFieldModel::FTNFieldModel(FTNFieldInfo fieldInfo)
-	: FieldInfo(MoveTemp(fieldInfo))
+FTNFieldModel::FTNFieldModel(FTNFieldContext fieldInfo)
+	: FieldContext(MoveTemp(fieldInfo))
 	, FieldActor(nullptr)
 	, PreviewTetrominoNum(0)
 {
 
 }
 
-void FTNFieldModel::Tick(float deltaSeconds)
+void FTNFieldModel::Tick(float deltaTime)
 {
+	tetrominoFall(deltaTime);
+	setMoveState(deltaTime, LeftDirectionState, E_TNTetrominoDirection::Left);
+	setMoveState(deltaTime, RightDirectionState, E_TNTetrominoDirection::Right);
+	updateLockDown(deltaTime);
+	waitForSpawn();
+
 	if (bLineDeleting)
 	{
 		for (const int32 deleteLine : DeletedLines)
 		{
-			for (int32 j = 0; j < FieldInfo.BufferWidth; j++)
+			for (int32 j = 0; j < FieldContext.BufferWidth; j++)
 			{
 				SetValueToCheckBuffer(j, deleteLine, E_TNTetrominoType::None);
 			}
@@ -26,7 +33,7 @@ void FTNFieldModel::Tick(float deltaSeconds)
 			TArray<int32> lineChecker;
 			int32 lineDeleteValue = 0;
 
-			for (int32 i = 0; i < FieldInfo.BufferHeight; i++)
+			for (int32 i = 0; i < FieldContext.BufferHeight; i++)
 			{
 				if (DeletedLines.Find(i) != -1)
 				{
@@ -39,11 +46,11 @@ void FTNFieldModel::Tick(float deltaSeconds)
 				}
 			}
 
-			for (int32 i = 0; i < FieldInfo.BufferHeight; i++)
+			for (int32 i = 0; i < FieldContext.BufferHeight; i++)
 			{
 				if (lineChecker[i] != -1)
 				{
-					for (int32 j = 0; j < FieldInfo.BufferWidth; j++)
+					for (int32 j = 0; j < FieldContext.BufferWidth; j++)
 					{
 						const E_TNTetrominoType value = GetValueFromCheckBuffer(j, i);
 						SetValueToCheckBuffer(j, i, E_TNTetrominoType::None);
@@ -56,27 +63,27 @@ void FTNFieldModel::Tick(float deltaSeconds)
 			bLineDeleting = false;
 		}
 
-		DeleteLineCheckTime += deltaSeconds;
+		DeleteLineCheckTime += deltaTime;
 	}
 }
 
 void FTNFieldModel::SetBufferSize(const int32 bufferHeight, const int32 bufferWidth)
 {
-	FieldInfo.BufferHeight = bufferHeight;
-	FieldInfo.BufferWidth = bufferWidth;
+	FieldContext.BufferHeight = bufferHeight;
+	FieldContext.BufferWidth = bufferWidth;
 
-	for (int32 i = 0; i < FieldInfo.BufferHeight * 2 + 2; i++)
+	for (int32 i = 0; i < FieldContext.BufferHeight * 2 + 2; i++)
 	{
 		TArray<E_TNTetrominoType> buffer;
-		for (int32 j = 0; j < FieldInfo.BufferWidth + 2; j++)
+		for (int32 j = 0; j < FieldContext.BufferWidth + 2; j++)
 		{
-			if (i == 0 || j == 0 || j == FieldInfo.BufferWidth + 2 - 1)
+			if (i == 0 || j == 0 || j == FieldContext.BufferWidth + 2 - 1)
 				buffer.Add(E_TNTetrominoType::Obstacle);
 			else
 				buffer.Add(E_TNTetrominoType::None);
 		}
 
-		FieldInfo.CheckBuffer.Add(buffer);
+		FieldContext.CheckBuffer.Add(buffer);
 	}
 }
 
@@ -86,10 +93,10 @@ E_TNTetrominoType FTNFieldModel::GetValueFromCheckBuffer(const int32 x, const in
 
 	if (bSpaceInverted)
 	{
-		newX = FieldInfo.BufferWidth - x - 1;
+		newX = FieldContext.BufferWidth - x - 1;
 	}
 
-	return FieldInfo.CheckBuffer[y + 1][newX + 1];
+	return FieldContext.CheckBuffer[y + 1][newX + 1];
 }
 
 void FTNFieldModel::SetValueToCheckBuffer(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
@@ -98,16 +105,16 @@ void FTNFieldModel::SetValueToCheckBuffer(const int32 x, const int32 y, const E_
 
 	if (bSpaceInverted)
 	{
-		newX = FieldInfo.BufferWidth - x - 1;
+		newX = FieldContext.BufferWidth - x - 1;
 	}
 
-	FieldInfo.CheckBuffer[y + 1][newX + 1] = tetrominoType;
+	FieldContext.CheckBuffer[y + 1][newX + 1] = tetrominoType;
 }
 
 bool FTNFieldModel::CheckMino(const int32 x, const int32 y)
 {
 	if (y < 0 || x < 0) return true;
-	if (y >= FieldInfo.BufferHeight || x >= FieldInfo.BufferWidth) return true;
+	if (y >= FieldContext.BufferHeight || x >= FieldContext.BufferWidth) return true;
 
 	return GetValueFromCheckBuffer(x, y) != E_TNTetrominoType::None;
 }
@@ -154,7 +161,7 @@ void FTNFieldModel::CheckLineDelete(const TArray<int32>& heights)
 bool FTNFieldModel::IsLineDeleted(int32 height) const
 {
 	// 주어진 높이에 대해 해당 줄이 모두 삭제되었는지 확인합니다.
-	for (int32 j = 0; j < FieldInfo.BufferWidth; ++j)
+	for (int32 j = 0; j < FieldContext.BufferWidth; ++j)
 	{
 		if (GetValueFromCheckBuffer(j, height) == E_TNTetrominoType::None)
 		{
@@ -179,7 +186,7 @@ void FTNFieldModel::HandleLineDeletion(const TArray<int32>& linesToDelete)
 
 TArray<TArray<E_TNTetrominoType>>& FTNFieldModel::GetCheckBuffer()
 {
-	return FieldInfo.CheckBuffer;
+	return FieldContext.CheckBuffer;
 }
 
 bool FTNFieldModel::moveTetromino(E_TNTetrominoDirection tetrominoDirection)
@@ -251,6 +258,77 @@ void FTNFieldModel::setMoveDirection(E_TNTetrominoDirection tetrominoDirection, 
 	}
 }
 
+void FTNFieldModel::tetrominoFall(float deltaTime)
+{
+	if (bWaitForSpawn)
+	{
+		return;
+	}
+
+	CurrentTime += deltaTime;
+	if (CurrentTime >= getFallingSpeed())
+	{
+		if (moveTetromino(E_TNTetrominoDirection::Down))
+		{
+			LockDown.StartLockDown();
+		}
+
+		CurrentTime = 0.f;
+	}
+}
+
+void FTNFieldModel::setMoveState(float deltaTime, FTNMoveDirectionState& moveState, E_TNTetrominoDirection tetrominoDirction)
+{
+	if (bWaitForSpawn)
+	{
+		return;
+	}
+
+	if (moveState.Pressed && TetrominoMoveDirection == tetrominoDirction)
+	{
+		if (moveState.PressedTime == 0.f)
+		{
+			moveTetromino(tetrominoDirction);
+		}
+		else if (moveState.PressedTime > KickInDelay)
+		{
+			moveState.AutoRepeatKickIn = true;
+			moveState.PressedTime = KickInDelay;
+		}
+
+		moveState.PressedTime += deltaTime;
+	}
+	else
+	{
+		moveState.AutoRepeatKickIn = false;
+		moveState.PressedTime = 0.f;
+	}
+
+	if (moveState.AutoRepeatKickIn)
+	{
+		if (moveState.PressedTime >= MoveSpeed)
+		{
+			moveTetromino(tetrominoDirction);
+			moveState.PressedTime = 0.f;
+		}
+
+		moveState.PressedTime += deltaTime;
+	}
+}
+
+void FTNFieldModel::updateLockDown(float deltaTime)
+{
+	if (bWaitForSpawn)
+	{
+		return;
+	}
+
+	if (LockDown.UpdateLockDown(deltaTime))
+	{
+		doLockDown();
+	}
+}
+
 void FTNFieldModel::lineDelete()
 {
 	if (CurrentTetromino.IsValid())
@@ -267,6 +345,57 @@ void FTNFieldModel::doLockDown()
 		lineDelete();
 		bWaitForSpawn = true;
 	}
+}
+
+void FTNFieldModel::waitForSpawn()
+{
+	// if (bWaitForSpawn && IsValid(TenetrisBufferComponent) && !TenetrisBufferComponent->GetLineDeleting())
+	{
+		// spawn();
+		bWaitForSpawn = false;
+	}
+}
+
+void FTNFieldModel::spawnNextTetromino()
+{
+	if (CurrentTetromino.IsValid() && TetrominoGenerator.IsValid())
+	{
+		CurrentTetromino->SetTetrominoType(TetrominoGenerator->GetTop());
+		CurrentTetromino->Spawn();
+	}
+}
+
+void FTNFieldModel::renewPreviewTetromino()
+{
+	if (!TetrominoGenerator.IsValid())
+	{
+		return;
+	}
+
+	for (int32 i = 0; i < PreviewTetrominos.Num(); i++)
+	{
+		TSharedPtr<FTNTetrominoBase> previewTetromino = PreviewTetrominos[i];
+		if (!previewTetromino.IsValid())
+		{
+			continue;
+		}
+
+		previewTetromino->HideTetromino();
+		previewTetromino->SetTetrominoType(TetrominoGenerator->GetAt(i));
+		previewTetromino->Spawn();
+	}
+}
+
+float FTNFieldModel::getFallingSpeed()
+{
+	float multiflier = 1.f;
+
+	if (bSoftDrop)
+	{
+		multiflier /= 20.f;
+	}
+
+	return TetrominoFallingSpeed * multiflier;
 }
 
 void FTNFieldModel::AddFieldActor(ATNFieldBase* fieldActor)
@@ -321,7 +450,10 @@ void FTNFieldModel::Hold()
 
 void FTNFieldModel::ToggleSpaceInversion()
 {
-	
+	if (CurrentTetromino.IsValid())
+	{
+		CurrentTetromino->ResetGuideTetromino();
+	}
 }
 
 void FTNFieldModel::HardDrop()
@@ -329,6 +461,6 @@ void FTNFieldModel::HardDrop()
 	if (CurrentTetromino.IsValid())
 	{
 		CurrentTetromino->HardDrop();
-		// doLockDown();
+		doLockDown();
 	}
 }

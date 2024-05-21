@@ -111,7 +111,7 @@ public:
 		SetMinoClassType(ATNTestMino::StaticClass());
 		CurrentTetromino = new FTNTestTetromino();
 
-		bindTetrominoToBuffer(CurrentTetromino, TenetrisBufferComponent);
+		// bindTetrominoToBuffer(CurrentTetromino, TenetrisBufferComponent);
 		CurrentTetromino->SetStartingLocation(4, 18);
 
 		PreviewBufferComponent->SetMinoClassType(ATNTestMino::StaticClass());

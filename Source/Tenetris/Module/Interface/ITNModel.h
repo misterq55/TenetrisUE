@@ -11,8 +11,8 @@ class ITNModel
 public:
 	virtual void Init() = 0;
 	virtual void Tick(float deltaTime) = 0;
-	virtual void CreateFieldModel(FTNFieldInfo fieldInfo) = 0;
-	virtual void CreateFieldModel(FTNFieldInfo fieldInfo, ATNFieldBase* fieldActor) = 0;
+	virtual void CreateFieldModel(FTNFieldContext fieldContext) = 0;
+	virtual void CreateFieldModel(FTNFieldContext fieldContext, ATNFieldBase* fieldActor) = 0;
 	virtual TSharedPtr<FTNFieldModel> GetPlayerFieldModel() = 0;
 
 	virtual void StartMoveLeft() = 0;

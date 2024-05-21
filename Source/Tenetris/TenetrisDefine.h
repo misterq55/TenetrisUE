@@ -48,19 +48,19 @@ enum class E_TNFieldType : uint32
 	Enemy
 };
 
-struct FTNFieldInfo
+struct FTNFieldContext
 {
 public:
-	FTNFieldInfo()
+	FTNFieldContext()
 	{}
 
-	FTNFieldInfo(E_TNFieldType fieldType)
+	FTNFieldContext(E_TNFieldType fieldType)
 		: FieldType(fieldType)
 		, BufferHeight(ColumnMax)
 		, BufferWidth(RowMax)
 	{}
 
-	FTNFieldInfo(E_TNFieldType fieldType, TArray<TArray<E_TNTetrominoType>> initialBuffer, int32 height = ColumnMax, int32 width = RowMax)
+	FTNFieldContext(E_TNFieldType fieldType, TArray<TArray<E_TNTetrominoType>> initialBuffer, int32 height = ColumnMax, int32 width = RowMax)
 		: FieldType(fieldType)
 		, BufferHeight(height)
 		, BufferWidth(width)

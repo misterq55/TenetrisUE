@@ -8,11 +8,11 @@ class FTNFieldModel
 {
 public:
 	FTNFieldModel() {}
-	FTNFieldModel(FTNFieldInfo fieldInfo);
+	FTNFieldModel(FTNFieldContext fieldContext);
 		
 
 public:
-	void Tick(float deltaSeconds);
+	void Tick(float deltaTime);
 	void SetBufferSize(const int32 bufferHeight, const int32 bufferWidth);
 	E_TNTetrominoType GetValueFromCheckBuffer(const int32 x, const int32 y) const;
 	void SetValueToCheckBuffer(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
@@ -23,8 +23,8 @@ public:
 	void HandleLineDeletion(const TArray<int32>& linesToDelete);
 	TArray<TArray<E_TNTetrominoType>>& GetCheckBuffer();
 
-	const FTNFieldInfo& GetFieldInfo() {
-		return FieldInfo;
+	const FTNFieldContext& GetFieldContext() {
+		return FieldContext;
 	}
 
 	void StartMoveLeft();
@@ -52,12 +52,23 @@ private:
 	void setMoveDirection(E_TNTetrominoDirection tetrominoDirection, bool pressed);
 	void setSoftDrop(bool softDrop) { bSoftDrop = softDrop; }
 	bool getSoftDrop() { return bSoftDrop; }
+
+	void tetrominoFall(float deltaTime);
+	void setMoveState(float deltaTime, FTNMoveDirectionState& moveState, E_TNTetrominoDirection tetrominoDirction);
+	void updateLockDown(float deltaTime);
+
 	void lineDelete();
 	void doLockDown();
+	void waitForSpawn();
+
+	void spawnNextTetromino();
+	void renewPreviewTetromino();
+	float getFallingSpeed();
+	
 
 private:
 
-	FTNFieldInfo FieldInfo;
+	FTNFieldContext FieldContext;
 	ATNFieldBase* FieldActor;
 
 	TSharedPtr<FTNTetrominoBase> CurrentTetromino;
