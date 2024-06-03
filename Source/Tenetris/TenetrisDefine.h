@@ -53,8 +53,8 @@ struct FTNFieldContext
 public:
 	FTNFieldContext(E_TNFieldType fieldType)
 		: FieldType(fieldType)
-		, BufferHeight(ColumnMax)
-		, BufferWidth(RowMax)
+		, BufferHeight(RowMax)
+		, BufferWidth(ColumnMax)
 	{
 		createBuffer();
 	}
