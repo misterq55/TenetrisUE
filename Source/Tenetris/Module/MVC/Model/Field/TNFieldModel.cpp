@@ -17,7 +17,13 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
 		switch (FieldContext.FieldType)
 		{
 		case E_TNFieldType::Player:
+		{
 			CurrentTetromino = MakeShareable(new FTNPlayerTetromino());
+
+			CurrentTetromino->OnBackgroundCubeType.BindRaw(this, &FTNFieldModel::SetValueToCheckBuffer);
+			CurrentTetromino->OnCheckMino.BindRaw(this, &FTNFieldModel::CheckMino);
+			CurrentTetromino->OnCalulateGuideMino.BindRaw(this, &FTNFieldModel::CalculateGuideMinoHeight);
+		}
 			break;
 		default:
 			break;
@@ -395,7 +401,7 @@ void FTNFieldModel::doLockDown()
 
 void FTNFieldModel::waitForSpawn()
 {
-	if (bWaitForSpawn && bLineDeleting)
+	if (bWaitForSpawn /* && bLineDeleting*/)
 	{
 		spawn();
 		bWaitForSpawn = false;
