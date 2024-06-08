@@ -401,7 +401,7 @@ void FTNFieldModel::doLockDown()
 
 void FTNFieldModel::waitForSpawn()
 {
-	if (bWaitForSpawn /* && bLineDeleting*/)
+	if (bWaitForSpawn && !bLineDeleting)
 	{
 		spawn();
 		bWaitForSpawn = false;
