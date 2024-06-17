@@ -4,13 +4,18 @@ class ATNFieldBase;
 class FTNTetrominoBase;
 class FTNTetrominoGenerator;
 
+DECLARE_DELEGATE_OneParam(FTNUpdateModel, const int32);
+
 class FTNFieldModel
 {
 public:
 	FTNFieldModel(FTNFieldContext fieldContext);
+	virtual ~FTNFieldModel() {}
 
 public:
 	void Initialize();
+	void SetId(const int32 id);
+	int32 GetId();
 	void Tick(float deltaTime);
 	void SetBufferSize(const int32 bufferHeight, const int32 bufferWidth);
 	E_TNTetrominoType GetValueFromCheckBuffer(const int32 x, const int32 y) const;
@@ -24,6 +29,10 @@ public:
 
 	const FTNFieldContext& GetFieldContext() {
 		return FieldContext;
+	}
+
+	virtual FTNUpdateModel& GetOnUpdateModelDelegate() {
+		return OnUpdateModel;
 	}
 
 	void StartMoveLeft();
@@ -91,7 +100,10 @@ private:
 
 	TSharedPtr<FTNTetrominoBase> HoldTetromino;
 
+	FTNUpdateModel OnUpdateModel;
+
 private:
+	int32 Id = 0;
 	bool bSoftDrop = false;
 	FTNMoveDirectionState LeftDirectionState;
 	FTNMoveDirectionState RightDirectionState;

@@ -21,7 +21,13 @@ void FTNModel::Tick(float deltaTime)
 void FTNModel::CreateFieldModel(FTNFieldContext fieldContext)
 {
 	TSharedPtr<FTNFieldModel> fieldModel = MakeShareable(new FTNFieldModel(fieldContext));
+	if (!fieldModel.IsValid())
+	{
+		return;
+	}
+	fieldModel->GetOnUpdateModelDelegate().BindRaw(this, &FTNModel::UpdateModel);
 	fieldModel->Initialize();
+	fieldModel->SetId(ModelKey);
 	FieldModelMap.Emplace(ModelKey, fieldModel);
 
 	if (fieldContext.FieldType == E_TNFieldType::Player)
@@ -35,8 +41,16 @@ void FTNModel::CreateFieldModel(FTNFieldContext fieldContext)
 void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, ATNFieldBase* fieldActor)
 {
 	TSharedPtr<FTNFieldModel> fieldModel = MakeShareable(new FTNFieldModel(fieldContext));
+	if (!fieldModel.IsValid())
+	{
+		return;
+	}
+
+	fieldModel->GetOnUpdateModelDelegate().BindRaw(this, &FTNModel::UpdateModel);
+
 	fieldModel->AddFieldActor(fieldActor); // TODO »èÁ¦
 	fieldModel->Initialize();
+	fieldModel->SetId(ModelKey);
 	FieldModelMap.Emplace(ModelKey, fieldModel);
 
 	if (fieldContext.FieldType == E_TNFieldType::Player)
@@ -46,6 +60,11 @@ void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, ATNFieldBase* fiel
 
 	CreateFieldViewWithFieldActorDelegate.ExecuteIfBound(ModelKey, fieldActor);
 	ModelKey++;
+}
+
+void FTNModel::UpdateModel(const int32 modelKey)
+{
+	UpdateFieldViewDelegate.ExecuteIfBound(modelKey);
 }
 
 TSharedPtr<FTNFieldModel> FTNModel::GetPlayerFieldModel()

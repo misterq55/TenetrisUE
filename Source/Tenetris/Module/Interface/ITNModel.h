@@ -13,6 +13,7 @@ public:
 	virtual void Tick(float deltaTime) = 0;
 	virtual void CreateFieldModel(FTNFieldContext fieldContext) = 0;
 	virtual void CreateFieldModel(FTNFieldContext fieldContext, ATNFieldBase* fieldActor) = 0;
+	virtual void UpdateModel(const int32 modelKey) = 0;
 	virtual TSharedPtr<FTNFieldModel> GetPlayerFieldModel() = 0;
 
 	virtual void StartMoveLeft() = 0;
