@@ -10,6 +10,7 @@ public:
 	virtual void Tick(float deltaTime) override;
 	virtual void CreateFieldModel(FTNFieldContext fieldContext) override;
 	virtual void CreateFieldModel(FTNFieldContext fieldContext, ATNFieldBase* fieldActor) override;
+	virtual void UpdateModel(const int32 modelKey) override;
 	virtual TSharedPtr<FTNFieldModel> GetPlayerFieldModel() override;
 
 	virtual void StartMoveLeft() override;

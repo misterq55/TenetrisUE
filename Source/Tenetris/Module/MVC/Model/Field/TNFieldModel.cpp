@@ -50,6 +50,16 @@ void FTNFieldModel::Initialize()
 	spawn();
 }
 
+void FTNFieldModel::SetId(const int32 id)
+{
+	Id = id;
+}
+
+int32 FTNFieldModel::GetId()
+{
+	return Id;
+}
+
 void FTNFieldModel::Tick(float deltaTime)
 {
 	tetrominoFall(deltaTime);
@@ -396,6 +406,8 @@ void FTNFieldModel::doLockDown()
 		CurrentTetromino->LockDown();
 		lineDelete();
 		bWaitForSpawn = true;
+
+		OnUpdateModel.ExecuteIfBound(Id);
 	}
 }
 
