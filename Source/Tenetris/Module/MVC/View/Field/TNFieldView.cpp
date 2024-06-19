@@ -10,6 +10,11 @@ void FTNFieldView::SetFieldActor(TObjectPtr<ATNFieldBase> fieldActor)
 	}
 
 	FieldActor = fieldActor;
+
+	if (IsValid(FieldActor))
+	{
+		FieldActor->Initialize();
+	}
 }
 
 void FTNFieldView::CreateFieldActor(TSubclassOf<ATNFieldBase> fieldActorClass, UWorld* world)
@@ -20,6 +25,11 @@ void FTNFieldView::CreateFieldActor(TSubclassOf<ATNFieldBase> fieldActorClass, U
 	}
 
 	FieldActor = world->SpawnActor<ATNFieldBase>(fieldActorClass);
+
+	if (IsValid(FieldActor))
+	{
+		FieldActor->Initialize();
+	}
 }
 
 void FTNFieldView::SetBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType)

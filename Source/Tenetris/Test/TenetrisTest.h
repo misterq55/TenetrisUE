@@ -2,12 +2,14 @@
 
 #pragma once
 
-#include "Tenetris/Module/MVC/View/Field/Actor/Field/PlayerField/TNPlayerField.h"
+// #include "Tenetris/Module/MVC/View/Field/Actor/Field/PlayerField/TNPlayerField.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Field/TNField.h"
 #include "Tenetris/Module/MVC/View/Field/Actor/Mino/TNMinoBase.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/StaticMeshActor.h"
-#include "Tenetris/Module/MVC/View/Field/Actor/Components/TenetrisBufferComponent/TNOldTenetrisBufferComponent.h"
+#include "Tenetris/Module/MVC/View/Field/Actor/Components/TenetrisBufferComponent/TNTenetrisBufferComponent.h"
+// #include "Tenetris/Module/MVC/View/Field/Actor/Components/TenetrisBufferComponent/TNOldTenetrisBufferComponent.h"
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/PlayerTetromino/TNPlayerTetromino.h"
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/PreviewTetromino/TNPreviewTetromino.h"
 #include "Tenetris/Module/MVC/Model/Field/TetrominoGenerator/TNTetrominoGenerator.h"
@@ -96,23 +98,23 @@ public:
 };
 
 UCLASS()
-class TENETRIS_API ATNTestField : public ATNPlayerField
+class TENETRIS_API ATNTestField : public ATNField
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
 	ATNTestField()
-		: ATNPlayerField()
+		: ATNField()
 	{
 		// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 		PrimaryActorTick.bCanEverTick = true;
 
 		SetMinoClassType(ATNTestMino::StaticClass());
-		CurrentTetromino = new FTNTestTetromino();
+		// CurrentTetromino = new FTNTestTetromino();
 
 		// bindTetrominoToBuffer(CurrentTetromino, TenetrisBufferComponent);
-		CurrentTetromino->SetStartingLocation(4, 18);
+		// CurrentTetromino->SetStartingLocation(4, 18);
 
 		PreviewBufferComponent->SetMinoClassType(ATNTestMino::StaticClass());
 		HoldBufferComponent->SetMinoClassType(ATNTestMino::StaticClass());
@@ -176,7 +178,7 @@ public:
 	{
 		Super::Initialize();
 
-		for (int i = 0; i < 4; i++)
+		/*for (int i = 0; i < 4; i++)
 		{
 			for (int j = 0; j < ColumnMax; j++)
 			{
@@ -188,7 +190,7 @@ public:
 
 				setBackgroundCubeType(j, i, E_TNTetrominoType::Obstacle);
 			}
-		}
+		}*/
 
 		//for (int i = 0; i < RowMax; i++)
 		//{
@@ -214,6 +216,6 @@ public:
 		setBackgroundCubeType(4, 3, E_TNTetrominoType::Obstacle);
 		setBackgroundCubeType(5, 4, E_TNTetrominoType::Obstacle);*/
 
-		spawn();
+		// spawn();
 	}
 };

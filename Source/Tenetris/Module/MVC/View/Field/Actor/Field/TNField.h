@@ -27,6 +27,7 @@ private:
 
 private:
 	int32 PreviewTetrominoNum;
+protected:
 	UTNTenetrisBufferComponent* PreviewBufferComponent;
 	UTNTenetrisBufferComponent* HoldBufferComponent;
 };
