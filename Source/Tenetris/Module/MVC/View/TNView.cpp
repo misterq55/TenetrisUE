@@ -37,6 +37,9 @@ void FTNView::CreateFieldViewWithFieldActor(const int32 key, ATNFieldBase* field
 	}
 }
 
+// TODO 모델이 아니라 컨텍스트를 반환하도록 하자
+// 아래 로직은 필드 뷰로 다 옮기자
+// 또 Background buffer만을 업데이트 하므로 이름도 바꾸자
 void FTNView::UpdateFieldView(const int32 modelKey)
 {
 	TSharedPtr<ITNModel> tnModel = FTNMVCHolder::GetInstance().GetModel();
@@ -72,7 +75,7 @@ void FTNView::UpdateFieldView(const int32 modelKey)
 		{
 			for (int32 j = 0; j < bufferWidth; j++)
 			{
-				const E_TNTetrominoType tetrominoType = fieldContext.CheckBuffer[i][j];
+				const E_TNTetrominoType tetrominoType = fieldContext.CheckBuffer[i + 1][j + 1];
 				(*fieldView)->SetBackgroundCubeType(j, i, tetrominoType);
 			}
 		}
