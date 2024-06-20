@@ -25,6 +25,7 @@ void FTNModel::CreateFieldModel(FTNFieldContext fieldContext)
 	{
 		return;
 	}
+
 	fieldModel->GetOnUpdateModelDelegate().BindRaw(this, &FTNModel::UpdateModel);
 	fieldModel->Initialize();
 	fieldModel->SetId(ModelKey);
@@ -62,9 +63,9 @@ void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, ATNFieldBase* fiel
 	ModelKey++;
 }
 
-void FTNModel::UpdateModel(const int32 modelKey)
+void FTNModel::UpdateModel(const int32 modelKey, const E_TNFieldModelStateType state)
 {
-	UpdateFieldViewDelegate.ExecuteIfBound(modelKey);
+	UpdateFieldViewDelegate.ExecuteIfBound(modelKey, state);
 }
 
 TSharedPtr<FTNFieldModel> FTNModel::GetPlayerFieldModel()

@@ -41,3 +41,33 @@ void FTNFieldView::SetBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tet
 
 	FieldActor->SetBackgroundCubeType(x, y, tetrominoType);
 }
+
+void FTNFieldView::SetMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
+{
+	if (!IsValid(FieldActor))
+	{
+		return;
+	}
+
+	FieldActor->SetMinoType(x, y, tetrominoType);
+}
+
+void FTNFieldView::SetVisibilityMino(const int32 x, const int32 y, const bool visible)
+{
+	if (!IsValid(FieldActor))
+	{
+		return;
+	}
+
+	FieldActor->SetVisibilityMino(x, y, visible);
+}
+
+void FTNFieldView::SetVisibilityBackgroundCube(const int32 x, const int32 y, const bool visible)
+{
+	if (!IsValid(FieldActor))
+	{
+		return;
+	}
+
+	FieldActor->SetVisibilityBackgroundCube(x, y, visible);
+}

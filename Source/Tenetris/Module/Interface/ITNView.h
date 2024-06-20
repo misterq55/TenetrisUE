@@ -1,3 +1,4 @@
+#include "Tenetris/TenetrisDefine.h"
 
 class FTNFieldView;
 class ATNFieldBase;

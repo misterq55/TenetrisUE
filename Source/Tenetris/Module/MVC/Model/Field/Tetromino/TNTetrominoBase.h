@@ -12,47 +12,13 @@ DECLARE_DELEGATE_RetVal_TwoParams(bool, FCheckMinoDelegate, const int32, const i
 DECLARE_DELEGATE_RetVal_TwoParams(int32, FCalculateGuideMinoHeightDelegate, const int32, const int32);
 
 
+DECLARE_DELEGATE(FHideTetromino)
+DECLARE_DELEGATE(FSetTetromino)
+
 class ATNFieldBase;
 
 class FTNTetrominoBase
 {
-	typedef TArray<FVector2D> TTetrominoCoordinate;
-	
-	const TTetrominoCoordinate IMinoCoordinate = { FVector2D(-1.f, 0.f) , FVector2D(0.f, 0.f), FVector2D(1.f, 0.f), FVector2D(2.f, 0.f) };
-	const TTetrominoCoordinate JMinoCoordinate = { FVector2D(-1.f, 0.f) , FVector2D(-1.f, 1.f), FVector2D(0.f, 0.f), FVector2D(1.f, 0.f) };
-	const TTetrominoCoordinate LMinoCoordinate = { FVector2D(-1.f, 0.f) , FVector2D(1.f, 1.f), FVector2D(0.f, 0.f), FVector2D(1.f, 0.f) };
-	const TTetrominoCoordinate OMinoCoordinate = { FVector2D(0.f, 0.f) , FVector2D(0.f, 1.f), FVector2D(1.f, 0.f), FVector2D(1.f, 1.f) };
-	const TTetrominoCoordinate SMinoCoordinate = { FVector2D(-1.f, 0.f) , FVector2D(0.f, 0.f), FVector2D(0.f, 1.f), FVector2D(1.f, 1.f) };
-	const TTetrominoCoordinate TMinoCoordinate = { FVector2D(0.f, 1.f) , FVector2D(-1.f, 0.f), FVector2D(0.f, 0.f), FVector2D(1.f, 0.f) };
-	const TTetrominoCoordinate ZMinoCoordinate = { FVector2D(-1.f, 1.f) , FVector2D(0.f, 0.f), FVector2D(0.f, 1.f), FVector2D(1.f, 0.f) };
-
-	struct FTNTetrominoInfo
-	{
-	public:
-		FTNTetrominoInfo()
-			: CurrentType(E_TNTetrominoType::None)
-			, CurrentPosition(FVector2D(1, 1))
-			, RotationState(0)
-		{}
-
-		FTNTetrominoInfo(E_TNTetrominoType currentTetrominoType)
-			: CurrentType(currentTetrominoType)
-			, CurrentPosition(FVector2D(1, 1))
-			, RotationState(0)
-		{}
-
-		void SetPosition(int32 x, int32 y)
-		{
-			CurrentPosition = FVector2D(x, y);
-		}
-		
-		E_TNTetrominoType CurrentType;
-		TTetrominoCoordinate Coordinate;
-		FVector2D CurrentPosition;
-		TArray<TTetrominoCoordinate> History;
-		int32 RotationState;
-	};
-
 public:
 	FTNTetrominoBase() {}
 
@@ -87,6 +53,7 @@ public:
 	void SetStartingLocation(const FVector2D& startingLocation);
 	FVector2D GetStaringLocation();
 	void HideTetromino();
+	FTNTetrominoInfo& GetTetrominoInfo();
 
 protected:
 	bool checkMino(const FVector2D& simulationPosition);
@@ -100,6 +67,9 @@ public:
 	FSetVisibilityMinoTypeDelegate OnVisibilityMinoType;
 	FCheckMinoDelegate OnCheckMino;
 	FCalculateGuideMinoHeightDelegate OnCalulateGuideMino;
+
+	FHideTetromino OnHideTetromino;
+	FSetTetromino OnSetTetromino;
 
 protected:
 	FTNTetrominoInfo TetrominoInfo;

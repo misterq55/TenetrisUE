@@ -61,6 +61,30 @@ void ATNFieldBase::SetBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tet
 	setBackgroundCubeType(x, y, tetrominoType);
 }
 
+void ATNFieldBase::SetMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
+{
+	if (IsValid(TenetrisBufferComponent))
+	{
+		TenetrisBufferComponent->SetMinoType(x, y, tetrominoType);
+	}
+}
+
+void ATNFieldBase::SetVisibilityMino(const int32 x, const int32 y, const bool visible)
+{
+	if (IsValid(TenetrisBufferComponent))
+	{
+		TenetrisBufferComponent->SetVisibilityMino(x, y, visible);
+	}
+}
+
+void ATNFieldBase::SetVisibilityBackgroundCube(const int32 x, const int32 y, const bool visible)
+{
+	if (IsValid(TenetrisBufferComponent))
+	{
+		TenetrisBufferComponent->SetVisibilityBackgroundCube(x, y, visible);
+	}
+}
+
 void ATNFieldBase::setBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType)
 {
 	if (IsValid(TenetrisBufferComponent))

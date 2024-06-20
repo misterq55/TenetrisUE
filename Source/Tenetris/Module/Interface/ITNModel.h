@@ -4,7 +4,7 @@ class FTNFieldModel;
 class ATNFieldBase;
 
 DECLARE_DELEGATE_TwoParams(FTNCreateFieldViewWithFieldActor, const int32, ATNFieldBase* field);
-DECLARE_DELEGATE_OneParam(FTNUpdateFieldView, const int32);
+DECLARE_DELEGATE_TwoParams(FTNUpdateFieldView, const int32, const E_TNFieldModelStateType state);
 
 class ITNModel
 {
@@ -13,7 +13,7 @@ public:
 	virtual void Tick(float deltaTime) = 0;
 	virtual void CreateFieldModel(FTNFieldContext fieldContext) = 0;
 	virtual void CreateFieldModel(FTNFieldContext fieldContext, ATNFieldBase* fieldActor) = 0;
-	virtual void UpdateModel(const int32 modelKey) = 0;
+	virtual void UpdateModel(const int32 modelKey, const E_TNFieldModelStateType state) = 0;
 	virtual TSharedPtr<FTNFieldModel> GetPlayerFieldModel() = 0;
 
 	virtual void StartMoveLeft() = 0;
