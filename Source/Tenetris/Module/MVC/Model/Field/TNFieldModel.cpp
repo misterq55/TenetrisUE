@@ -23,6 +23,9 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
 			CurrentTetromino->OnBackgroundCubeType.BindRaw(this, &FTNFieldModel::SetValueToCheckBuffer);
 			CurrentTetromino->OnCheckMino.BindRaw(this, &FTNFieldModel::CheckMino);
 			CurrentTetromino->OnCalulateGuideMino.BindRaw(this, &FTNFieldModel::CalculateGuideMinoHeight);
+			
+			CurrentTetromino->OnHideTetromino.BindRaw(this, &FTNFieldModel::HideTetromino);
+			CurrentTetromino->OnSetTetromino.BindRaw(this, &FTNFieldModel::SetTetromino);
 		}
 			break;
 		default:
@@ -141,6 +144,16 @@ int32 FTNFieldModel::CalculateGuideMinoHeight(const int32 x, const int32 y)
 	return result;
 }
 
+void FTNFieldModel::HideTetromino()
+{
+	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::HideTetromino);
+}
+
+void FTNFieldModel::SetTetromino()
+{
+	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::SetTetromino);
+}
+
 void FTNFieldModel::CheckLineDelete(const TArray<int32>& heights)
 {
 	TArray<int32> linesToDelete;
@@ -198,6 +211,8 @@ void FTNFieldModel::spawn()
 	spawnNextTetromino();
 	renewPreviewTetromino();
 	bCanHold = true;
+
+	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::SetTetromino);
 }
 
 bool FTNFieldModel::moveTetromino(E_TNTetrominoDirection tetrominoDirection)
@@ -385,6 +400,8 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 
 			DeleteLineCheckTime = 0.f;
 			bLineDeleting = false;
+
+			OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::LockDown);
 		}
 
 		DeleteLineCheckTime += deltaTime;
@@ -407,7 +424,7 @@ void FTNFieldModel::doLockDown()
 		lineDelete();
 		bWaitForSpawn = true;
 
-		OnUpdateModel.ExecuteIfBound(Id);
+		OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::LockDown);
 	}
 }
 

@@ -48,6 +48,13 @@ enum class E_TNFieldType : uint32
 	Enemy
 };
 
+enum class E_TNFieldModelStateType : uint32
+{
+	HideTetromino,
+	SetTetromino,
+	LockDown,
+};
+
 struct FTNFieldContext
 {
 public:
@@ -91,6 +98,43 @@ public:
 			CheckBuffer.Add(buffer);
 		}
 	}
+};
+
+typedef TArray<FVector2D> TTetrominoCoordinate;
+
+const TTetrominoCoordinate IMinoCoordinate = { FVector2D(-1.f, 0.f) , FVector2D(0.f, 0.f), FVector2D(1.f, 0.f), FVector2D(2.f, 0.f) };
+const TTetrominoCoordinate JMinoCoordinate = { FVector2D(-1.f, 0.f) , FVector2D(-1.f, 1.f), FVector2D(0.f, 0.f), FVector2D(1.f, 0.f) };
+const TTetrominoCoordinate LMinoCoordinate = { FVector2D(-1.f, 0.f) , FVector2D(1.f, 1.f), FVector2D(0.f, 0.f), FVector2D(1.f, 0.f) };
+const TTetrominoCoordinate OMinoCoordinate = { FVector2D(0.f, 0.f) , FVector2D(0.f, 1.f), FVector2D(1.f, 0.f), FVector2D(1.f, 1.f) };
+const TTetrominoCoordinate SMinoCoordinate = { FVector2D(-1.f, 0.f) , FVector2D(0.f, 0.f), FVector2D(0.f, 1.f), FVector2D(1.f, 1.f) };
+const TTetrominoCoordinate TMinoCoordinate = { FVector2D(0.f, 1.f) , FVector2D(-1.f, 0.f), FVector2D(0.f, 0.f), FVector2D(1.f, 0.f) };
+const TTetrominoCoordinate ZMinoCoordinate = { FVector2D(-1.f, 1.f) , FVector2D(0.f, 0.f), FVector2D(0.f, 1.f), FVector2D(1.f, 0.f) };
+
+struct FTNTetrominoInfo
+{
+public:
+	FTNTetrominoInfo()
+		: CurrentType(E_TNTetrominoType::None)
+		, CurrentPosition(FVector2D(1, 1))
+		, RotationState(0)
+	{}
+
+	FTNTetrominoInfo(E_TNTetrominoType currentTetrominoType)
+		: CurrentType(currentTetrominoType)
+		, CurrentPosition(FVector2D(1, 1))
+		, RotationState(0)
+	{}
+
+	void SetPosition(int32 x, int32 y)
+	{
+		CurrentPosition = FVector2D(x, y);
+	}
+
+	E_TNTetrominoType CurrentType;
+	TTetrominoCoordinate Coordinate;
+	FVector2D CurrentPosition;
+	TArray<TTetrominoCoordinate> History;
+	int32 RotationState;
 };
 
 struct FTNMoveDirectionState

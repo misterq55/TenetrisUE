@@ -34,6 +34,9 @@ public:
 
 	void SetMinoClassType(TSubclassOf<ATNMinoBase> minoClass);
 	void SetBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType);
+	void SetMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
+	void SetVisibilityMino(const int32 x, const int32 y, const bool visible);
+	void SetVisibilityBackgroundCube(const int32 x, const int32 y, const bool visible);
 
 protected:
 	void setBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType);

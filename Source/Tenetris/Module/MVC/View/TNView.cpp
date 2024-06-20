@@ -3,6 +3,7 @@
 #include "Tenetris/Module/MVC/Model/TNModel.h"
 #include "Tenetris/Module/MVC/Model/Field/TNFieldModel.h"
 #include "Tenetris/Module/MVC/View/Field/TNFieldView.h"
+#include "Tenetris/Module/MVC/Model/Field/Tetromino/TNTetrominoBase.h"
 
 void FTNView::Init()
 {
@@ -39,44 +40,130 @@ void FTNView::CreateFieldViewWithFieldActor(const int32 key, ATNFieldBase* field
 
 // TODO 모델이 아니라 컨텍스트를 반환하도록 하자
 // 아래 로직은 필드 뷰로 다 옮기자
-// 또 Background buffer만을 업데이트 하므로 이름도 바꾸자
-void FTNView::UpdateFieldView(const int32 modelKey)
+void FTNView::UpdateFieldView(const int32 modelKey, const E_TNFieldModelStateType state)
 {
-	TSharedPtr<ITNModel> tnModel = FTNMVCHolder::GetInstance().GetModel();
-	if (!tnModel.IsValid())
+	if (state == E_TNFieldModelStateType::LockDown)
 	{
-		return;
-	}
-
-	tnModel->GetFieldModelMap();
-
-	const auto modelMap = tnModel->GetFieldModelMap();
-	const TSharedPtr<FTNFieldModel>* fieldModeltPtr =	modelMap.Find(modelKey);
-	if (!fieldModeltPtr)
-	{
-		return;
-	}
-
-	TSharedPtr<FTNFieldModel> fieldModel = *fieldModeltPtr;
-	
-	if (!fieldModel.IsValid())
-	{
-		return;
-	}
-
-	TSharedPtr<FTNFieldView>* fieldView = FieldViewMap.Find(modelKey);
-	if (fieldView && fieldView->IsValid())
-	{
-		const FTNFieldContext& fieldContext = fieldModel->GetFieldContext();
-		const int32 bufferHeight = fieldContext.BufferHeight;
-		const int32 bufferWidth = fieldContext.BufferWidth;
-
-		for (int32 i = 0; i < bufferHeight; i++)
+		TSharedPtr<ITNModel> tnModel = FTNMVCHolder::GetInstance().GetModel();
+		if (!tnModel.IsValid())
 		{
-			for (int32 j = 0; j < bufferWidth; j++)
+			return;
+		}
+
+		tnModel->GetFieldModelMap();
+
+		const auto modelMap = tnModel->GetFieldModelMap();
+		const TSharedPtr<FTNFieldModel>* fieldModeltPtr = modelMap.Find(modelKey);
+		if (!fieldModeltPtr)
+		{
+			return;
+		}
+
+		TSharedPtr<FTNFieldModel> fieldModel = *fieldModeltPtr;
+
+		if (!fieldModel.IsValid())
+		{
+			return;
+		}
+
+		TSharedPtr<FTNFieldView>* fieldView = FieldViewMap.Find(modelKey);
+		if (fieldView && fieldView->IsValid())
+		{
+			const FTNFieldContext& fieldContext = fieldModel->GetFieldContext();
+			const int32 bufferHeight = fieldContext.BufferHeight;
+			const int32 bufferWidth = fieldContext.BufferWidth;
+
+			for (int32 i = 0; i < bufferHeight; i++)
 			{
-				const E_TNTetrominoType tetrominoType = fieldContext.CheckBuffer[i + 1][j + 1];
-				(*fieldView)->SetBackgroundCubeType(j, i, tetrominoType);
+				for (int32 j = 0; j < bufferWidth; j++)
+				{
+					const E_TNTetrominoType tetrominoType = fieldContext.CheckBuffer[i + 1][j + 1];
+					(*fieldView)->SetBackgroundCubeType(j, i, tetrominoType);
+				}
+			}
+		}
+	}
+
+	else if (state == E_TNFieldModelStateType::HideTetromino)
+	{
+		TSharedPtr<ITNModel> tnModel = FTNMVCHolder::GetInstance().GetModel();
+		if (!tnModel.IsValid())
+		{
+			return;
+		}
+
+		tnModel->GetFieldModelMap();
+
+		const auto modelMap = tnModel->GetFieldModelMap();
+		const TSharedPtr<FTNFieldModel>* fieldModeltPtr = modelMap.Find(modelKey);
+		if (!fieldModeltPtr)
+		{
+			return;
+		}
+
+		TSharedPtr<FTNFieldModel> fieldModel = *fieldModeltPtr;
+
+		if (!fieldModel.IsValid())
+		{
+			return;
+		}
+
+		TSharedPtr<FTNTetrominoBase> currentTetromino = fieldModel->GetCurrentTetromino();
+		if (!currentTetromino.IsValid())
+		{
+			return;
+		}
+
+		FTNTetrominoInfo& tetrominoInfo = currentTetromino->GetTetrominoInfo();
+
+		TSharedPtr<FTNFieldView>* fieldView = FieldViewMap.Find(modelKey);
+		if (fieldView && fieldView->IsValid())
+		{
+			for (const auto& coord : tetrominoInfo.Coordinate)
+			{
+				(*fieldView)->SetVisibilityMino(coord.X + tetrominoInfo.CurrentPosition.X, coord.Y + tetrominoInfo.CurrentPosition.Y, false);
+			}
+		}
+	}
+
+	else if (state == E_TNFieldModelStateType::SetTetromino)
+	{
+		TSharedPtr<ITNModel> tnModel = FTNMVCHolder::GetInstance().GetModel();
+		if (!tnModel.IsValid())
+		{
+			return;
+		}
+
+		tnModel->GetFieldModelMap();
+
+		const auto modelMap = tnModel->GetFieldModelMap();
+		const TSharedPtr<FTNFieldModel>* fieldModeltPtr = modelMap.Find(modelKey);
+		if (!fieldModeltPtr)
+		{
+			return;
+		}
+
+		TSharedPtr<FTNFieldModel> fieldModel = *fieldModeltPtr;
+
+		if (!fieldModel.IsValid())
+		{
+			return;
+		}
+
+		TSharedPtr<FTNTetrominoBase> currentTetromino = fieldModel->GetCurrentTetromino();
+		if (!currentTetromino.IsValid())
+		{
+			return;
+		}
+
+		FTNTetrominoInfo& tetrominoInfo = currentTetromino->GetTetrominoInfo();
+
+		TSharedPtr<FTNFieldView>* fieldView = FieldViewMap.Find(modelKey);
+		if (fieldView && fieldView->IsValid())
+		{
+			for (const auto& coord : tetrominoInfo.Coordinate)
+			{
+				(*fieldView)->SetMinoType(coord.X + tetrominoInfo.CurrentPosition.X, coord.Y + tetrominoInfo.CurrentPosition.Y, tetrominoInfo.CurrentType);
 			}
 		}
 	}

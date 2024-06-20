@@ -108,14 +108,23 @@ bool FTNTetrominoBase::checkMino(const FVector2D& simulationPosition)
 
 void FTNTetrominoBase::HideTetromino()
 {
+	OnHideTetromino.ExecuteIfBound();
+
 	for (const FVector2D& coord : TetrominoInfo.Coordinate)
 	{
 		OnVisibilityMinoType.ExecuteIfBound(coord.X + TetrominoInfo.CurrentPosition.X, coord.Y + TetrominoInfo.CurrentPosition.Y, false);
 	}
 }
 
+FTNTetrominoInfo& FTNTetrominoBase::GetTetrominoInfo()
+{
+	return TetrominoInfo;
+}
+
 void FTNTetrominoBase::setTetromino()
 {
+	OnSetTetromino.ExecuteIfBound();
+
 	for (const FVector2D& coord : TetrominoInfo.Coordinate)
 	{
 		OnMinoType.ExecuteIfBound(coord.X + TetrominoInfo.CurrentPosition.X, coord.Y + TetrominoInfo.CurrentPosition.Y, TetrominoInfo.CurrentType);
