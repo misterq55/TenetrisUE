@@ -52,6 +52,8 @@ enum class E_TNFieldModelStateType : uint32
 {
 	HideTetromino,
 	SetTetromino,
+	HideGuideTetromino,
+	SetGuideTetromino,
 	LockDown,
 };
 
@@ -133,6 +135,7 @@ public:
 	E_TNTetrominoType CurrentType;
 	TTetrominoCoordinate Coordinate;
 	FVector2D CurrentPosition;
+	FVector2D GuideTetrominoPosition;
 	TArray<TTetrominoCoordinate> History;
 	int32 RotationState;
 };

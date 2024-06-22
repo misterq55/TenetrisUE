@@ -5,12 +5,11 @@
 #include "Tenetris/TenetrisDefine.h"
 
 DECLARE_DELEGATE_ThreeParams(FSetBackgroundCubeTypeDelegate, const int32, const int32, const E_TNTetrominoType);
-DECLARE_DELEGATE_ThreeParams(FSetVisibilityBackgroundCubeTypeDelegate, const int32, const int32, const bool);
-DECLARE_DELEGATE_ThreeParams(FSetMinoTypeDelegate, const int32, const int32, const E_TNTetrominoType);
-DECLARE_DELEGATE_ThreeParams(FSetVisibilityMinoTypeDelegate, const int32, const int32, const bool);
+// DECLARE_DELEGATE_ThreeParams(FSetVisibilityBackgroundCubeTypeDelegate, const int32, const int32, const bool);
+// DECLARE_DELEGATE_ThreeParams(FSetMinoTypeDelegate, const int32, const int32, const E_TNTetrominoType);
+// DECLARE_DELEGATE_ThreeParams(FSetVisibilityMinoTypeDelegate, const int32, const int32, const bool);
 DECLARE_DELEGATE_RetVal_TwoParams(bool, FCheckMinoDelegate, const int32, const int32);
 DECLARE_DELEGATE_RetVal_TwoParams(int32, FCalculateGuideMinoHeightDelegate, const int32, const int32);
-
 
 DECLARE_DELEGATE(FHideTetromino)
 DECLARE_DELEGATE(FSetTetromino)
@@ -24,10 +23,10 @@ public:
 
 	virtual ~FTNTetrominoBase() 
 	{
-		OnBackgroundCubeType.Unbind();
-		OnVisibilityBackgroundCubeType.Unbind();
-		OnMinoType.Unbind();
-		OnVisibilityMinoType.Unbind();
+		/*OnBackgroundCubeType.Unbind();
+		OnVisibilityBackgroundCubeType.Unbind();*/
+		/*OnMinoType.Unbind();
+		OnVisibilityMinoType.Unbind();*/
 		OnCheckMino.Unbind();
 		OnCalulateGuideMino.Unbind();
 	}
@@ -62,9 +61,9 @@ protected:
 	
 public:
 	FSetBackgroundCubeTypeDelegate OnBackgroundCubeType;
-	FSetVisibilityBackgroundCubeTypeDelegate OnVisibilityBackgroundCubeType;
-	FSetMinoTypeDelegate OnMinoType;
-	FSetVisibilityMinoTypeDelegate OnVisibilityMinoType;
+	// FSetVisibilityBackgroundCubeTypeDelegate OnVisibilityBackgroundCubeType;
+	// FSetMinoTypeDelegate OnMinoType;
+	// FSetVisibilityMinoTypeDelegate OnVisibilityMinoType;
 	FCheckMinoDelegate OnCheckMino;
 	FCalculateGuideMinoHeightDelegate OnCalulateGuideMino;
 

@@ -26,6 +26,9 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
 			
 			CurrentTetromino->OnHideTetromino.BindRaw(this, &FTNFieldModel::HideTetromino);
 			CurrentTetromino->OnSetTetromino.BindRaw(this, &FTNFieldModel::SetTetromino);
+
+			CurrentTetromino->OnHideGuideTetromino.BindRaw(this, &FTNFieldModel::HideGuideTetromino);
+			CurrentTetromino->OnSetGuideTetromino.BindRaw(this, &FTNFieldModel::SetGuideTetromino);
 		}
 			break;
 		default:
@@ -152,6 +155,16 @@ void FTNFieldModel::HideTetromino()
 void FTNFieldModel::SetTetromino()
 {
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::SetTetromino);
+}
+
+void FTNFieldModel::HideGuideTetromino()
+{
+	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::HideGuideTetromino);
+}
+
+void FTNFieldModel::SetGuideTetromino()
+{
+	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::SetGuideTetromino);
 }
 
 void FTNFieldModel::CheckLineDelete(const TArray<int32>& heights)
@@ -372,6 +385,8 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 			TArray<int32> lineChecker;
 			int32 lineDeleteValue = 0;
 
+			const int32 deleteLinesNum = DeletedLines.Num();
+
 			for (int32 i = 0; i < FieldContext.BufferHeight; i++)
 			{
 				if (DeletedLines.Find(i) != -1)
@@ -387,19 +402,22 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 
 			for (int32 i = 0; i < FieldContext.BufferHeight; i++)
 			{
-				if (lineChecker[i] != -1)
+				int32 lineChecValue = lineChecker[i];
+
+				if (lineChecValue != -1)
 				{
 					for (int32 j = 0; j < FieldContext.BufferWidth; j++)
 					{
 						const E_TNTetrominoType value = GetValueFromCheckBuffer(j, i);
-						SetValueToCheckBuffer(j, i, E_TNTetrominoType::None);
-
+						SetValueToCheckBuffer(j, i - lineChecValue, value);
 					}
 				}
 			}
 
 			DeleteLineCheckTime = 0.f;
 			bLineDeleting = false;
+
+			DeletedLines.Empty();
 
 			OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::LockDown);
 		}
@@ -542,7 +560,35 @@ void FTNFieldModel::RotateCounterClockWise()
 
 void FTNFieldModel::Hold()
 {
-	
+	if (!bCanHold || !HoldTetromino.IsValid() || !CurrentTetromino.IsValid())
+	{
+		return;
+	}
+
+	E_TNTetrominoType holdTetrominoType = HoldTetromino->GetTetrominoType();
+	E_TNTetrominoType currentTetrominoType = CurrentTetromino->GetTetrominoType();
+
+	CurrentTetromino->HideTetromino();
+	CurrentTetromino->HideGuideTetromino();
+
+	HoldTetromino->HideTetromino();
+	HoldTetromino->SetTetrominoType(currentTetrominoType);
+	HoldTetromino->Spawn();
+
+	if (holdTetrominoType != E_TNTetrominoType::None)
+	{
+		CurrentTime = 0.f;
+		CurrentTetromino->SetTetrominoType(holdTetrominoType);
+		CurrentTetromino->Spawn();
+	}
+	else
+	{
+		CurrentTime = 0.f;
+		spawnNextTetromino();
+		renewPreviewTetromino();
+	}
+
+	bCanHold = false;
 }
 
 void FTNFieldModel::ToggleSpaceInversion()

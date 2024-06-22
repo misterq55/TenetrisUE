@@ -4,6 +4,9 @@
 
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/TNTetrominoBase.h"
 
+DECLARE_DELEGATE(FHideGuideTetromino)
+DECLARE_DELEGATE(FSetGuideTetromino)
+
 class FTNPlayerTetromino : public FTNTetrominoBase
 {
 	const TArray<TArray<FVector2D>> JLSTZOffset = {
@@ -30,7 +33,6 @@ class FTNPlayerTetromino : public FTNTetrominoBase
 public:
 	FTNPlayerTetromino() 
 		: FTNTetrominoBase()
-		, GuideTetrominoPosition(FVector2D(0, 0))
 	{}
 
 	virtual ~FTNPlayerTetromino() {}
@@ -47,6 +49,7 @@ private:
 	
 	int32 mod(int32 n, int32 m) { return ((n % m) + m) % m; }
 
-private:
-	FVector2D GuideTetrominoPosition;
+public:
+	FHideGuideTetromino OnHideGuideTetromino;
+	FSetGuideTetromino OnSetGuideTetromino;
 };

@@ -15,11 +15,6 @@ TArray<int32> FTNTetrominoBase::GetMinoHeights()
 void FTNTetrominoBase::SetTetrominoPosition(const int32 x, const int32 y)
 {
 	TetrominoInfo.SetPosition(x, y);
-
-	for (const FVector2D& coord : TetrominoInfo.Coordinate)
-	{
-		OnMinoType.ExecuteIfBound(coord.X + TetrominoInfo.CurrentPosition.X, coord.Y + TetrominoInfo.CurrentPosition.Y, TetrominoInfo.CurrentType);
-	}
 }
 
 void FTNTetrominoBase::SetTetrominoType(const E_TNTetrominoType currentTetrominoType)
@@ -80,11 +75,6 @@ void FTNTetrominoBase::Spawn()
 {
 	TetrominoInfo.SetPosition(StartingLocation.X, StartingLocation.Y);
 	TetrominoInfo.RotationState = 0;
-
-	for (const FVector2D& coord : TetrominoInfo.Coordinate)
-	{
-		OnMinoType.ExecuteIfBound(coord.X + TetrominoInfo.CurrentPosition.X, coord.Y + TetrominoInfo.CurrentPosition.Y, TetrominoInfo.CurrentType);
-	}
 }
 
 bool FTNTetrominoBase::checkMino(const FVector2D& simulationPosition)
@@ -109,11 +99,6 @@ bool FTNTetrominoBase::checkMino(const FVector2D& simulationPosition)
 void FTNTetrominoBase::HideTetromino()
 {
 	OnHideTetromino.ExecuteIfBound();
-
-	for (const FVector2D& coord : TetrominoInfo.Coordinate)
-	{
-		OnVisibilityMinoType.ExecuteIfBound(coord.X + TetrominoInfo.CurrentPosition.X, coord.Y + TetrominoInfo.CurrentPosition.Y, false);
-	}
 }
 
 FTNTetrominoInfo& FTNTetrominoBase::GetTetrominoInfo()
@@ -124,11 +109,6 @@ FTNTetrominoInfo& FTNTetrominoBase::GetTetrominoInfo()
 void FTNTetrominoBase::setTetromino()
 {
 	OnSetTetromino.ExecuteIfBound();
-
-	for (const FVector2D& coord : TetrominoInfo.Coordinate)
-	{
-		OnMinoType.ExecuteIfBound(coord.X + TetrominoInfo.CurrentPosition.X, coord.Y + TetrominoInfo.CurrentPosition.Y, TetrominoInfo.CurrentType);
-	}
 }
 
 void FTNTetrominoBase::setTetrominoBackground()

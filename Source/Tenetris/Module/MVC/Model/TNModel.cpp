@@ -48,10 +48,9 @@ void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, ATNFieldBase* fiel
 	}
 
 	fieldModel->GetOnUpdateModelDelegate().BindRaw(this, &FTNModel::UpdateModel);
-
 	fieldModel->AddFieldActor(fieldActor); // TODO »èÁ¦
-	fieldModel->Initialize();
 	fieldModel->SetId(ModelKey);
+	
 	FieldModelMap.Emplace(ModelKey, fieldModel);
 
 	if (fieldContext.FieldType == E_TNFieldType::Player)
@@ -60,6 +59,9 @@ void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, ATNFieldBase* fiel
 	}
 
 	CreateFieldViewWithFieldActorDelegate.ExecuteIfBound(ModelKey, fieldActor);
+
+	fieldModel->Initialize();
+
 	ModelKey++;
 }
 
