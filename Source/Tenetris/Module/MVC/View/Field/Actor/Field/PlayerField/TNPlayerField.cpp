@@ -292,10 +292,10 @@ void ATNPlayerField::bindTetrominoToBuffer(FTNTetrominoBase* tetromino, UTNOldTe
 		return;
 	}
 
-	tetromino->OnBackgroundCubeType.BindUObject(buffer, &UTNOldTenetrisBufferComponent::SetBackgroundCubeType);
-	tetromino->OnVisibilityBackgroundCubeType.BindUObject(buffer, &UTNOldTenetrisBufferComponent::SetVisibilityBackgroundCube);
-	tetromino->OnMinoType.BindUObject(buffer, &UTNOldTenetrisBufferComponent::SetMinoType);
-	tetromino->OnVisibilityMinoType.BindUObject(buffer, &UTNOldTenetrisBufferComponent::SetVisibilityMino);
+	// tetromino->OnBackgroundCubeType.BindUObject(buffer, &UTNOldTenetrisBufferComponent::SetBackgroundCubeType);
+	// tetromino->OnVisibilityBackgroundCubeType.BindUObject(buffer, &UTNOldTenetrisBufferComponent::SetVisibilityBackgroundCube);
+	//tetromino->OnMinoType.BindUObject(buffer, &UTNOldTenetrisBufferComponent::SetMinoType);
+	//tetromino->OnVisibilityMinoType.BindUObject(buffer, &UTNOldTenetrisBufferComponent::SetVisibilityMino);
 	tetromino->OnCheckMino.BindUObject(buffer, &UTNOldTenetrisBufferComponent::CheckMino);
 	tetromino->OnCalulateGuideMino.BindUObject(buffer, &UTNOldTenetrisBufferComponent::CalculateGuideMinoHeight);
 }

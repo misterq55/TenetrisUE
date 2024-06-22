@@ -2,6 +2,7 @@
 
 class ATNFieldBase;
 class FTNTetrominoBase;
+class FTNPlayerTetromino;
 class FTNTetrominoGenerator;
 
 DECLARE_DELEGATE_TwoParams(FTNUpdateModel, const int32, const E_TNFieldModelStateType);
@@ -24,6 +25,8 @@ public:
 	int32 CalculateGuideMinoHeight(const int32 x, const int32 y);
 	void HideTetromino();
 	void SetTetromino();
+	void HideGuideTetromino();
+	void SetGuideTetromino();
 	void CheckLineDelete(const TArray<int32>& heights);
 	bool IsLineDeleted(int32 height) const;
 	void HandleLineDeletion(const TArray<int32>& linesToDelete);
@@ -37,7 +40,7 @@ public:
 		return OnUpdateModel;
 	}
 
-	TSharedPtr<FTNTetrominoBase> GetCurrentTetromino()
+	TSharedPtr<FTNPlayerTetromino> GetCurrentTetromino()
 	{
 		return CurrentTetromino;
 	}
@@ -92,7 +95,7 @@ private:
 	FTNFieldContext FieldContext;
 	ATNFieldBase* FieldActor;
 
-	TSharedPtr<FTNTetrominoBase> CurrentTetromino;
+	TSharedPtr<FTNPlayerTetromino> CurrentTetromino;
 	TSharedPtr<FTNTetrominoGenerator> TetrominoGenerator;
 	TArray<TSharedPtr<FTNTetrominoBase>> PreviewTetrominos;
 
