@@ -1,6 +1,6 @@
 #include "Tenetris/TenetrisDefine.h"
 
-class ATNFieldBase;
+class ATNField;
 class FTNTetrominoBase;
 class FTNPlayerTetromino;
 class FTNTetrominoGenerator;
@@ -23,6 +23,10 @@ public:
 	void SetValueToCheckBuffer(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
 	bool CheckMino(const int32 x, const int32 y);
 	int32 CalculateGuideMinoHeight(const int32 x, const int32 y);
+	void HidePreviewTetromino();
+	void SetPreviewTetromino();
+	void HideHoldTetromino();
+	void SetHoldTetromino();
 	void HideTetromino();
 	void SetTetromino();
 	void HideGuideTetromino();
@@ -44,6 +48,16 @@ public:
 	{
 		return CurrentTetromino;
 	}
+	
+	TSharedPtr<FTNTetrominoBase> GetHoldTetromino()
+	{
+		return HoldTetromino;
+	}
+
+	TArray<TSharedPtr<FTNTetrominoBase>>& GetPreviewTetrominos()
+	{
+		return PreviewTetrominos;
+	}
 
 	void StartMoveLeft();
 	void StopMoveLeft();
@@ -62,7 +76,7 @@ public:
 	void HardDrop();
 
 public:
-	void AddFieldActor(ATNFieldBase* fieldActor);
+	void AddFieldActor(ATNField* fieldActor);
 
 private:
 	void initializePreviewTetrominos();
@@ -93,7 +107,7 @@ private:
 private:
 
 	FTNFieldContext FieldContext;
-	ATNFieldBase* FieldActor;
+	ATNField* FieldActor;
 
 	TSharedPtr<FTNPlayerTetromino> CurrentTetromino;
 	TSharedPtr<FTNTetrominoGenerator> TetrominoGenerator;

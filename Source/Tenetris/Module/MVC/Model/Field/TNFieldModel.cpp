@@ -147,6 +147,26 @@ int32 FTNFieldModel::CalculateGuideMinoHeight(const int32 x, const int32 y)
 	return result;
 }
 
+void FTNFieldModel::HidePreviewTetromino()
+{
+	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::HidePreviewTetromino);
+}
+
+void FTNFieldModel::SetPreviewTetromino()
+{
+	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::SetPreviewTetromino);
+}
+
+void FTNFieldModel::HideHoldTetromino()
+{
+	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::HideHoldTetromino);
+}
+
+void FTNFieldModel::SetHoldTetromino()
+{
+	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::SetHoldTetromino);
+}
+
 void FTNFieldModel::HideTetromino()
 {
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::HideTetromino);
@@ -471,6 +491,8 @@ void FTNFieldModel::renewPreviewTetromino()
 		return;
 	}
 
+	HidePreviewTetromino();
+
 	for (int32 i = 0; i < PreviewTetrominos.Num(); i++)
 	{
 		TSharedPtr<FTNTetrominoBase> previewTetromino = PreviewTetrominos[i];
@@ -483,6 +505,8 @@ void FTNFieldModel::renewPreviewTetromino()
 		previewTetromino->SetTetrominoType(TetrominoGenerator->GetAt(i));
 		previewTetromino->Spawn();
 	}
+	
+	SetPreviewTetromino();
 }
 
 float FTNFieldModel::getFallingSpeed()
@@ -497,13 +521,15 @@ float FTNFieldModel::getFallingSpeed()
 	return TetrominoFallingSpeed * multiflier;
 }
 
-void FTNFieldModel::AddFieldActor(ATNFieldBase* fieldActor)
+void FTNFieldModel::AddFieldActor(ATNField* fieldActor)
 {
 	FieldActor = fieldActor;
 }
 
 void FTNFieldModel::initializePreviewTetrominos()
 {
+	PreviewTetrominoNum = 5;
+
 	for (int32 i = 0; i < PreviewTetrominoNum; i++)
 	{
 		TSharedPtr<FTNTetrominoBase> previewTetromino = MakeShareable(new FTNPreviewTetromino());
@@ -515,6 +541,8 @@ void FTNFieldModel::initializePreviewTetrominos()
 void FTNFieldModel::initializeHoldTetromino()
 {
 	HoldTetromino = MakeShareable(new FTNPreviewTetromino());
+	HoldTetromino->OnHideTetromino.BindRaw(this, &FTNFieldModel::HideHoldTetromino);
+	HoldTetromino->OnSetTetromino.BindRaw(this, &FTNFieldModel::SetHoldTetromino);
 	HoldTetromino->SetStartingLocation(2, 1);
 }
 

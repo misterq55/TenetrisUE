@@ -21,6 +21,11 @@ public:
 	ATNField();
 	virtual	void Initialize() override;
 
+	void SetHoldMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
+	void SetVisibilityHoldMino(const int32 x, const int32 y, const bool visible);
+	void SetPreviewMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
+	void SetVisibilityPreviewMino(const int32 x, const int32 y, const bool visible);
+
 private:
 	void initializePreviewBuffer();
 	void initializeHoldBuffer();
