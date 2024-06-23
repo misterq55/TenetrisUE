@@ -75,6 +75,7 @@ void FTNTetrominoBase::Spawn()
 {
 	TetrominoInfo.SetPosition(StartingLocation.X, StartingLocation.Y);
 	TetrominoInfo.RotationState = 0;
+	setTetromino();
 }
 
 bool FTNTetrominoBase::checkMino(const FVector2D& simulationPosition)
