@@ -19,11 +19,11 @@ class TENETRIS_API ATNTenetrisGameModeBase : public AGameModeBase
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
-	virtual void AddFields(ATNFieldBase* field);
+	virtual void AddFields(ATNField* field);
 	
 	UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
-	void SetPlayerField(ATNFieldBase* playerField);
+	void SetPlayerField(ATNField* playerField);
 
 protected:
-	TArray<ATNFieldBase*> Fields;
+	TArray<ATNField*> Fields;
 };

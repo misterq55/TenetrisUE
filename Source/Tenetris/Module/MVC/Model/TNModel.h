@@ -9,7 +9,7 @@ public:
 	virtual void Init() override;
 	virtual void Tick(float deltaTime) override;
 	virtual void CreateFieldModel(FTNFieldContext fieldContext) override;
-	virtual void CreateFieldModel(FTNFieldContext fieldContext, ATNFieldBase* fieldActor) override;
+	virtual void CreateFieldModel(FTNFieldContext fieldContext, ATNField* fieldActor) override;
 	virtual void UpdateModel(const int32 modelKey, const E_TNFieldModelStateType state) override;
 	virtual TSharedPtr<FTNFieldModel> GetPlayerFieldModel() override;
 

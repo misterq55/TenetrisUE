@@ -28,6 +28,38 @@ void ATNField::Initialize()
 	}
 }
 
+void ATNField::SetHoldMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
+{
+	if (IsValid(HoldBufferComponent))
+	{
+		HoldBufferComponent->SetMinoType(x, y, tetrominoType);
+	}
+}
+
+void ATNField::SetVisibilityHoldMino(const int32 x, const int32 y, const bool visible)
+{
+	if (IsValid(HoldBufferComponent))
+	{
+		HoldBufferComponent->SetVisibilityMino(x, y, visible);
+	}
+}
+
+void ATNField::SetPreviewMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
+{
+	if (IsValid(PreviewBufferComponent))
+	{
+		PreviewBufferComponent->SetMinoType(x, y, tetrominoType);
+	}
+}
+
+void ATNField::SetVisibilityPreviewMino(const int32 x, const int32 y, const bool visible)
+{
+	if (IsValid(PreviewBufferComponent))
+	{
+		PreviewBufferComponent->SetVisibilityMino(x, y, visible);
+	}
+}
+
 void ATNField::initializePreviewBuffer()
 {
 	PreviewTetrominoNum = 5;

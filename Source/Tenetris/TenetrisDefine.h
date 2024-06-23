@@ -54,6 +54,10 @@ enum class E_TNFieldModelStateType : uint32
 	SetTetromino,
 	HideGuideTetromino,
 	SetGuideTetromino,
+	HideHoldTetromino,
+	SetHoldTetromino,
+	HidePreviewTetromino,
+	SetPreviewTetromino,
 	LockDown,
 };
 
