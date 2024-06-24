@@ -49,8 +49,6 @@ void FTNView::UpdateFieldView(const int32 modelKey, const E_TNFieldModelStateTyp
 		return;
 	}
 
-	tnModel->GetFieldModelMap();
-
 	const auto modelMap = tnModel->GetFieldModelMap();
 	const TSharedPtr<FTNFieldModel>* fieldModeltPtr = modelMap.Find(modelKey);
 	if (!fieldModeltPtr)

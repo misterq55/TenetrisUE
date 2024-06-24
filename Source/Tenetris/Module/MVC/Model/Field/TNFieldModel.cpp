@@ -593,8 +593,8 @@ void FTNFieldModel::Hold()
 		return;
 	}
 
-	E_TNTetrominoType holdTetrominoType = HoldTetromino->GetTetrominoType();
-	E_TNTetrominoType currentTetrominoType = CurrentTetromino->GetTetrominoType();
+	const E_TNTetrominoType holdTetrominoType = HoldTetromino->GetTetrominoType();
+	const E_TNTetrominoType currentTetrominoType = CurrentTetromino->GetTetrominoType();
 
 	CurrentTetromino->HideTetromino();
 	CurrentTetromino->HideGuideTetromino();
