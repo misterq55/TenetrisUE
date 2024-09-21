@@ -3,6 +3,8 @@
 class FTNFieldModel;
 class ATNField;
 
+struct FTNFieldContext;
+
 DECLARE_DELEGATE_TwoParams(FTNCreateFieldViewWithFieldActor, const int32, ATNField* field);
 DECLARE_DELEGATE_TwoParams(FTNUpdateFieldView, const int32, const E_TNFieldModelStateType state);
 
@@ -14,6 +16,7 @@ public:
 	virtual void CreateFieldModel(FTNFieldContext fieldContext) = 0;
 	virtual void CreateFieldModel(FTNFieldContext fieldContext, ATNField* fieldActor) = 0;
 	virtual void UpdateModel(const int32 modelKey, const E_TNFieldModelStateType state) = 0;
+	virtual FTNFieldContext GetFieldContext(const int32 modelKey) = 0;
 	virtual TSharedPtr<FTNFieldModel> GetPlayerFieldModel() = 0;
 
 	virtual void StartMoveLeft() = 0;
@@ -34,5 +37,4 @@ public:
 
 	virtual FTNCreateFieldViewWithFieldActor& GetCreateFieldViewWithFieldActorDelegate() = 0;
 	virtual FTNUpdateFieldView& GetUpdateFieldViewDelegate() = 0;
-	virtual TMap<int32, TSharedPtr<FTNFieldModel>>& GetFieldModelMap() = 0;
 };

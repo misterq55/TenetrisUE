@@ -70,6 +70,17 @@ void FTNModel::UpdateModel(const int32 modelKey, const E_TNFieldModelStateType s
 	UpdateFieldViewDelegate.ExecuteIfBound(modelKey, state);
 }
 
+FTNFieldContext FTNModel::GetFieldContext(const int32 modelKey)
+{
+	const TSharedPtr<FTNFieldModel>* fieldModeltPtr = FieldModelMap.Find(modelKey);
+	if (fieldModeltPtr && fieldModeltPtr->IsValid())
+	{
+		return (*fieldModeltPtr)->GetFieldContext();
+	}
+
+	return FTNFieldContext(E_TNFieldType::Player);
+}
+
 TSharedPtr<FTNFieldModel> FTNModel::GetPlayerFieldModel()
 {
 	return PlayerFieldModel;

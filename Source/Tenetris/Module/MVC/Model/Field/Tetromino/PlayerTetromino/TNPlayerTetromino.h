@@ -35,6 +35,10 @@ public:
 		: FTNTetrominoBase()
 	{}
 
+	FTNPlayerTetromino(TSharedPtr<FTNTetrominoInfo> tetrominoInfo)
+		: FTNTetrominoBase(tetrominoInfo)
+	{}
+
 	virtual ~FTNPlayerTetromino() {}
 	virtual bool Move(const E_TNTetrominoDirection tetrominoDirection) override;
 	virtual bool Rotate(const E_TNTetrominoRotation tetrominoRotation) override;

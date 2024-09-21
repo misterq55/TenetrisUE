@@ -2,11 +2,16 @@
 
 TArray<int32> FTNTetrominoBase::GetMinoHeights()
 {
+	if (!TetrominoInfo.IsValid())
+	{
+		return TArray<int32>();
+	}
+
 	TArray<int32> result;
 
-	for (const FVector2D& coord : TetrominoInfo.Coordinate)
+	for (const FVector2D& coord : TetrominoInfo->Coordinate)
 	{
-		result.AddUnique(coord.Y + TetrominoInfo.CurrentPosition.Y);
+		result.AddUnique(coord.Y + TetrominoInfo->CurrentPosition.Y);
 	}
 
 	return result;
@@ -14,46 +19,66 @@ TArray<int32> FTNTetrominoBase::GetMinoHeights()
 
 void FTNTetrominoBase::SetTetrominoPosition(const int32 x, const int32 y)
 {
-	TetrominoInfo.SetPosition(x, y);
+	if (!TetrominoInfo.IsValid())
+	{
+		return;
+	}
+
+	TetrominoInfo->SetPosition(x, y);
 }
 
 void FTNTetrominoBase::SetTetrominoType(const E_TNTetrominoType currentTetrominoType)
 {
-	TetrominoInfo.CurrentType = currentTetrominoType;
+	if (!TetrominoInfo.IsValid())
+	{
+		return;
+	}
 
-	switch (TetrominoInfo.CurrentType)
+	TetrominoInfo->CurrentType = currentTetrominoType;
+
+	switch (TetrominoInfo->CurrentType)
 	{
 	case E_TNTetrominoType::I:
-		TetrominoInfo.Coordinate = IMinoCoordinate;
+		TetrominoInfo->Coordinate = IMinoCoordinate;
 		break;
 
 	case E_TNTetrominoType::J:
-		TetrominoInfo.Coordinate = JMinoCoordinate;
+		TetrominoInfo->Coordinate = JMinoCoordinate;
 		break;
 
 	case E_TNTetrominoType::L:
-		TetrominoInfo.Coordinate = LMinoCoordinate;
+		TetrominoInfo->Coordinate = LMinoCoordinate;
 		break;
 
 	case E_TNTetrominoType::O:
-		TetrominoInfo.Coordinate = OMinoCoordinate;
+		TetrominoInfo->Coordinate = OMinoCoordinate;
 		break;
 
 	case E_TNTetrominoType::S:
-		TetrominoInfo.Coordinate = SMinoCoordinate;
+		TetrominoInfo->Coordinate = SMinoCoordinate;
 		break;
 
 	case E_TNTetrominoType::T:
-		TetrominoInfo.Coordinate = TMinoCoordinate;
+		TetrominoInfo->Coordinate = TMinoCoordinate;
 		break;
 
 	case E_TNTetrominoType::Z:
-		TetrominoInfo.Coordinate = ZMinoCoordinate;
+		TetrominoInfo->Coordinate = ZMinoCoordinate;
 		break;
 
 	default:
 		break;
 	}
+}
+
+E_TNTetrominoType FTNTetrominoBase::GetTetrominoType()
+{
+	if (TetrominoInfo.IsValid())
+	{
+		return TetrominoInfo->CurrentType;
+	}
+
+	return E_TNTetrominoType();
 }
 
 void FTNTetrominoBase::SetStartingLocation(const int32 x, const int32 y)
@@ -73,8 +98,13 @@ FVector2D FTNTetrominoBase::GetStaringLocation()
 
 void FTNTetrominoBase::Spawn()
 {
-	TetrominoInfo.SetPosition(StartingLocation.X, StartingLocation.Y);
-	TetrominoInfo.RotationState = 0;
+	if (!TetrominoInfo.IsValid())
+	{
+		return;
+	}
+
+	TetrominoInfo->SetPosition(StartingLocation.X, StartingLocation.Y);
+	TetrominoInfo->RotationState = 0;
 	setTetromino();
 }
 
@@ -83,9 +113,14 @@ bool FTNTetrominoBase::checkMino(const FVector2D& simulationPosition)
 	if (!OnCheckMino.IsBound())
 		return false;
 
+	if (!TetrominoInfo.IsValid())
+	{
+		return false;
+	}
+
 	bool tetrominoCheck = false;
 
-	for (const FVector2D& coord : TetrominoInfo.Coordinate)
+	for (const FVector2D& coord : TetrominoInfo->Coordinate)
 	{
 		if (OnCheckMino.Execute(coord.X + simulationPosition.X, coord.Y + simulationPosition.Y))
 		{
@@ -102,7 +137,7 @@ void FTNTetrominoBase::HideTetromino()
 	OnHideTetromino.ExecuteIfBound();
 }
 
-FTNTetrominoInfo& FTNTetrominoBase::GetTetrominoInfo()
+TSharedPtr<FTNTetrominoInfo> FTNTetrominoBase::GetTetrominoInfo()
 {
 	return TetrominoInfo;
 }
@@ -114,8 +149,13 @@ void FTNTetrominoBase::setTetromino()
 
 void FTNTetrominoBase::setTetrominoBackground()
 {
-	for (const FVector2D& coord : TetrominoInfo.Coordinate)
+	if (!TetrominoInfo.IsValid())
 	{
-		OnBackgroundCubeType.ExecuteIfBound(coord.X + TetrominoInfo.CurrentPosition.X, coord.Y + TetrominoInfo.CurrentPosition.Y, TetrominoInfo.CurrentType);
+		return;
+	}
+
+	for (const FVector2D& coord : TetrominoInfo->Coordinate)
+	{
+		OnBackgroundCubeType.ExecuteIfBound(coord.X + TetrominoInfo->CurrentPosition.X, coord.Y + TetrominoInfo->CurrentPosition.Y, TetrominoInfo->CurrentType);
 	}
 }

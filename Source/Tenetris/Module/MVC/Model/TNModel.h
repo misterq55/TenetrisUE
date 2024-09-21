@@ -11,6 +11,7 @@ public:
 	virtual void CreateFieldModel(FTNFieldContext fieldContext) override;
 	virtual void CreateFieldModel(FTNFieldContext fieldContext, ATNField* fieldActor) override;
 	virtual void UpdateModel(const int32 modelKey, const E_TNFieldModelStateType state) override;
+	virtual FTNFieldContext GetFieldContext(const int32 modelKey) override;
 	virtual TSharedPtr<FTNFieldModel> GetPlayerFieldModel() override;
 
 	virtual void StartMoveLeft() override;
@@ -35,10 +36,6 @@ public:
 
 	virtual FTNUpdateFieldView& GetUpdateFieldViewDelegate() {
 		return UpdateFieldViewDelegate;
-	}
-
-	virtual TMap<int32, TSharedPtr<FTNFieldModel>>& GetFieldModelMap() {
-		return FieldModelMap;
 	}
 
 private:
