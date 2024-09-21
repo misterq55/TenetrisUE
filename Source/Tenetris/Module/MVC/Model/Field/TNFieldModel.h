@@ -36,7 +36,7 @@ public:
 	void HandleLineDeletion(const TArray<int32>& linesToDelete);
 	TArray<TArray<E_TNTetrominoType>>& GetCheckBuffer();
 
-	const FTNFieldContext& GetFieldContext() {
+	FTNFieldContext& GetFieldContext() {
 		return FieldContext;
 	}
 
@@ -118,7 +118,6 @@ private:
 	bool bLineDeleting = false;
 	bool bSpaceInverted = false;
 
-	int32 PreviewTetrominoNum;
 	float TetrominoFallingSpeed = 1.f;
 	float CurrentTime = 0.f;
 

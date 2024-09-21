@@ -39,8 +39,6 @@ void FTNView::CreateFieldViewWithFieldActor(const int32 key, ATNField* fieldActo
 	}
 }
 
-// TODO 모델이 아니라 컨텍스트를 반환하도록 하자
-// 아래 로직은 필드 뷰로 다 옮기자
 void FTNView::UpdateFieldView(const int32 modelKey, const E_TNFieldModelStateType state)
 {
 	TSharedPtr<ITNModel> tnModel = FTNMVCHolder::GetInstance().GetModel();
@@ -49,160 +47,11 @@ void FTNView::UpdateFieldView(const int32 modelKey, const E_TNFieldModelStateTyp
 		return;
 	}
 
-	const auto modelMap = tnModel->GetFieldModelMap();
-	const TSharedPtr<FTNFieldModel>* fieldModeltPtr = modelMap.Find(modelKey);
-	if (!fieldModeltPtr)
-	{
-		return;
-	}
-
-	TSharedPtr<FTNFieldModel> fieldModel = *fieldModeltPtr;
-
-	if (!fieldModel.IsValid())
-	{
-		return;
-	}
+	const FTNFieldContext& filedContext = tnModel->GetFieldContext(modelKey);
 
 	TSharedPtr<FTNFieldView>* fieldView = FieldViewMap.Find(modelKey);
 	if (fieldView && fieldView->IsValid())
 	{
-		if (state == E_TNFieldModelStateType::LockDown)
-		{
-			const FTNFieldContext& fieldContext = fieldModel->GetFieldContext();
-			const int32 bufferHeight = fieldContext.BufferHeight;
-			const int32 bufferWidth = fieldContext.BufferWidth;
-
-			for (int32 i = 0; i < bufferHeight; i++)
-			{
-				for (int32 j = 0; j < bufferWidth; j++)
-				{
-					const E_TNTetrominoType tetrominoType = fieldContext.CheckBuffer[i + 1][j + 1];
-					(*fieldView)->SetBackgroundCubeType(j, i, tetrominoType);
-				}
-			}
-		}
-		else
-		{
-			
-
-			if (state == E_TNFieldModelStateType::HideTetromino)
-			{
-				TSharedPtr<FTNPlayerTetromino> currentTetromino = fieldModel->GetCurrentTetromino();
-				if (!currentTetromino.IsValid())
-				{
-					return;
-				}
-
-				FTNTetrominoInfo& tetrominoInfo = currentTetromino->GetTetrominoInfo();
-
-				for (const auto& coord : tetrominoInfo.Coordinate)
-				{
-					(*fieldView)->SetVisibilityMino(coord.X + tetrominoInfo.CurrentPosition.X, coord.Y + tetrominoInfo.CurrentPosition.Y, false);
-				}
-			}
-			else if (state == E_TNFieldModelStateType::SetTetromino)
-			{
-				TSharedPtr<FTNPlayerTetromino> currentTetromino = fieldModel->GetCurrentTetromino();
-				if (!currentTetromino.IsValid())
-				{
-					return;
-				}
-
-				FTNTetrominoInfo& tetrominoInfo = currentTetromino->GetTetrominoInfo();
-
-				for (const auto& coord : tetrominoInfo.Coordinate)
-				{
-					(*fieldView)->SetMinoType(coord.X + tetrominoInfo.CurrentPosition.X, coord.Y + tetrominoInfo.CurrentPosition.Y, tetrominoInfo.CurrentType);
-				}
-			}
-			else if (state == E_TNFieldModelStateType::HideGuideTetromino)
-			{
-				TSharedPtr<FTNPlayerTetromino> currentTetromino = fieldModel->GetCurrentTetromino();
-				if (!currentTetromino.IsValid())
-				{
-					return;
-				}
-
-				FTNTetrominoInfo& tetrominoInfo = currentTetromino->GetTetrominoInfo();
-
-				for (const auto& coord : tetrominoInfo.Coordinate)
-				{
-					(*fieldView)->SetVisibilityMino(coord.X + tetrominoInfo.GuideTetrominoPosition.X, coord.Y + tetrominoInfo.GuideTetrominoPosition.Y, false);
-				}
-			}
-			else if (state == E_TNFieldModelStateType::SetGuideTetromino)
-			{
-				TSharedPtr<FTNPlayerTetromino> currentTetromino = fieldModel->GetCurrentTetromino();
-				if (!currentTetromino.IsValid())
-				{
-					return;
-				}
-
-				FTNTetrominoInfo& tetrominoInfo = currentTetromino->GetTetrominoInfo();
-
-				for (const auto& coord : tetrominoInfo.Coordinate)
-				{
-					(*fieldView)->SetMinoType(coord.X + tetrominoInfo.GuideTetrominoPosition.X, coord.Y + tetrominoInfo.GuideTetrominoPosition.Y, E_TNTetrominoType::Guide);
-				}
-			}
-			else if (state == E_TNFieldModelStateType::HideHoldTetromino)
-			{
-				TSharedPtr<FTNTetrominoBase> holdTetromino = fieldModel->GetHoldTetromino();
-				if (!holdTetromino.IsValid())
-				{
-					return;
-				}
-
-				FTNTetrominoInfo& tetrominoInfo = holdTetromino->GetTetrominoInfo();
-
-				for (const auto& coord : tetrominoInfo.Coordinate)
-				{
-					(*fieldView)->SetVisibilityHoldMino(coord.X + tetrominoInfo.CurrentPosition.X, coord.Y + tetrominoInfo.CurrentPosition.Y, false);
-				}
-			}
-			else if (state == E_TNFieldModelStateType::SetHoldTetromino)
-			{
-				TSharedPtr<FTNTetrominoBase> holdTetromino = fieldModel->GetHoldTetromino();
-				if (!holdTetromino.IsValid())
-				{
-					return;
-				}
-
-				FTNTetrominoInfo& tetrominoInfo = holdTetromino->GetTetrominoInfo();
-
-				for (const auto& coord : tetrominoInfo.Coordinate)
-				{
-					(*fieldView)->SetHoldMinoType(coord.X + tetrominoInfo.CurrentPosition.X, coord.Y + tetrominoInfo.CurrentPosition.Y, tetrominoInfo.CurrentType);
-				}
-			}
-			else if (state == E_TNFieldModelStateType::HidePreviewTetromino)
-			{
-				TArray<TSharedPtr<FTNTetrominoBase>>& previewTetrominos = fieldModel->GetPreviewTetrominos();
-
-				for (const auto& previewTetromino : previewTetrominos)
-				{
-					FTNTetrominoInfo& tetrominoInfo = previewTetromino->GetTetrominoInfo();
-
-					for (const auto& coord : tetrominoInfo.Coordinate)
-					{
-						(*fieldView)->SetVisibilityPreviewMino(coord.X + tetrominoInfo.CurrentPosition.X, coord.Y + tetrominoInfo.CurrentPosition.Y, false);
-					}
-				}
-			}
-			else if (state == E_TNFieldModelStateType::SetPreviewTetromino)
-			{
-				TArray<TSharedPtr<FTNTetrominoBase>>& previewTetrominos = fieldModel->GetPreviewTetrominos();
-
-				for (const auto& previewTetromino : previewTetrominos)
-				{
-					FTNTetrominoInfo& tetrominoInfo = previewTetromino->GetTetrominoInfo();
-
-					for (const auto& coord : tetrominoInfo.Coordinate)
-					{
-						(*fieldView)->SetPreviewMinoType(coord.X + tetrominoInfo.CurrentPosition.X, coord.Y + tetrominoInfo.CurrentPosition.Y, tetrominoInfo.CurrentType);
-					}
-				}
-			}
-		}
+		(*fieldView)->Update(filedContext, state);
 	}
 }

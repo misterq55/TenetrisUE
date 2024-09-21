@@ -17,6 +17,10 @@ class FTNTetrominoBase
 {
 public:
 	FTNTetrominoBase() {}
+	FTNTetrominoBase(TSharedPtr<FTNTetrominoInfo> tetrominoInfo) 
+	{
+		TetrominoInfo = tetrominoInfo;
+	}
 
 	virtual ~FTNTetrominoBase() 
 	{
@@ -40,12 +44,12 @@ public:
 	TArray<int32> GetMinoHeights();
 	void SetTetrominoPosition(const int32 x, const int32 y);
 	void SetTetrominoType(const E_TNTetrominoType currentTetrominoType);
-	E_TNTetrominoType GetTetrominoType() { return TetrominoInfo.CurrentType; }
+	E_TNTetrominoType GetTetrominoType();
 	void SetStartingLocation(const int32 x, const int32 y);
 	void SetStartingLocation(const FVector2D& startingLocation);
 	FVector2D GetStaringLocation();
 	void HideTetromino();
-	FTNTetrominoInfo& GetTetrominoInfo();
+	TSharedPtr<FTNTetrominoInfo> GetTetrominoInfo();
 
 protected:
 	bool checkMino(const FVector2D& simulationPosition);
@@ -61,6 +65,6 @@ public:
 	FSetTetromino OnSetTetromino;
 
 protected:
-	FTNTetrominoInfo TetrominoInfo;
+	TSharedPtr<FTNTetrominoInfo> TetrominoInfo;
 	FVector2D StartingLocation;
 };

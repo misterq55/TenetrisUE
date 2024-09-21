@@ -61,51 +61,6 @@ enum class E_TNFieldModelStateType : uint32
 	LockDown,
 };
 
-struct FTNFieldContext
-{
-public:
-	FTNFieldContext(E_TNFieldType fieldType)
-		: FieldType(fieldType)
-		, BufferHeight(RowMax)
-		, BufferWidth(ColumnMax)
-	{
-		createBuffer();
-	}
-
-	FTNFieldContext(E_TNFieldType fieldType, TArray<TArray<E_TNTetrominoType>> initialBuffer, int32 height = ColumnMax, int32 width = RowMax)
-		: FieldType(fieldType)
-		, BufferHeight(height)
-		, BufferWidth(width)
-		, CheckBuffer(MoveTemp(initialBuffer))
-	{}
-
-	E_TNFieldType FieldType;
-	int32 BufferHeight = 0;
-	int32 BufferWidth = 0;
-	TArray<TArray<E_TNTetrominoType>> CheckBuffer;
-
-	void createBuffer()
-	{
-		for (int32 i = 0; i < BufferHeight * 2 + 2; i++)
-		{
-			TArray<E_TNTetrominoType> buffer;
-			for (int32 j = 0; j < BufferWidth + 2; j++)
-			{
-				if (i == 0 || j == 0 || j == BufferWidth + 2 - 1)
-				{
-					buffer.Add(E_TNTetrominoType::Obstacle);
-				}
-				else
-				{
-					buffer.Add(E_TNTetrominoType::None);
-				}
-			}
-
-			CheckBuffer.Add(buffer);
-		}
-	}
-};
-
 typedef TArray<FVector2D> TTetrominoCoordinate;
 
 const TTetrominoCoordinate IMinoCoordinate = { FVector2D(-1.f, 0.f) , FVector2D(0.f, 0.f), FVector2D(1.f, 0.f), FVector2D(2.f, 0.f) };
@@ -231,4 +186,66 @@ private:
 	bool LockDownStart = false;
 	const int32 MaxLockDownRemainCount = 15;
 	int32 LockDownRemainCount = 0;
+};
+
+struct FTNFieldContext
+{
+public:
+	FTNFieldContext(E_TNFieldType fieldType)
+		: FieldType(fieldType)
+		, BufferHeight(RowMax)
+		, BufferWidth(ColumnMax)
+	{
+		initializeTetrnominoInfos();
+		createBuffer();
+	}
+
+	FTNFieldContext(E_TNFieldType fieldType, TArray<TArray<E_TNTetrominoType>> initialBuffer, int32 height = ColumnMax, int32 width = RowMax)
+		: FieldType(fieldType)
+		, BufferHeight(height)
+		, BufferWidth(width)
+		, CheckBuffer(MoveTemp(initialBuffer))
+	{}
+
+	E_TNFieldType FieldType;
+	int32 BufferHeight = 0;
+	int32 BufferWidth = 0;
+	TArray<TArray<E_TNTetrominoType>> CheckBuffer;
+	TSharedPtr<FTNTetrominoInfo> PlayerTetrominoInfo;
+	TSharedPtr<FTNTetrominoInfo> HoldTetrominoInfo;
+	int32 PreviewTetrominoNum;
+	TArray<TSharedPtr<FTNTetrominoInfo>> PreviewTetrominoInfos;
+
+	void initializeTetrnominoInfos()
+	{
+		PlayerTetrominoInfo = MakeShareable(new FTNTetrominoInfo());
+		HoldTetrominoInfo = MakeShareable(new FTNTetrominoInfo());
+
+		PreviewTetrominoNum = 5;
+		for (int32 i = 0; i < PreviewTetrominoNum; i++)
+		{
+			PreviewTetrominoInfos.Emplace(MakeShareable(new FTNTetrominoInfo()));
+		}
+	}
+
+	void createBuffer()
+	{
+		for (int32 i = 0; i < BufferHeight * 2 + 2; i++)
+		{
+			TArray<E_TNTetrominoType> buffer;
+			for (int32 j = 0; j < BufferWidth + 2; j++)
+			{
+				if (i == 0 || j == 0 || j == BufferWidth + 2 - 1)
+				{
+					buffer.Add(E_TNTetrominoType::Obstacle);
+				}
+				else
+				{
+					buffer.Add(E_TNTetrominoType::None);
+				}
+			}
+
+			CheckBuffer.Add(buffer);
+		}
+	}
 };

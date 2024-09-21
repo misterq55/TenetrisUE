@@ -3,6 +3,7 @@
 class UWorld;
 class UClass;
 class ATNField;
+struct FTNFieldContext;
 
 class FTNFieldView
 {
@@ -17,6 +18,7 @@ public:
 	void SetPreviewMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
 	void SetVisibilityPreviewMino(const int32 x, const int32 y, const bool visible);
 	void SetVisibilityBackgroundCube(const int32 x, const int32 y, const bool visible);
+	void Update(const FTNFieldContext& fieldContext, const E_TNFieldModelStateType state);
 
 private:
 	TObjectPtr<ATNField> FieldActor = nullptr;

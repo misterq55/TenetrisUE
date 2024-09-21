@@ -9,7 +9,6 @@
 FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
 	: FieldContext(MoveTemp(fieldContext))
 	, FieldActor(nullptr)
-	, PreviewTetrominoNum(0)
 {
 	if (!CurrentTetromino.IsValid())
 	{
@@ -18,7 +17,7 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
 		{
 		case E_TNFieldType::Player:
 		{
-			CurrentTetromino = MakeShareable(new FTNPlayerTetromino());
+			CurrentTetromino = MakeShareable(new FTNPlayerTetromino(FieldContext.PlayerTetrominoInfo));
 
 			CurrentTetromino->OnBackgroundCubeType.BindRaw(this, &FTNFieldModel::SetValueToCheckBuffer);
 			CurrentTetromino->OnCheckMino.BindRaw(this, &FTNFieldModel::CheckMino);
@@ -528,19 +527,17 @@ void FTNFieldModel::AddFieldActor(ATNField* fieldActor)
 
 void FTNFieldModel::initializePreviewTetrominos()
 {
-	PreviewTetrominoNum = 5;
-
-	for (int32 i = 0; i < PreviewTetrominoNum; i++)
+	for (int32 i = 0; i < FieldContext.PreviewTetrominoNum; i++)
 	{
-		TSharedPtr<FTNTetrominoBase> previewTetromino = MakeShareable(new FTNPreviewTetromino());
+		TSharedPtr<FTNTetrominoBase> previewTetromino = MakeShareable(new FTNPreviewTetromino(FieldContext.PreviewTetrominoInfos[i]));
 		PreviewTetrominos.Add(previewTetromino);
-		previewTetromino->SetStartingLocation(2, (PreviewTetrominoNum - i - 1) * 3 + 1);
+		previewTetromino->SetStartingLocation(2, (FieldContext.PreviewTetrominoNum - i - 1) * 3 + 1);
 	}
 }
 
 void FTNFieldModel::initializeHoldTetromino()
 {
-	HoldTetromino = MakeShareable(new FTNPreviewTetromino());
+	HoldTetromino = MakeShareable(new FTNPreviewTetromino(FieldContext.HoldTetrominoInfo));
 	HoldTetromino->OnHideTetromino.BindRaw(this, &FTNFieldModel::HideHoldTetromino);
 	HoldTetromino->OnSetTetromino.BindRaw(this, &FTNFieldModel::SetHoldTetromino);
 	HoldTetromino->SetStartingLocation(2, 1);
