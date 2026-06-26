@@ -1,7 +1,7 @@
 #include "TNFieldModel.h"
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/TNTetrominoBase.h"
 
-// TODO Å×Æ®·Î¹Ì³ë ÆÑÅä¸®·Î ºÐ¸® [05/21/2024]
+// TODO ï¿½ï¿½Æ®ï¿½Î¹Ì³ï¿½ ï¿½ï¿½ï¿½ä¸®ï¿½ï¿½ ï¿½Ð¸ï¿½ [05/21/2024]
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/PlayerTetromino/TNPlayerTetromino.h"
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/PreviewTetromino/TNPreviewTetromino.h"
 #include "Tenetris/Module/MVC/Model/Field/TetrominoGenerator/TNTetrominoGenerator.h"
@@ -12,7 +12,7 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
 {
 	if (!CurrentTetromino.IsValid())
 	{
-		// TODO Å×Æ®·Î¹Ì³ë¸¦ diÇÒ ¼ö ÀÖµµ·Ï ¼öÁ¤ÇØ¾ßÇÔ [05/21/2024]
+		// TODO ï¿½ï¿½Æ®ï¿½Î¹Ì³ë¸¦ diï¿½ï¿½ ï¿½ï¿½ ï¿½Öµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½ï¿½ [05/21/2024]
 		switch (FieldContext.FieldType)
 		{
 		case E_TNFieldType::Player:
@@ -190,7 +190,7 @@ void FTNFieldModel::CheckLineDelete(const TArray<int32>& heights)
 {
 	TArray<int32> linesToDelete;
 
-	// °¢ ³ôÀÌ¿¡ ´ëÇØ ÁÙ »èÁ¦ ¿©ºÎ¸¦ °Ë»çÇÕ´Ï´Ù.
+	// ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î¸ï¿½ ï¿½Ë»ï¿½ï¿½Õ´Ï´ï¿½.
 	for (int32 height : heights)
 	{
 		if (IsLineDeleted(height))
@@ -199,7 +199,7 @@ void FTNFieldModel::CheckLineDelete(const TArray<int32>& heights)
 		}
 	}
 
-	// »èÁ¦µÈ ÁÙÀÌ ÀÖ´Â °æ¿ì Ã³¸®ÇÕ´Ï´Ù.
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 	if (linesToDelete.Num() > 0)
 	{
 		HandleLineDeletion(linesToDelete);
@@ -208,27 +208,27 @@ void FTNFieldModel::CheckLineDelete(const TArray<int32>& heights)
 
 bool FTNFieldModel::IsLineDeleted(int32 height) const
 {
-	// ÁÖ¾îÁø ³ôÀÌ¿¡ ´ëÇØ ÇØ´ç ÁÙÀÌ ¸ðµÎ »èÁ¦µÇ¾ú´ÂÁö È®ÀÎÇÕ´Ï´Ù.
+	// ï¿½Ö¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ì¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 	for (int32 j = 0; j < FieldContext.BufferWidth; ++j)
 	{
 		if (GetValueFromCheckBuffer(j, height) == E_TNTetrominoType::None)
 		{
-			return false; // ÇÏ³ª¶óµµ ºí·ÏÀÌ ¾øÀ¸¸é »èÁ¦µÇÁö ¾ÊÀº ÁÙÀÔ´Ï´Ù.
+			return false; // ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ô´Ï´ï¿½.
 		}
 	}
 
-	return true; // ¸ðµç ºí·ÏÀÌ Á¸ÀçÇÏ¿© ÁÙÀÌ »èÁ¦µÇ¾ú½À´Ï´Ù.
+	return true; // ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¿ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.
 }
 
 void FTNFieldModel::HandleLineDeletion(const TArray<int32>& linesToDelete)
 {
-	// »èÁ¦µÈ ÁÙ¿¡ ´ëÇØ Ã³¸®¸¦ ¼öÇàÇÕ´Ï´Ù.
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù¿ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 	for (int32 height : linesToDelete)
 	{
 		DeletedLines.AddUnique(height);
 	}
 
-	// ÁÙ »èÁ¦ ÇÃ·¡±×¸¦ ¼³Á¤ÇÕ´Ï´Ù.
+	// ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½×¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 	bLineDeleting = true;
 }
 
