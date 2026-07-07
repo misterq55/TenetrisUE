@@ -1,9 +1,19 @@
 #include "TNController.h"
+
+#include "Module/MVC/View/TNView.h"
 #include "Tenetris/Module/MVC/Holder/TNMVCHolder.h"
 #include "Tenetris/Module/MVC/Model/TNModel.h"
 
 void FTNController::Init()
 {
+	TSharedPtr<ITNModel> tnModel = FTNMVCHolder::GetInstance().GetModel();
+	TSharedPtr<ITNView> tnView = FTNMVCHolder::GetInstance().GetView();
+	
+	if (tnModel.IsValid() && tnView.IsValid())
+	{
+		tnModel->GetCreateFieldViewWithFieldActorDelegate().BindRaw(tnView.Get(), &ITNView::CreateFieldViewWithFieldActor);
+		tnModel->GetUpdateFieldViewDelegate().BindRaw(tnView.Get(), &ITNView::UpdateFieldView);
+	}
 }
 
 void FTNController::Tick(float deltaTime)

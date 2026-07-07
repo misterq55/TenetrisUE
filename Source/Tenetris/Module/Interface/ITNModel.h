@@ -6,7 +6,7 @@ class ATNField;
 struct FTNFieldContext;
 
 DECLARE_DELEGATE_TwoParams(FTNCreateFieldViewWithFieldActor, const int32, ATNField* field);
-DECLARE_DELEGATE_TwoParams(FTNUpdateFieldView, const int32, const E_TNFieldModelStateType state);
+DECLARE_DELEGATE_ThreeParams(FTNUpdateFieldView, const int32, const FTNFieldContext&, const E_TNFieldModelStateType state);
 
 class ITNModel
 {
