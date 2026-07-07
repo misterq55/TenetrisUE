@@ -67,7 +67,8 @@ void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, ATNField* fieldAct
 
 void FTNModel::UpdateModel(const int32 modelKey, const E_TNFieldModelStateType state)
 {
-	UpdateFieldViewDelegate.ExecuteIfBound(modelKey, state);
+	FTNFieldContext fieldContext = GetFieldContext(modelKey);
+	UpdateFieldViewDelegate.ExecuteIfBound(modelKey, fieldContext, state);
 }
 
 FTNFieldContext FTNModel::GetFieldContext(const int32 modelKey)
