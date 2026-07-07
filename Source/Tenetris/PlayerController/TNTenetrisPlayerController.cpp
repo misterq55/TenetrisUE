@@ -2,61 +2,48 @@
 
 
 #include "TNTenetrisPlayerController.h"
-#include "GameFramework/PlayerInput.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
 #include "Tenetris/Module/MVC/Holder/TNMVCHolder.h"
 #include "Tenetris/Module/MVC/Controller/TNController.h"
+
+void ATNTenetrisPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	if (ULocalPlayer* LocalPlayer = GetLocalPlayer())
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
+			LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
+		{
+			Subsystem->AddMappingContext(DefaultMappingContext, 0);
+		}
+	}
+}
 
 void ATNTenetrisPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("startMoveLeft", EKeys::Left));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("stopMoveLeft", EKeys::Left));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("startMoveRight", EKeys::Right));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("stopMoveRight", EKeys::Right));
-	
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("startSoftDrop", EKeys::Down));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("stopSoftDrop", EKeys::Down));
+	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
 
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("rotateClockWise", EKeys::Up));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("rotateCounterClockWise", EKeys::LeftControl));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("HardDrop", EKeys::SpaceBar));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Hold", EKeys::LeftShift));
+	EnhancedInputComponent->BindAction(MoveLeftAction, ETriggerEvent::Started, this, &ATNTenetrisPlayerController::startMoveLeft);
+	EnhancedInputComponent->BindAction(MoveLeftAction, ETriggerEvent::Completed, this, &ATNTenetrisPlayerController::stopMoveLeft);
+	EnhancedInputComponent->BindAction(MoveLeftAction, ETriggerEvent::Canceled, this, &ATNTenetrisPlayerController::stopMoveLeft);
 
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("SpaceInversion", EKeys::Z));
+	EnhancedInputComponent->BindAction(MoveRightAction, ETriggerEvent::Started, this, &ATNTenetrisPlayerController::startMoveRight);
+	EnhancedInputComponent->BindAction(MoveRightAction, ETriggerEvent::Completed, this, &ATNTenetrisPlayerController::stopMoveRight);
+	EnhancedInputComponent->BindAction(MoveRightAction, ETriggerEvent::Canceled, this, &ATNTenetrisPlayerController::stopMoveRight);
 
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("startMoveLeft", EKeys::Gamepad_DPad_Left));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("stopMoveLeft", EKeys::Gamepad_DPad_Left));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("startMoveRight", EKeys::Gamepad_DPad_Right));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("stopMoveRight", EKeys::Gamepad_DPad_Right));
+	EnhancedInputComponent->BindAction(SoftDropAction, ETriggerEvent::Started, this, &ATNTenetrisPlayerController::startSoftDrop);
+	EnhancedInputComponent->BindAction(SoftDropAction, ETriggerEvent::Completed, this, &ATNTenetrisPlayerController::stopSoftDrop);
+	EnhancedInputComponent->BindAction(SoftDropAction, ETriggerEvent::Canceled, this, &ATNTenetrisPlayerController::stopSoftDrop);
 
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("startSoftDrop", EKeys::Gamepad_DPad_Down));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("stopSoftDrop", EKeys::Gamepad_DPad_Down));
-
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("rotateClockWise", EKeys::Gamepad_FaceButton_Right));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("rotateCounterClockWise", EKeys::Gamepad_FaceButton_Bottom));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("HardDrop", EKeys::Gamepad_DPad_Up));
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("Hold", EKeys::Gamepad_LeftShoulder));
-
-	UPlayerInput::AddEngineDefinedActionMapping(FInputActionKeyMapping("SpaceInversion", EKeys::Gamepad_FaceButton_Top));
-
-	if (IsValid(InputComponent))
-	{
-		InputComponent->BindAction("startMoveLeft", EInputEvent::IE_Pressed, this, &ATNTenetrisPlayerController::startMoveLeft);
-		InputComponent->BindAction("stopMoveLeft", EInputEvent::IE_Released, this, &ATNTenetrisPlayerController::stopMoveLeft);
-		InputComponent->BindAction("startMoveRight", EInputEvent::IE_Pressed, this, &ATNTenetrisPlayerController::startMoveRight);
-		InputComponent->BindAction("stopMoveRight", EInputEvent::IE_Released, this, &ATNTenetrisPlayerController::stopMoveRight);
-
-		InputComponent->BindAction("startSoftDrop", EInputEvent::IE_Pressed, this, &ATNTenetrisPlayerController::startSoftDrop);
-		InputComponent->BindAction("stopSoftDrop", EInputEvent::IE_Released, this, &ATNTenetrisPlayerController::stopSoftDrop);
-
-		InputComponent->BindAction("rotateClockWise", EInputEvent::IE_Pressed, this, &ATNTenetrisPlayerController::rotateClockWise);
-		InputComponent->BindAction("rotateCounterClockWise", EInputEvent::IE_Pressed, this, &ATNTenetrisPlayerController::rotateCounterClockWise);
-		InputComponent->BindAction("HardDrop", EInputEvent::IE_Pressed, this, &ATNTenetrisPlayerController::HardDrop);
-
-		InputComponent->BindAction("Hold", EInputEvent::IE_Pressed, this, &ATNTenetrisPlayerController::hold);
-		InputComponent->BindAction("SpaceInversion", EInputEvent::IE_Pressed, this, &ATNTenetrisPlayerController::toggleSpaceInversion);
-	}
+	EnhancedInputComponent->BindAction(RotateClockWiseAction, ETriggerEvent::Started, this, &ATNTenetrisPlayerController::rotateClockWise);
+	EnhancedInputComponent->BindAction(RotateCounterClockWiseAction, ETriggerEvent::Started, this, &ATNTenetrisPlayerController::rotateCounterClockWise);
+	EnhancedInputComponent->BindAction(HardDropAction, ETriggerEvent::Started, this, &ATNTenetrisPlayerController::hardDrop);
+	EnhancedInputComponent->BindAction(HoldAction, ETriggerEvent::Started, this, &ATNTenetrisPlayerController::hold);
+	EnhancedInputComponent->BindAction(SpaceInversionAction, ETriggerEvent::Started, this, &ATNTenetrisPlayerController::toggleSpaceInversion);
 }
 
 void ATNTenetrisPlayerController::startMoveLeft()
@@ -149,7 +136,7 @@ void ATNTenetrisPlayerController::toggleSpaceInversion()
 	}
 }
 
-void ATNTenetrisPlayerController::HardDrop()
+void ATNTenetrisPlayerController::hardDrop()
 {
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
