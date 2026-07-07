@@ -11,14 +11,46 @@
  * 
  */
 
+class UInputMappingContext;
+class UInputAction;
+
 UCLASS()
 class TENETRIS_API ATNTenetrisPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
 protected:
+	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 
+protected:
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	TObjectPtr<UInputMappingContext> DefaultMappingContext;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> MoveLeftAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> MoveRightAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> SoftDropAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> RotateClockWiseAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> RotateCounterClockWiseAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> HardDropAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> HoldAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> SpaceInversionAction;
+	
 protected:
 	void startMoveLeft();
 	void stopMoveLeft();
@@ -34,5 +66,5 @@ protected:
 
 	void hold();
 	void toggleSpaceInversion();
-	void HardDrop();
+	void hardDrop();
 };
