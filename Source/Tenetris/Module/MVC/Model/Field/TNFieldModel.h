@@ -1,6 +1,4 @@
 #include "Tenetris/TenetrisDefine.h"
-
-class ATNField;
 class FTNTetrominoBase;
 class FTNPlayerTetromino;
 class FTNTetrominoGenerator;
@@ -75,9 +73,6 @@ public:
 	void ToggleSpaceInversion();
 	void HardDrop();
 
-public:
-	void AddFieldActor(ATNField* fieldActor);
-
 private:
 	void initializePreviewTetrominos();
 	void initializeHoldTetromino();
@@ -107,7 +102,6 @@ private:
 private:
 
 	FTNFieldContext FieldContext;
-	ATNField* FieldActor;
 
 	TSharedPtr<FTNPlayerTetromino> CurrentTetromino;
 	TSharedPtr<FTNTetrominoGenerator> TetrominoGenerator;

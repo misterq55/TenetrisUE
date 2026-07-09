@@ -2,7 +2,7 @@
 #include "Tenetris/Module/MVC/View/Field/Actor/Field/TNField.h"
 #include "Engine/World.h"
 
-void FTNFieldView::SetFieldActor(TObjectPtr<ATNField> fieldActor)
+void FTNFieldView::SetFieldActor(ATNField* fieldActor)
 {
 	if (!IsValid(fieldActor))
 	{
@@ -11,7 +11,7 @@ void FTNFieldView::SetFieldActor(TObjectPtr<ATNField> fieldActor)
 
 	FieldActor = fieldActor;
 
-	if (IsValid(FieldActor))
+	if (FieldActor.IsValid())
 	{
 		FieldActor->Initialize();
 	}
@@ -26,7 +26,7 @@ void FTNFieldView::CreateFieldActor(TSubclassOf<ATNField> fieldActorClass, UWorl
 
 	FieldActor = world->SpawnActor<ATNField>(fieldActorClass);
 
-	if (IsValid(FieldActor))
+	if (FieldActor.IsValid())
 	{
 		FieldActor->Initialize();
 	}
@@ -34,7 +34,7 @@ void FTNFieldView::CreateFieldActor(TSubclassOf<ATNField> fieldActorClass, UWorl
 
 void FTNFieldView::SetBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType)
 {
-	if (!IsValid(FieldActor))
+	if (!FieldActor.IsValid())
 	{
 		return;
 	}
@@ -44,7 +44,7 @@ void FTNFieldView::SetBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tet
 
 void FTNFieldView::SetMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
 {
-	if (!IsValid(FieldActor))
+	if (!FieldActor.IsValid())
 	{
 		return;
 	}
@@ -54,7 +54,7 @@ void FTNFieldView::SetMinoType(const int32 x, const int32 y, const E_TNTetromino
 
 void FTNFieldView::SetVisibilityMino(const int32 x, const int32 y, const bool visible)
 {
-	if (!IsValid(FieldActor))
+	if (!FieldActor.IsValid())
 	{
 		return;
 	}
@@ -64,7 +64,7 @@ void FTNFieldView::SetVisibilityMino(const int32 x, const int32 y, const bool vi
 
 void FTNFieldView::SetHoldMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
 {
-	if (!IsValid(FieldActor))
+	if (!FieldActor.IsValid())
 	{
 		return;
 	}
@@ -74,7 +74,7 @@ void FTNFieldView::SetHoldMinoType(const int32 x, const int32 y, const E_TNTetro
 
 void FTNFieldView::SetVisibilityHoldMino(const int32 x, const int32 y, const bool visible)
 {
-	if (!IsValid(FieldActor))
+	if (!FieldActor.IsValid())
 	{
 		return;
 	}
@@ -84,7 +84,7 @@ void FTNFieldView::SetVisibilityHoldMino(const int32 x, const int32 y, const boo
 
 void FTNFieldView::SetPreviewMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
 {
-	if (!IsValid(FieldActor))
+	if (!FieldActor.IsValid())
 	{
 		return;
 	}
@@ -94,7 +94,7 @@ void FTNFieldView::SetPreviewMinoType(const int32 x, const int32 y, const E_TNTe
 
 void FTNFieldView::SetVisibilityPreviewMino(const int32 x, const int32 y, const bool visible)
 {
-	if (!IsValid(FieldActor))
+	if (!FieldActor.IsValid())
 	{
 		return;
 	}
@@ -104,7 +104,7 @@ void FTNFieldView::SetVisibilityPreviewMino(const int32 x, const int32 y, const 
 
 void FTNFieldView::SetVisibilityBackgroundCube(const int32 x, const int32 y, const bool visible)
 {
-	if (!IsValid(FieldActor))
+	if (!FieldActor.IsValid())
 	{
 		return;
 	}

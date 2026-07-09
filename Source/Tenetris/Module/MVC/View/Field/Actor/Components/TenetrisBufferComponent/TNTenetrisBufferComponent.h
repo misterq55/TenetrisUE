@@ -36,9 +36,16 @@ public:
 private:
 	TArray<TArray<ATNMinoBase*>> BackgroundCubeBuffer;
 	TArray<TArray<ATNMinoBase*>> MinoBuffer;
-	UStaticMeshComponent* BackgroundMeshComponent;
-	USceneComponent* BackGroundMinoBufferPivot;
-	USceneComponent* MinoBufferPivot;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UStaticMeshComponent> BackgroundMeshComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USceneComponent> BackGroundMinoBufferPivot;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USceneComponent> MinoBufferPivot;
+
 	TSubclassOf<ATNMinoBase> MinoClass;
 	int32 BufferHeight = 0;
 	int32 BufferWidth = 0;

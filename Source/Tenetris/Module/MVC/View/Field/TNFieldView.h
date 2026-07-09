@@ -8,7 +8,7 @@ struct FTNFieldContext;
 class FTNFieldView
 {
 public:
-	void SetFieldActor(TObjectPtr<ATNField> fieldActor);
+	void SetFieldActor(ATNField* fieldActor);
 	void CreateFieldActor(TSubclassOf<ATNField> fieldActorClass, UWorld* world);
 	void SetBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType);
 	void SetMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
@@ -21,5 +21,5 @@ public:
 	void Update(const FTNFieldContext& fieldContext, const E_TNFieldModelStateType state);
 
 private:
-	TObjectPtr<ATNField> FieldActor = nullptr;
+	TWeakObjectPtr<ATNField> FieldActor;
 };
