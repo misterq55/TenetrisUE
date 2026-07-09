@@ -8,7 +8,6 @@
 
 FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
 	: FieldContext(MoveTemp(fieldContext))
-	, FieldActor(nullptr)
 {
 	if (!CurrentTetromino.IsValid())
 	{
@@ -507,11 +506,6 @@ float FTNFieldModel::getFallingSpeed()
 	}
 
 	return TetrominoFallingSpeed * multiflier;
-}
-
-void FTNFieldModel::AddFieldActor(ATNField* fieldActor)
-{
-	FieldActor = fieldActor;
 }
 
 void FTNFieldModel::initializePreviewTetrominos()

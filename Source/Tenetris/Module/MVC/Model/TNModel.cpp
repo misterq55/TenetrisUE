@@ -48,7 +48,6 @@ void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, ATNField* fieldAct
 	}
 
 	fieldModel->GetOnUpdateModelDelegate().BindRaw(this, &FTNModel::UpdateModel);
-	fieldModel->AddFieldActor(fieldActor); // TODO 삭제
 	fieldModel->SetId(ModelKey);
 	
 	FieldModelMap.Emplace(ModelKey, fieldModel);

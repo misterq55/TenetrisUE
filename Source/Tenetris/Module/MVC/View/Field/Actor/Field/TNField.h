@@ -34,6 +34,9 @@ private:
 	int32 PreviewTetrominoNum;
 
 protected:
-	UTNTenetrisBufferComponent* PreviewBufferComponent;
-	UTNTenetrisBufferComponent* HoldBufferComponent;
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UTNTenetrisBufferComponent> PreviewBufferComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UTNTenetrisBufferComponent> HoldBufferComponent;
 };
