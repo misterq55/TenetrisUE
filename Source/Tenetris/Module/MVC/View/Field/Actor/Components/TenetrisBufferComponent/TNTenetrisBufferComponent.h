@@ -34,6 +34,9 @@ public:
 	void SetVisibilityMino(const int32 x, const int32 y, const bool visible);
 
 private:
+	void buildMinoLayer(USceneComponent* pivot, TArray<TArray<ATNMinoBase*>>& targetBuffer);
+	
+private:
 	TArray<TArray<ATNMinoBase*>> BackgroundCubeBuffer;
 	TArray<TArray<ATNMinoBase*>> MinoBuffer;
 

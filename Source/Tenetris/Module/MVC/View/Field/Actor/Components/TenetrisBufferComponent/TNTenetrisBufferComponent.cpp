@@ -48,7 +48,7 @@ void UTNTenetrisBufferComponent::TickComponent(float DeltaTime, ELevelTick TickT
 	// ...
 }
 
-void UTNTenetrisBufferComponent::Initialize()
+void UTNTenetrisBufferComponent::buildMinoLayer(USceneComponent* pivot, TArray<TArray<ATNMinoBase*>>& targetBuffer)
 {
 	for (int32 i = 0; i < BufferHeight + 2; i++)
 	{
@@ -62,7 +62,7 @@ void UTNTenetrisBufferComponent::Initialize()
 			}
 
 			childComponent->SetChildActorClass(MinoClass);
-			childComponent->AttachToComponent(BackGroundMinoBufferPivot, FAttachmentTransformRules::KeepRelativeTransform);
+			childComponent->AttachToComponent(pivot, FAttachmentTransformRules::KeepRelativeTransform);
 			childComponent->CreateChildActor();
 
 			ATNMinoBase* minoBase = Cast<ATNMinoBase>(childComponent->GetChildActor());
@@ -73,38 +73,15 @@ void UTNTenetrisBufferComponent::Initialize()
 			}
 
 			minoBase->SetActorRelativeLocation(FVector(0.f, MinoRatio * 100.f * (j - (BufferWidth - 1) * 0.5f), MinoRatio * 100.f * (i - BufferHeight * 0.5f)));
-
-			BackgroundCubeBuffer[i].Add(minoBase);
+			targetBuffer[i].Add(minoBase);
 		}
 	}
+}
 
-	for (int32 i = 0; i < BufferHeight + 2; i++)
-	{
-		for (int32 j = 0; j < BufferWidth; j++)
-		{
-			UChildActorComponent* childComponent = NewObject<UChildActorComponent>(this);
-
-			if (!IsValid(childComponent))
-			{
-				continue;
-			}
-
-			childComponent->SetChildActorClass(MinoClass);
-			childComponent->AttachToComponent(MinoBufferPivot, FAttachmentTransformRules::KeepRelativeTransform);
-			childComponent->CreateChildActor();
-
-			ATNMinoBase* minoBase = Cast<ATNMinoBase>(childComponent->GetChildActor());
-
-			if (!IsValid(minoBase))
-			{
-				continue;
-			}
-
-			minoBase->SetActorRelativeLocation(FVector(0.f, MinoRatio * 100.f * (j - (BufferWidth - 1) * 0.5f), MinoRatio * 100.f * (i - BufferHeight * 0.5f)));
-
-			MinoBuffer[i].Add(minoBase);
-		}
-	}
+void UTNTenetrisBufferComponent::Initialize()
+{
+	buildMinoLayer(BackGroundMinoBufferPivot, BackgroundCubeBuffer);
+	buildMinoLayer(MinoBufferPivot, MinoBuffer);
 }
 
 void UTNTenetrisBufferComponent::SetBufferSize(const int32 bufferHeight, const int32 bufferWidth)
