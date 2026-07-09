@@ -97,26 +97,15 @@ void FTNFieldModel::SetBufferSize(const int32 bufferHeight, const int32 bufferWi
 
 E_TNTetrominoType FTNFieldModel::GetValueFromCheckBuffer(const int32 x, const int32 y) const
 {
-	int32 newX = x;
-
-	if (bSpaceInverted)
-	{
-		newX = FieldContext.BufferWidth - x - 1;
-	}
-
-	return FieldContext.CheckBuffer[y + 1][newX + 1];
+	const TArray<TArray<E_TNTetrominoType>>& bufferToUse = bSpaceInverted ? FieldContext.ReversedBuffer : FieldContext.CheckBuffer;
+	
+	return bufferToUse[y + 1][x + 1];
 }
 
 void FTNFieldModel::SetValueToCheckBuffer(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
 {
-	int32 newX = x;
-
-	if (bSpaceInverted)
-	{
-		newX = FieldContext.BufferWidth - x - 1;
-	}
-
-	FieldContext.CheckBuffer[y + 1][newX + 1] = tetrominoType;
+	FieldContext.CheckBuffer[y + 1][x + 1] = tetrominoType;
+	FieldContext.ReversedBuffer[y + 1][FieldContext.BufferWidth - x] = tetrominoType;
 }
 
 bool FTNFieldModel::CheckMino(const int32 x, const int32 y)

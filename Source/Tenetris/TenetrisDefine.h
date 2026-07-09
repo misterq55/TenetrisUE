@@ -197,7 +197,8 @@ public:
 		, BufferWidth(ColumnMax)
 	{
 		initializeTetrnominoInfos();
-		createBuffer();
+		createBuffer(CheckBuffer);
+		createBuffer(ReversedBuffer);
 	}
 
 	FTNFieldContext(E_TNFieldType fieldType, TArray<TArray<E_TNTetrominoType>> initialBuffer, int32 height = ColumnMax, int32 width = RowMax)
@@ -211,6 +212,7 @@ public:
 	int32 BufferHeight = 0;
 	int32 BufferWidth = 0;
 	TArray<TArray<E_TNTetrominoType>> CheckBuffer;
+	TArray<TArray<E_TNTetrominoType>> ReversedBuffer;
 	TSharedPtr<FTNTetrominoInfo> PlayerTetrominoInfo;
 	TSharedPtr<FTNTetrominoInfo> HoldTetrominoInfo;
 	int32 PreviewTetrominoNum;
@@ -228,7 +230,7 @@ public:
 		}
 	}
 
-	void createBuffer()
+	void createBuffer(TArray<TArray<E_TNTetrominoType>>& checkBuffer)
 	{
 		for (int32 i = 0; i < BufferHeight * 2 + 2; i++)
 		{
@@ -245,7 +247,7 @@ public:
 				}
 			}
 
-			CheckBuffer.Add(buffer);
+			checkBuffer.Add(buffer);
 		}
 	}
 };
