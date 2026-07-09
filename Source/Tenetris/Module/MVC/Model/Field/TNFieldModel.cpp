@@ -117,7 +117,6 @@ bool FTNFieldModel::CheckMino(const int32 x, const int32 y)
 
 int32 FTNFieldModel::CalculateGuideMinoHeight(const int32 x, const int32 y)
 {
-	int32 result = 0;
 	int32 height = 0;
 
 	for (int32 i = y; i >= -1; i--)
@@ -129,9 +128,7 @@ int32 FTNFieldModel::CalculateGuideMinoHeight(const int32 x, const int32 y)
 		}
 	}
 
-	result = y - height - 1;
-
-	return result;
+	return y - height - 1;
 }
 
 void FTNFieldModel::HidePreviewTetromino()
