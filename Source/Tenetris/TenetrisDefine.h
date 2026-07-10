@@ -196,7 +196,7 @@ public:
 		, BufferHeight(RowMax)
 		, BufferWidth(ColumnMax)
 	{
-		initializeTetrnominoInfos();
+		initializeTetrominoInfos();
 		createBuffer(CheckBuffer);
 		createBuffer(ReversedBuffer);
 	}
@@ -206,7 +206,11 @@ public:
 		, BufferHeight(height)
 		, BufferWidth(width)
 		, CheckBuffer(MoveTemp(initialBuffer))
-	{}
+	{
+		initializeTetrominoInfos();
+		createBuffer(CheckBuffer);
+		createBuffer(ReversedBuffer);
+	}
 
 	E_TNFieldType FieldType;
 	int32 BufferHeight = 0;
@@ -218,7 +222,7 @@ public:
 	int32 PreviewTetrominoNum;
 	TArray<TSharedPtr<FTNTetrominoInfo>> PreviewTetrominoInfos;
 
-	void initializeTetrnominoInfos()
+	void initializeTetrominoInfos()
 	{
 		PlayerTetrominoInfo = MakeShareable(new FTNTetrominoInfo());
 		HoldTetrominoInfo = MakeShareable(new FTNTetrominoInfo());
@@ -230,11 +234,15 @@ public:
 		}
 	}
 
-	void createBuffer(TArray<TArray<E_TNTetrominoType>>& checkBuffer)
+	void createBuffer(TArray<TArray<E_TNTetrominoType>>& checkBuffer) const
 	{
+		checkBuffer.Empty();
+		checkBuffer.Reserve(BufferHeight * 2 + 2);
+		
 		for (int32 i = 0; i < BufferHeight * 2 + 2; i++)
 		{
 			TArray<E_TNTetrominoType> buffer;
+			buffer.Reserve(BufferWidth + 2);
 			for (int32 j = 0; j < BufferWidth + 2; j++)
 			{
 				if (i == 0 || j == 0 || j == BufferWidth + 2 - 1)
@@ -247,7 +255,7 @@ public:
 				}
 			}
 
-			checkBuffer.Add(buffer);
+			checkBuffer.Add(MoveTemp(buffer));
 		}
 	}
 };

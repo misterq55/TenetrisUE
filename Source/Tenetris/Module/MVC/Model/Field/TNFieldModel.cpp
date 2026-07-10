@@ -79,19 +79,8 @@ void FTNFieldModel::SetBufferSize(const int32 bufferHeight, const int32 bufferWi
 	FieldContext.BufferHeight = bufferHeight;
 	FieldContext.BufferWidth = bufferWidth;
 
-	for (int32 i = 0; i < FieldContext.BufferHeight * 2 + 2; i++)
-	{
-		TArray<E_TNTetrominoType> buffer;
-		for (int32 j = 0; j < FieldContext.BufferWidth + 2; j++)
-		{
-			if (i == 0 || j == 0 || j == FieldContext.BufferWidth + 2 - 1)
-				buffer.Add(E_TNTetrominoType::Obstacle);
-			else
-				buffer.Add(E_TNTetrominoType::None);
-		}
-
-		FieldContext.CheckBuffer.Add(buffer);
-	}
+	FieldContext.createBuffer(FieldContext.CheckBuffer);
+	FieldContext.createBuffer(FieldContext.ReversedBuffer);
 }
 
 E_TNTetrominoType FTNFieldModel::GetValueFromCheckBuffer(const int32 x, const int32 y) const
@@ -103,8 +92,11 @@ E_TNTetrominoType FTNFieldModel::GetValueFromCheckBuffer(const int32 x, const in
 
 void FTNFieldModel::SetValueToCheckBuffer(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
 {
-	FieldContext.CheckBuffer[y + 1][x + 1] = tetrominoType;
-	FieldContext.ReversedBuffer[y + 1][FieldContext.BufferWidth - x] = tetrominoType;
+	TArray<TArray<E_TNTetrominoType>>& currentBuffer = bSpaceInverted ? FieldContext.ReversedBuffer : FieldContext.CheckBuffer;
+	TArray<TArray<E_TNTetrominoType>>& otherBuffer = bSpaceInverted ? FieldContext.CheckBuffer : FieldContext.ReversedBuffer;
+	
+	currentBuffer[y + 1][x + 1] = tetrominoType;
+	otherBuffer[y + 1][FieldContext.BufferWidth - x] = tetrominoType;
 }
 
 bool FTNFieldModel::CheckMino(const int32 x, const int32 y)
@@ -388,8 +380,6 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 		{
 			TArray<int32> lineChecker;
 			int32 lineDeleteValue = 0;
-
-			const int32 deleteLinesNum = DeletedLines.Num();
 
 			for (int32 i = 0; i < FieldContext.BufferHeight; i++)
 			{
