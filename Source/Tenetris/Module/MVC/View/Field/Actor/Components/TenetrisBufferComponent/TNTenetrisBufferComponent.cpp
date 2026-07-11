@@ -158,12 +158,16 @@ void UTNTenetrisBufferComponent::SetVisibilityMino(const int32 x, const int32 y,
 	}
 }
 
-void UTNTenetrisBufferComponent::RotateField(const bool bSpaceInverted) const
+void UTNTenetrisBufferComponent::RotateField(const float alpha, const bool bSpaceInverted) const
 {
 	if (IsValid(BackGroundMinoBufferPivot))
 	{
+		const float clampedAlpha = FMath::Clamp(alpha, 0.f, 1.f);
+		const float startYaw = bSpaceInverted ? 0.f : 180.f;
+		const float targetYaw = bSpaceInverted ? 180.f : 0.f;
+
 		FRotator newRotation = BackGroundMinoBufferPivot->GetRelativeRotation();
-		newRotation.Yaw = bSpaceInverted ? 180.f : 0.f;
+		newRotation.Yaw = FMath::Lerp(startYaw, targetYaw, clampedAlpha);
 		BackGroundMinoBufferPivot->SetRelativeRotation(newRotation);
 	}
 }

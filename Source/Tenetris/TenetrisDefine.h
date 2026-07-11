@@ -2,10 +2,11 @@
 
 #pragma once
 
-const int32 RowMax = 20;
-const int32 ColumnMax = 10;
+constexpr int32 RowMax = 20;
+constexpr int32 ColumnMax = 10;
 
-const float MinoRatio = 0.25f;
+constexpr float MinoRatio = 0.25f;
+constexpr float RotationDuration = 1.f;
 
 enum class E_TNTetrominoType : uint32
 {

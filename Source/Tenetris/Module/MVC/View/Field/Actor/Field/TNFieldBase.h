@@ -47,4 +47,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UTNTenetrisBufferComponent> TenetrisBufferComponent;
+	
+	float RotationRemainingTime = 0.f;
+	bool bCachedSpaceInverted = false;
 };
