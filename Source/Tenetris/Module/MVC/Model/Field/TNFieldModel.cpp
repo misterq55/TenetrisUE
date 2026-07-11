@@ -40,7 +40,7 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
 		TetrominoGenerator->Initialize();
 	}
 
-	initializePreviewTetrominos();
+	initializePreviewTetrominoes();
 	initializeHoldTetromino();
 }
 
@@ -212,6 +212,11 @@ void FTNFieldModel::spawn()
 
 bool FTNFieldModel::moveTetromino(E_TNTetrominoDirection tetrominoDirection)
 {
+	if (isSpaceInverting())
+	{
+		return false;
+	}
+	
 	if (CurrentTetromino.IsValid())
 	{
 		if (!CurrentTetromino->Move(tetrominoDirection))
@@ -227,6 +232,11 @@ bool FTNFieldModel::moveTetromino(E_TNTetrominoDirection tetrominoDirection)
 
 void FTNFieldModel::rotateTetromino(E_TNTetrominoRotation tetrominoRotation)
 {
+	if (isSpaceInverting())
+	{
+		return;
+	}
+	
 	if (CurrentTetromino.IsValid())
 	{
 		if (!CurrentTetromino->Rotate(tetrominoRotation))
@@ -286,6 +296,17 @@ void FTNFieldModel::tetrominoFall(float deltaTime)
 		return;
 	}
 
+	if (isSpaceInverting())
+	{
+		RotationPauseRemainingTime -= deltaTime;
+		if (RotationPauseRemainingTime < 0.f)
+		{
+			RotationPauseRemainingTime = 0.f;
+		}
+
+		return;
+	}
+
 	CurrentTime += deltaTime;
 	if (CurrentTime >= getFallingSpeed())
 	{
@@ -298,18 +319,23 @@ void FTNFieldModel::tetrominoFall(float deltaTime)
 	}
 }
 
-void FTNFieldModel::setMoveState(float deltaTime, FTNMoveDirectionState& moveState, E_TNTetrominoDirection tetrominoDirction)
+void FTNFieldModel::setMoveState(float deltaTime, FTNMoveDirectionState& moveState, E_TNTetrominoDirection tetrominoDirection)
 {
 	if (bWaitForSpawn)
 	{
 		return;
 	}
+	
+	if (isSpaceInverting())
+	{
+		return;
+	}
 
-	if (moveState.Pressed && TetrominoMoveDirection == tetrominoDirction)
+	if (moveState.Pressed && TetrominoMoveDirection == tetrominoDirection)
 	{
 		if (moveState.PressedTime == 0.f)
 		{
-			moveTetromino(tetrominoDirction);
+			moveTetromino(tetrominoDirection);
 		}
 		else if (moveState.PressedTime > KickInDelay)
 		{
@@ -329,7 +355,7 @@ void FTNFieldModel::setMoveState(float deltaTime, FTNMoveDirectionState& moveSta
 	{
 		if (moveState.PressedTime >= MoveSpeed)
 		{
-			moveTetromino(tetrominoDirction);
+			moveTetromino(tetrominoDirection);
 			moveState.PressedTime = 0.f;
 		}
 
@@ -435,7 +461,7 @@ void FTNFieldModel::waitForSpawn()
 	}
 }
 
-void FTNFieldModel::spawnNextTetromino()
+void FTNFieldModel::spawnNextTetromino() const
 {
 	if (CurrentTetromino.IsValid() && TetrominoGenerator.IsValid())
 	{
@@ -453,9 +479,9 @@ void FTNFieldModel::renewPreviewTetromino()
 
 	HidePreviewTetromino();
 
-	for (int32 i = 0; i < PreviewTetrominos.Num(); i++)
+	for (int32 i = 0; i < PreviewTetrominoes.Num(); i++)
 	{
-		TSharedPtr<FTNTetrominoBase> previewTetromino = PreviewTetrominos[i];
+		TSharedPtr<FTNTetrominoBase> previewTetromino = PreviewTetrominoes[i];
 		if (!previewTetromino.IsValid())
 		{
 			continue;
@@ -471,22 +497,22 @@ void FTNFieldModel::renewPreviewTetromino()
 
 float FTNFieldModel::getFallingSpeed() const
 {
-	float multiflier = 1.f;
+	float multiplier = 1.f;
 
 	if (bSoftDrop)
 	{
-		multiflier /= 20.f;
+		multiplier /= 20.f;
 	}
 
-	return TetrominoFallingSpeed * multiflier;
+	return TetrominoFallingSpeed * multiplier;
 }
 
-void FTNFieldModel::initializePreviewTetrominos()
+void FTNFieldModel::initializePreviewTetrominoes()
 {
 	for (int32 i = 0; i < FieldContext.PreviewTetrominoNum; i++)
 	{
 		TSharedPtr<FTNTetrominoBase> previewTetromino = MakeShareable(new FTNPreviewTetromino(FieldContext.PreviewTetrominoInfos[i]));
-		PreviewTetrominos.Add(previewTetromino);
+		PreviewTetrominoes.Add(previewTetromino);
 		previewTetromino->SetStartingLocation(2, (FieldContext.PreviewTetrominoNum - i - 1) * 3 + 1);
 	}
 }
@@ -521,6 +547,11 @@ void FTNFieldModel::StopMoveRight()
 
 void FTNFieldModel::StartSoftDrop()
 {
+	if (isSpaceInverting())
+	{
+		return;
+	}
+
 	bSoftDrop = true;
 }
 
@@ -541,6 +572,11 @@ void FTNFieldModel::RotateCounterClockWise()
 
 void FTNFieldModel::Hold()
 {
+	if (isSpaceInverting())
+	{
+		return;
+	}
+
 	if (!bCanHold || !HoldTetromino.IsValid() || !CurrentTetromino.IsValid())
 	{
 		return;
@@ -574,7 +610,14 @@ void FTNFieldModel::Hold()
 
 void FTNFieldModel::ToggleSpaceInversion()
 {
+	if (isSpaceInverting())
+	{
+		return;
+	}
+
 	FieldContext.bSpaceInverted = !FieldContext.bSpaceInverted;
+	RotationPauseRemainingTime = RotationDuration;
+	CurrentTime = 0.f;
 	
 	if (CurrentTetromino.IsValid())
 	{
@@ -586,6 +629,11 @@ void FTNFieldModel::ToggleSpaceInversion()
 
 void FTNFieldModel::HardDrop()
 {
+	if (isSpaceInverting())
+	{
+		return;
+	}
+
 	if (CurrentTetromino.IsValid())
 	{
 		CurrentTetromino->HardDrop();

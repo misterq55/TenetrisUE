@@ -52,9 +52,9 @@ public:
 		return HoldTetromino;
 	}
 
-	TArray<TSharedPtr<FTNTetrominoBase>>& GetPreviewTetrominos()
+	TArray<TSharedPtr<FTNTetrominoBase>>& GetPreviewTetrominoes()
 	{
-		return PreviewTetrominos;
+		return PreviewTetrominoes;
 	}
 
 	void StartMoveLeft();
@@ -74,7 +74,7 @@ public:
 	void HardDrop();
 
 private:
-	void initializePreviewTetrominos();
+	void initializePreviewTetrominoes();
 	void initializeHoldTetromino();
 
 	void spawn();
@@ -84,7 +84,7 @@ private:
 	void setMoveDirection(E_TNTetrominoDirection tetrominoDirection, bool pressed);
 
 	void tetrominoFall(float deltaTime);
-	void setMoveState(float deltaTime, FTNMoveDirectionState& moveState, E_TNTetrominoDirection tetrominoDirction);
+	void setMoveState(float deltaTime, FTNMoveDirectionState& moveState, E_TNTetrominoDirection tetrominoDirection);
 	void updateLockDown(float deltaTime);
 	void updateLineDelete(float deltaTime);
 
@@ -92,16 +92,20 @@ private:
 	void doLockDown();
 	void waitForSpawn();
 
-	void spawnNextTetromino();
+	void spawnNextTetromino() const;
 	void renewPreviewTetromino();
 	float getFallingSpeed() const;
+	bool isSpaceInverting() const
+	{
+		return RotationPauseRemainingTime > 0.f;
+	}
 
 private:
 	FTNFieldContext FieldContext;
 
 	TSharedPtr<FTNPlayerTetromino> CurrentTetromino;
 	TSharedPtr<FTNTetrominoGenerator> TetrominoGenerator;
-	TArray<TSharedPtr<FTNTetrominoBase>> PreviewTetrominos;
+	TArray<TSharedPtr<FTNTetrominoBase>> PreviewTetrominoes;
 
 	TArray<int32> DeletedLines;
 	float DeleteLineCheckTime = 0.f;
@@ -109,6 +113,7 @@ private:
 
 	float TetrominoFallingSpeed = 1.f;
 	float CurrentTime = 0.f;
+	float RotationPauseRemainingTime = 0.f;
 
 	TSharedPtr<FTNTetrominoBase> HoldTetromino;
 

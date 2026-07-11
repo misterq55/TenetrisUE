@@ -32,7 +32,7 @@ public:
 	void SetVisibilityBackgroundCube(const int32 x, const int32 y, const bool visible);
 	void SetMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
 	void SetVisibilityMino(const int32 x, const int32 y, const bool visible);
-	void RotateField(const bool bRotate) const;
+	void RotateField(const float alpha, const bool bSpaceInverted) const;
 
 private:
 	void buildMinoLayer(USceneComponent* pivot, TArray<TArray<ATNMinoBase*>>& targetBuffer);

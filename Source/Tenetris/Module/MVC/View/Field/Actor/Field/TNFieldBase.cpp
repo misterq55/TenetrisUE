@@ -38,6 +38,17 @@ void ATNFieldBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (RotationRemainingTime > 0.f && IsValid(TenetrisBufferComponent))
+	{
+		RotationRemainingTime -= DeltaTime;
+		if (RotationRemainingTime <= 0.f)
+		{
+			RotationRemainingTime = 0.f;
+		}
+		
+		const float elapsed = RotationDuration - RotationRemainingTime;
+		TenetrisBufferComponent->RotateField(FMath::Clamp(elapsed / RotationDuration, 0.f, 1.f), bCachedSpaceInverted);
+	}
 }
 
 void ATNFieldBase::Initialize()
@@ -87,10 +98,13 @@ void ATNFieldBase::SetVisibilityBackgroundCube(const int32 x, const int32 y, con
 
 void ATNFieldBase::RotateField(const bool bSpaceInverted)
 {
-	if (IsValid(TenetrisBufferComponent))
-	{
-		TenetrisBufferComponent->RotateField(bSpaceInverted);
-	}
+	RotationRemainingTime = RotationDuration;
+	bCachedSpaceInverted = bSpaceInverted;
+	
+	// if (IsValid(TenetrisBufferComponent))
+	// {
+	// 	TenetrisBufferComponent->RotateField(bSpaceInverted);
+	// }
 }
 
 void ATNFieldBase::setBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType)
