@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Tenetris/TenetrisDefine.h"
 
 class FTNFieldModel;
@@ -11,6 +13,7 @@ DECLARE_DELEGATE_ThreeParams(FTNUpdateFieldView, const int32, const FTNFieldCont
 class ITNModel
 {
 public:
+	virtual ~ITNModel() {}
 	virtual void Init() = 0;
 	virtual void Tick(float deltaTime) = 0;
 	virtual void CreateFieldModel(FTNFieldContext fieldContext) = 0;

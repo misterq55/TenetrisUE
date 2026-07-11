@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Tenetris/Module/Interface/ITNModel.h"
 
 
@@ -5,7 +7,7 @@ class FTNModel : public ITNModel
 {
 public:
 	FTNModel() {}
-	virtual ~FTNModel() {}
+	virtual ~FTNModel() override {}
 	virtual void Init() override;
 	virtual void Tick(float deltaTime) override;
 	virtual void CreateFieldModel(FTNFieldContext fieldContext) override;
@@ -30,11 +32,11 @@ public:
 	virtual void ToggleSpaceInversion() override;
 	virtual void HardDrop() override;
 
-	virtual FTNCreateFieldViewWithFieldActor& GetCreateFieldViewWithFieldActorDelegate() { 
+	virtual FTNCreateFieldViewWithFieldActor& GetCreateFieldViewWithFieldActorDelegate() override { 
 		return CreateFieldViewWithFieldActorDelegate; 
 	}
 
-	virtual FTNUpdateFieldView& GetUpdateFieldViewDelegate() {
+	virtual FTNUpdateFieldView& GetUpdateFieldViewDelegate() override {
 		return UpdateFieldViewDelegate;
 	}
 

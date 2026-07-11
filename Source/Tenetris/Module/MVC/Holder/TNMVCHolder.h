@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Tenetris/Module/Util/Singleton/Singleton.h"
 
 class ITNModel;

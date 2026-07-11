@@ -85,6 +85,14 @@ void ATNFieldBase::SetVisibilityBackgroundCube(const int32 x, const int32 y, con
 	}
 }
 
+void ATNFieldBase::RotateField(const bool bSpaceInverted)
+{
+	if (IsValid(TenetrisBufferComponent))
+	{
+		TenetrisBufferComponent->RotateField(bSpaceInverted);
+	}
+}
+
 void ATNFieldBase::setBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType)
 {
 	if (IsValid(TenetrisBufferComponent))

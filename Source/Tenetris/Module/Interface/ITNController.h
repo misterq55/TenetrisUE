@@ -1,7 +1,9 @@
+#pragma once
 
 class ITNController
 {
 public:
+	virtual ~ITNController() {}
 	virtual void Init() = 0;
 	virtual void Tick(float deltaTime) = 0;
 	virtual void StartMoveLeft() = 0;

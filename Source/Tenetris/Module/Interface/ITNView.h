@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Tenetris/TenetrisDefine.h"
 
 class FTNFieldView;
@@ -6,6 +8,7 @@ class ATNField;
 class ITNView
 {
 public:
+	virtual ~ITNView() = default;
 	virtual void Init() = 0;
 	virtual void Tick(float deltaTime) = 0;
 	virtual void CreateFieldView(const int32 key) = 0;
