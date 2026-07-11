@@ -118,14 +118,7 @@ void UTNTenetrisBufferComponent::SetMinoClassType(const TSubclassOf<ATNMinoBase>
 
 void UTNTenetrisBufferComponent::SetBackgroundCubeType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
 {
-	int32 newX = x;
-
-	if (bSpaceInverted)
-	{
-		newX = BufferWidth - x - 1;
-	}
-
-	ATNMinoBase* mino = BackgroundCubeBuffer[y][newX];
+	ATNMinoBase* mino = BackgroundCubeBuffer[y][x];
 
 	if (IsValid(mino))
 	{
@@ -136,14 +129,7 @@ void UTNTenetrisBufferComponent::SetBackgroundCubeType(const int32 x, const int3
 
 void UTNTenetrisBufferComponent::SetVisibilityBackgroundCube(const int32 x, const int32 y, const bool visible)
 {
-	int32 newX = x;
-
-	if (bSpaceInverted)
-	{
-		newX = BufferWidth - x - 1;
-	}
-
-	ATNMinoBase* mino = BackgroundCubeBuffer[y][newX];
+	ATNMinoBase* mino = BackgroundCubeBuffer[y][x];
 
 	if (IsValid(mino))
 	{
@@ -169,6 +155,16 @@ void UTNTenetrisBufferComponent::SetVisibilityMino(const int32 x, const int32 y,
 	if (IsValid(mino))
 	{
 		mino->SetVitibility(visible);
+	}
+}
+
+void UTNTenetrisBufferComponent::RotateField(const bool bSpaceInverted) const
+{
+	if (IsValid(BackGroundMinoBufferPivot))
+	{
+		FRotator newRotation = BackGroundMinoBufferPivot->GetRelativeRotation();
+		newRotation.Yaw = bSpaceInverted ? 180.f : 0.f;
+		BackGroundMinoBufferPivot->SetRelativeRotation(newRotation);
 	}
 }
 

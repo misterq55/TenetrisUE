@@ -32,7 +32,7 @@ void FTNFieldView::CreateFieldActor(TSubclassOf<ATNField> fieldActorClass, UWorl
 	}
 }
 
-void FTNFieldView::SetBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType)
+void FTNFieldView::setBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType) const
 {
 	if (!FieldActor.IsValid())
 	{
@@ -42,7 +42,7 @@ void FTNFieldView::SetBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tet
 	FieldActor->SetBackgroundCubeType(x, y, tetrominoType);
 }
 
-void FTNFieldView::SetMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
+void FTNFieldView::setMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType) const
 {
 	if (!FieldActor.IsValid())
 	{
@@ -52,7 +52,7 @@ void FTNFieldView::SetMinoType(const int32 x, const int32 y, const E_TNTetromino
 	FieldActor->SetMinoType(x, y, tetrominoType);
 }
 
-void FTNFieldView::SetVisibilityMino(const int32 x, const int32 y, const bool visible)
+void FTNFieldView::setVisibilityMino(const int32 x, const int32 y, const bool visible) const
 {
 	if (!FieldActor.IsValid())
 	{
@@ -62,7 +62,7 @@ void FTNFieldView::SetVisibilityMino(const int32 x, const int32 y, const bool vi
 	FieldActor->SetVisibilityMino(x, y, visible);
 }
 
-void FTNFieldView::SetHoldMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
+void FTNFieldView::setHoldMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType) const
 {
 	if (!FieldActor.IsValid())
 	{
@@ -72,7 +72,7 @@ void FTNFieldView::SetHoldMinoType(const int32 x, const int32 y, const E_TNTetro
 	FieldActor->SetHoldMinoType(x, y, tetrominoType);
 }
 
-void FTNFieldView::SetVisibilityHoldMino(const int32 x, const int32 y, const bool visible)
+void FTNFieldView::setVisibilityHoldMino(const int32 x, const int32 y, const bool visible) const
 {
 	if (!FieldActor.IsValid())
 	{
@@ -82,7 +82,7 @@ void FTNFieldView::SetVisibilityHoldMino(const int32 x, const int32 y, const boo
 	FieldActor->SetVisibilityHoldMino(x, y, visible);
 }
 
-void FTNFieldView::SetPreviewMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
+void FTNFieldView::setPreviewMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType) const
 {
 	if (!FieldActor.IsValid())
 	{
@@ -92,7 +92,7 @@ void FTNFieldView::SetPreviewMinoType(const int32 x, const int32 y, const E_TNTe
 	FieldActor->SetPreviewMinoType(x, y, tetrominoType);
 }
 
-void FTNFieldView::SetVisibilityPreviewMino(const int32 x, const int32 y, const bool visible)
+void FTNFieldView::setVisibilityPreviewMino(const int32 x, const int32 y, const bool visible) const
 {
 	if (!FieldActor.IsValid())
 	{
@@ -102,7 +102,7 @@ void FTNFieldView::SetVisibilityPreviewMino(const int32 x, const int32 y, const 
 	FieldActor->SetVisibilityPreviewMino(x, y, visible);
 }
 
-void FTNFieldView::SetVisibilityBackgroundCube(const int32 x, const int32 y, const bool visible)
+void FTNFieldView::setVisibilityBackgroundCube(const int32 x, const int32 y, const bool visible) const
 {
 	if (!FieldActor.IsValid())
 	{
@@ -112,7 +112,7 @@ void FTNFieldView::SetVisibilityBackgroundCube(const int32 x, const int32 y, con
 	FieldActor->SetVisibilityBackgroundCube(x, y, visible);
 }
 
-void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldModelStateType state)
+void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldModelStateType state) const
 {
 	switch (state)
 	{
@@ -126,7 +126,7 @@ void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldMo
 			for (int32 j = 0; j < bufferWidth; j++)
 			{
 				const E_TNTetrominoType tetrominoType = fieldContext.CheckBuffer[i + 1][j + 1];
-				SetBackgroundCubeType(j, i, tetrominoType);
+							setBackgroundCubeType(j, i, tetrominoType);
 			}
 		}
 	}
@@ -143,7 +143,7 @@ void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldMo
 
 		for (const auto& coord : tetrominoInfo->Coordinate)
 		{
-			SetVisibilityMino(coord.X + tetrominoInfo->CurrentPosition.X, coord.Y + tetrominoInfo->CurrentPosition.Y, false);
+			setVisibilityMino(coord.X + tetrominoInfo->CurrentPosition.X, coord.Y + tetrominoInfo->CurrentPosition.Y, false);
 		}
 	}
 		break;
@@ -159,7 +159,7 @@ void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldMo
 
 		for (const auto& coord : tetrominoInfo->Coordinate)
 		{
-			SetMinoType(coord.X + tetrominoInfo->CurrentPosition.X, coord.Y + tetrominoInfo->CurrentPosition.Y, tetrominoInfo->CurrentType);
+			setMinoType(coord.X + tetrominoInfo->CurrentPosition.X, coord.Y + tetrominoInfo->CurrentPosition.Y, tetrominoInfo->CurrentType);
 		}
 	}
 		break;
@@ -175,7 +175,7 @@ void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldMo
 
 		for (const auto& coord : tetrominoInfo->Coordinate)
 		{
-			SetVisibilityMino(coord.X + tetrominoInfo->GuideTetrominoPosition.X, coord.Y + tetrominoInfo->GuideTetrominoPosition.Y, false);
+			setVisibilityMino(coord.X + tetrominoInfo->GuideTetrominoPosition.X, coord.Y + tetrominoInfo->GuideTetrominoPosition.Y, false);
 		}
 	}
 		break;
@@ -191,7 +191,7 @@ void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldMo
 
 		for (const auto& coord : tetrominoInfo->Coordinate)
 		{
-			SetMinoType(coord.X + tetrominoInfo->GuideTetrominoPosition.X, coord.Y + tetrominoInfo->GuideTetrominoPosition.Y, E_TNTetrominoType::Guide);
+			setMinoType(coord.X + tetrominoInfo->GuideTetrominoPosition.X, coord.Y + tetrominoInfo->GuideTetrominoPosition.Y, E_TNTetrominoType::Guide);
 		}
 	}
 		break;
@@ -207,7 +207,7 @@ void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldMo
 
 		for (const auto& coord : tetrominoInfo->Coordinate)
 		{
-			SetVisibilityHoldMino(coord.X + tetrominoInfo->CurrentPosition.X, coord.Y + tetrominoInfo->CurrentPosition.Y, false);
+			setVisibilityHoldMino(coord.X + tetrominoInfo->CurrentPosition.X, coord.Y + tetrominoInfo->CurrentPosition.Y, false);
 		}
 	}
 		break;
@@ -223,7 +223,7 @@ void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldMo
 
 		for (const auto& coord : tetrominoInfo->Coordinate)
 		{
-			SetHoldMinoType(coord.X + tetrominoInfo->CurrentPosition.X, coord.Y + tetrominoInfo->CurrentPosition.Y, tetrominoInfo->CurrentType);
+			setHoldMinoType(coord.X + tetrominoInfo->CurrentPosition.X, coord.Y + tetrominoInfo->CurrentPosition.Y, tetrominoInfo->CurrentType);
 		}
 	}
 		break;
@@ -241,7 +241,7 @@ void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldMo
 
 			for (const auto& coord : tetrominoInfo->Coordinate)
 			{
-				SetVisibilityPreviewMino(coord.X + tetrominoInfo->CurrentPosition.X, coord.Y + tetrominoInfo->CurrentPosition.Y, false);
+				setVisibilityPreviewMino(coord.X + tetrominoInfo->CurrentPosition.X, coord.Y + tetrominoInfo->CurrentPosition.Y, false);
 			}
 		}
 	}
@@ -260,10 +260,19 @@ void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldMo
 
 			for (const auto& coord : tetrominoInfo->Coordinate)
 			{
-				SetPreviewMinoType(coord.X + tetrominoInfo->CurrentPosition.X, coord.Y + tetrominoInfo->CurrentPosition.Y, tetrominoInfo->CurrentType);
+				setPreviewMinoType(coord.X + tetrominoInfo->CurrentPosition.X, coord.Y + tetrominoInfo->CurrentPosition.Y, tetrominoInfo->CurrentType);
 			}
 		}
 	}
+		break;
+		
+	case E_TNFieldModelStateType::RotateField:
+		{
+			if (FieldActor.IsValid())
+			{
+				FieldActor->RotateField(fieldContext.bSpaceInverted);
+			}
+		}
 		break;
 	default:
 		break;

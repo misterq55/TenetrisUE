@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Tenetris/TenetrisDefine.h"
 
 class UWorld;
@@ -10,15 +12,17 @@ class FTNFieldView
 public:
 	void SetFieldActor(ATNField* fieldActor);
 	void CreateFieldActor(TSubclassOf<ATNField> fieldActorClass, UWorld* world);
-	void SetBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType);
-	void SetMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
-	void SetVisibilityMino(const int32 x, const int32 y, const bool visible);
-	void SetHoldMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
-	void SetVisibilityHoldMino(const int32 x, const int32 y, const bool visible);
-	void SetPreviewMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
-	void SetVisibilityPreviewMino(const int32 x, const int32 y, const bool visible);
-	void SetVisibilityBackgroundCube(const int32 x, const int32 y, const bool visible);
-	void Update(const FTNFieldContext& fieldContext, const E_TNFieldModelStateType state);
+	void Update(const FTNFieldContext& fieldContext, const E_TNFieldModelStateType state) const;
+	
+private:
+	void setBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType) const;
+	void setMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType) const;
+	void setVisibilityMino(const int32 x, const int32 y, const bool visible) const;
+	void setHoldMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType) const;
+	void setVisibilityHoldMino(const int32 x, const int32 y, const bool visible) const;
+	void setPreviewMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType) const;
+	void setVisibilityPreviewMino(const int32 x, const int32 y, const bool visible) const;
+	void setVisibilityBackgroundCube(const int32 x, const int32 y, const bool visible) const;
 
 private:
 	TWeakObjectPtr<ATNField> FieldActor;

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Tenetris/Module/Interface/ITNController.h"
 
 class FTNController : public ITNController

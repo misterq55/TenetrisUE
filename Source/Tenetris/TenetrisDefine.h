@@ -58,6 +58,7 @@ enum class E_TNFieldModelStateType : uint32
 	SetHoldTetromino,
 	HidePreviewTetromino,
 	SetPreviewTetromino,
+	RotateField,
 	LockDown,
 };
 
@@ -215,6 +216,7 @@ public:
 	E_TNFieldType FieldType;
 	int32 BufferHeight = 0;
 	int32 BufferWidth = 0;
+	bool bSpaceInverted = false;
 	TArray<TArray<E_TNTetrominoType>> CheckBuffer;
 	TArray<TArray<E_TNTetrominoType>> ReversedBuffer;
 	TSharedPtr<FTNTetrominoInfo> PlayerTetrominoInfo;

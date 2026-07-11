@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Tenetris/TenetrisDefine.h"
 class FTNTetrominoBase;
 class FTNPlayerTetromino;
@@ -14,25 +16,23 @@ public:
 public:
 	void Initialize();
 	void SetId(const int32 id);
-	int32 GetId();
+	int32 GetId() const;
 	void Tick(float deltaTime);
-	void SetBufferSize(const int32 bufferHeight, const int32 bufferWidth);
 	E_TNTetrominoType GetValueFromCheckBuffer(const int32 x, const int32 y) const;
 	void SetValueToCheckBuffer(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
-	bool CheckMino(const int32 x, const int32 y);
-	int32 CalculateGuideMinoHeight(const int32 x, const int32 y);
-	void HidePreviewTetromino();
-	void SetPreviewTetromino();
-	void HideHoldTetromino();
-	void SetHoldTetromino();
-	void HideTetromino();
-	void SetTetromino();
-	void HideGuideTetromino();
-	void SetGuideTetromino();
+	bool CheckMino(const int32 x, const int32 y) const;
+	int32 CalculateGuideMinoHeight(const int32 x, const int32 y) const;
+	void HidePreviewTetromino() const;
+	void SetPreviewTetromino() const;
+	void HideHoldTetromino() const;
+	void SetHoldTetromino() const;
+	void HideTetromino() const;
+	void SetTetromino() const;
+	void HideGuideTetromino() const;
+	void SetGuideTetromino() const;
 	void CheckLineDelete(const TArray<int32>& heights);
 	bool IsLineDeleted(int32 height) const;
 	void HandleLineDeletion(const TArray<int32>& linesToDelete);
-	TArray<TArray<E_TNTetrominoType>>& GetCheckBuffer();
 
 	FTNFieldContext& GetFieldContext() {
 		return FieldContext;
@@ -42,12 +42,12 @@ public:
 		return OnUpdateModel;
 	}
 
-	TSharedPtr<FTNPlayerTetromino> GetCurrentTetromino()
+	TSharedPtr<FTNPlayerTetromino> GetCurrentTetromino() const
 	{
 		return CurrentTetromino;
 	}
 	
-	TSharedPtr<FTNTetrominoBase> GetHoldTetromino()
+	TSharedPtr<FTNTetrominoBase> GetHoldTetromino() const
 	{
 		return HoldTetromino;
 	}
@@ -82,8 +82,6 @@ private:
 	bool moveTetromino(E_TNTetrominoDirection tetrominoDirection);
 	void rotateTetromino(E_TNTetrominoRotation tetrominoRotation);
 	void setMoveDirection(E_TNTetrominoDirection tetrominoDirection, bool pressed);
-	void setSoftDrop(bool softDrop) { bSoftDrop = softDrop; }
-	bool getSoftDrop() { return bSoftDrop; }
 
 	void tetrominoFall(float deltaTime);
 	void setMoveState(float deltaTime, FTNMoveDirectionState& moveState, E_TNTetrominoDirection tetrominoDirction);
@@ -96,11 +94,9 @@ private:
 
 	void spawnNextTetromino();
 	void renewPreviewTetromino();
-	float getFallingSpeed();
-	
+	float getFallingSpeed() const;
 
 private:
-
 	FTNFieldContext FieldContext;
 
 	TSharedPtr<FTNPlayerTetromino> CurrentTetromino;
@@ -110,7 +106,6 @@ private:
 	TArray<int32> DeletedLines;
 	float DeleteLineCheckTime = 0.f;
 	bool bLineDeleting = false;
-	bool bSpaceInverted = false;
 
 	float TetrominoFallingSpeed = 1.f;
 	float CurrentTime = 0.f;

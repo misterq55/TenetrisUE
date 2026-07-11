@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Tenetris/Module/Interface/ITNView.h"
 
 class FTNView : public ITNView
