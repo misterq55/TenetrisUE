@@ -28,7 +28,7 @@ void ATNField::Initialize()
 	}
 }
 
-void ATNField::SetHoldMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
+void ATNField::setHoldMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
 {
 	if (IsValid(HoldBufferComponent))
 	{
@@ -36,7 +36,7 @@ void ATNField::SetHoldMinoType(const int32 x, const int32 y, const E_TNTetromino
 	}
 }
 
-void ATNField::SetVisibilityHoldMino(const int32 x, const int32 y, const bool visible)
+void ATNField::setVisibilityHoldMino(const int32 x, const int32 y, const bool visible)
 {
 	if (IsValid(HoldBufferComponent))
 	{
@@ -44,7 +44,7 @@ void ATNField::SetVisibilityHoldMino(const int32 x, const int32 y, const bool vi
 	}
 }
 
-void ATNField::SetPreviewMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
+void ATNField::setPreviewMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
 {
 	if (IsValid(PreviewBufferComponent))
 	{
@@ -52,11 +52,113 @@ void ATNField::SetPreviewMinoType(const int32 x, const int32 y, const E_TNTetrom
 	}
 }
 
-void ATNField::SetVisibilityPreviewMino(const int32 x, const int32 y, const bool visible)
+void ATNField::setVisibilityPreviewMino(const int32 x, const int32 y, const bool visible)
 {
 	if (IsValid(PreviewBufferComponent))
 	{
 		PreviewBufferComponent->SetVisibilityMino(x, y, visible);
+	}
+}
+
+void ATNField::HideGuideTetromino(const FTNFieldContext& fieldContext)
+{
+	TSharedPtr<FTNTetrominoInfo> tetrominoInfo = fieldContext.PlayerTetrominoInfo;
+
+	if (!tetrominoInfo.IsValid())
+	{
+		return;
+	}
+
+	for (const auto& coord : tetrominoInfo->Coordinate)
+	{
+		setVisibilityMino(coord.X + tetrominoInfo->GuideTetrominoPosition.X,
+		                  coord.Y + tetrominoInfo->GuideTetrominoPosition.Y, false);
+	}
+}
+
+void ATNField::SetGuideTetromino(const FTNFieldContext& fieldContext)
+{
+	TSharedPtr<FTNTetrominoInfo> tetrominoInfo = fieldContext.PlayerTetrominoInfo;
+
+	if (!tetrominoInfo.IsValid())
+	{
+		return;
+	}
+
+	for (const auto& coord : tetrominoInfo->Coordinate)
+	{
+		setMinoType(coord.X + tetrominoInfo->GuideTetrominoPosition.X,
+		            coord.Y + tetrominoInfo->GuideTetrominoPosition.Y, E_TNTetrominoType::Guide);
+	}
+}
+
+void ATNField::HideHoldTetromino(const FTNFieldContext& fieldContext)
+{
+	TSharedPtr<FTNTetrominoInfo> tetrominoInfo = fieldContext.HoldTetrominoInfo;
+
+	if (!tetrominoInfo.IsValid())
+	{
+		return;
+	}
+
+	for (const auto& coord : tetrominoInfo->Coordinate)
+	{
+		setVisibilityHoldMino(coord.X + tetrominoInfo->CurrentPosition.X,
+		                      coord.Y + tetrominoInfo->CurrentPosition.Y, false);
+	}
+}
+
+void ATNField::SetHoldTetromino(const FTNFieldContext& fieldContext)
+{
+	TSharedPtr<FTNTetrominoInfo> tetrominoInfo = fieldContext.HoldTetrominoInfo;
+
+	if (!tetrominoInfo.IsValid())
+	{
+		return;
+	}
+
+	for (const auto& coord : tetrominoInfo->Coordinate)
+	{
+		setHoldMinoType(coord.X + tetrominoInfo->CurrentPosition.X, coord.Y + tetrominoInfo->CurrentPosition.Y,
+		                tetrominoInfo->CurrentType);
+	}
+}
+
+void ATNField::HidePreviewTetromino(const FTNFieldContext& fieldContext)
+{
+	TArray<TSharedPtr<FTNTetrominoInfo>> previewTetrominoInfos = fieldContext.PreviewTetrominoInfos;
+
+	for (const auto& tetrominoInfo : previewTetrominoInfos)
+	{
+		if (!tetrominoInfo.IsValid())
+		{
+			continue;
+		}
+
+		for (const auto& coord : tetrominoInfo->Coordinate)
+		{
+			setVisibilityPreviewMino(coord.X + tetrominoInfo->CurrentPosition.X,
+			                         coord.Y + tetrominoInfo->CurrentPosition.Y, false);
+		}
+	}
+}
+
+void ATNField::SetPreviewTetromino(const FTNFieldContext& fieldContext)
+{
+	TArray<TSharedPtr<FTNTetrominoInfo>> previewTetrominoInfos = fieldContext.PreviewTetrominoInfos;
+
+	for (const auto& tetrominoInfo : previewTetrominoInfos)
+	{
+		if (!tetrominoInfo.IsValid())
+		{
+			continue;
+		}
+
+		for (const auto& coord : tetrominoInfo->Coordinate)
+		{
+			setPreviewMinoType(coord.X + tetrominoInfo->CurrentPosition.X,
+			                   coord.Y + tetrominoInfo->CurrentPosition.Y, tetrominoInfo->CurrentType);
+		}
 	}
 }
 

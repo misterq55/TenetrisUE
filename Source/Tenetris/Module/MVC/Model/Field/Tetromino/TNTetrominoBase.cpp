@@ -1,6 +1,6 @@
 #include "TNTetrominoBase.h"
 
-TArray<int32> FTNTetrominoBase::GetMinoHeights()
+TArray<int32> FTNTetrominoBase::GetMinoHeights() const
 {
 	if (!TetrominoInfo.IsValid())
 	{
@@ -17,7 +17,7 @@ TArray<int32> FTNTetrominoBase::GetMinoHeights()
 	return result;
 }
 
-void FTNTetrominoBase::SetTetrominoPosition(const int32 x, const int32 y)
+void FTNTetrominoBase::SetTetrominoPosition(const int32 x, const int32 y) const
 {
 	if (!TetrominoInfo.IsValid())
 	{
@@ -27,7 +27,7 @@ void FTNTetrominoBase::SetTetrominoPosition(const int32 x, const int32 y)
 	TetrominoInfo->SetPosition(x, y);
 }
 
-void FTNTetrominoBase::SetTetrominoType(const E_TNTetrominoType currentTetrominoType)
+void FTNTetrominoBase::SetTetrominoType(const E_TNTetrominoType currentTetrominoType) const
 {
 	if (!TetrominoInfo.IsValid())
 	{
@@ -71,7 +71,7 @@ void FTNTetrominoBase::SetTetrominoType(const E_TNTetrominoType currentTetromino
 	}
 }
 
-E_TNTetrominoType FTNTetrominoBase::GetTetrominoType()
+E_TNTetrominoType FTNTetrominoBase::GetTetrominoType() const
 {
 	if (TetrominoInfo.IsValid())
 	{
@@ -91,7 +91,7 @@ void FTNTetrominoBase::SetStartingLocation(const FVector2D& startingLocation)
 	StartingLocation = startingLocation;
 }
 
-FVector2D FTNTetrominoBase::GetStaringLocation()
+FVector2D FTNTetrominoBase::GetStaringLocation() const
 {
 	return StartingLocation;
 }
@@ -108,7 +108,7 @@ void FTNTetrominoBase::Spawn()
 	setTetromino();
 }
 
-bool FTNTetrominoBase::checkMino(const FVector2D& simulationPosition)
+bool FTNTetrominoBase::checkMino(const FVector2D& simulationPosition) const
 {
 	if (!OnCheckMino.IsBound())
 		return false;
@@ -132,22 +132,22 @@ bool FTNTetrominoBase::checkMino(const FVector2D& simulationPosition)
 	return tetrominoCheck;
 }
 
-void FTNTetrominoBase::HideTetromino()
+void FTNTetrominoBase::HideTetromino() const
 {
 	OnHideTetromino.ExecuteIfBound();
 }
 
-TSharedPtr<FTNTetrominoInfo> FTNTetrominoBase::GetTetrominoInfo()
+TSharedPtr<FTNTetrominoInfo> FTNTetrominoBase::GetTetrominoInfo() const
 {
 	return TetrominoInfo;
 }
 
-void FTNTetrominoBase::setTetromino()
+void FTNTetrominoBase::setTetromino() const
 {
 	OnSetTetromino.ExecuteIfBound();
 }
 
-void FTNTetrominoBase::setTetrominoBackground()
+void FTNTetrominoBase::moveTetrominoToCheckBuffer() const
 {
 	if (!TetrominoInfo.IsValid())
 	{
@@ -156,6 +156,6 @@ void FTNTetrominoBase::setTetrominoBackground()
 
 	for (const FVector2D& coord : TetrominoInfo->Coordinate)
 	{
-		OnBackgroundCubeType.ExecuteIfBound(coord.X + TetrominoInfo->CurrentPosition.X, coord.Y + TetrominoInfo->CurrentPosition.Y, TetrominoInfo->CurrentType);
+		OnMoveTetrominoToCheckBuffer.ExecuteIfBound(coord.X + TetrominoInfo->CurrentPosition.X, coord.Y + TetrominoInfo->CurrentPosition.Y, TetrominoInfo->CurrentType);
 	}
 }

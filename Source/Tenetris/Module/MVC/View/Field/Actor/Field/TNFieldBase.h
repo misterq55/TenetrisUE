@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Tenetris/TenetrisDefine.h"
-#include "Tenetris/Module/MVC/Model/Field/Tetromino/TNTetrominoBase.h"
 #include "TNFieldBase.generated.h"
 
 class ATNMinoBase;
@@ -32,14 +31,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Field")
 		virtual	void Initialize();
 
-	void SetMinoClassType(TSubclassOf<ATNMinoBase> minoClass);
-	void SetBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType);
-	void SetMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
-	void SetVisibilityMino(const int32 x, const int32 y, const bool visible);
-	void SetVisibilityBackgroundCube(const int32 x, const int32 y, const bool visible);
-	void RotateField(const bool bRotate);
+	void RotateField(const FTNFieldContext& fieldContext);
+	void HideTetromino(const FTNFieldContext& fieldContext);
+	void SetTetromino(const FTNFieldContext& fieldContext);
+	void LockDown(const FTNFieldContext& fieldContext);
 
 protected:
+	void setMinoClassType(TSubclassOf<ATNMinoBase> minoClass);
+	void setMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
+	void setVisibilityMino(const int32 x, const int32 y, const bool visible);
 	void setBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType);
 
 protected:
