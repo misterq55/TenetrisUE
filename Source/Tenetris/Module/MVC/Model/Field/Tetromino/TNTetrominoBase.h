@@ -41,23 +41,23 @@ public:
 		SetGuideTetromino();
 	}
 	
-	TArray<int32> GetMinoHeights();
-	void SetTetrominoPosition(const int32 x, const int32 y);
-	void SetTetrominoType(const E_TNTetrominoType currentTetrominoType);
-	E_TNTetrominoType GetTetrominoType();
+	TArray<int32> GetMinoHeights() const;
+	void SetTetrominoPosition(const int32 x, const int32 y) const;
+	void SetTetrominoType(const E_TNTetrominoType currentTetrominoType) const;
+	E_TNTetrominoType GetTetrominoType() const;
 	void SetStartingLocation(const int32 x, const int32 y);
 	void SetStartingLocation(const FVector2D& startingLocation);
-	FVector2D GetStaringLocation();
-	void HideTetromino();
-	TSharedPtr<FTNTetrominoInfo> GetTetrominoInfo();
+	FVector2D GetStaringLocation() const;
+	void HideTetromino() const;
+	TSharedPtr<FTNTetrominoInfo> GetTetrominoInfo() const;
 
 protected:
-	bool checkMino(const FVector2D& simulationPosition);
-	void setTetromino();
-	void setTetrominoBackground();
+	bool checkMino(const FVector2D& simulationPosition) const;
+	void setTetromino() const;
+	void moveTetrominoToCheckBuffer() const;
 	
 public:
-	FSetBackgroundCubeTypeDelegate OnBackgroundCubeType;
+	FSetBackgroundCubeTypeDelegate OnMoveTetrominoToCheckBuffer;
 	FCheckMinoDelegate OnCheckMino;
 	FCalculateGuideMinoHeightDelegate OnCalulateGuideMino;
 

@@ -118,7 +118,7 @@ void UTNTenetrisBufferComponent::SetMinoClassType(const TSubclassOf<ATNMinoBase>
 
 void UTNTenetrisBufferComponent::SetBackgroundCubeType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
 {
-	ATNMinoBase* mino = BackgroundCubeBuffer[y][x];
+	ATNMinoBase* const mino = BackgroundCubeBuffer[y][x];
 
 	if (IsValid(mino))
 	{
@@ -129,7 +129,7 @@ void UTNTenetrisBufferComponent::SetBackgroundCubeType(const int32 x, const int3
 
 void UTNTenetrisBufferComponent::SetVisibilityBackgroundCube(const int32 x, const int32 y, const bool visible)
 {
-	ATNMinoBase* mino = BackgroundCubeBuffer[y][x];
+	ATNMinoBase* const mino = BackgroundCubeBuffer[y][x];
 
 	if (IsValid(mino))
 	{
@@ -139,7 +139,7 @@ void UTNTenetrisBufferComponent::SetVisibilityBackgroundCube(const int32 x, cons
 
 void UTNTenetrisBufferComponent::SetMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
 {
-	ATNMinoBase* mino = MinoBuffer[y][x];
+	ATNMinoBase* const mino = MinoBuffer[y][x];
 
 	if (IsValid(mino))
 	{
@@ -150,7 +150,7 @@ void UTNTenetrisBufferComponent::SetMinoType(const int32 x, const int32 y, const
 
 void UTNTenetrisBufferComponent::SetVisibilityMino(const int32 x, const int32 y, const bool visible)
 {
-	ATNMinoBase* mino = MinoBuffer[y][x];
+	ATNMinoBase* const mino = MinoBuffer[y][x];
 
 	if (IsValid(mino))
 	{

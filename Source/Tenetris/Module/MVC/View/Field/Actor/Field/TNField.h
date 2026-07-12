@@ -21,14 +21,20 @@ public:
 	ATNField();
 	virtual	void Initialize() override;
 
-	void SetHoldMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
-	void SetVisibilityHoldMino(const int32 x, const int32 y, const bool visible);
-	void SetPreviewMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
-	void SetVisibilityPreviewMino(const int32 x, const int32 y, const bool visible);
-
+	void HideGuideTetromino(const FTNFieldContext& fieldContext);
+	void SetGuideTetromino(const FTNFieldContext& fieldContext);
+	void HideHoldTetromino(const FTNFieldContext& fieldContext);
+	void SetHoldTetromino(const FTNFieldContext& fieldContext);
+	void HidePreviewTetromino(const FTNFieldContext& fieldContext);
+	void SetPreviewTetromino(const FTNFieldContext& fieldContext);
+	
 private:
 	void initializePreviewBuffer();
 	void initializeHoldBuffer();
+	void setHoldMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
+	void setVisibilityHoldMino(const int32 x, const int32 y, const bool visible);
+	void setPreviewMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
+	void setVisibilityPreviewMino(const int32 x, const int32 y, const bool visible);
 
 private:
 	int32 PreviewTetrominoNum;

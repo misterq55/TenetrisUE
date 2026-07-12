@@ -15,14 +15,16 @@ public:
 	void Update(const FTNFieldContext& fieldContext, const E_TNFieldModelStateType state) const;
 	
 private:
-	void setBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType) const;
-	void setMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType) const;
-	void setVisibilityMino(const int32 x, const int32 y, const bool visible) const;
-	void setHoldMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType) const;
-	void setVisibilityHoldMino(const int32 x, const int32 y, const bool visible) const;
-	void setPreviewMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType) const;
-	void setVisibilityPreviewMino(const int32 x, const int32 y, const bool visible) const;
-	void setVisibilityBackgroundCube(const int32 x, const int32 y, const bool visible) const;
+	void hideTetromino(const FTNFieldContext& fieldContext) const;
+	void setTetromino(const FTNFieldContext& fieldContext) const;
+	void hideGuideTetromino(const FTNFieldContext& fieldContext) const;
+	void setGuideTetromino(const FTNFieldContext& fieldContext) const;
+	void hideHoldTetromino(const FTNFieldContext& fieldContext) const;
+	void setHoldTetromino(const FTNFieldContext& fieldContext) const;
+	void hidePreviewTetromino(const FTNFieldContext& fieldContext) const;
+	void setPreviewTetromino(const FTNFieldContext& fieldContext) const;
+	void rotateField(const FTNFieldContext& fieldContext) const;
+	void lockDown(const FTNFieldContext& fieldContext) const;
 
 private:
 	TWeakObjectPtr<ATNField> FieldActor;

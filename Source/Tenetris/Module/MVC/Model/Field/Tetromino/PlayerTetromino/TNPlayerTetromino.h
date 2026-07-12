@@ -49,7 +49,7 @@ public:
 	virtual void HideGuideTetromino() override;
 
 private:
-	FVector2D simulatePosition(const E_TNTetrominoDirection tetrominoDirection);
+	FVector2D simulatePosition(const E_TNTetrominoDirection tetrominoDirection) const;
 	
 	int32 mod(int32 n, int32 m) { return ((n % m) + m) % m; }
 

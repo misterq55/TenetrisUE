@@ -18,15 +18,15 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
 		{
 			CurrentTetromino = MakeShareable(new FTNPlayerTetromino(FieldContext.PlayerTetrominoInfo));
 
-			CurrentTetromino->OnBackgroundCubeType.BindRaw(this, &FTNFieldModel::SetValueToCheckBuffer);
-			CurrentTetromino->OnCheckMino.BindRaw(this, &FTNFieldModel::CheckMino);
-			CurrentTetromino->OnCalulateGuideMino.BindRaw(this, &FTNFieldModel::CalculateGuideMinoHeight);
+			CurrentTetromino->OnMoveTetrominoToCheckBuffer.BindRaw(this, &FTNFieldModel::setValueToCheckBuffer);
+			CurrentTetromino->OnCheckMino.BindRaw(this, &FTNFieldModel::checkMino);
+			CurrentTetromino->OnCalulateGuideMino.BindRaw(this, &FTNFieldModel::calculateGuideMinoHeight);
 			
-			CurrentTetromino->OnHideTetromino.BindRaw(this, &FTNFieldModel::HideTetromino);
-			CurrentTetromino->OnSetTetromino.BindRaw(this, &FTNFieldModel::SetTetromino);
+			CurrentTetromino->OnHideTetromino.BindRaw(this, &FTNFieldModel::hideTetromino);
+			CurrentTetromino->OnSetTetromino.BindRaw(this, &FTNFieldModel::setTetromino);
 
-			CurrentTetromino->OnHideGuideTetromino.BindRaw(this, &FTNFieldModel::HideGuideTetromino);
-			CurrentTetromino->OnSetGuideTetromino.BindRaw(this, &FTNFieldModel::SetGuideTetromino);
+			CurrentTetromino->OnHideGuideTetromino.BindRaw(this, &FTNFieldModel::hideGuideTetromino);
+			CurrentTetromino->OnSetGuideTetromino.BindRaw(this, &FTNFieldModel::setGuideTetromino);
 		}
 			break;
 		default:
@@ -74,14 +74,14 @@ void FTNFieldModel::Tick(float deltaTime)
 	updateLineDelete(deltaTime);
 }
 
-E_TNTetrominoType FTNFieldModel::GetValueFromCheckBuffer(const int32 x, const int32 y) const
+E_TNTetrominoType FTNFieldModel::getValueFromCheckBuffer(const int32 x, const int32 y) const
 {
 	const TArray<TArray<E_TNTetrominoType>>& bufferToUse = FieldContext.bSpaceInverted ? FieldContext.ReversedBuffer : FieldContext.CheckBuffer;
 	
 	return bufferToUse[y + 1][x + 1];
 }
 
-void FTNFieldModel::SetValueToCheckBuffer(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
+void FTNFieldModel::setValueToCheckBuffer(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
 {
 	TArray<TArray<E_TNTetrominoType>>& currentBuffer = FieldContext.bSpaceInverted ? FieldContext.ReversedBuffer : FieldContext.CheckBuffer;
 	TArray<TArray<E_TNTetrominoType>>& otherBuffer = FieldContext.bSpaceInverted ? FieldContext.CheckBuffer : FieldContext.ReversedBuffer;
@@ -90,21 +90,21 @@ void FTNFieldModel::SetValueToCheckBuffer(const int32 x, const int32 y, const E_
 	otherBuffer[y + 1][FieldContext.BufferWidth - x] = tetrominoType;
 }
 
-bool FTNFieldModel::CheckMino(const int32 x, const int32 y) const
+bool FTNFieldModel::checkMino(const int32 x, const int32 y) const
 {
 	if (y < 0 || x < 0) return true;
 	if (y >= FieldContext.BufferHeight || x >= FieldContext.BufferWidth) return true;
 
-	return GetValueFromCheckBuffer(x, y) != E_TNTetrominoType::None;
+	return getValueFromCheckBuffer(x, y) != E_TNTetrominoType::None;
 }
 
-int32 FTNFieldModel::CalculateGuideMinoHeight(const int32 x, const int32 y) const
+int32 FTNFieldModel::calculateGuideMinoHeight(const int32 x, const int32 y) const
 {
 	int32 height = 0;
 
 	for (int32 i = y; i >= -1; i--)
 	{
-		if (GetValueFromCheckBuffer(x, i) != E_TNTetrominoType::None)
+		if (getValueFromCheckBuffer(x, i) != E_TNTetrominoType::None)
 		{
 			height = i;
 			break;
@@ -114,54 +114,54 @@ int32 FTNFieldModel::CalculateGuideMinoHeight(const int32 x, const int32 y) cons
 	return y - height - 1;
 }
 
-void FTNFieldModel::HidePreviewTetromino() const
+void FTNFieldModel::hidePreviewTetromino() const
 {
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::HidePreviewTetromino);
 }
 
-void FTNFieldModel::SetPreviewTetromino() const
+void FTNFieldModel::setPreviewTetromino() const
 {
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::SetPreviewTetromino);
 }
 
-void FTNFieldModel::HideHoldTetromino() const
+void FTNFieldModel::hideHoldTetromino() const
 {
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::HideHoldTetromino);
 }
 
-void FTNFieldModel::SetHoldTetromino() const
+void FTNFieldModel::setHoldTetromino() const
 {
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::SetHoldTetromino);
 }
 
-void FTNFieldModel::HideTetromino() const
+void FTNFieldModel::hideTetromino() const
 {
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::HideTetromino);
 }
 
-void FTNFieldModel::SetTetromino() const
+void FTNFieldModel::setTetromino() const
 {
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::SetTetromino);
 }
 
-void FTNFieldModel::HideGuideTetromino() const
+void FTNFieldModel::hideGuideTetromino() const
 {
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::HideGuideTetromino);
 }
 
-void FTNFieldModel::SetGuideTetromino() const
+void FTNFieldModel::setGuideTetromino() const
 {
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::SetGuideTetromino);
 }
 
-void FTNFieldModel::CheckLineDelete(const TArray<int32>& heights)
+void FTNFieldModel::checkLineDelete(const TArray<int32>& heights)
 {
 	TArray<int32> linesToDelete;
 
 	// �� ���̿� ���� �� ���� ���θ� �˻��մϴ�.
 	for (int32 height : heights)
 	{
-		if (IsLineDeleted(height))
+		if (isLineDeleted(height))
 		{
 			linesToDelete.AddUnique(height);
 		}
@@ -170,16 +170,16 @@ void FTNFieldModel::CheckLineDelete(const TArray<int32>& heights)
 	// ������ ���� �ִ� ��� ó���մϴ�.
 	if (linesToDelete.Num() > 0)
 	{
-		HandleLineDeletion(linesToDelete);
+		handleLineDeletion(linesToDelete);
 	}
 }
 
-bool FTNFieldModel::IsLineDeleted(int32 height) const
+bool FTNFieldModel::isLineDeleted(int32 height) const
 {
 	// �־��� ���̿� ���� �ش� ���� ��� �����Ǿ����� Ȯ���մϴ�.
 	for (int32 j = 0; j < FieldContext.BufferWidth; ++j)
 	{
-		if (GetValueFromCheckBuffer(j, height) == E_TNTetrominoType::None)
+		if (getValueFromCheckBuffer(j, height) == E_TNTetrominoType::None)
 		{
 			return false; // �ϳ��� ������ ������ �������� ���� ���Դϴ�.
 		}
@@ -188,7 +188,7 @@ bool FTNFieldModel::IsLineDeleted(int32 height) const
 	return true; // ��� ������ �����Ͽ� ���� �����Ǿ����ϴ�.
 }
 
-void FTNFieldModel::HandleLineDeletion(const TArray<int32>& linesToDelete)
+void FTNFieldModel::handleLineDeletion(const TArray<int32>& linesToDelete)
 {
 	// ������ �ٿ� ���� ó���� �����մϴ�.
 	for (int32 height : linesToDelete)
@@ -384,7 +384,7 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 		{
 			for (int32 j = 0; j < FieldContext.BufferWidth; j++)
 			{
-				SetValueToCheckBuffer(j, deleteLine, E_TNTetrominoType::None);
+				setValueToCheckBuffer(j, deleteLine, E_TNTetrominoType::None);
 			}
 		}
 
@@ -414,8 +414,8 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 				{
 					for (int32 j = 0; j < FieldContext.BufferWidth; j++)
 					{
-						const E_TNTetrominoType value = GetValueFromCheckBuffer(j, i);
-						SetValueToCheckBuffer(j, i - lineChecValue, value);
+						const E_TNTetrominoType value = getValueFromCheckBuffer(j, i);
+						setValueToCheckBuffer(j, i - lineChecValue, value);
 					}
 				}
 			}
@@ -424,7 +424,7 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 			bLineDeleting = false;
 
 			DeletedLines.Empty();
-
+			
 			OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::LockDown);
 		}
 
@@ -436,7 +436,7 @@ void FTNFieldModel::lineDelete()
 {
 	if (CurrentTetromino.IsValid())
 	{
-		CheckLineDelete(CurrentTetromino->GetMinoHeights());
+		checkLineDelete(CurrentTetromino->GetMinoHeights());
 	}
 }
 
@@ -477,7 +477,7 @@ void FTNFieldModel::renewPreviewTetromino()
 		return;
 	}
 
-	HidePreviewTetromino();
+	hidePreviewTetromino();
 
 	for (int32 i = 0; i < PreviewTetrominoes.Num(); i++)
 	{
@@ -492,7 +492,7 @@ void FTNFieldModel::renewPreviewTetromino()
 		previewTetromino->Spawn();
 	}
 	
-	SetPreviewTetromino();
+	setPreviewTetromino();
 }
 
 float FTNFieldModel::getFallingSpeed() const
@@ -520,8 +520,8 @@ void FTNFieldModel::initializePreviewTetrominoes()
 void FTNFieldModel::initializeHoldTetromino()
 {
 	HoldTetromino = MakeShareable(new FTNPreviewTetromino(FieldContext.HoldTetrominoInfo));
-	HoldTetromino->OnHideTetromino.BindRaw(this, &FTNFieldModel::HideHoldTetromino);
-	HoldTetromino->OnSetTetromino.BindRaw(this, &FTNFieldModel::SetHoldTetromino);
+	HoldTetromino->OnHideTetromino.BindRaw(this, &FTNFieldModel::hideHoldTetromino);
+	HoldTetromino->OnSetTetromino.BindRaw(this, &FTNFieldModel::setHoldTetromino);
 	HoldTetromino->SetStartingLocation(2, 1);
 }
 
