@@ -119,7 +119,7 @@ void FTNFieldModel::hidePreviewTetromino() const
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::HidePreviewTetromino);
 }
 
-void FTNFieldModel::setPreviewTetromino() const
+void FTNFieldModel::showPreviewTetromino() const
 {
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::ShowPreviewTetromino);
 }
@@ -465,7 +465,7 @@ void FTNFieldModel::spawnNextTetromino() const
 {
 	if (CurrentTetromino.IsValid() && TetrominoGenerator.IsValid())
 	{
-		CurrentTetromino->ShowTetrominoType(TetrominoGenerator->GetTop());
+		CurrentTetromino->SetTetrominoType(TetrominoGenerator->GetTop());
 		CurrentTetromino->Spawn();
 	}
 }
@@ -487,12 +487,11 @@ void FTNFieldModel::renewPreviewTetromino()
 			continue;
 		}
 
-		previewTetromino->HideTetromino();
-		previewTetromino->ShowTetrominoType(TetrominoGenerator->GetAt(i));
+		previewTetromino->SetTetrominoType(TetrominoGenerator->GetAt(i));
 		previewTetromino->Spawn();
 	}
 	
-	setPreviewTetromino();
+	showPreviewTetromino();
 }
 
 float FTNFieldModel::getFallingSpeed() const
@@ -589,13 +588,13 @@ void FTNFieldModel::Hold()
 	CurrentTetromino->HideGuideTetromino();
 
 	HoldTetromino->HideTetromino();
-	HoldTetromino->ShowTetrominoType(currentTetrominoType);
+	HoldTetromino->SetTetrominoType(currentTetrominoType);
 	HoldTetromino->Spawn();
 
 	if (holdTetrominoType != E_TNTetrominoType::None)
 	{
 		CurrentTime = 0.f;
-		CurrentTetromino->ShowTetrominoType(holdTetrominoType);
+		CurrentTetromino->SetTetrominoType(holdTetrominoType);
 		CurrentTetromino->Spawn();
 	}
 	else
