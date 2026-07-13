@@ -10,7 +10,7 @@
  * 
  */
 
-class ATNFieldBase;
+class ATNField;
 
 UCLASS(Blueprintable)
 class TENETRIS_API ATNTenetrisGameModeBase : public AGameModeBase

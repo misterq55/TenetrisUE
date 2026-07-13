@@ -3,7 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Module/MVC/View/Field/Actor/Field/TNFieldBase.h"
+#include "GameFramework/Actor.h"
+#include "Tenetris/TenetrisDefine.h"
 #include "TNField.generated.h"
 
 /**
@@ -11,16 +12,30 @@
  */
 
 class UTNTenetrisBufferComponent;
+class ATNMinoBase;
 
 UCLASS()
-class TENETRIS_API ATNField : public ATNFieldBase
+class TENETRIS_API ATNField : public AActor
 {
 	GENERATED_BODY()
 	
 public:
 	ATNField();
-	virtual	void Initialize() override;
+	virtual ~ATNField();
 
+protected:
+	virtual void BeginPlay() override;
+
+public:
+	virtual void Tick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable, Category = "Field")
+	void Initialize();
+
+	void RotateField(const FTNFieldContext& fieldContext);
+	void HideTetromino(const FTNFieldContext& fieldContext);
+	void SetTetromino(const FTNFieldContext& fieldContext);
+	void LockDown(const FTNFieldContext& fieldContext);
 	void HideGuideTetromino(const FTNFieldContext& fieldContext);
 	void SetGuideTetromino(const FTNFieldContext& fieldContext);
 	void HideHoldTetromino(const FTNFieldContext& fieldContext);
@@ -28,9 +43,13 @@ public:
 	void HidePreviewTetromino(const FTNFieldContext& fieldContext);
 	void SetPreviewTetromino(const FTNFieldContext& fieldContext);
 	
-private:
+protected:
 	void initializePreviewBuffer();
 	void initializeHoldBuffer();
+	void setMinoClassType(TSubclassOf<ATNMinoBase> minoClass);
+	void setMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
+	void setVisibilityMino(const int32 x, const int32 y, const bool visible);
+	void setBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType);
 	void setHoldMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
 	void setVisibilityHoldMino(const int32 x, const int32 y, const bool visible);
 	void setPreviewMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
@@ -38,11 +57,18 @@ private:
 
 private:
 	int32 PreviewTetrominoNum;
+	TSubclassOf<ATNMinoBase> MinoClass;
 
 protected:
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<UTNTenetrisBufferComponent> TenetrisBufferComponent;
+
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UTNTenetrisBufferComponent> PreviewBufferComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UTNTenetrisBufferComponent> HoldBufferComponent;
+
+	float RotationRemainingTime = 0.f;
+	bool bCachedSpaceInverted = false;
 };
