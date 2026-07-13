@@ -43,6 +43,8 @@ public:
 	void HidePreviewTetromino(const FTNFieldContext& fieldContext);
 	void ShowPreviewTetromino(const FTNFieldContext& fieldContext);
 	
+	void UpdatePreviewTetrominoes(const FTNFieldContext& fieldContext);
+	
 protected:
 	void initializePreviewBuffer();
 	void initializeHoldBuffer();
@@ -71,4 +73,6 @@ protected:
 
 	float RotationRemainingTime = 0.f;
 	bool bCachedSpaceInverted = false;
+	TArray<FVector2D> PreviewTetrominoPositions;
+	TArray<E_TNTetrominoType> PreviewTetrominoTypes;
 };

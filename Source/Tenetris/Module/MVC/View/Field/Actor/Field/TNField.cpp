@@ -283,6 +283,25 @@ void ATNField::ShowPreviewTetromino(const FTNFieldContext& fieldContext)
 	}
 }
 
+void ATNField::UpdatePreviewTetrominoes(const FTNFieldContext& fieldContext)
+{
+	TArray<TSharedPtr<FTNTetrominoInfo>> previewTetrominoInfos = fieldContext.PreviewTetrominoInfos;
+
+	for (const auto& tetrominoInfo : previewTetrominoInfos)
+	{
+		if (!tetrominoInfo.IsValid())
+		{
+			continue;
+		}
+
+		// for (const auto& coord : tetrominoInfo->Coordinate)
+		// {
+		// 	setPreviewMinoType(coord.X + tetrominoInfo->CurrentPosition.X,
+		// 					   coord.Y + tetrominoInfo->CurrentPosition.Y, tetrominoInfo->CurrentType);
+		// }
+	}
+}
+
 void ATNField::initializePreviewBuffer()
 {
 	PreviewTetrominoNum = PreviewTetrominoMax;

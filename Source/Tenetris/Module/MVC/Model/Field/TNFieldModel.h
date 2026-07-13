@@ -95,7 +95,7 @@ private:
 	void handleLineDeletion(const TArray<int32>& linesToDelete);
 
 	void spawnNextTetromino() const;
-	void renewPreviewTetromino();
+	void updatePreviewTetrominoes();
 	float getFallingSpeed() const;
 	bool isSpaceInverting() const
 	{
