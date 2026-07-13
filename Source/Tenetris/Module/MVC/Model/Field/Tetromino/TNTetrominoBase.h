@@ -11,8 +11,6 @@ DECLARE_DELEGATE_RetVal_TwoParams(int32, FCalculateGuideMinoHeightDelegate, cons
 DECLARE_DELEGATE(FHideTetromino)
 DECLARE_DELEGATE(FSetTetromino)
 
-class ATNFieldBase;
-
 class FTNTetrominoBase
 {
 public:
