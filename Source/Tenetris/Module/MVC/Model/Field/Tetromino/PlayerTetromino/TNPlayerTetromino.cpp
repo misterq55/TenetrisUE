@@ -19,10 +19,10 @@ bool FTNPlayerTetromino::Move(const E_TNTetrominoDirection tetrominoDirection)
 			tetrominoDirection == E_TNTetrominoDirection::Right)
 		{
 			HideGuideTetromino();
-			SetGuideTetromino();
+			ShowGuideTetromino();
 		}
 
-		setTetromino();
+		showTetromino();
 
 		return false;
 	}
@@ -124,8 +124,8 @@ bool FTNPlayerTetromino::Rotate(const E_TNTetrominoRotation tetrominoRotation)
 		TetrominoInfo->CurrentPosition += kickOffset;
 		TetrominoInfo->Coordinate = simulationCoordinates;
 
-		SetGuideTetromino();
-		setTetromino();
+		ShowGuideTetromino();
+		showTetromino();
 
 		return false;
 	}
@@ -143,10 +143,10 @@ void FTNPlayerTetromino::LockDown()
 void FTNPlayerTetromino::Spawn()
 {
 	FTNTetrominoBase::Spawn();
-	SetGuideTetromino();
+	ShowGuideTetromino();
 }
 
-void FTNPlayerTetromino::SetGuideTetromino()
+void FTNPlayerTetromino::ShowGuideTetromino()
 {
 	if (!TetrominoInfo.IsValid())
 	{
@@ -178,7 +178,7 @@ void FTNPlayerTetromino::SetGuideTetromino()
 
 	TetrominoInfo->GuideTetrominoPosition = FVector2D(TetrominoInfo->CurrentPosition.X, TetrominoInfo->CurrentPosition.Y - minHeight);
 
-	OnSetGuideTetromino.ExecuteIfBound();
+	OnShowGuideTetromino.ExecuteIfBound();
 }
 
 void FTNPlayerTetromino::HardDrop()
@@ -189,8 +189,8 @@ void FTNPlayerTetromino::HardDrop()
 		TetrominoInfo->CurrentPosition = TetrominoInfo->GuideTetrominoPosition;
 	}
 	HideGuideTetromino();
-	SetGuideTetromino();
-	setTetromino();
+	ShowGuideTetromino();
+	showTetromino();
 }
 
 FVector2D FTNPlayerTetromino::simulatePosition(const E_TNTetrominoDirection tetrominoDirection) const

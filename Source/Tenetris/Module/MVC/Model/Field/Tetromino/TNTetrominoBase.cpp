@@ -17,7 +17,7 @@ TArray<int32> FTNTetrominoBase::GetMinoHeights() const
 	return result;
 }
 
-void FTNTetrominoBase::SetTetrominoPosition(const int32 x, const int32 y) const
+void FTNTetrominoBase::ShowTetrominoPosition(const int32 x, const int32 y) const
 {
 	if (!TetrominoInfo.IsValid())
 	{
@@ -27,7 +27,7 @@ void FTNTetrominoBase::SetTetrominoPosition(const int32 x, const int32 y) const
 	TetrominoInfo->SetPosition(x, y);
 }
 
-void FTNTetrominoBase::SetTetrominoType(const E_TNTetrominoType currentTetrominoType) const
+void FTNTetrominoBase::ShowTetrominoType(const E_TNTetrominoType currentTetrominoType) const
 {
 	if (!TetrominoInfo.IsValid())
 	{
@@ -105,7 +105,7 @@ void FTNTetrominoBase::Spawn()
 
 	TetrominoInfo->SetPosition(StartingLocation.X, StartingLocation.Y);
 	TetrominoInfo->RotationState = 0;
-	setTetromino();
+	showTetromino();
 }
 
 bool FTNTetrominoBase::checkMino(const FVector2D& simulationPosition) const
@@ -142,9 +142,9 @@ TSharedPtr<FTNTetrominoInfo> FTNTetrominoBase::GetTetrominoInfo() const
 	return TetrominoInfo;
 }
 
-void FTNTetrominoBase::setTetromino() const
+void FTNTetrominoBase::showTetromino() const
 {
-	OnSetTetromino.ExecuteIfBound();
+	OnShowTetromino.ExecuteIfBound();
 }
 
 void FTNTetrominoBase::moveTetrominoToCheckBuffer() const

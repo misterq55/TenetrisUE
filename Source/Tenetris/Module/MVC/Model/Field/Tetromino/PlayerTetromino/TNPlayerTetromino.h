@@ -5,7 +5,7 @@
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/TNTetrominoBase.h"
 
 DECLARE_DELEGATE(FHideGuideTetromino)
-DECLARE_DELEGATE(FSetGuideTetromino)
+DECLARE_DELEGATE(FShowGuideTetromino)
 
 class FTNPlayerTetromino : public FTNTetrominoBase
 {
@@ -44,7 +44,7 @@ public:
 	virtual bool Rotate(const E_TNTetrominoRotation tetrominoRotation) override;
 	virtual void LockDown() override;
 	virtual void Spawn() override;
-	virtual void SetGuideTetromino() override;
+	virtual void ShowGuideTetromino() override;
 	virtual void HardDrop() override;
 	virtual void HideGuideTetromino() override;
 
@@ -55,5 +55,5 @@ private:
 
 public:
 	FHideGuideTetromino OnHideGuideTetromino;
-	FSetGuideTetromino OnSetGuideTetromino;
+	FShowGuideTetromino OnShowGuideTetromino;
 };

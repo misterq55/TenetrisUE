@@ -16,7 +16,7 @@ public:
 	
 private:
 	void hideTetromino(const FTNFieldContext& fieldContext) const;
-	void setTetromino(const FTNFieldContext& fieldContext) const;
+	void showTetromino(const FTNFieldContext& fieldContext) const;
 	void hideGuideTetromino(const FTNFieldContext& fieldContext) const;
 	void setGuideTetromino(const FTNFieldContext& fieldContext) const;
 	void hideHoldTetromino(const FTNFieldContext& fieldContext) const;

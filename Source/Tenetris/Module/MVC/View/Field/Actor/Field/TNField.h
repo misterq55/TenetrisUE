@@ -34,14 +34,14 @@ public:
 
 	void RotateField(const FTNFieldContext& fieldContext);
 	void HideTetromino(const FTNFieldContext& fieldContext);
-	void SetTetromino(const FTNFieldContext& fieldContext);
+	void ShowTetromino(const FTNFieldContext& fieldContext);
 	void LockDown(const FTNFieldContext& fieldContext);
 	void HideGuideTetromino(const FTNFieldContext& fieldContext);
-	void SetGuideTetromino(const FTNFieldContext& fieldContext);
+	void ShowGuideTetromino(const FTNFieldContext& fieldContext);
 	void HideHoldTetromino(const FTNFieldContext& fieldContext);
-	void SetHoldTetromino(const FTNFieldContext& fieldContext);
+	void ShowHoldTetromino(const FTNFieldContext& fieldContext);
 	void HidePreviewTetromino(const FTNFieldContext& fieldContext);
-	void SetPreviewTetromino(const FTNFieldContext& fieldContext);
+	void ShowPreviewTetromino(const FTNFieldContext& fieldContext);
 	
 protected:
 	void initializePreviewBuffer();

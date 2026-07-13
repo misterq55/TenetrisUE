@@ -85,7 +85,7 @@ void ATNField::HideTetromino(const FTNFieldContext& fieldContext)
 	}
 }
 
-void ATNField::SetTetromino(const FTNFieldContext& fieldContext)
+void ATNField::ShowTetromino(const FTNFieldContext& fieldContext)
 {
 	TSharedPtr<FTNTetrominoInfo> tetrominoInfo = fieldContext.PlayerTetrominoInfo;
 
@@ -197,7 +197,7 @@ void ATNField::HideGuideTetromino(const FTNFieldContext& fieldContext)
 	}
 }
 
-void ATNField::SetGuideTetromino(const FTNFieldContext& fieldContext)
+void ATNField::ShowGuideTetromino(const FTNFieldContext& fieldContext)
 {
 	TSharedPtr<FTNTetrominoInfo> tetrominoInfo = fieldContext.PlayerTetrominoInfo;
 
@@ -229,7 +229,7 @@ void ATNField::HideHoldTetromino(const FTNFieldContext& fieldContext)
 	}
 }
 
-void ATNField::SetHoldTetromino(const FTNFieldContext& fieldContext)
+void ATNField::ShowHoldTetromino(const FTNFieldContext& fieldContext)
 {
 	TSharedPtr<FTNTetrominoInfo> tetrominoInfo = fieldContext.HoldTetrominoInfo;
 
@@ -264,7 +264,7 @@ void ATNField::HidePreviewTetromino(const FTNFieldContext& fieldContext)
 	}
 }
 
-void ATNField::SetPreviewTetromino(const FTNFieldContext& fieldContext)
+void ATNField::ShowPreviewTetromino(const FTNFieldContext& fieldContext)
 {
 	TArray<TSharedPtr<FTNTetrominoInfo>> previewTetrominoInfos = fieldContext.PreviewTetrominoInfos;
 
