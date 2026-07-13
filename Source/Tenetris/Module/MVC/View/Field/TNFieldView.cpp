@@ -48,9 +48,9 @@ void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldMo
 		}
 		break;
 
-	case E_TNFieldModelStateType::SetTetromino:
+	case E_TNFieldModelStateType::ShowTetromino:
 		{
-			setTetromino(fieldContext);
+			showTetromino(fieldContext);
 		}
 		break;
 
@@ -60,7 +60,7 @@ void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldMo
 		}
 		break;
 
-	case E_TNFieldModelStateType::SetGuideTetromino:
+	case E_TNFieldModelStateType::ShowGuideTetromino:
 		{
 			setGuideTetromino(fieldContext);
 		}
@@ -72,7 +72,7 @@ void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldMo
 		}
 		break;
 
-	case E_TNFieldModelStateType::SetHoldTetromino:
+	case E_TNFieldModelStateType::ShowHoldTetromino:
 		{
 			setHoldTetromino(fieldContext);
 		}
@@ -84,7 +84,7 @@ void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldMo
 		}
 		break;
 
-	case E_TNFieldModelStateType::SetPreviewTetromino:
+	case E_TNFieldModelStateType::ShowPreviewTetromino:
 		{
 			setPreviewTetromino(fieldContext);
 		}
@@ -108,11 +108,11 @@ void FTNFieldView::hideTetromino(const FTNFieldContext& fieldContext) const
 	}
 }
 
-void FTNFieldView::setTetromino(const FTNFieldContext& fieldContext) const
+void FTNFieldView::showTetromino(const FTNFieldContext& fieldContext) const
 {
 	if (FieldActor.IsValid())
 	{
-		FieldActor->SetTetromino(fieldContext);
+		FieldActor->ShowTetromino(fieldContext);
 	}
 }
 
@@ -128,7 +128,7 @@ void FTNFieldView::setGuideTetromino(const FTNFieldContext& fieldContext) const
 {
 	if (FieldActor.IsValid())
 	{
-		FieldActor->SetGuideTetromino(fieldContext);
+		FieldActor->ShowGuideTetromino(fieldContext);
 	}
 }
 
@@ -144,7 +144,7 @@ void FTNFieldView::setHoldTetromino(const FTNFieldContext& fieldContext) const
 {
 	if (FieldActor.IsValid())
 	{
-		FieldActor->SetHoldTetromino(fieldContext);
+		FieldActor->ShowHoldTetromino(fieldContext);
 	}
 }
 
@@ -160,7 +160,7 @@ void FTNFieldView::setPreviewTetromino(const FTNFieldContext& fieldContext) cons
 {
 	if (FieldActor.IsValid())
 	{
-		FieldActor->SetPreviewTetromino(fieldContext);
+		FieldActor->ShowPreviewTetromino(fieldContext);
 	}
 }
 

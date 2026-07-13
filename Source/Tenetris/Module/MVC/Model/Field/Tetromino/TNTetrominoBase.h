@@ -9,7 +9,7 @@ DECLARE_DELEGATE_RetVal_TwoParams(bool, FCheckMinoDelegate, const int32, const i
 DECLARE_DELEGATE_RetVal_TwoParams(int32, FCalculateGuideMinoHeightDelegate, const int32, const int32);
 
 DECLARE_DELEGATE(FHideTetromino)
-DECLARE_DELEGATE(FSetTetromino)
+DECLARE_DELEGATE(FShowTetromino)
 
 class FTNTetrominoBase
 {
@@ -30,18 +30,18 @@ public:
 	virtual bool Rotate(const E_TNTetrominoRotation tetrominoRotation) { return true; }
 	virtual void LockDown() {}
 	virtual void Spawn();
-	virtual void SetGuideTetromino() {}
+	virtual void ShowGuideTetromino() {}
 	virtual void HardDrop() {}
 	virtual void HideGuideTetromino() {}
 	virtual void ResetGuideTetromino()
 	{
 		HideGuideTetromino();
-		SetGuideTetromino();
+		ShowGuideTetromino();
 	}
 	
 	TArray<int32> GetMinoHeights() const;
-	void SetTetrominoPosition(const int32 x, const int32 y) const;
-	void SetTetrominoType(const E_TNTetrominoType currentTetrominoType) const;
+	void ShowTetrominoPosition(const int32 x, const int32 y) const;
+	void ShowTetrominoType(const E_TNTetrominoType currentTetrominoType) const;
 	E_TNTetrominoType GetTetrominoType() const;
 	void SetStartingLocation(const int32 x, const int32 y);
 	void SetStartingLocation(const FVector2D& startingLocation);
@@ -51,7 +51,7 @@ public:
 
 protected:
 	bool checkMino(const FVector2D& simulationPosition) const;
-	void setTetromino() const;
+	void showTetromino() const;
 	void moveTetrominoToCheckBuffer() const;
 	
 public:
@@ -60,7 +60,7 @@ public:
 	FCalculateGuideMinoHeightDelegate OnCalulateGuideMino;
 
 	FHideTetromino OnHideTetromino;
-	FSetTetromino OnSetTetromino;
+	FShowTetromino OnShowTetromino;
 
 protected:
 	TSharedPtr<FTNTetrominoInfo> TetrominoInfo;

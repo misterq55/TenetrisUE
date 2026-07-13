@@ -43,7 +43,7 @@ void ATNMinoBase::SetVitibility(bool newVisibility)
 	}
 }
 
-void ATNMinoBase::SetTetrominoType(E_TNTetrominoType tetrominoType)
+void ATNMinoBase::ShowTetrominoType(E_TNTetrominoType tetrominoType)
 {
 	TetrominoType = tetrominoType;
 }

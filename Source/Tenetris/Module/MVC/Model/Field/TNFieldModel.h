@@ -69,7 +69,7 @@ private:
 	void hideHoldTetromino() const;
 	void setHoldTetromino() const;
 	void hideTetromino() const;
-	void setTetromino() const;
+	void showTetromino() const;
 	void hideGuideTetromino() const;
 	void setGuideTetromino() const;
 	void checkLineDelete(const TArray<int32>& heights);
