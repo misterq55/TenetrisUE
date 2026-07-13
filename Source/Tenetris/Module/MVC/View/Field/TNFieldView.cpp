@@ -95,6 +95,12 @@ void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldMo
 			rotateField(fieldContext);
 		}
 		break;
+
+	case E_TNFieldModelStateType::UpdatePreviewTetrominoes:
+		{
+			updatePreviewTetrominoes(fieldContext);
+		}
+		break;
 	default:
 		break;
 	}
@@ -169,6 +175,14 @@ void FTNFieldView::rotateField(const FTNFieldContext& fieldContext) const
 	if (FieldActor.IsValid())
 	{
 		FieldActor->RotateField(fieldContext);
+	}
+}
+
+void FTNFieldView::updatePreviewTetrominoes(const FTNFieldContext& fieldContext) const
+{
+	if (FieldActor.IsValid())
+	{
+		FieldActor->UpdatePreviewTetrominoes(fieldContext);
 	}
 }
 
