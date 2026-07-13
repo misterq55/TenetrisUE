@@ -65,7 +65,7 @@ private:
 	bool checkMino(const int32 x, const int32 y) const;
 	int32 calculateGuideMinoHeight(const int32 x, const int32 y) const;
 	void hidePreviewTetromino() const;
-	void setPreviewTetromino() const;
+	void showPreviewTetromino() const;
 	void hideHoldTetromino() const;
 	void setHoldTetromino() const;
 	void hideTetromino() const;

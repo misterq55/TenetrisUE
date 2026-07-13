@@ -123,7 +123,7 @@ void UTNTenetrisBufferComponent::SetBackgroundCubeType(const int32 x, const int3
 	if (IsValid(mino))
 	{
 		mino->SetVitibility(E_TNTetrominoType::None != tetrominoType);
-		mino->ShowTetrominoType(tetrominoType);
+		mino->SetTetrominoType(tetrominoType);
 	}
 }
 
@@ -144,7 +144,7 @@ void UTNTenetrisBufferComponent::SetMinoType(const int32 x, const int32 y, const
 	if (IsValid(mino))
 	{
 		mino->SetVitibility(true);
-		mino->ShowTetrominoType(tetrominoType);
+		mino->SetTetrominoType(tetrominoType);
 	}
 }
 

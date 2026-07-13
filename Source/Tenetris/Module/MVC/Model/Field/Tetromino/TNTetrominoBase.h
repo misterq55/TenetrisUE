@@ -40,8 +40,8 @@ public:
 	}
 	
 	TArray<int32> GetMinoHeights() const;
-	void ShowTetrominoPosition(const int32 x, const int32 y) const;
-	void ShowTetrominoType(const E_TNTetrominoType currentTetrominoType) const;
+	void SetTetrominoPosition(const int32 x, const int32 y) const;
+	void SetTetrominoType(const E_TNTetrominoType currentTetrominoType) const;
 	E_TNTetrominoType GetTetrominoType() const;
 	void SetStartingLocation(const int32 x, const int32 y);
 	void SetStartingLocation(const FVector2D& startingLocation);

@@ -32,9 +32,9 @@ public:
 		InitailizeMesh(MeshObj.Object);
 	}
 
-	void ShowTetrominoType(E_TNTetrominoType tetrominoType)
+	void SetTetrominoType(E_TNTetrominoType tetrominoType)
 	{
-		Super::ShowTetrominoType(tetrominoType);
+		Super::SetTetrominoType(tetrominoType);
 
 		if (!MinoMeshComponent)
 			return;

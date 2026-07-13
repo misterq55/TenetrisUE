@@ -86,7 +86,7 @@ void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldMo
 
 	case E_TNFieldModelStateType::ShowPreviewTetromino:
 		{
-			setPreviewTetromino(fieldContext);
+			showPreviewTetromino(fieldContext);
 		}
 		break;
 
@@ -156,7 +156,7 @@ void FTNFieldView::hidePreviewTetromino(const FTNFieldContext& fieldContext) con
 	}
 }
 
-void FTNFieldView::setPreviewTetromino(const FTNFieldContext& fieldContext) const
+void FTNFieldView::showPreviewTetromino(const FTNFieldContext& fieldContext) const
 {
 	if (FieldActor.IsValid())
 	{

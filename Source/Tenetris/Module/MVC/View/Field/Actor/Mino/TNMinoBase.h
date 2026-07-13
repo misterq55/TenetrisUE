@@ -29,7 +29,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void SetVitibility(bool newVisibility);
-	virtual void ShowTetrominoType(E_TNTetrominoType tetrominoType);
+	virtual void SetTetrominoType(E_TNTetrominoType tetrominoType);
 
 protected:
 	UStaticMeshComponent* MinoMeshComponent;
