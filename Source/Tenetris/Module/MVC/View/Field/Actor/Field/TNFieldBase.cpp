@@ -59,6 +59,59 @@ void ATNFieldBase::Initialize()
 	}
 }
 
+void ATNFieldBase::RotateField(const FTNFieldContext& fieldContext)
+{
+	RotationRemainingTime = RotationDuration;
+	bCachedSpaceInverted = fieldContext.bSpaceInverted;
+}
+
+void ATNFieldBase::HideTetromino(const FTNFieldContext& fieldContext)
+{
+	TSharedPtr<FTNTetrominoInfo> tetrominoInfo = fieldContext.PlayerTetrominoInfo;
+
+	if (!tetrominoInfo.IsValid())
+	{
+		return;
+	}
+
+	for (const auto& coord : tetrominoInfo->Coordinate)
+	{
+		setVisibilityMino(coord.X + tetrominoInfo->CurrentPosition.X,
+						  coord.Y + tetrominoInfo->CurrentPosition.Y, false);
+	}
+}
+
+void ATNFieldBase::SetTetromino(const FTNFieldContext& fieldContext)
+{
+	TSharedPtr<FTNTetrominoInfo> tetrominoInfo = fieldContext.PlayerTetrominoInfo;
+
+	if (!tetrominoInfo.IsValid())
+	{
+		return;
+	}
+
+	for (const auto& coord : tetrominoInfo->Coordinate)
+	{
+		setMinoType(coord.X + tetrominoInfo->CurrentPosition.X, coord.Y + tetrominoInfo->CurrentPosition.Y,
+					tetrominoInfo->CurrentType);
+	}
+}
+
+void ATNFieldBase::LockDown(const FTNFieldContext& fieldContext)
+{
+	const int32 bufferHeight = fieldContext.BufferHeight;
+	const int32 bufferWidth = fieldContext.BufferWidth;
+
+	for (int32 i = 0; i < bufferHeight; i++)
+	{
+		for (int32 j = 0; j < bufferWidth; j++)
+		{
+			const E_TNTetrominoType tetrominoType = fieldContext.CheckBuffer[i + 1][j + 1];
+			setBackgroundCubeType(j, i, tetrominoType);
+		}
+	}
+}
+
 void ATNFieldBase::setMinoClassType(TSubclassOf<ATNMinoBase> minoClass)
 {
 	if (IsValid(TenetrisBufferComponent))
@@ -80,59 +133,6 @@ void ATNFieldBase::setVisibilityMino(const int32 x, const int32 y, const bool vi
 	if (IsValid(TenetrisBufferComponent))
 	{
 		TenetrisBufferComponent->SetVisibilityMino(x, y, visible);
-	}
-}
-
-void ATNFieldBase::RotateField(const FTNFieldContext& fieldContext)
-{
-	RotationRemainingTime = RotationDuration;
-	bCachedSpaceInverted = fieldContext.bSpaceInverted;
-}
-
-void ATNFieldBase::HideTetromino(const FTNFieldContext& fieldContext)
-{
-	TSharedPtr<FTNTetrominoInfo> tetrominoInfo = fieldContext.PlayerTetrominoInfo;
-
-	if (!tetrominoInfo.IsValid())
-	{
-		return;
-	}
-
-	for (const auto& coord : tetrominoInfo->Coordinate)
-	{
-		setVisibilityMino(coord.X + tetrominoInfo->CurrentPosition.X,
-		                  coord.Y + tetrominoInfo->CurrentPosition.Y, false);
-	}
-}
-
-void ATNFieldBase::SetTetromino(const FTNFieldContext& fieldContext)
-{
-	TSharedPtr<FTNTetrominoInfo> tetrominoInfo = fieldContext.PlayerTetrominoInfo;
-
-	if (!tetrominoInfo.IsValid())
-	{
-		return;
-	}
-
-	for (const auto& coord : tetrominoInfo->Coordinate)
-	{
-		setMinoType(coord.X + tetrominoInfo->CurrentPosition.X, coord.Y + tetrominoInfo->CurrentPosition.Y,
-		            tetrominoInfo->CurrentType);
-	}
-}
-
-void ATNFieldBase::LockDown(const FTNFieldContext& fieldContext)
-{
-	const int32 bufferHeight = fieldContext.BufferHeight;
-	const int32 bufferWidth = fieldContext.BufferWidth;
-
-	for (int32 i = 0; i < bufferHeight; i++)
-	{
-		for (int32 j = 0; j < bufferWidth; j++)
-		{
-			const E_TNTetrominoType tetrominoType = fieldContext.CheckBuffer[i + 1][j + 1];
-			setBackgroundCubeType(j, i, tetrominoType);
-		}
 	}
 }
 

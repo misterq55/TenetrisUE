@@ -164,7 +164,7 @@ void ATNField::SetPreviewTetromino(const FTNFieldContext& fieldContext)
 
 void ATNField::initializePreviewBuffer()
 {
-	PreviewTetrominoNum = 5;
+	PreviewTetrominoNum = PreviewTetrominoMax;
 
 	PreviewBufferComponent = CreateDefaultSubobject<UTNTenetrisBufferComponent>(TEXT("PreviewBufferComponent"));
 	PreviewBufferComponent->SetBufferSize(PreviewTetrominoNum * 3 + 1, 5);
