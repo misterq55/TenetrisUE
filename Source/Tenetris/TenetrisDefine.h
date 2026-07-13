@@ -4,6 +4,7 @@
 
 constexpr int32 RowMax = 20;
 constexpr int32 ColumnMax = 10;
+constexpr int32 PreviewTetrominoMax = 5;
 
 constexpr float MinoRatio = 0.25f;
 constexpr float RotationDuration = 1.f;
@@ -230,7 +231,7 @@ public:
 		PlayerTetrominoInfo = MakeShareable(new FTNTetrominoInfo());
 		HoldTetrominoInfo = MakeShareable(new FTNTetrominoInfo());
 
-		PreviewTetrominoNum = 5;
+		PreviewTetrominoNum = PreviewTetrominoMax;
 		for (int32 i = 0; i < PreviewTetrominoNum; i++)
 		{
 			PreviewTetrominoInfos.Emplace(MakeShareable(new FTNTetrominoInfo()));
