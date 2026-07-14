@@ -1,5 +1,6 @@
 #include "TNFieldModel.h"
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/TNTetromino.h"
+#include "Tenetris/Module/MVC/Model/Field/LockDown/TNLockDown.h"
 
 // TODO 테트로미노 리스트 분리 [05/21/2024]
 #include "Tenetris/Module/MVC/Model/Field/TetrominoGenerator/TNTetrominoGenerator.h"
@@ -31,6 +32,11 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
 	{
 		TetrominoGenerator = MakeShareable(new FTNTetrominoGenerator());
 		TetrominoGenerator->Initialize();
+	}
+	
+	if (!LockDown.IsValid())
+	{
+		LockDown = MakeShareable(new FTNLockDown());
 	}
 }
 
@@ -274,7 +280,10 @@ bool FTNFieldModel::moveTetromino(E_TNTetrominoDirection tetrominoDirection)
 	{
 		if (!CurrentTetromino->Move(tetrominoDirection))
 		{
-			LockDown.CheckRemainCount(tetrominoDirection);
+			if (LockDown.IsValid())
+			{
+				LockDown->CheckRemainCount(tetrominoDirection);
+			}
 
 			return false;
 		}
@@ -294,7 +303,10 @@ void FTNFieldModel::rotateTetromino(E_TNTetrominoRotation tetrominoRotation)
 	{
 		if (!CurrentTetromino->Rotate(tetrominoRotation))
 		{
-			LockDown.CheckRemainCount();
+			if (LockDown.IsValid())
+			{
+				LockDown->CheckRemainCount();
+			}
 		}
 	}
 }
@@ -365,7 +377,10 @@ void FTNFieldModel::tetrominoFall(float deltaTime)
 	{
 		if (moveTetromino(E_TNTetrominoDirection::Down))
 		{
-			LockDown.StartLockDown();
+			if (LockDown.IsValid())
+			{
+				LockDown->StartLockDown();
+			}
 		}
 
 		CurrentTime = 0.f;
@@ -423,7 +438,7 @@ void FTNFieldModel::updateLockDown(float deltaTime)
 		return;
 	}
 
-	if (LockDown.UpdateLockDown(deltaTime))
+	if (LockDown.IsValid() && LockDown->UpdateLockDown(deltaTime))
 	{
 		doLockDown();
 	}
