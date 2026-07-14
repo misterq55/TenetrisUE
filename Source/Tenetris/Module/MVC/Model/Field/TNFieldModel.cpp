@@ -1,7 +1,7 @@
 #include "TNFieldModel.h"
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/TNTetrominoBase.h"
 
-// TODO ��Ʈ�ι̳� ���丮�� �и� [05/21/2024]
+// TODO 테트로미노 리스트 분리 [05/21/2024]
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/PlayerTetromino/TNPlayerTetromino.h"
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/PreviewTetromino/TNPreviewTetromino.h"
 #include "Tenetris/Module/MVC/Model/Field/TetrominoGenerator/TNTetrominoGenerator.h"
@@ -11,7 +11,7 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
 {
 	if (!CurrentTetromino.IsValid())
 	{
-		// TODO ��Ʈ�ι̳븦 di�� �� �ֵ��� �����ؾ��� [05/21/2024]
+		// TODO 테트로미노를 DI할 수 있도록 해야한다 [05/21/2024]
 		switch (FieldContext.FieldType)
 		{
 		case E_TNFieldType::Player:
@@ -135,7 +135,7 @@ void FTNFieldModel::checkLineDelete(const TArray<int32>& heights)
 {
 	TArray<int32> linesToDelete;
 
-	// �� ���̿� ���� �� ���� ���θ� �˻��մϴ�.
+	// 각 높이에 대해 삭제 될 줄 여부를 검사합니다.
 	for (int32 height : heights)
 	{
 		if (isLineDeleted(height))
@@ -144,7 +144,7 @@ void FTNFieldModel::checkLineDelete(const TArray<int32>& heights)
 		}
 	}
 
-	// ������ ���� �ִ� ��� ó���մϴ�.
+	// 삭제될 줄이 있는 경우 처리합니다.
 	if (linesToDelete.Num() > 0)
 	{
 		handleLineDeletion(linesToDelete);
@@ -153,27 +153,27 @@ void FTNFieldModel::checkLineDelete(const TArray<int32>& heights)
 
 bool FTNFieldModel::isLineDeleted(int32 height) const
 {
-	// �־��� ���̿� ���� �ش� ���� ��� �����Ǿ����� Ȯ���մϴ�.
+	// 주어진 높이에 대해 해당 칸이 모두 채워져있는지 확인합니다.
 	for (int32 j = 0; j < FieldContext.BufferWidth; ++j)
 	{
 		if (getValueFromCheckBuffer(j, height) == E_TNTetrominoType::None)
 		{
-			return false; // �ϳ��� ������ ������ �������� ���� ���Դϴ�.
+			return false; // 하나의 칸이라도 비어있으면 완성된 줄이 아닙니다.
 		}
 	}
 
-	return true; // ��� ������ �����Ͽ� ���� �����Ǿ����ϴ�.
+	return true; // 모든 칸이 채워져 줄이 완성되었습니다.
 }
 
 void FTNFieldModel::handleLineDeletion(const TArray<int32>& linesToDelete)
 {
-	// ������ �ٿ� ���� ó���� �����մϴ�.
+	// 삭제될 줄을 처리 목록에 추가합니다.
 	for (int32 height : linesToDelete)
 	{
 		DeletedLines.AddUnique(height);
 	}
 
-	// �� ���� �÷��׸� �����մϴ�.
+	// 줄 삭제 플래그를 설정합니다.
 	bLineDeleting = true;
 }
 
