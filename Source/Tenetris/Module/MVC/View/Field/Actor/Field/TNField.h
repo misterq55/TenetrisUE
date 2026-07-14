@@ -30,19 +30,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Field")
-	void Initialize();
+	virtual void Initialize();
 
-	void RotateField(const FTNFieldContext& fieldContext);
-	void HideTetromino(const FTNFieldContext& fieldContext);
-	void ShowTetromino(const FTNFieldContext& fieldContext);
-	
-	void UpdateTetromino(const FTNFieldContext& fieldContext);
-	
-	void LockDown(const FTNFieldContext& fieldContext);
-	void HideGuideTetromino(const FTNFieldContext& fieldContext);
-	void ShowGuideTetromino(const FTNFieldContext& fieldContext);
-	void UpdateHoldTetromino(const FTNFieldContext& fieldContext) const;
-	void UpdatePreviewTetrominoes(const FTNFieldContext& fieldContext) const;
+	void HandleFieldState(const FTNFieldContext& fieldContext, const E_TNFieldModelStateType state);
 	
 protected:
 	void initializePreviewBuffer();
@@ -57,6 +47,12 @@ protected:
 	void setVisibilityPreviewMino(const int32 x, const int32 y, const bool visible);
 
 private:
+	void updateTetromino(const FTNFieldContext& fieldContext);
+	void updateHoldTetromino(const FTNFieldContext& fieldContext) const;
+	void updatePreviewTetrominoes(const FTNFieldContext& fieldContext) const;
+	void lockDown(const FTNFieldContext& fieldContext);
+	void rotateField(const FTNFieldContext& fieldContext);
+
 	int32 PreviewTetrominoNum;
 	TSubclassOf<ATNMinoBase> MinoClass;
 

@@ -52,15 +52,11 @@ enum class E_TNFieldType : uint32
 
 enum class E_TNFieldModelStateType : uint32
 {
-	HideTetromino,
-	ShowTetromino,
-	HideGuideTetromino,
-	
 	UpdateTetromino,
 	UpdateHoldTetromino,
 	UpdatePreviewTetrominoes,
-	RotateField,
 	LockDown,
+	RotateField,
 };
 
 typedef TArray<FVector2D> TTetrominoCoordinate;

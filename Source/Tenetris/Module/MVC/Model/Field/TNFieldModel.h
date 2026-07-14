@@ -53,10 +53,6 @@ private:
 	void setValueToCheckBuffer(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
 	bool checkMino(const int32 x, const int32 y) const;
 	int32 calculateGuideMinoHeight(const int32 x, const int32 y) const;
-	void hideTetromino() const;
-	void showTetromino() const;
-	void hideGuideTetromino() const;
-	// void setGuideTetromino() const;
 	
 	void updateTetromino() const;
 	
