@@ -47,20 +47,18 @@ public:
 	virtual ~FTNTetromino()
 	{
 		OnCheckMino.Unbind();
-		OnCalulateGuideMino.Unbind();
+		OnCalculateGuideMino.Unbind();
 	}
 
 	virtual bool Move(const E_TNTetrominoDirection tetrominoDirection);
 	virtual bool Rotate(const E_TNTetrominoRotation tetrominoRotation);
 	virtual void LockDown();
 	virtual void Spawn();
-	virtual void ShowGuideTetromino();
 	virtual void HardDrop();
-	virtual void HideGuideTetromino();
 	virtual void ResetGuideTetromino()
 	{
-		HideGuideTetromino();
-		ShowGuideTetromino();
+		hideGuideTetromino();
+		showGuideTetromino();
 	}
 
 	TArray<int32> GetMinoHeights() const;
@@ -70,22 +68,22 @@ public:
 	void SetStartingLocation(const int32 x, const int32 y);
 	void SetStartingLocation(const FVector2D& startingLocation);
 	FVector2D GetStaringLocation() const;
-	void HideTetromino() const;
 	TSharedPtr<FTNTetrominoInfo> GetTetrominoInfo() const;
 
-protected:
+private:
 	bool checkMino(const FVector2D& simulationPosition) const;
 	void showTetromino() const;
 	void moveTetrominoToCheckBuffer() const;
-
-private:
+	void hideGuideTetromino();
+	void showGuideTetromino();
+	void hideTetromino() const;
 	FVector2D simulatePosition(const E_TNTetrominoDirection tetrominoDirection) const;
 	int32 mod(int32 n, int32 m) { return ((n % m) + m) % m; }
 
 public:
 	FSetBackgroundCubeTypeDelegate OnMoveTetrominoToCheckBuffer;
 	FCheckMinoDelegate OnCheckMino;
-	FCalculateGuideMinoHeightDelegate OnCalulateGuideMino;
+	FCalculateGuideMinoHeightDelegate OnCalculateGuideMino;
 
 	FHideTetromino OnHideTetromino;
 	FShowTetromino OnShowTetromino;

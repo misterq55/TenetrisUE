@@ -18,7 +18,7 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
 
 			CurrentTetromino->OnMoveTetrominoToCheckBuffer.BindRaw(this, &FTNFieldModel::setValueToCheckBuffer);
 			CurrentTetromino->OnCheckMino.BindRaw(this, &FTNFieldModel::checkMino);
-			CurrentTetromino->OnCalulateGuideMino.BindRaw(this, &FTNFieldModel::calculateGuideMinoHeight);
+			CurrentTetromino->OnCalculateGuideMino.BindRaw(this, &FTNFieldModel::calculateGuideMinoHeight);
 			
 			CurrentTetromino->OnHideTetromino.BindRaw(this, &FTNFieldModel::hideTetromino);
 			CurrentTetromino->OnShowTetromino.BindRaw(this, &FTNFieldModel::showTetromino);
@@ -536,9 +536,9 @@ void FTNFieldModel::Hold()
 
 	const E_TNTetrominoType holdTetrominoType = FieldContext.HoldTetrominoInfo->CurrentType;
 	const E_TNTetrominoType currentTetrominoType = CurrentTetromino->GetTetrominoType();
-
-	CurrentTetromino->HideTetromino();
-	CurrentTetromino->HideGuideTetromino();
+	
+	hideTetromino();
+	hideGuideTetromino();
 	
 	FieldContext.HoldTetrominoInfo->ApplyTetrominoType(currentTetrominoType);
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateHoldTetromino);
