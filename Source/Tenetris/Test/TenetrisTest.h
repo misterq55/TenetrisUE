@@ -10,8 +10,7 @@
 #include "Engine/StaticMeshActor.h"
 #include "Tenetris/Module/MVC/View/Field/Actor/Components/TenetrisBufferComponent/TNTenetrisBufferComponent.h"
 // #include "Tenetris/Module/MVC/View/Field/Actor/Components/TenetrisBufferComponent/TNOldTenetrisBufferComponent.h"
-#include "Tenetris/Module/MVC/Model/Field/Tetromino/PlayerTetromino/TNPlayerTetromino.h"
-#include "Tenetris/Module/MVC/Model/Field/Tetromino/PreviewTetromino/TNPreviewTetromino.h"
+#include "Tenetris/Module/MVC/Model/Field/Tetromino/TNTetromino.h"
 #include "Tenetris/Module/MVC/Model/Field/TetrominoGenerator/TNTetrominoGenerator.h"
 #include "TenetrisTest.generated.h"
 
@@ -87,11 +86,11 @@ public:
 	}
 };
 
-class FTNTestTetromino : public FTNPlayerTetromino
+class FTNTestTetromino : public FTNTetromino
 {
 public:
 	FTNTestTetromino()
-		: FTNPlayerTetromino()
+		: FTNTetromino()
 	{
 		
 	}

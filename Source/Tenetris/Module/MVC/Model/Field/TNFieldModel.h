@@ -1,8 +1,7 @@
 #pragma once
 
 #include "Tenetris/TenetrisDefine.h"
-class FTNTetrominoBase;
-class FTNPlayerTetromino;
+class FTNTetromino;
 class FTNTetrominoGenerator;
 
 DECLARE_DELEGATE_TwoParams(FTNUpdateModel, const int32, const E_TNFieldModelStateType);
@@ -26,12 +25,12 @@ public:
 		return OnUpdateModel;
 	}
 
-	TSharedPtr<FTNPlayerTetromino> GetCurrentTetromino() const
+	TSharedPtr<FTNTetromino> GetCurrentTetromino() const
 	{
 		return CurrentTetromino;
 	}
 
-	TSharedPtr<FTNTetrominoBase> GetHoldTetromino() const
+	TSharedPtr<FTNTetromino> GetHoldTetromino() const
 	{
 		return HoldTetromino;
 	}
@@ -94,7 +93,7 @@ private:
 private:
 	FTNFieldContext FieldContext;
 
-	TSharedPtr<FTNPlayerTetromino> CurrentTetromino;
+	TSharedPtr<FTNTetromino> CurrentTetromino;
 	TSharedPtr<FTNTetrominoGenerator> TetrominoGenerator;
 
 	TArray<int32> DeletedLines;
@@ -105,7 +104,7 @@ private:
 	float CurrentTime = 0.f;
 	float RotationPauseRemainingTime = 0.f;
 
-	TSharedPtr<FTNTetrominoBase> HoldTetromino;
+	TSharedPtr<FTNTetromino> HoldTetromino;
 
 	FTNUpdateModel OnUpdateModel;
 
