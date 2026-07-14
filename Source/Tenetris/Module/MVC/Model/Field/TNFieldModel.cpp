@@ -19,12 +19,7 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
 			CurrentTetromino->OnMoveTetrominoToCheckBuffer.BindRaw(this, &FTNFieldModel::setValueToCheckBuffer);
 			CurrentTetromino->OnCheckMino.BindRaw(this, &FTNFieldModel::checkMino);
 			CurrentTetromino->OnCalculateGuideMino.BindRaw(this, &FTNFieldModel::calculateGuideMinoHeight);
-			
-			CurrentTetromino->OnHideTetromino.BindRaw(this, &FTNFieldModel::hideTetromino);
-			CurrentTetromino->OnShowTetromino.BindRaw(this, &FTNFieldModel::showTetromino);
-
-			CurrentTetromino->OnHideGuideTetromino.BindRaw(this, &FTNFieldModel::hideGuideTetromino);
-			CurrentTetromino->OnShowGuideTetromino.BindRaw(this, &FTNFieldModel::setGuideTetromino);
+			CurrentTetromino->OnUpdateTetromino.BindRaw(this, &FTNFieldModel::updateTetromino);
 		}
 			break;
 		default:
@@ -124,9 +119,9 @@ void FTNFieldModel::hideGuideTetromino() const
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::HideGuideTetromino);
 }
 
-void FTNFieldModel::setGuideTetromino() const
+void FTNFieldModel::updateTetromino() const
 {
-	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::ShowGuideTetromino);
+	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateTetromino);
 }
 
 void FTNFieldModel::checkLineDelete(const TArray<int32>& heights)
@@ -182,7 +177,7 @@ void FTNFieldModel::spawn()
 	updatePreviewTetrominoes();
 	bCanHold = true;
 
-	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::ShowTetromino);
+	// OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::ShowTetromino);
 }
 
 bool FTNFieldModel::moveTetromino(E_TNTetrominoDirection tetrominoDirection)
@@ -536,9 +531,6 @@ void FTNFieldModel::Hold()
 
 	const E_TNTetrominoType holdTetrominoType = FieldContext.HoldTetrominoInfo->CurrentType;
 	const E_TNTetrominoType currentTetrominoType = CurrentTetromino->GetTetrominoType();
-	
-	hideTetromino();
-	hideGuideTetromino();
 	
 	FieldContext.HoldTetrominoInfo->ApplyTetrominoType(currentTetrominoType);
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateHoldTetromino);

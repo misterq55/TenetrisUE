@@ -60,12 +60,6 @@ void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldMo
 		}
 		break;
 
-	case E_TNFieldModelStateType::ShowGuideTetromino:
-		{
-			setGuideTetromino(fieldContext);
-		}
-		break;
-
 	case E_TNFieldModelStateType::RotateField:
 		{
 			rotateField(fieldContext);
@@ -81,6 +75,12 @@ void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldMo
 	case E_TNFieldModelStateType::UpdatePreviewTetrominoes:
 		{
 			updatePreviewTetrominoes(fieldContext);
+		}
+		break;
+
+	case E_TNFieldModelStateType::UpdateTetromino:
+		{
+			updateTetromino(fieldContext);
 		}
 		break;
 	default:
@@ -101,6 +101,14 @@ void FTNFieldView::showTetromino(const FTNFieldContext& fieldContext) const
 	if (FieldActor.IsValid())
 	{
 		FieldActor->ShowTetromino(fieldContext);
+	}
+}
+
+void FTNFieldView::updateTetromino(const FTNFieldContext& fieldContext) const
+{
+	if (FieldActor.IsValid())
+	{
+		FieldActor->UpdateTetromino(fieldContext);
 	}
 }
 

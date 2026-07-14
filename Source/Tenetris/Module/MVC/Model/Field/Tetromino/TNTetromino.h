@@ -8,10 +8,7 @@ DECLARE_DELEGATE_ThreeParams(FSetBackgroundCubeTypeDelegate, const int32, const 
 DECLARE_DELEGATE_RetVal_TwoParams(bool, FCheckMinoDelegate, const int32, const int32);
 DECLARE_DELEGATE_RetVal_TwoParams(int32, FCalculateGuideMinoHeightDelegate, const int32, const int32);
 
-DECLARE_DELEGATE(FHideTetromino)
-DECLARE_DELEGATE(FShowTetromino)
-DECLARE_DELEGATE(FHideGuideTetromino)
-DECLARE_DELEGATE(FShowGuideTetromino)
+DECLARE_DELEGATE(FUpdateTetromino)
 
 class FTNTetromino
 {
@@ -57,8 +54,8 @@ public:
 	virtual void HardDrop();
 	virtual void ResetGuideTetromino()
 	{
-		hideGuideTetromino();
-		showGuideTetromino();
+		calculateGuideTetromino();
+		updateTetromino();
 	}
 
 	TArray<int32> GetMinoHeights() const;
@@ -72,23 +69,18 @@ public:
 
 private:
 	bool checkMino(const FVector2D& simulationPosition) const;
-	void showTetromino() const;
 	void moveTetrominoToCheckBuffer() const;
-	void hideGuideTetromino();
-	void showGuideTetromino();
-	void hideTetromino() const;
+	void calculateGuideTetromino() const;
+	void updateTetromino() const;
 	FVector2D simulatePosition(const E_TNTetrominoDirection tetrominoDirection) const;
-	int32 mod(int32 n, int32 m) { return ((n % m) + m) % m; }
+	static int32 mod(int32 n, int32 m) { return ((n % m) + m) % m; }
 
 public:
 	FSetBackgroundCubeTypeDelegate OnMoveTetrominoToCheckBuffer;
 	FCheckMinoDelegate OnCheckMino;
 	FCalculateGuideMinoHeightDelegate OnCalculateGuideMino;
 
-	FHideTetromino OnHideTetromino;
-	FShowTetromino OnShowTetromino;
-	FHideGuideTetromino OnHideGuideTetromino;
-	FShowGuideTetromino OnShowGuideTetromino;
+	FUpdateTetromino OnUpdateTetromino;
 
 protected:
 	TSharedPtr<FTNTetrominoInfo> TetrominoInfo;
