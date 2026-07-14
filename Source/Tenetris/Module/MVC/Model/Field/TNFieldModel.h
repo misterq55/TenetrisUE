@@ -3,6 +3,7 @@
 #include "Tenetris/TenetrisDefine.h"
 class FTNTetromino;
 class FTNTetrominoGenerator;
+class FTNLockDown;
 
 DECLARE_DELEGATE_TwoParams(FTNUpdateModel, const int32, const E_TNFieldModelStateType);
 
@@ -85,30 +86,29 @@ private:
 	}
 
 private:
+	int32 Id = 0;
 	FTNFieldContext FieldContext;
+	FTNUpdateModel OnUpdateModel;
 
 	TSharedPtr<FTNTetromino> CurrentTetromino;
 	TSharedPtr<FTNTetrominoGenerator> TetrominoGenerator;
-
-	TArray<int32> DeletedLines;
-	float DeleteLineCheckTime = 0.f;
-	bool bLineDeleting = false;
 
 	float TetrominoFallingSpeed = 1.f;
 	float CurrentTime = 0.f;
 	float RotationPauseRemainingTime = 0.f;
 
-	FTNUpdateModel OnUpdateModel;
+	TArray<int32> DeletedLines;
+	float DeleteLineCheckTime = 0.f;
+	bool bLineDeleting = false;
 
-private:
-	int32 Id = 0;
 	bool bSoftDrop = false;
 	FTNMoveDirectionState LeftDirectionState;
 	FTNMoveDirectionState RightDirectionState;
 	E_TNTetrominoDirection TetrominoMoveDirection = E_TNTetrominoDirection::None;
 	float KickInDelay = 0.3f;
 	float MoveSpeed = 0.05f;
-	FTNLockDown LockDown;
+
+	TSharedPtr<FTNLockDown> LockDown;
 	bool bWaitForSpawn = false;
 	bool bCanHold = true;
 };
