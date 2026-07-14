@@ -34,41 +34,7 @@ void FTNTetrominoBase::SetTetrominoType(const E_TNTetrominoType currentTetromino
 		return;
 	}
 
-	TetrominoInfo->CurrentType = currentTetrominoType;
-
-	switch (TetrominoInfo->CurrentType)
-	{
-	case E_TNTetrominoType::I:
-		TetrominoInfo->Coordinate = IMinoCoordinate;
-		break;
-
-	case E_TNTetrominoType::J:
-		TetrominoInfo->Coordinate = JMinoCoordinate;
-		break;
-
-	case E_TNTetrominoType::L:
-		TetrominoInfo->Coordinate = LMinoCoordinate;
-		break;
-
-	case E_TNTetrominoType::O:
-		TetrominoInfo->Coordinate = OMinoCoordinate;
-		break;
-
-	case E_TNTetrominoType::S:
-		TetrominoInfo->Coordinate = SMinoCoordinate;
-		break;
-
-	case E_TNTetrominoType::T:
-		TetrominoInfo->Coordinate = TMinoCoordinate;
-		break;
-
-	case E_TNTetrominoType::Z:
-		TetrominoInfo->Coordinate = ZMinoCoordinate;
-		break;
-
-	default:
-		break;
-	}
+	TetrominoInfo->ApplyTetrominoType(currentTetrominoType);
 }
 
 E_TNTetrominoType FTNTetrominoBase::GetTetrominoType() const

@@ -39,9 +39,6 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
 		TetrominoGenerator = MakeShareable(new FTNTetrominoGenerator());
 		TetrominoGenerator->Initialize();
 	}
-
-	initializePreviewTetrominoes();
-	initializeHoldTetromino();
 }
 
 void FTNFieldModel::Initialize()
@@ -112,26 +109,6 @@ int32 FTNFieldModel::calculateGuideMinoHeight(const int32 x, const int32 y) cons
 	}
 
 	return y - height - 1;
-}
-
-void FTNFieldModel::hidePreviewTetromino() const
-{
-	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::HidePreviewTetromino);
-}
-
-void FTNFieldModel::showPreviewTetromino() const
-{
-	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::ShowPreviewTetromino);
-}
-
-void FTNFieldModel::hideHoldTetromino() const
-{
-	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::HideHoldTetromino);
-}
-
-void FTNFieldModel::setHoldTetromino() const
-{
-	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::ShowHoldTetromino);
 }
 
 void FTNFieldModel::hideTetromino() const
@@ -470,43 +447,21 @@ void FTNFieldModel::spawnNextTetromino() const
 	}
 }
 
+void FTNFieldModel::updateHoldTetromino()
+{
+	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateHoldTetromino);
+}
+
 void FTNFieldModel::updatePreviewTetrominoes()
 {
 	if (!TetrominoGenerator.IsValid())
 	{
 		return;
 	}
-
-	// hidePreviewTetromino();
-	//
-	// const int32 PreviewTetrominoesNum = PreviewTetrominoes.Num();
-	//
-	// for (int32 i = 0; i < PreviewTetrominoesNum; i++)
-	// {
-	// 	TSharedPtr<FTNTetrominoBase> previewTetromino = PreviewTetrominoes[i];
-	// 	if (!previewTetromino.IsValid())
-	// 	{
-	// 		continue;
-	// 	}
-	//
-	// 	previewTetromino->SetTetrominoType(TetrominoGenerator->GetAt(i));
-	// 	previewTetromino->Spawn();
-	// }
-	//
-	// showPreviewTetromino();
 	
-	const int32 PreviewTetrominoesNum = PreviewTetrominoes.Num();
-	
-	for (int32 i = 0; i < PreviewTetrominoesNum; i++)
+	for (int32 i = 0; i < FieldContext.PreviewTetrominoNum; i++)
 	{
-		TSharedPtr<FTNTetrominoBase> previewTetromino = PreviewTetrominoes[i];
-		if (!previewTetromino.IsValid())
-		{
-			continue;
-		}
-
-		previewTetromino->SetTetrominoType(TetrominoGenerator->GetAt(i));
-		previewTetromino->Spawn();
+		FieldContext.PreviewTetrominoInfos[i]->ApplyTetrominoType(TetrominoGenerator->GetAt(i));
 	}
 	
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdatePreviewTetrominoes);
@@ -522,24 +477,6 @@ float FTNFieldModel::getFallingSpeed() const
 	}
 
 	return TetrominoFallingSpeed * multiplier;
-}
-
-void FTNFieldModel::initializePreviewTetrominoes()
-{
-	for (int32 i = 0; i < FieldContext.PreviewTetrominoNum; i++)
-	{
-		TSharedPtr<FTNTetrominoBase> previewTetromino = MakeShareable(new FTNPreviewTetromino(FieldContext.PreviewTetrominoInfos[i]));
-		PreviewTetrominoes.Add(previewTetromino);
-		previewTetromino->SetStartingLocation(2, (FieldContext.PreviewTetrominoNum - i - 1) * 3 + 1);
-	}
-}
-
-void FTNFieldModel::initializeHoldTetromino()
-{
-	HoldTetromino = MakeShareable(new FTNPreviewTetromino(FieldContext.HoldTetrominoInfo));
-	HoldTetromino->OnHideTetromino.BindRaw(this, &FTNFieldModel::hideHoldTetromino);
-	HoldTetromino->OnShowTetromino.BindRaw(this, &FTNFieldModel::setHoldTetromino);
-	HoldTetromino->SetStartingLocation(2, 1);
 }
 
 void FTNFieldModel::StartMoveLeft()
@@ -593,21 +530,20 @@ void FTNFieldModel::Hold()
 	{
 		return;
 	}
-
-	if (!bCanHold || !HoldTetromino.IsValid() || !CurrentTetromino.IsValid())
+	
+	if (!bCanHold || !CurrentTetromino.IsValid())
 	{
 		return;
 	}
 
-	const E_TNTetrominoType holdTetrominoType = HoldTetromino->GetTetrominoType();
+	const E_TNTetrominoType holdTetrominoType = FieldContext.HoldTetrominoInfo->CurrentType;
 	const E_TNTetrominoType currentTetrominoType = CurrentTetromino->GetTetrominoType();
 
 	CurrentTetromino->HideTetromino();
 	CurrentTetromino->HideGuideTetromino();
-
-	HoldTetromino->HideTetromino();
-	HoldTetromino->SetTetrominoType(currentTetrominoType);
-	HoldTetromino->Spawn();
+	
+	FieldContext.HoldTetrominoInfo->ApplyTetrominoType(currentTetrominoType);
+	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateHoldTetromino);
 
 	if (holdTetrominoType != E_TNTetrominoType::None)
 	{

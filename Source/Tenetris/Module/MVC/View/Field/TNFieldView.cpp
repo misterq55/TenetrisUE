@@ -66,33 +66,15 @@ void FTNFieldView::Update(const FTNFieldContext& fieldContext, const E_TNFieldMo
 		}
 		break;
 
-	case E_TNFieldModelStateType::HideHoldTetromino:
-		{
-			hideHoldTetromino(fieldContext);
-		}
-		break;
-
-	case E_TNFieldModelStateType::ShowHoldTetromino:
-		{
-			setHoldTetromino(fieldContext);
-		}
-		break;
-
-	case E_TNFieldModelStateType::HidePreviewTetromino:
-		{
-			hidePreviewTetromino(fieldContext);
-		}
-		break;
-
-	case E_TNFieldModelStateType::ShowPreviewTetromino:
-		{
-			showPreviewTetromino(fieldContext);
-		}
-		break;
-
 	case E_TNFieldModelStateType::RotateField:
 		{
 			rotateField(fieldContext);
+		}
+		break;
+		
+	case E_TNFieldModelStateType::UpdateHoldTetromino:
+		{
+			updateHoldTetromino(fieldContext);
 		}
 		break;
 
@@ -138,35 +120,11 @@ void FTNFieldView::setGuideTetromino(const FTNFieldContext& fieldContext) const
 	}
 }
 
-void FTNFieldView::hideHoldTetromino(const FTNFieldContext& fieldContext) const
+void FTNFieldView::updateHoldTetromino(const FTNFieldContext& fieldContext) const
 {
 	if (FieldActor.IsValid())
 	{
-		FieldActor->HideHoldTetromino(fieldContext);
-	}
-}
-
-void FTNFieldView::setHoldTetromino(const FTNFieldContext& fieldContext) const
-{
-	if (FieldActor.IsValid())
-	{
-		FieldActor->ShowHoldTetromino(fieldContext);
-	}
-}
-
-void FTNFieldView::hidePreviewTetromino(const FTNFieldContext& fieldContext) const
-{
-	if (FieldActor.IsValid())
-	{
-		FieldActor->HidePreviewTetromino(fieldContext);
-	}
-}
-
-void FTNFieldView::showPreviewTetromino(const FTNFieldContext& fieldContext) const
-{
-	if (FieldActor.IsValid())
-	{
-		FieldActor->ShowPreviewTetromino(fieldContext);
+		FieldActor->UpdateHoldTetromino(fieldContext);
 	}
 }
 

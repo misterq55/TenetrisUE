@@ -19,10 +19,7 @@ private:
 	void showTetromino(const FTNFieldContext& fieldContext) const;
 	void hideGuideTetromino(const FTNFieldContext& fieldContext) const;
 	void setGuideTetromino(const FTNFieldContext& fieldContext) const;
-	void hideHoldTetromino(const FTNFieldContext& fieldContext) const;
-	void setHoldTetromino(const FTNFieldContext& fieldContext) const;
-	void hidePreviewTetromino(const FTNFieldContext& fieldContext) const;
-	void showPreviewTetromino(const FTNFieldContext& fieldContext) const;
+	void updateHoldTetromino(const FTNFieldContext& fieldContext) const;
 	void rotateField(const FTNFieldContext& fieldContext) const;
 	void updatePreviewTetrominoes(const FTNFieldContext& fieldContext) const;
 	void lockDown(const FTNFieldContext& fieldContext) const;
