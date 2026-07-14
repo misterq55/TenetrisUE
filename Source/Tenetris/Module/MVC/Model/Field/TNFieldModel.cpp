@@ -49,11 +49,6 @@ void FTNFieldModel::SetId(const int32 id)
 	Id = id;
 }
 
-int32 FTNFieldModel::GetId() const
-{
-	return Id;
-}
-
 void FTNFieldModel::Tick(float deltaTime)
 {
 	tetrominoFall(deltaTime);
@@ -62,6 +57,123 @@ void FTNFieldModel::Tick(float deltaTime)
 	updateLockDown(deltaTime);
 	waitForSpawn();
 	updateLineDelete(deltaTime);
+}
+
+int32 FTNFieldModel::GetId() const
+{
+	return Id;
+}
+
+void FTNFieldModel::StartMoveLeft()
+{
+	setMoveDirection(E_TNTetrominoDirection::Left, true);
+}
+
+void FTNFieldModel::StopMoveLeft()
+{
+	setMoveDirection(E_TNTetrominoDirection::Left, false);
+}
+
+void FTNFieldModel::StartMoveRight()
+{
+	setMoveDirection(E_TNTetrominoDirection::Right, true);
+}
+
+void FTNFieldModel::StopMoveRight()
+{
+	setMoveDirection(E_TNTetrominoDirection::Right, false);
+}
+
+void FTNFieldModel::StartSoftDrop()
+{
+	if (isSpaceInverting())
+	{
+		return;
+	}
+
+	bSoftDrop = true;
+}
+
+void FTNFieldModel::StopSoftDrop()
+{
+	bSoftDrop = false;
+}
+
+void FTNFieldModel::RotateClockWise()
+{
+	rotateTetromino(E_TNTetrominoRotation::ClockWise);
+}
+
+void FTNFieldModel::RotateCounterClockWise()
+{
+	rotateTetromino(E_TNTetrominoRotation::CounterClockWise);
+}
+
+void FTNFieldModel::Hold()
+{
+	if (isSpaceInverting())
+	{
+		return;
+	}
+	
+	if (!bCanHold || !CurrentTetromino.IsValid())
+	{
+		return;
+	}
+
+	const E_TNTetrominoType holdTetrominoType = FieldContext.HoldTetrominoInfo->CurrentType;
+	const E_TNTetrominoType currentTetrominoType = CurrentTetromino->GetTetrominoType();
+	
+	FieldContext.HoldTetrominoInfo->ApplyTetrominoType(currentTetrominoType);
+	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateHoldTetromino);
+
+	if (holdTetrominoType != E_TNTetrominoType::None)
+	{
+		CurrentTime = 0.f;
+		CurrentTetromino->SetTetrominoType(holdTetrominoType);
+		CurrentTetromino->Spawn();
+	}
+	else
+	{
+		CurrentTime = 0.f;
+		spawnNextTetromino();
+		updatePreviewTetrominoes();
+	}
+
+	bCanHold = false;
+}
+
+void FTNFieldModel::ToggleSpaceInversion()
+{
+	if (isSpaceInverting())
+	{
+		return;
+	}
+
+	FieldContext.bSpaceInverted = !FieldContext.bSpaceInverted;
+	RotationPauseRemainingTime = RotationDuration;
+	CurrentTime = 0.f;
+	
+	if (CurrentTetromino.IsValid())
+	{
+		CurrentTetromino->ResetGuideTetromino();
+	}
+	
+	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::RotateField);
+}
+
+void FTNFieldModel::HardDrop()
+{
+	if (isSpaceInverting())
+	{
+		return;
+	}
+
+	if (CurrentTetromino.IsValid())
+	{
+		CurrentTetromino->HardDrop();
+		doLockDown();
+	}
 }
 
 E_TNTetrominoType FTNFieldModel::getValueFromCheckBuffer(const int32 x, const int32 y) const
@@ -104,21 +216,6 @@ int32 FTNFieldModel::calculateGuideMinoHeight(const int32 x, const int32 y) cons
 	return y - height - 1;
 }
 
-void FTNFieldModel::hideTetromino() const
-{
-	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::HideTetromino);
-}
-
-void FTNFieldModel::showTetromino() const
-{
-	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::ShowTetromino);
-}
-
-void FTNFieldModel::hideGuideTetromino() const
-{
-	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::HideGuideTetromino);
-}
-
 void FTNFieldModel::updateTetromino() const
 {
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateTetromino);
@@ -158,26 +255,12 @@ bool FTNFieldModel::isLineDeleted(int32 height) const
 	return true; // 모든 칸이 채워져 줄이 완성되었습니다.
 }
 
-void FTNFieldModel::handleLineDeletion(const TArray<int32>& linesToDelete)
-{
-	// 삭제될 줄을 처리 목록에 추가합니다.
-	for (int32 height : linesToDelete)
-	{
-		DeletedLines.AddUnique(height);
-	}
-
-	// 줄 삭제 플래그를 설정합니다.
-	bLineDeleting = true;
-}
-
 void FTNFieldModel::spawn()
 {
 	CurrentTime = 0.f;
 	spawnNextTetromino();
 	updatePreviewTetrominoes();
 	bCanHold = true;
-
-	// OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::ShowTetromino);
 }
 
 bool FTNFieldModel::moveTetromino(E_TNTetrominoDirection tetrominoDirection)
@@ -431,6 +514,18 @@ void FTNFieldModel::waitForSpawn()
 	}
 }
 
+void FTNFieldModel::handleLineDeletion(const TArray<int32>& linesToDelete)
+{
+	// 삭제될 줄을 처리 목록에 추가합니다.
+	for (int32 height : linesToDelete)
+	{
+		DeletedLines.AddUnique(height);
+	}
+
+	// 줄 삭제 플래그를 설정합니다.
+	bLineDeleting = true;
+}
+
 void FTNFieldModel::spawnNextTetromino() const
 {
 	if (CurrentTetromino.IsValid() && TetrominoGenerator.IsValid())
@@ -470,116 +565,4 @@ float FTNFieldModel::getFallingSpeed() const
 	}
 
 	return TetrominoFallingSpeed * multiplier;
-}
-
-void FTNFieldModel::StartMoveLeft()
-{
-	setMoveDirection(E_TNTetrominoDirection::Left, true);
-}
-
-void FTNFieldModel::StopMoveLeft()
-{
-	setMoveDirection(E_TNTetrominoDirection::Left, false);
-}
-
-void FTNFieldModel::StartMoveRight()
-{
-	setMoveDirection(E_TNTetrominoDirection::Right, true);
-}
-
-void FTNFieldModel::StopMoveRight()
-{
-	setMoveDirection(E_TNTetrominoDirection::Right, false);
-}
-
-void FTNFieldModel::StartSoftDrop()
-{
-	if (isSpaceInverting())
-	{
-		return;
-	}
-
-	bSoftDrop = true;
-}
-
-void FTNFieldModel::StopSoftDrop()
-{
-	bSoftDrop = false;
-}
-
-void FTNFieldModel::RotateClockWise()
-{
-	rotateTetromino(E_TNTetrominoRotation::ClockWise);
-}
-
-void FTNFieldModel::RotateCounterClockWise()
-{
-	rotateTetromino(E_TNTetrominoRotation::CounterClockWise);
-}
-
-void FTNFieldModel::Hold()
-{
-	if (isSpaceInverting())
-	{
-		return;
-	}
-	
-	if (!bCanHold || !CurrentTetromino.IsValid())
-	{
-		return;
-	}
-
-	const E_TNTetrominoType holdTetrominoType = FieldContext.HoldTetrominoInfo->CurrentType;
-	const E_TNTetrominoType currentTetrominoType = CurrentTetromino->GetTetrominoType();
-	
-	FieldContext.HoldTetrominoInfo->ApplyTetrominoType(currentTetrominoType);
-	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateHoldTetromino);
-
-	if (holdTetrominoType != E_TNTetrominoType::None)
-	{
-		CurrentTime = 0.f;
-		CurrentTetromino->SetTetrominoType(holdTetrominoType);
-		CurrentTetromino->Spawn();
-	}
-	else
-	{
-		CurrentTime = 0.f;
-		spawnNextTetromino();
-		updatePreviewTetrominoes();
-	}
-
-	bCanHold = false;
-}
-
-void FTNFieldModel::ToggleSpaceInversion()
-{
-	if (isSpaceInverting())
-	{
-		return;
-	}
-
-	FieldContext.bSpaceInverted = !FieldContext.bSpaceInverted;
-	RotationPauseRemainingTime = RotationDuration;
-	CurrentTime = 0.f;
-	
-	if (CurrentTetromino.IsValid())
-	{
-		CurrentTetromino->ResetGuideTetromino();
-	}
-	
-	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::RotateField);
-}
-
-void FTNFieldModel::HardDrop()
-{
-	if (isSpaceInverting())
-	{
-		return;
-	}
-
-	if (CurrentTetromino.IsValid())
-	{
-		CurrentTetromino->HardDrop();
-		doLockDown();
-	}
 }
