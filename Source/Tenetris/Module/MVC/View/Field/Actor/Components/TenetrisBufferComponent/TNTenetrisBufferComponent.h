@@ -26,6 +26,8 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	virtual	void Initialize();
+	void CleanMinoBuffer();
+	void CleanBackgroundBuffer();
 	void SetBufferSize(const int32 bufferHeight, const int32 bufferWidth);
 	void SetMinoClassType(const TSubclassOf<ATNMinoBase> minoClass);
 	void SetBackgroundCubeType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
@@ -36,6 +38,7 @@ public:
 
 private:
 	void buildMinoLayer(USceneComponent* pivot, TArray<TArray<ATNMinoBase*>>& targetBuffer);
+	void cleanBuffer(TArray<TArray<ATNMinoBase*>>& targetBuffer);
 	
 private:
 	TArray<TArray<ATNMinoBase*>> BackgroundCubeBuffer;

@@ -56,13 +56,8 @@ enum class E_TNFieldModelStateType : uint32
 	ShowTetromino,
 	HideGuideTetromino,
 	ShowGuideTetromino,
-	HideHoldTetromino,
-	ShowHoldTetromino,
-	HidePreviewTetromino,
-	ShowPreviewTetromino,
-	
+	UpdateHoldTetromino,
 	UpdatePreviewTetrominoes,
-	
 	RotateField,
 	LockDown,
 };
@@ -76,6 +71,16 @@ const TTetrominoCoordinate OMinoCoordinate = { FVector2D(0.f, 0.f) , FVector2D(0
 const TTetrominoCoordinate SMinoCoordinate = { FVector2D(-1.f, 0.f) , FVector2D(0.f, 0.f), FVector2D(0.f, 1.f), FVector2D(1.f, 1.f) };
 const TTetrominoCoordinate TMinoCoordinate = { FVector2D(0.f, 1.f) , FVector2D(-1.f, 0.f), FVector2D(0.f, 0.f), FVector2D(1.f, 0.f) };
 const TTetrominoCoordinate ZMinoCoordinate = { FVector2D(-1.f, 1.f) , FVector2D(0.f, 0.f), FVector2D(0.f, 1.f), FVector2D(1.f, 0.f) };
+const TTetrominoCoordinate TetrominoCoordinatesByType[] =
+{
+	IMinoCoordinate,
+	JMinoCoordinate,
+	LMinoCoordinate,
+	OMinoCoordinate,
+	SMinoCoordinate,
+	TMinoCoordinate,
+	ZMinoCoordinate,
+};
 
 struct FTNTetrominoInfo
 {
@@ -84,13 +89,31 @@ public:
 		: CurrentType(E_TNTetrominoType::None)
 		, CurrentPosition(FVector2D(1, 1))
 		, RotationState(0)
-	{}
+	{
+		ApplyTetrominoType(CurrentType);
+	}
 
 	FTNTetrominoInfo(E_TNTetrominoType currentTetrominoType)
 		: CurrentType(currentTetrominoType)
 		, CurrentPosition(FVector2D(1, 1))
 		, RotationState(0)
-	{}
+	{
+		ApplyTetrominoType(CurrentType);
+	}
+
+	void ApplyTetrominoType(const E_TNTetrominoType tetrominoType)
+	{
+		CurrentType = tetrominoType;
+
+		const uint32 typeIndex = static_cast<uint32>(CurrentType);
+		if (typeIndex < UE_ARRAY_COUNT(TetrominoCoordinatesByType))
+		{
+			Coordinate = TetrominoCoordinatesByType[typeIndex];
+			return;
+		}
+
+		Coordinate.Empty();
+	}
 
 	void SetPosition(int32 x, int32 y)
 	{

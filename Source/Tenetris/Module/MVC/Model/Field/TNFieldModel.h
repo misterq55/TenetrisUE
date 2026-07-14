@@ -36,11 +36,6 @@ public:
 		return HoldTetromino;
 	}
 
-	TArray<TSharedPtr<FTNTetrominoBase>>& GetPreviewTetrominoes()
-	{
-		return PreviewTetrominoes;
-	}
-
 	int32 GetId() const;
 
 	void StartMoveLeft();
@@ -64,19 +59,12 @@ private:
 	void setValueToCheckBuffer(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
 	bool checkMino(const int32 x, const int32 y) const;
 	int32 calculateGuideMinoHeight(const int32 x, const int32 y) const;
-	void hidePreviewTetromino() const;
-	void showPreviewTetromino() const;
-	void hideHoldTetromino() const;
-	void setHoldTetromino() const;
 	void hideTetromino() const;
 	void showTetromino() const;
 	void hideGuideTetromino() const;
 	void setGuideTetromino() const;
 	void checkLineDelete(const TArray<int32>& heights);
 	bool isLineDeleted(int32 height) const;
-
-	void initializePreviewTetrominoes();
-	void initializeHoldTetromino();
 
 	void spawn();
 
@@ -95,6 +83,7 @@ private:
 	void handleLineDeletion(const TArray<int32>& linesToDelete);
 
 	void spawnNextTetromino() const;
+	void updateHoldTetromino();
 	void updatePreviewTetrominoes();
 	float getFallingSpeed() const;
 	bool isSpaceInverting() const
@@ -107,7 +96,6 @@ private:
 
 	TSharedPtr<FTNPlayerTetromino> CurrentTetromino;
 	TSharedPtr<FTNTetrominoGenerator> TetrominoGenerator;
-	TArray<TSharedPtr<FTNTetrominoBase>> PreviewTetrominoes;
 
 	TArray<int32> DeletedLines;
 	float DeleteLineCheckTime = 0.f;

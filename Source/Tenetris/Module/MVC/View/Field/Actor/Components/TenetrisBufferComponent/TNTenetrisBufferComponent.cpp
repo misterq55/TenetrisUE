@@ -65,7 +65,7 @@ void UTNTenetrisBufferComponent::buildMinoLayer(USceneComponent* pivot, TArray<T
 			childComponent->AttachToComponent(pivot, FAttachmentTransformRules::KeepRelativeTransform);
 			childComponent->CreateChildActor();
 
-			ATNMinoBase* minoBase = Cast<ATNMinoBase>(childComponent->GetChildActor());
+			ATNMinoBase* const minoBase = Cast<ATNMinoBase>(childComponent->GetChildActor());
 
 			if (!IsValid(minoBase))
 			{
@@ -82,6 +82,29 @@ void UTNTenetrisBufferComponent::Initialize()
 {
 	buildMinoLayer(BackGroundMinoBufferPivot, BackgroundCubeBuffer);
 	buildMinoLayer(MinoBufferPivot, MinoBuffer);
+}
+
+void UTNTenetrisBufferComponent::CleanMinoBuffer()
+{
+	cleanBuffer(MinoBuffer);
+}
+
+void UTNTenetrisBufferComponent::CleanBackgroundBuffer()
+{
+	cleanBuffer(BackgroundCubeBuffer);
+}
+
+void UTNTenetrisBufferComponent::cleanBuffer(TArray<TArray<ATNMinoBase*>>& targetBuffer)
+{
+	for (int32 i = 0; i < BufferHeight + 2; i++)
+	{
+		for (int32 j = 0; j < BufferWidth; j++)
+		{
+			ATNMinoBase* const mino = targetBuffer[i][j];
+			mino->SetTetrominoType(E_TNTetrominoType::None);
+			mino->SetVitibility(false);
+		}
+	}
 }
 
 void UTNTenetrisBufferComponent::SetBufferSize(const int32 bufferHeight, const int32 bufferWidth)
