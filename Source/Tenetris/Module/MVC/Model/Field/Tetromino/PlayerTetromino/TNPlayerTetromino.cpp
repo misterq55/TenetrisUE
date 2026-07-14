@@ -38,7 +38,7 @@ bool FTNPlayerTetromino::Rotate(const E_TNTetrominoRotation tetrominoRotation)
 	}
 	
 	// Super Rotation System
-	// ���� ���� Ŭ������ �и��� ��ȹ
+	// 별도 클래스로 분리할 계획
 	TArray<FVector2D> simulationCoordinates;
 	TArray<FVector2D> rotateMatrix;
 
@@ -85,14 +85,14 @@ bool FTNPlayerTetromino::Rotate(const E_TNTetrominoRotation tetrominoRotation)
 	const TArray<FVector2D>& oldOffset = offset[oldRotationState];
 	const TArray<FVector2D>& newOffset = offset[TetrominoInfo->RotationState];
 
-	// ű ������ ���ϱ�
+	// 킥 오프셋 구하기
 	FVector2D kickOffset(0, 0);
 	bool tetrominoCheck = true;
 	for (int32 i = 0; i < newOffset.Num(); i++)
 	{
 		const FVector2D& difference = oldOffset[i] - newOffset[i];
 
-		// CheckMino ����
+		// CheckMino 실행
 		bool simulationCheck = false;
 		const FVector2D& simulationPosition = TetrominoInfo->CurrentPosition + difference;
 		for (const FVector2D& coord : simulationCoordinates)
