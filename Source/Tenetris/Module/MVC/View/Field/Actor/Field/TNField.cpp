@@ -81,7 +81,7 @@ void ATNField::HideTetromino(const FTNFieldContext& fieldContext)
 	for (const auto& coord : tetrominoInfo->Coordinate)
 	{
 		setVisibilityMino(coord.X + tetrominoInfo->CurrentPosition.X,
-						  coord.Y + tetrominoInfo->CurrentPosition.Y, false);
+		                  coord.Y + tetrominoInfo->CurrentPosition.Y, false);
 	}
 }
 
@@ -99,6 +99,34 @@ void ATNField::ShowTetromino(const FTNFieldContext& fieldContext)
 		setMinoType(coord.X + tetrominoInfo->CurrentPosition.X,
 		            coord.Y + tetrominoInfo->CurrentPosition.Y,
 		            tetrominoInfo->CurrentType);
+	}
+}
+
+void ATNField::UpdateTetromino(const FTNFieldContext& fieldContext)
+{
+	if (!IsValid(TenetrisBufferComponent))
+	{
+		return;
+	}
+
+	TenetrisBufferComponent->CleanMinoBuffer();
+
+	TSharedPtr<FTNTetrominoInfo> tetrominoInfo = fieldContext.PlayerTetrominoInfo;
+
+	if (!tetrominoInfo.IsValid())
+	{
+		return;
+	}
+
+	for (const auto& coord : tetrominoInfo->Coordinate)
+	{
+		TenetrisBufferComponent->SetMinoType(coord.X + tetrominoInfo->CurrentPosition.X,
+		                                     coord.Y + tetrominoInfo->CurrentPosition.Y,
+		                                     tetrominoInfo->CurrentType);
+
+		TenetrisBufferComponent->SetMinoType(coord.X + tetrominoInfo->GuideTetrominoPosition.X,
+		                                     coord.Y + tetrominoInfo->GuideTetrominoPosition.Y,
+		                                     E_TNTetrominoType::Guide);
 	}
 }
 
@@ -178,9 +206,9 @@ void ATNField::UpdatePreviewTetrominoes(const FTNFieldContext& fieldContext) con
 	{
 		return;
 	}
-	
+
 	PreviewBufferComponent->CleanMinoBuffer();
-	
+
 	const TArray<TSharedPtr<FTNTetrominoInfo>>& previewTetrominoInfos = fieldContext.PreviewTetrominoInfos;
 
 	for (int32 i = 0; i < PreviewTetrominoNum; i++)
@@ -192,7 +220,7 @@ void ATNField::UpdatePreviewTetrominoes(const FTNFieldContext& fieldContext) con
 		}
 
 		const FVector2D pos = PreviewTetrominoPositions[i];
-		
+
 		for (const auto& coord : tetrominoInfo->Coordinate)
 		{
 			PreviewBufferComponent->SetMinoType(coord.X + pos.X, coord.Y + pos.Y, tetrominoInfo->CurrentType);
@@ -210,7 +238,7 @@ void ATNField::initializePreviewBuffer()
 	PreviewBufferComponent->SetMobility(EComponentMobility::Movable);
 	PreviewBufferComponent->SetRelativeLocation(FVector(0.f, 200.f, 50.f));
 	PreviewBufferComponent->SetRelativeScale3D(FVector(0.75f, 0.75f, 0.75f));
-	
+
 	PreviewTetrominoPositions.Reserve(PreviewTetrominoNum);
 	for (int32 i = 0; i < PreviewTetrominoNum; i++)
 	{
@@ -226,7 +254,7 @@ void ATNField::initializeHoldBuffer()
 	HoldBufferComponent->SetMobility(EComponentMobility::Movable);
 	HoldBufferComponent->SetRelativeLocation(FVector(0.f, -200.f, 150.f));
 	HoldBufferComponent->SetRelativeScale3D(FVector(0.75f, 0.75f, 0.75f));
-	
+
 	HoldTetrominoPosition = FVector2D(2, 1);
 }
 

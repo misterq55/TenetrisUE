@@ -35,6 +35,9 @@ public:
 	void RotateField(const FTNFieldContext& fieldContext);
 	void HideTetromino(const FTNFieldContext& fieldContext);
 	void ShowTetromino(const FTNFieldContext& fieldContext);
+	
+	void UpdateTetromino(const FTNFieldContext& fieldContext);
+	
 	void LockDown(const FTNFieldContext& fieldContext);
 	void HideGuideTetromino(const FTNFieldContext& fieldContext);
 	void ShowGuideTetromino(const FTNFieldContext& fieldContext);

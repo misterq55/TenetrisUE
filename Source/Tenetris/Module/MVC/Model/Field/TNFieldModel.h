@@ -30,11 +30,6 @@ public:
 		return CurrentTetromino;
 	}
 
-	TSharedPtr<FTNTetromino> GetHoldTetromino() const
-	{
-		return HoldTetromino;
-	}
-
 	int32 GetId() const;
 
 	void StartMoveLeft();
@@ -61,7 +56,10 @@ private:
 	void hideTetromino() const;
 	void showTetromino() const;
 	void hideGuideTetromino() const;
-	void setGuideTetromino() const;
+	// void setGuideTetromino() const;
+	
+	void updateTetromino() const;
+	
 	void checkLineDelete(const TArray<int32>& heights);
 	bool isLineDeleted(int32 height) const;
 
@@ -103,8 +101,6 @@ private:
 	float TetrominoFallingSpeed = 1.f;
 	float CurrentTime = 0.f;
 	float RotationPauseRemainingTime = 0.f;
-
-	TSharedPtr<FTNTetromino> HoldTetromino;
 
 	FTNUpdateModel OnUpdateModel;
 
