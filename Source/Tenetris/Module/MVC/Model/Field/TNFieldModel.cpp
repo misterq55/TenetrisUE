@@ -1,9 +1,7 @@
 #include "TNFieldModel.h"
-#include "Tenetris/Module/MVC/Model/Field/Tetromino/TNTetrominoBase.h"
+#include "Tenetris/Module/MVC/Model/Field/Tetromino/TNTetromino.h"
 
 // TODO 테트로미노 리스트 분리 [05/21/2024]
-#include "Tenetris/Module/MVC/Model/Field/Tetromino/PlayerTetromino/TNPlayerTetromino.h"
-#include "Tenetris/Module/MVC/Model/Field/Tetromino/PreviewTetromino/TNPreviewTetromino.h"
 #include "Tenetris/Module/MVC/Model/Field/TetrominoGenerator/TNTetrominoGenerator.h"
 
 FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
@@ -16,7 +14,7 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
 		{
 		case E_TNFieldType::Player:
 		{
-			CurrentTetromino = MakeShareable(new FTNPlayerTetromino(FieldContext.PlayerTetrominoInfo));
+			CurrentTetromino = MakeShareable(new FTNTetromino(FieldContext.PlayerTetrominoInfo));
 
 			CurrentTetromino->OnMoveTetrominoToCheckBuffer.BindRaw(this, &FTNFieldModel::setValueToCheckBuffer);
 			CurrentTetromino->OnCheckMino.BindRaw(this, &FTNFieldModel::checkMino);

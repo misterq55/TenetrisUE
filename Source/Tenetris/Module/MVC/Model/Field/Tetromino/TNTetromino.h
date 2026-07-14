@@ -10,35 +10,59 @@ DECLARE_DELEGATE_RetVal_TwoParams(int32, FCalculateGuideMinoHeightDelegate, cons
 
 DECLARE_DELEGATE(FHideTetromino)
 DECLARE_DELEGATE(FShowTetromino)
+DECLARE_DELEGATE(FHideGuideTetromino)
+DECLARE_DELEGATE(FShowGuideTetromino)
 
-class FTNTetrominoBase
+class FTNTetromino
 {
+private:
+	const TArray<TArray<FVector2D>> JLSTZOffset = {
+		{FVector2D(0,0), FVector2D(0,0), FVector2D(0,0), FVector2D(0,0), FVector2D(0,0)} ,
+		{FVector2D(0,0), FVector2D(1,0), FVector2D(1,-1), FVector2D(0,2), FVector2D(1,2)} ,
+		{FVector2D(0,0), FVector2D(0,0), FVector2D(0,0), FVector2D(0,0), FVector2D(0,0)} ,
+		{FVector2D(0,0), FVector2D(-1,0), FVector2D(-1,-1), FVector2D(0,0), FVector2D(-1,2)}
+	};
+
+	const TArray<TArray<FVector2D>> IOffset = {
+		{FVector2D(0,0), FVector2D(-1,0), FVector2D(2,0), FVector2D(-1,0), FVector2D(2,0)} ,
+		{FVector2D(-1,0), FVector2D(0,0), FVector2D(0,0), FVector2D(0,1), FVector2D(0,-2)} ,
+		{FVector2D(-1,1), FVector2D(1,1), FVector2D(-2,1), FVector2D(1,0), FVector2D(-2,0)} ,
+		{FVector2D(0,1), FVector2D(0,1), FVector2D(0,1), FVector2D(0,-1), FVector2D(0,2)}
+	};
+
+	const TArray<TArray<FVector2D>> OOffset = {
+		{FVector2D(0,0)} ,
+		{FVector2D(0,-1)} ,
+		{FVector2D(-1,-1)} ,
+		{FVector2D(-1,0)}
+	};
+
 public:
-	FTNTetrominoBase() {}
-	FTNTetrominoBase(TSharedPtr<FTNTetrominoInfo> tetrominoInfo) 
+	FTNTetromino() {}
+	FTNTetromino(TSharedPtr<FTNTetrominoInfo> tetrominoInfo)
 	{
 		TetrominoInfo = tetrominoInfo;
 	}
 
-	virtual ~FTNTetrominoBase() 
+	virtual ~FTNTetromino()
 	{
 		OnCheckMino.Unbind();
 		OnCalulateGuideMino.Unbind();
 	}
 
-	virtual bool Move(const E_TNTetrominoDirection tetrominoDirection) { return true; }
-	virtual bool Rotate(const E_TNTetrominoRotation tetrominoRotation) { return true; }
-	virtual void LockDown() {}
+	virtual bool Move(const E_TNTetrominoDirection tetrominoDirection);
+	virtual bool Rotate(const E_TNTetrominoRotation tetrominoRotation);
+	virtual void LockDown();
 	virtual void Spawn();
-	virtual void ShowGuideTetromino() {}
-	virtual void HardDrop() {}
-	virtual void HideGuideTetromino() {}
+	virtual void ShowGuideTetromino();
+	virtual void HardDrop();
+	virtual void HideGuideTetromino();
 	virtual void ResetGuideTetromino()
 	{
 		HideGuideTetromino();
 		ShowGuideTetromino();
 	}
-	
+
 	TArray<int32> GetMinoHeights() const;
 	void SetTetrominoPosition(const int32 x, const int32 y) const;
 	void SetTetrominoType(const E_TNTetrominoType currentTetrominoType) const;
@@ -53,7 +77,11 @@ protected:
 	bool checkMino(const FVector2D& simulationPosition) const;
 	void showTetromino() const;
 	void moveTetrominoToCheckBuffer() const;
-	
+
+private:
+	FVector2D simulatePosition(const E_TNTetrominoDirection tetrominoDirection) const;
+	int32 mod(int32 n, int32 m) { return ((n % m) + m) % m; }
+
 public:
 	FSetBackgroundCubeTypeDelegate OnMoveTetrominoToCheckBuffer;
 	FCheckMinoDelegate OnCheckMino;
@@ -61,6 +89,8 @@ public:
 
 	FHideTetromino OnHideTetromino;
 	FShowTetromino OnShowTetromino;
+	FHideGuideTetromino OnHideGuideTetromino;
+	FShowGuideTetromino OnShowGuideTetromino;
 
 protected:
 	TSharedPtr<FTNTetrominoInfo> TetrominoInfo;
