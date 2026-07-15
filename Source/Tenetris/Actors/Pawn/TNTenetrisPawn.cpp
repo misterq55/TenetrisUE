@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TNTenetrisPawn.h"
+#include "Tenetris/Actors/Pawn/TNTenetrisPawn.h"
 #include "Camera/CameraComponent.h"
 
 // Sets default values
@@ -41,4 +41,3 @@ void ATNTenetrisPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 }
-

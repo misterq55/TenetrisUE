@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TNTenetrisBufferComponent.h"
-#include "Tenetris/Module/MVC/View/Field/Actor/Mino/TNMinoBase.h"
+#include "Tenetris/Actors/Components/TenetrisBufferComponent/TNTenetrisBufferComponent.h"
+#include "Tenetris/Actors/Mino/TNMinoBase.h"
 
 // Sets default values for this component's properties
 UTNTenetrisBufferComponent::UTNTenetrisBufferComponent()
@@ -194,4 +194,3 @@ void UTNTenetrisBufferComponent::RotateField(const float alpha, const bool bSpac
 		BackGroundMinoBufferPivot->SetRelativeRotation(newRotation);
 	}
 }
-

@@ -1,6 +1,6 @@
-#include "TNField.h"
-#include "Tenetris/Module/MVC/View/Field/Actor/Mino/TNMinoBase.h"
-#include "Module/MVC/View/Field/Actor/Components/TenetrisBufferComponent/TNTenetrisBufferComponent.h"
+#include "Tenetris/Actors/Field/TNField.h"
+#include "Tenetris/Actors/Mino/TNMinoBase.h"
+#include "Tenetris/Actors/Components/TenetrisBufferComponent/TNTenetrisBufferComponent.h"
 
 ATNField::ATNField()
 {

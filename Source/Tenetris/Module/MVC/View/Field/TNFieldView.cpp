@@ -1,5 +1,5 @@
 #include "TNFieldView.h"
-#include "Tenetris/Module/MVC/View/Field/Actor/Field/TNField.h"
+#include "Tenetris/Actors/Field/TNField.h"
 #include "Engine/World.h"
 
 void FTNFieldView::SetFieldActor(ATNField* fieldActor)

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "TNMinoBase.h"
+#include "Tenetris/Actors/Mino/TNMinoBase.h"
 
 // Sets default values
 ATNMinoBase::ATNMinoBase()
@@ -47,4 +47,3 @@ void ATNMinoBase::SetTetrominoType(E_TNTetrominoType tetrominoType)
 {
 	TetrominoType = tetrominoType;
 }
-
