@@ -3,7 +3,7 @@
 #pragma once
 
 // #include "Tenetris/Module/MVC/View/Field/Actor/Field/PlayerField/TNPlayerField.h"
-#include "Tenetris/Actors/Field/ElectronicDisplay/ATNElectronicDisplayField.h"
+#include "Tenetris/Actors/Field/ElectronicDisplay/TNElectronicDisplayField.h"
 #include "Tenetris/Actors/Mino/TNMinoBase.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/StaticMesh.h"

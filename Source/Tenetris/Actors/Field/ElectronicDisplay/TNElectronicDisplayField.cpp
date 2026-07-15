@@ -1,6 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Tenetris/Actors/Field/ElectronicDisplay/ATNElectronicDisplayField.h"
+#include "Tenetris/Actors/Field/ElectronicDisplay/TNElectronicDisplayField.h"
 #include "Tenetris/Actors/Mino/TNMinoBase.h"
 #include "Tenetris/Actors/Components/TenetrisBufferComponent/TNTenetrisBufferComponent.h"
 
