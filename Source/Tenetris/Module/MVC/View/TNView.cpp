@@ -20,7 +20,7 @@ void FTNView::CreateFieldView(const int32 key)
 	}
 }
 
-void FTNView::CreateFieldViewWithFieldActor(const int32 key, ATNField* fieldActor)
+void FTNView::CreateFieldViewWithFieldActor(const int32 key, ATNFieldBase* fieldActor)
 {
 	TSharedPtr<FTNFieldView> fieldView = MakeShareable(new FTNFieldView());
 	if (fieldView.IsValid())

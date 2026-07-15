@@ -39,7 +39,7 @@ void FTNModel::CreateFieldModel(FTNFieldContext fieldContext)
 	ModelKey++;
 }
 
-void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, ATNField* fieldActor)
+void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, ATNFieldBase* fieldActor)
 {
 	TSharedPtr<FTNFieldModel> fieldModel = MakeShareable(new FTNFieldModel(fieldContext));
 	if (!fieldModel.IsValid())

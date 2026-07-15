@@ -10,7 +10,7 @@
  * 
  */
 
-class ATNField;
+class ATNFieldBase;
 
 UCLASS(Blueprintable)
 class TENETRIS_API ATNTenetrisGameModeBase : public AGameModeBase
@@ -19,11 +19,11 @@ class TENETRIS_API ATNTenetrisGameModeBase : public AGameModeBase
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
-	virtual void AddFields(ATNField* field);
+	virtual void AddFields(ATNFieldBase* field);
 	
 	UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
-	void SetPlayerField(ATNField* playerField);
+	void SetPlayerField(ATNFieldBase* playerField);
 
 protected:
-	TArray<ATNField*> Fields;
+	TArray<ATNFieldBase*> Fields;
 };
