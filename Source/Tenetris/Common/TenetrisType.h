@@ -116,20 +116,15 @@ public:
 	TArray<TArray<E_TNTetrominoType>> CheckBuffer;
 	TArray<TArray<E_TNTetrominoType>> ReversedBuffer;
 	TSharedPtr<FTNTetrominoInfo> PlayerTetrominoInfo;
-	TSharedPtr<FTNTetrominoInfo> HoldTetrominoInfo;
 	int32 PreviewTetrominoNum;
-	TArray<TSharedPtr<FTNTetrominoInfo>> PreviewTetrominoInfos;
+	E_TNTetrominoType HoldTetrominoType = E_TNTetrominoType::None;
+	TArray<E_TNTetrominoType> PreviewTetrominoTypes;
 
 	void initializeTetrominoInfos()
 	{
 		PlayerTetrominoInfo = MakeShareable(new FTNTetrominoInfo());
-		HoldTetrominoInfo = MakeShareable(new FTNTetrominoInfo());
-
 		PreviewTetrominoNum = PreviewTetrominoMax;
-		for (int32 i = 0; i < PreviewTetrominoNum; i++)
-		{
-			PreviewTetrominoInfos.Emplace(MakeShareable(new FTNTetrominoInfo()));
-		}
+		PreviewTetrominoTypes.Init(E_TNTetrominoType::None, PreviewTetrominoNum);
 	}
 
 	void createBuffer(TArray<TArray<E_TNTetrominoType>>& checkBuffer) const
