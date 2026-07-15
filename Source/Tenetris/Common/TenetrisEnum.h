@@ -40,7 +40,8 @@ enum class E_TNTetrominoBufferDataType : uint32
 enum class E_TNFieldType : uint32
 {
 	Player,
-	Enemy
+	Enemy,
+	None,
 };
 
 enum class E_TNFieldModelStateType : uint32
