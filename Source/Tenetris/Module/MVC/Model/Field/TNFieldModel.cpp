@@ -127,10 +127,10 @@ void FTNFieldModel::Hold()
 		return;
 	}
 
-	const E_TNTetrominoType holdTetrominoType = FieldContext.HoldTetrominoInfo->CurrentType;
+	const E_TNTetrominoType holdTetrominoType = FieldContext.HoldTetrominoType;
 	const E_TNTetrominoType currentTetrominoType = CurrentTetromino->GetTetrominoType();
 	
-	FieldContext.HoldTetrominoInfo->ApplyTetrominoType(currentTetrominoType);
+	FieldContext.HoldTetrominoType = currentTetrominoType;
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateHoldTetromino);
 
 	if (holdTetrominoType != E_TNTetrominoType::None)
@@ -564,7 +564,7 @@ void FTNFieldModel::updatePreviewTetrominoes()
 	
 	for (int32 i = 0; i < FieldContext.PreviewTetrominoNum; i++)
 	{
-		FieldContext.PreviewTetrominoInfos[i]->ApplyTetrominoType(TetrominoGenerator->GetAt(i));
+		FieldContext.PreviewTetrominoTypes[i] = TetrominoGenerator->GetAt(i);	
 	}
 	
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdatePreviewTetrominoes);

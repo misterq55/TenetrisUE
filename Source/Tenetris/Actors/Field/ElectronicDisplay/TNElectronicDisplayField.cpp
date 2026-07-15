@@ -144,19 +144,12 @@ void ATNElectronicDisplayField::updateHoldTetromino(const FTNFieldContext& field
 	}
 
 	HoldBufferComponent->CleanMinoBuffer();
-
-	TSharedPtr<FTNTetrominoInfo> tetrominoInfo = fieldContext.HoldTetrominoInfo;
-
-	if (!tetrominoInfo.IsValid())
+	
+	const E_TNTetrominoType holdTetrominoType = fieldContext.HoldTetrominoType;
+	for (const auto& coord : TetrominoCoordinatesByType[static_cast<uint32>(holdTetrominoType)])
 	{
-		return;
-	}
-
-	for (const auto& coord : tetrominoInfo->Coordinate)
-	{
-		HoldBufferComponent->SetMinoType(coord.X + HoldTetrominoPosition.X,
-		                                 coord.Y + HoldTetrominoPosition.Y, tetrominoInfo->CurrentType);
-	}
+		HoldBufferComponent->SetMinoType(coord.X + HoldTetrominoPosition.X, coord.Y + HoldTetrominoPosition.Y, holdTetrominoType);
+	}	
 }
 
 void ATNElectronicDisplayField::updatePreviewTetrominoes(const FTNFieldContext& fieldContext) const
@@ -167,22 +160,15 @@ void ATNElectronicDisplayField::updatePreviewTetrominoes(const FTNFieldContext& 
 	}
 
 	PreviewBufferComponent->CleanMinoBuffer();
-
-	const TArray<TSharedPtr<FTNTetrominoInfo>>& previewTetrominoInfos = fieldContext.PreviewTetrominoInfos;
-
+	
 	for (int32 i = 0; i < PreviewTetrominoNum; i++)
 	{
-		TSharedPtr<FTNTetrominoInfo> tetrominoInfo = previewTetrominoInfos[i];
-		if (!tetrominoInfo.IsValid())
-		{
-			continue;
-		}
-
+		const E_TNTetrominoType tetrominoType = fieldContext.PreviewTetrominoTypes[i];
 		const FVector2D pos = PreviewTetrominoPositions[i];
 
-		for (const auto& coord : tetrominoInfo->Coordinate)
+		for (const auto& coord : TetrominoCoordinatesByType[static_cast<uint32>(tetrominoType)])
 		{
-			PreviewBufferComponent->SetMinoType(coord.X + pos.X, coord.Y + pos.Y, tetrominoInfo->CurrentType);
+			PreviewBufferComponent->SetMinoType(coord.X + pos.X, coord.Y + pos.Y, tetrominoType);
 		}
 	}
 }
