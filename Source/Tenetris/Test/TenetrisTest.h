@@ -3,13 +3,12 @@
 #pragma once
 
 // #include "Tenetris/Module/MVC/View/Field/Actor/Field/PlayerField/TNPlayerField.h"
-#include "Tenetris/Module/MVC/View/Field/Actor/Field/TNField.h"
-#include "Tenetris/Module/MVC/View/Field/Actor/Mino/TNMinoBase.h"
+#include "Tenetris/Actors/Field/TNField.h"
+#include "Tenetris/Actors/Mino/TNMinoBase.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/StaticMesh.h"
 #include "Engine/StaticMeshActor.h"
-#include "Tenetris/Module/MVC/View/Field/Actor/Components/TenetrisBufferComponent/TNTenetrisBufferComponent.h"
-// #include "Tenetris/Module/MVC/View/Field/Actor/Components/TenetrisBufferComponent/TNOldTenetrisBufferComponent.h"
+#include "Tenetris/Actors/Components/TenetrisBufferComponent/TNTenetrisBufferComponent.h"
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/TNTetromino.h"
 #include "Tenetris/Module/MVC/Model/Field/TetrominoGenerator/TNTetrominoGenerator.h"
 #include "TenetrisTest.generated.h"

@@ -4,7 +4,7 @@
 
 #include "Tenetris/TenetrisDefine.h"
 
-DECLARE_DELEGATE_ThreeParams(FSetBackgroundCubeTypeDelegate, const int32, const int32, const E_TNTetrominoType);
+DECLARE_DELEGATE_ThreeParams(FMoveTetrominoToCheckBufferDelegate, const int32, const int32, const E_TNTetrominoType);
 DECLARE_DELEGATE_RetVal_TwoParams(bool, FCheckMinoDelegate, const int32, const int32);
 DECLARE_DELEGATE_RetVal_TwoParams(int32, FCalculateGuideMinoHeightDelegate, const int32, const int32);
 
@@ -76,13 +76,12 @@ private:
 	static int32 mod(int32 n, int32 m) { return ((n % m) + m) % m; }
 
 public:
-	FSetBackgroundCubeTypeDelegate OnMoveTetrominoToCheckBuffer;
+	FMoveTetrominoToCheckBufferDelegate OnMoveTetrominoToCheckBuffer;
 	FCheckMinoDelegate OnCheckMino;
 	FCalculateGuideMinoHeightDelegate OnCalculateGuideMino;
-
 	FUpdateTetromino OnUpdateTetromino;
 
-protected:
+private:
 	TSharedPtr<FTNTetrominoInfo> TetrominoInfo;
 	FVector2D StartingLocation;
 };
