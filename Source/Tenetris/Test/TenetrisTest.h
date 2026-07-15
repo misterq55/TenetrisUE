@@ -3,7 +3,7 @@
 #pragma once
 
 // #include "Tenetris/Module/MVC/View/Field/Actor/Field/PlayerField/TNPlayerField.h"
-#include "Tenetris/Actors/Field/TNField.h"
+#include "Tenetris/Actors/Field/ElectronicDisplay/ATNElectronicDisplayField.h"
 #include "Tenetris/Actors/Mino/TNMinoBase.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Engine/StaticMesh.h"
@@ -96,14 +96,14 @@ public:
 };
 
 UCLASS()
-class TENETRIS_API ATNTestField : public ATNField
+class TENETRIS_API ATNTestField : public ATNElectronicDisplayField
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this actor's properties
 	ATNTestField()
-		: ATNField()
+		: ATNElectronicDisplayField()
 	{
 		// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 		PrimaryActorTick.bCanEverTick = true;

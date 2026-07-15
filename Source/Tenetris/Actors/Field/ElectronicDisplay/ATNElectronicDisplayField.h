@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Tenetris/Actors/Field/TNFieldBase.h"
-#include "TNField.generated.h"
+#include "ATNElectronicDisplayField.generated.h"
 
 /**
  * 
@@ -14,13 +14,13 @@ class UTNTenetrisBufferComponent;
 class ATNMinoBase;
 
 UCLASS()
-class TENETRIS_API ATNField : public ATNFieldBase
+class TENETRIS_API ATNElectronicDisplayField : public ATNFieldBase
 {
 	GENERATED_BODY()
 	
 public:
-	ATNField();
-	virtual ~ATNField();
+	ATNElectronicDisplayField();
+	virtual ~ATNElectronicDisplayField();
 
 protected:
 	virtual void BeginPlay() override;
