@@ -78,7 +78,7 @@ FTNFieldContext FTNModel::GetFieldContext(const int32 modelKey)
 		return (*fieldModeltPtr)->GetFieldContext();
 	}
 
-	return FTNFieldContext(E_TNFieldType::Player);
+	return FTNFieldContext(E_TNFieldType::None);
 }
 
 TSharedPtr<FTNFieldModel> FTNModel::GetPlayerFieldModel()

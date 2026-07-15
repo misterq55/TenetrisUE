@@ -32,7 +32,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Field")
 	virtual void Initialize();
 
-	void HandleFieldState(const FTNFieldContext& fieldContext, const E_TNFieldModelStateType state);
+	virtual void HandleFieldState(const FTNFieldContext& fieldContext, const E_TNFieldModelStateType state);
 	
 protected:
 	void initializePreviewBuffer();
