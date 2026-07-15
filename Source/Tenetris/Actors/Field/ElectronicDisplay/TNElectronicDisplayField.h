@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Tenetris/Actors/Field/TNFieldBase.h"
-#include "ATNElectronicDisplayField.generated.h"
+#include "TNElectronicDisplayField.generated.h"
 
 /**
  * 
