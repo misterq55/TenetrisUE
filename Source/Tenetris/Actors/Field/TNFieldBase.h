@@ -15,10 +15,10 @@ class TENETRIS_API ATNFieldBase : public AActor, public ITNFieldActorInterface
 
 public:
 	ATNFieldBase();
-	virtual ~ATNFieldBase();
+	virtual ~ATNFieldBase() override;
 
-	virtual void Initialize() PURE_VIRTUAL(ATNFieldBase::Initialize, );
-	virtual void HandleFieldState(const FTNFieldContext& fieldContext, const E_TNFieldModelStateType state) PURE_VIRTUAL(ATNFieldBase::HandleFieldState, );
-	virtual void ApplyPreviewVisible(bool bVisible) PURE_VIRTUAL(ATNFieldBase::ApplyPreviewVisible, );
-	virtual void ApplyHoldVisible(bool bVisible) PURE_VIRTUAL(ATNFieldBase::ApplyHoldVisible, );
+	virtual void Initialize() override PURE_VIRTUAL(ATNFieldBase::Initialize, );
+	virtual void HandleFieldState(const FTNFieldContext& fieldContext, const E_TNFieldModelStateType state) override PURE_VIRTUAL(ATNFieldBase::HandleFieldState, );
+	virtual void ApplyPreviewVisible(bool bVisible) override PURE_VIRTUAL(ATNFieldBase::ApplyPreviewVisible, );
+	virtual void ApplyHoldVisible(bool bVisible) override PURE_VIRTUAL(ATNFieldBase::ApplyHoldVisible, );
 };
