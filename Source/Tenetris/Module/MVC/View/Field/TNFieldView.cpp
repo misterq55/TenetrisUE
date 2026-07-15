@@ -1,8 +1,8 @@
 #include "TNFieldView.h"
-#include "Tenetris/Actors/Field/TNField.h"
+#include "Tenetris/Actors/Field/TNFieldBase.h"
 #include "Engine/World.h"
 
-void FTNFieldView::SetFieldActor(ATNField* fieldActor)
+void FTNFieldView::SetFieldActor(ATNFieldBase* fieldActor)
 {
 	if (!IsValid(fieldActor))
 	{
@@ -17,14 +17,14 @@ void FTNFieldView::SetFieldActor(ATNField* fieldActor)
 	}
 }
 
-void FTNFieldView::CreateFieldActor(TSubclassOf<ATNField> fieldActorClass, UWorld* world)
+void FTNFieldView::CreateFieldActor(TSubclassOf<ATNFieldBase> fieldActorClass, UWorld* world)
 {
 	if (!IsValid(world))
 	{
 		return;
 	}
 
-	FieldActor = world->SpawnActor<ATNField>(fieldActorClass);
+	FieldActor = world->SpawnActor<ATNFieldBase>(fieldActorClass);
 
 	if (FieldActor.IsValid())
 	{

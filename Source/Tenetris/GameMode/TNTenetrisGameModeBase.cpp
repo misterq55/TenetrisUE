@@ -3,7 +3,7 @@
 
 #include "TNTenetrisGameModeBase.h"
 #include "Tenetris/Actors/Pawn/TNTenetrisPawn.h"
-#include "Tenetris/Actors/Field/TNField.h"
+#include "Tenetris/Actors/Field/TNFieldBase.h"
 #include "Tenetris/PlayerController/TNTenetrisPlayerController.h"
 
 ATNTenetrisGameModeBase::ATNTenetrisGameModeBase(const FObjectInitializer& ObjectInitializer)
@@ -13,12 +13,12 @@ ATNTenetrisGameModeBase::ATNTenetrisGameModeBase(const FObjectInitializer& Objec
 	PlayerControllerClass = ATNTenetrisPlayerController::StaticClass();
 }
 
-void ATNTenetrisGameModeBase::AddFields(ATNField* field)
+void ATNTenetrisGameModeBase::AddFields(ATNFieldBase* field)
 {
 	Fields.Add(field);
 }
 
-void ATNTenetrisGameModeBase::SetPlayerField(ATNField* playerField)
+void ATNTenetrisGameModeBase::SetPlayerField(ATNFieldBase* playerField)
 {
 	AddFields(playerField);
 }

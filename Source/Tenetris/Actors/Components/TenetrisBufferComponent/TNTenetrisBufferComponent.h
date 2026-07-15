@@ -26,6 +26,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	virtual	void Initialize();
+	void ApplyVisibility(bool bBufferVisible);
 	void CleanMinoBuffer();
 	void CleanBackgroundBuffer();
 	void SetBufferSize(const int32 bufferHeight, const int32 bufferWidth);

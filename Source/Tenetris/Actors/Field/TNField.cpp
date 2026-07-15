@@ -4,8 +4,6 @@
 
 ATNField::ATNField()
 {
-	PrimaryActorTick.bCanEverTick = true;
-
 	RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("ROOT_COMPONENT"));
 
 	TenetrisBufferComponent = CreateDefaultSubobject<UTNTenetrisBufferComponent>(TEXT("BufferComponent"));
@@ -89,6 +87,22 @@ void ATNField::HandleFieldState(const FTNFieldContext& fieldContext, const E_TNF
 
 	default:
 		break;
+	}
+}
+
+void ATNField::ApplyPreviewVisible(bool bVisible)
+{
+	if (IsValid(PreviewBufferComponent))
+	{
+		PreviewBufferComponent->ApplyVisibility(bVisible);
+	}
+}
+
+void ATNField::ApplyHoldVisible(bool bVisible)
+{
+	if (IsValid(HoldBufferComponent))
+	{
+		HoldBufferComponent->ApplyVisibility(bVisible);
 	}
 }
 

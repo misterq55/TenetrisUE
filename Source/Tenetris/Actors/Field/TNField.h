@@ -3,8 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
-#include "Tenetris/TenetrisDefine.h"
+#include "Tenetris/Actors/Field/TNFieldBase.h"
 #include "TNField.generated.h"
 
 /**
@@ -15,7 +14,7 @@ class UTNTenetrisBufferComponent;
 class ATNMinoBase;
 
 UCLASS()
-class TENETRIS_API ATNField : public AActor
+class TENETRIS_API ATNField : public ATNFieldBase
 {
 	GENERATED_BODY()
 	
@@ -29,10 +28,11 @@ protected:
 public:
 	virtual void Tick(float DeltaTime) override;
 
-	UFUNCTION(BlueprintCallable, Category = "Field")
-	virtual void Initialize();
-
-	virtual void HandleFieldState(const FTNFieldContext& fieldContext, const E_TNFieldModelStateType state);
+public:
+	virtual void Initialize() override;
+	virtual void HandleFieldState(const FTNFieldContext& fieldContext, const E_TNFieldModelStateType state) override;
+	virtual void ApplyPreviewVisible(bool bVisible) override;
+	virtual void ApplyHoldVisible(bool bVisible) override;
 	
 protected:
 	void initializePreviewBuffer();

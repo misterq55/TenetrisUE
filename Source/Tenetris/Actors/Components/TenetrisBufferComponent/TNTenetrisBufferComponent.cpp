@@ -84,6 +84,17 @@ void UTNTenetrisBufferComponent::Initialize()
 	buildMinoLayer(MinoBufferPivot, MinoBuffer);
 }
 
+void UTNTenetrisBufferComponent::ApplyVisibility(bool bBufferVisible)
+{
+	// show and hide the buffer depends on the bVisible value
+	if (IsValid(BackgroundMeshComponent) && IsValid(BackGroundMinoBufferPivot) && IsValid(MinoBufferPivot))
+	{
+		BackgroundMeshComponent->SetVisibility(bBufferVisible, true);
+		BackGroundMinoBufferPivot->SetVisibility(bBufferVisible, true);
+		MinoBufferPivot->SetVisibility(bBufferVisible, true);
+	}
+}
+
 void UTNTenetrisBufferComponent::CleanMinoBuffer()
 {
 	cleanBuffer(MinoBuffer);
