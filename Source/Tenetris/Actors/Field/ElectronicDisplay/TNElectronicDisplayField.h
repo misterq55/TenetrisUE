@@ -20,7 +20,7 @@ class TENETRIS_API ATNElectronicDisplayField : public ATNFieldBase
 	
 public:
 	ATNElectronicDisplayField();
-	virtual ~ATNElectronicDisplayField();
+	virtual ~ATNElectronicDisplayField() override;
 
 protected:
 	virtual void BeginPlay() override;
