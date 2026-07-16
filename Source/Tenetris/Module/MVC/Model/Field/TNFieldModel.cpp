@@ -136,7 +136,7 @@ void FTNFieldModel::Hold()
 	if (holdTetrominoType != E_TNTetrominoType::None)
 	{
 		CurrentTime = 0.f;
-		CurrentTetromino->SetTetrominoType(holdTetrominoType);
+		CurrentTetromino->ApplyTetrominoType(holdTetrominoType);
 		CurrentTetromino->Spawn();
 	}
 	else
@@ -545,7 +545,7 @@ void FTNFieldModel::spawnNextTetromino() const
 {
 	if (CurrentTetromino.IsValid() && TetrominoGenerator.IsValid())
 	{
-		CurrentTetromino->SetTetrominoType(TetrominoGenerator->GetTop());
+		CurrentTetromino->ApplyTetrominoType(TetrominoGenerator->GetTop());
 		CurrentTetromino->Spawn();
 	}
 }

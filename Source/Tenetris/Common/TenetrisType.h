@@ -31,7 +31,7 @@ public:
 		, CurrentPosition(FVector2D(1, 1))
 		, RotationState(0)
 	{
-		ApplyTetrominoType(CurrentType);
+		
 	}
 
 	FTNTetrominoInfo(E_TNTetrominoType currentTetrominoType)
@@ -39,21 +39,7 @@ public:
 		, CurrentPosition(FVector2D(1, 1))
 		, RotationState(0)
 	{
-		ApplyTetrominoType(CurrentType);
-	}
-
-	void ApplyTetrominoType(const E_TNTetrominoType tetrominoType)
-	{
-		CurrentType = tetrominoType;
-
-		const uint32 typeIndex = static_cast<uint32>(CurrentType);
-		if (typeIndex < UE_ARRAY_COUNT(TetrominoCoordinatesByType))
-		{
-			Coordinate = TetrominoCoordinatesByType[typeIndex];
-			return;
-		}
-
-		Coordinate.Empty();
+		
 	}
 
 	void SetPosition(int32 x, int32 y)
@@ -62,10 +48,8 @@ public:
 	}
 
 	E_TNTetrominoType CurrentType;
-	TTetrominoCoordinate Coordinate;
 	FVector2D CurrentPosition;
 	FVector2D GuideTetrominoPosition;
-	TArray<TTetrominoCoordinate> History;
 	int32 RotationState;
 };
 

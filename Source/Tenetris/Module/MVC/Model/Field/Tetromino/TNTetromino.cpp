@@ -36,30 +36,30 @@ bool FTNTetromino::Rotate(const E_TNTetrominoRotation tetrominoRotation)
 	// Super Rotation System
 	// 별도 클래스로 분리할 계획
 	TArray<FVector2D> simulationCoordinates;
+	TArray<FVector2D> clockwiseRotateMatrix = { FVector2D(0, -1), FVector2D(1, 0) };
+	TArray<FVector2D> counterClockwiseRotateMatrix = { FVector2D(0, 1), FVector2D(-1, 0) };
 	TArray<FVector2D> rotateMatrix;
 
 	const int32 oldRotationState = TetrominoInfo->RotationState;
 
 	if (tetrominoRotation == E_TNTetrominoRotation::ClockWise)
 	{
-		rotateMatrix.Emplace(0, -1);
-		rotateMatrix.Emplace(1, 0);
+		rotateMatrix = clockwiseRotateMatrix;
 		TetrominoInfo->RotationState += 1;
 	}
 	else if (tetrominoRotation == E_TNTetrominoRotation::CounterClockWise)
 	{
-		rotateMatrix.Emplace(0, 1);
-		rotateMatrix.Emplace(-1, 0);
+		rotateMatrix = counterClockwiseRotateMatrix;
 		TetrominoInfo->RotationState -= 1;
 	}
 
 	TetrominoInfo->RotationState = mod(TetrominoInfo->RotationState, 4);
-
-	for (const FVector2D& coord : TetrominoInfo->Coordinate)
+	
+	for (const FVector2D& coord : Coordinate)
 	{
 		const int32 newX = (rotateMatrix[0].X * coord.X) + (rotateMatrix[1].X * coord.Y);
 		const int32 newY = (rotateMatrix[0].Y * coord.X) + (rotateMatrix[1].Y * coord.Y);
-
+	
 		simulationCoordinates.Emplace(newX, newY);
 	}
 
@@ -115,7 +115,7 @@ bool FTNTetromino::Rotate(const E_TNTetrominoRotation tetrominoRotation)
 	if (!tetrominoCheck)
 	{
 		TetrominoInfo->CurrentPosition += kickOffset;
-		TetrominoInfo->Coordinate = simulationCoordinates;
+		Coordinate = simulationCoordinates;
 		
 		calculateGuideTetromino();
 		updateTetromino();
@@ -159,7 +159,7 @@ void FTNTetromino::calculateGuideTetromino() const
 
 	TArray<int32> checkHeightArray;
 
-	for (const FVector2D& coord : TetrominoInfo->Coordinate)
+	for (const FVector2D& coord : Coordinate)
 	{
 		const int32 height = OnCalculateGuideMino.Execute(coord.X + TetrominoInfo->CurrentPosition.X, coord.Y + TetrominoInfo->CurrentPosition.Y);
 		checkHeightArray.Add(height);
@@ -198,7 +198,7 @@ TArray<int32> FTNTetromino::GetMinoHeights() const
 
 	TArray<int32> result;
 
-	for (const FVector2D& coord : TetrominoInfo->Coordinate)
+	for (const FVector2D& coord : Coordinate)
 	{
 		result.AddUnique(coord.Y + TetrominoInfo->CurrentPosition.Y);
 	}
@@ -216,14 +216,20 @@ void FTNTetromino::SetTetrominoPosition(const int32 x, const int32 y) const
 	TetrominoInfo->SetPosition(x, y);
 }
 
-void FTNTetromino::SetTetrominoType(const E_TNTetrominoType currentTetrominoType) const
+void FTNTetromino::ApplyTetrominoType(const E_TNTetrominoType currentTetrominoType)
 {
 	if (!TetrominoInfo.IsValid())
 	{
 		return;
 	}
 
-	TetrominoInfo->ApplyTetrominoType(currentTetrominoType);
+	TetrominoInfo->CurrentType = currentTetrominoType;
+	
+	const uint32 typeIndex = static_cast<uint32>(currentTetrominoType);
+	if (typeIndex < UE_ARRAY_COUNT(TetrominoCoordinatesByType))
+	{
+		Coordinate = TetrominoCoordinatesByType[typeIndex];
+	}
 }
 
 E_TNTetrominoType FTNTetromino::GetTetrominoType() const
@@ -275,7 +281,7 @@ bool FTNTetromino::checkMino(const FVector2D& simulationPosition) const
 
 	bool tetrominoCheck = false;
 
-	for (const FVector2D& coord : TetrominoInfo->Coordinate)
+	for (const FVector2D& coord : Coordinate)
 	{
 		if (OnCheckMino.Execute(coord.X + simulationPosition.X, coord.Y + simulationPosition.Y))
 		{
@@ -293,8 +299,8 @@ void FTNTetromino::moveTetrominoToCheckBuffer() const
 	{
 		return;
 	}
-
-	for (const FVector2D& coord : TetrominoInfo->Coordinate)
+	
+	for (const FVector2D& coord : Coordinate)
 	{
 		OnMoveTetrominoToCheckBuffer.ExecuteIfBound(coord.X + TetrominoInfo->CurrentPosition.X, coord.Y + TetrominoInfo->CurrentPosition.Y, TetrominoInfo->CurrentType);
 	}
