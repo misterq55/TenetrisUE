@@ -123,13 +123,15 @@ void ATNElectronicDisplayField::updateTetromino(const FTNFieldContext& fieldCont
 	{
 		return;
 	}
-
-	for (const auto& coord : tetrominoInfo->Coordinate)
+	
+	const TTetrominoCoordinate coordinate = getRotatedCoordinate(tetrominoInfo->CurrentType, tetrominoInfo->RotationState);
+	
+	for (const auto& coord : coordinate)
 	{
 		TenetrisBufferComponent->SetMinoType(coord.X + tetrominoInfo->CurrentPosition.X,
 		                                     coord.Y + tetrominoInfo->CurrentPosition.Y,
 		                                     tetrominoInfo->CurrentType);
-
+	
 		TenetrisBufferComponent->SetMinoType(coord.X + tetrominoInfo->GuideTetrominoPosition.X,
 		                                     coord.Y + tetrominoInfo->GuideTetrominoPosition.Y,
 		                                     E_TNTetrominoType::Guide);
@@ -286,4 +288,29 @@ void ATNElectronicDisplayField::setVisibilityPreviewMino(const int32 x, const in
 	{
 		PreviewBufferComponent->SetVisibilityMino(x, y, visible);
 	}
+}
+
+TTetrominoCoordinate ATNElectronicDisplayField::getRotatedCoordinate(const E_TNTetrominoType type, const int32 rotationState) const
+{
+	const uint32 typeIndex = static_cast<uint32>(type);
+	if (typeIndex >= UE_ARRAY_COUNT(TetrominoCoordinatesByType))
+	{
+		return TTetrominoCoordinate();
+	}
+
+	TTetrominoCoordinate coordinate = TetrominoCoordinatesByType[typeIndex];
+
+	const int32 normalizedState = ((rotationState % 4) + 4) % 4;
+	for (int32 i = 0; i < normalizedState; i++)
+	{
+		TTetrominoCoordinate rotated;
+		rotated.Reserve(coordinate.Num());
+		for (const FVector2D& c : coordinate)
+		{
+			rotated.Emplace(c.Y, -c.X);
+		}
+		coordinate = MoveTemp(rotated);
+	}
+
+	return coordinate;
 }

@@ -60,7 +60,7 @@ public:
 
 	TArray<int32> GetMinoHeights() const;
 	void SetTetrominoPosition(const int32 x, const int32 y) const;
-	void SetTetrominoType(const E_TNTetrominoType currentTetrominoType) const;
+	void ApplyTetrominoType(const E_TNTetrominoType currentTetrominoType);
 	E_TNTetrominoType GetTetrominoType() const;
 	void SetStartingLocation(const int32 x, const int32 y);
 	void SetStartingLocation(const FVector2D& startingLocation);
@@ -83,5 +83,6 @@ public:
 
 private:
 	TSharedPtr<FTNTetrominoInfo> TetrominoInfo;
+	TTetrominoCoordinate Coordinate;
 	FVector2D StartingLocation;
 };
