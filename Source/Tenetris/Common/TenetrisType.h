@@ -25,7 +25,7 @@ const TTetrominoCoordinate TetrominoCoordinatesByType[] =
 
 struct FTNTetrominoInfo
 {
-public:
+	public:
 	FTNTetrominoInfo()
 		: CurrentType(E_TNTetrominoType::None)
 		, CurrentPosition(FVector2D(1, 1))
@@ -55,7 +55,7 @@ public:
 
 struct FTNMoveDirectionState
 {
-public:
+	public:
 	FTNMoveDirectionState()
 		: Pressed(false)
 		, PressedTime(0.f)
@@ -71,34 +71,21 @@ public:
 
 struct FTNFieldContext
 {
-public:
+	public:
 	FTNFieldContext(E_TNFieldType fieldType)
 		: FieldType(fieldType)
 		, BufferHeight(RowMax)
 		, BufferWidth(ColumnMax)
 	{
 		initializeTetrominoInfos();
-		createBuffer(CheckBuffer);
-		createBuffer(ReversedBuffer);
-	}
-
-	FTNFieldContext(E_TNFieldType fieldType, TArray<TArray<E_TNTetrominoType>> initialBuffer, int32 height = ColumnMax, int32 width = RowMax)
-		: FieldType(fieldType)
-		, BufferHeight(height)
-		, BufferWidth(width)
-		, CheckBuffer(MoveTemp(initialBuffer))
-	{
-		initializeTetrominoInfos();
-		createBuffer(CheckBuffer);
-		createBuffer(ReversedBuffer);
+		initializeLockedGrid(LockedGrid);
 	}
 
 	E_TNFieldType FieldType;
 	int32 BufferHeight = 0;
 	int32 BufferWidth = 0;
 	bool bSpaceInverted = false;
-	TArray<TArray<E_TNTetrominoType>> CheckBuffer;
-	TArray<TArray<E_TNTetrominoType>> ReversedBuffer;
+	TArray<TArray<E_TNTetrominoType>> LockedGrid;
 	TSharedPtr<FTNTetrominoInfo> PlayerTetrominoInfo;
 	int32 PreviewTetrominoNum;
 	E_TNTetrominoType HoldTetrominoType = E_TNTetrominoType::None;
@@ -110,29 +97,26 @@ public:
 		PreviewTetrominoNum = PreviewTetrominoMax;
 		PreviewTetrominoTypes.Init(E_TNTetrominoType::None, PreviewTetrominoNum);
 	}
-
-	void createBuffer(TArray<TArray<E_TNTetrominoType>>& checkBuffer) const
+	
+	void initializeLockedGrid(TArray<TArray<E_TNTetrominoType>>& grid) const
 	{
-		checkBuffer.Empty();
-		checkBuffer.Reserve(BufferHeight * 2 + 2);
-		
 		for (int32 i = 0; i < BufferHeight * 2 + 2; i++)
 		{
-			TArray<E_TNTetrominoType> buffer;
-			buffer.Reserve(BufferWidth + 2);
+			TArray<E_TNTetrominoType> row;
+			row.Reserve(BufferWidth + 2);
 			for (int32 j = 0; j < BufferWidth + 2; j++)
 			{
 				if (i == 0 || j == 0 || j == BufferWidth + 2 - 1)
 				{
-					buffer.Add(E_TNTetrominoType::Obstacle);
+					row.Add(E_TNTetrominoType::Obstacle);
 				}
 				else
 				{
-					buffer.Add(E_TNTetrominoType::None);
+					row.Add(E_TNTetrominoType::None);
 				}
 			}
 
-			checkBuffer.Add(MoveTemp(buffer));
+			grid.Add(MoveTemp(row));
 		}
 	}
 };

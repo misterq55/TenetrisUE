@@ -185,6 +185,7 @@ void FTNTetromino::HardDrop()
 	{
 		TetrominoInfo->CurrentPosition = TetrominoInfo->GuideTetrominoPosition;
 	}
+	
 	calculateGuideTetromino();
 	updateTetromino();
 }
