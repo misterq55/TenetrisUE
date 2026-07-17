@@ -8,6 +8,8 @@
 FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
 	: FieldContext(MoveTemp(fieldContext))
 {
+	initializeBuffers();
+
 	if (!CurrentTetromino.IsValid())
 	{
 		// TODO 테트로미노를 DI할 수 있도록 해야한다 [05/21/2024]
@@ -184,18 +186,52 @@ void FTNFieldModel::HardDrop()
 
 E_TNTetrominoType FTNFieldModel::getValueFromCheckBuffer(const int32 x, const int32 y) const
 {
-	const TArray<TArray<E_TNTetrominoType>>& bufferToUse = FieldContext.bSpaceInverted ? FieldContext.ReversedBuffer : FieldContext.CheckBuffer;
+	const TArray<TArray<E_TNTetrominoType>>& bufferToUse = FieldContext.bSpaceInverted ? ReversedBuffer : CheckBuffer;
 	
 	return bufferToUse[y + 1][x + 1];
 }
 
 void FTNFieldModel::setValueToCheckBuffer(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
 {
-	TArray<TArray<E_TNTetrominoType>>& currentBuffer = FieldContext.bSpaceInverted ? FieldContext.ReversedBuffer : FieldContext.CheckBuffer;
-	TArray<TArray<E_TNTetrominoType>>& otherBuffer = FieldContext.bSpaceInverted ? FieldContext.CheckBuffer : FieldContext.ReversedBuffer;
+	TArray<TArray<E_TNTetrominoType>>& currentBuffer = FieldContext.bSpaceInverted ? ReversedBuffer : CheckBuffer;
+	TArray<TArray<E_TNTetrominoType>>& otherBuffer = FieldContext.bSpaceInverted ? CheckBuffer : ReversedBuffer;
 	
 	currentBuffer[y + 1][x + 1] = tetrominoType;
 	otherBuffer[y + 1][FieldContext.BufferWidth - x] = tetrominoType;
+	
+	const int32 lockedGridX = FieldContext.bSpaceInverted ? FieldContext.BufferWidth - x : x + 1;
+	FieldContext.LockedGrid[y + 1][lockedGridX] = tetrominoType;
+}
+
+void FTNFieldModel::initializeBuffers()
+{
+	createBuffer(CheckBuffer);
+	createBuffer(ReversedBuffer);
+}
+
+void FTNFieldModel::createBuffer(TArray<TArray<E_TNTetrominoType>>& buffer) const
+{
+	buffer.Empty();
+	buffer.Reserve(FieldContext.BufferHeight * 2 + 2);
+
+	for (int32 i = 0; i < FieldContext.BufferHeight * 2 + 2; i++)
+	{
+		TArray<E_TNTetrominoType> row;
+		row.Reserve(FieldContext.BufferWidth + 2);
+		for (int32 j = 0; j < FieldContext.BufferWidth + 2; j++)
+		{
+			if (i == 0 || j == 0 || j == FieldContext.BufferWidth + 2 - 1)
+			{
+				row.Add(E_TNTetrominoType::Obstacle);
+			}
+			else
+			{
+				row.Add(E_TNTetrominoType::None);
+			}
+		}
+
+		buffer.Add(MoveTemp(row));
+	}
 }
 
 bool FTNFieldModel::checkMino(const int32 x, const int32 y) const

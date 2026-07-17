@@ -184,7 +184,7 @@ void ATNElectronicDisplayField::lockDown(const FTNFieldContext& fieldContext)
 	{
 		for (int32 j = 0; j < bufferWidth; j++)
 		{
-			const E_TNTetrominoType tetrominoType = fieldContext.CheckBuffer[i + 1][j + 1];
+			const E_TNTetrominoType tetrominoType = fieldContext.LockedGrid[i + 1][j + 1];
 			setBackgroundCubeType(j, i, tetrominoType);
 		}
 	}
