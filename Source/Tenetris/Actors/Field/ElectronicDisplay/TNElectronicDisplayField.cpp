@@ -108,7 +108,7 @@ void ATNElectronicDisplayField::ApplyHoldVisible(bool bVisible)
 	}
 }
 
-void ATNElectronicDisplayField::updateTetromino(const FTNFieldContext& fieldContext)
+void ATNElectronicDisplayField::updateTetromino(const FTNFieldContext& fieldContext) const
 {
 	if (!IsValid(TenetrisBufferComponent))
 	{
@@ -175,10 +175,10 @@ void ATNElectronicDisplayField::updatePreviewTetrominoes(const FTNFieldContext& 
 	}
 }
 
-void ATNElectronicDisplayField::lockDown(const FTNFieldContext& fieldContext)
+void ATNElectronicDisplayField::lockDown(const FTNFieldContext& fieldContext) const
 {
-	const int32 bufferHeight = fieldContext.BufferHeight;
-	const int32 bufferWidth = fieldContext.BufferWidth;
+	constexpr int32 bufferHeight = RowMax;
+	constexpr int32 bufferWidth = ColumnMax;
 
 	for (int32 i = 0; i < bufferHeight; i++)
 	{
@@ -226,7 +226,7 @@ void ATNElectronicDisplayField::initializeHoldBuffer()
 	HoldTetrominoPosition = FVector2D(2, 1);
 }
 
-void ATNElectronicDisplayField::setMinoClassType(TSubclassOf<ATNMinoBase> minoClass)
+void ATNElectronicDisplayField::setMinoClassType(TSubclassOf<ATNMinoBase> minoClass) const
 {
 	if (IsValid(TenetrisBufferComponent))
 	{
@@ -234,7 +234,7 @@ void ATNElectronicDisplayField::setMinoClassType(TSubclassOf<ATNMinoBase> minoCl
 	}
 }
 
-void ATNElectronicDisplayField::setMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
+void ATNElectronicDisplayField::setMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType) const
 {
 	if (IsValid(TenetrisBufferComponent))
 	{
@@ -242,7 +242,7 @@ void ATNElectronicDisplayField::setMinoType(const int32 x, const int32 y, const 
 	}
 }
 
-void ATNElectronicDisplayField::setVisibilityMino(const int32 x, const int32 y, const bool visible)
+void ATNElectronicDisplayField::setVisibilityMino(const int32 x, const int32 y, const bool visible) const
 {
 	if (IsValid(TenetrisBufferComponent))
 	{
@@ -250,7 +250,7 @@ void ATNElectronicDisplayField::setVisibilityMino(const int32 x, const int32 y, 
 	}
 }
 
-void ATNElectronicDisplayField::setBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType)
+void ATNElectronicDisplayField::setBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType) const
 {
 	if (IsValid(TenetrisBufferComponent))
 	{
@@ -258,7 +258,7 @@ void ATNElectronicDisplayField::setBackgroundCubeType(int32 x, int32 y, E_TNTetr
 	}
 }
 
-void ATNElectronicDisplayField::setHoldMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
+void ATNElectronicDisplayField::setHoldMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType) const
 {
 	if (IsValid(HoldBufferComponent))
 	{
@@ -266,7 +266,7 @@ void ATNElectronicDisplayField::setHoldMinoType(const int32 x, const int32 y, co
 	}
 }
 
-void ATNElectronicDisplayField::setVisibilityHoldMino(const int32 x, const int32 y, const bool visible)
+void ATNElectronicDisplayField::setVisibilityHoldMino(const int32 x, const int32 y, const bool visible) const
 {
 	if (IsValid(HoldBufferComponent))
 	{
@@ -274,7 +274,7 @@ void ATNElectronicDisplayField::setVisibilityHoldMino(const int32 x, const int32
 	}
 }
 
-void ATNElectronicDisplayField::setPreviewMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
+void ATNElectronicDisplayField::setPreviewMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType) const
 {
 	if (IsValid(PreviewBufferComponent))
 	{
@@ -282,7 +282,7 @@ void ATNElectronicDisplayField::setPreviewMinoType(const int32 x, const int32 y,
 	}
 }
 
-void ATNElectronicDisplayField::setVisibilityPreviewMino(const int32 x, const int32 y, const bool visible)
+void ATNElectronicDisplayField::setVisibilityPreviewMino(const int32 x, const int32 y, const bool visible) const
 {
 	if (IsValid(PreviewBufferComponent))
 	{

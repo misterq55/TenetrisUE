@@ -37,20 +37,20 @@ public:
 protected:
 	void initializePreviewBuffer();
 	void initializeHoldBuffer();
-	void setMinoClassType(TSubclassOf<ATNMinoBase> minoClass);
-	void setMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
-	void setVisibilityMino(const int32 x, const int32 y, const bool visible);
-	void setBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType);
-	void setHoldMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
-	void setVisibilityHoldMino(const int32 x, const int32 y, const bool visible);
-	void setPreviewMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
-	void setVisibilityPreviewMino(const int32 x, const int32 y, const bool visible);
+	void setMinoClassType(TSubclassOf<ATNMinoBase> minoClass) const;
+	void setMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType) const;
+	void setVisibilityMino(const int32 x, const int32 y, const bool visible) const;
+	void setBackgroundCubeType(int32 x, int32 y, E_TNTetrominoType tetrominoType) const;
+	void setHoldMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType) const;
+	void setVisibilityHoldMino(const int32 x, const int32 y, const bool visible) const;
+	void setPreviewMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType) const;
+	void setVisibilityPreviewMino(const int32 x, const int32 y, const bool visible) const;
 
 private:
-	void updateTetromino(const FTNFieldContext& fieldContext);
+	void updateTetromino(const FTNFieldContext& fieldContext) const;
 	void updateHoldTetromino(const FTNFieldContext& fieldContext) const;
 	void updatePreviewTetrominoes(const FTNFieldContext& fieldContext) const;
-	void lockDown(const FTNFieldContext& fieldContext);
+	void lockDown(const FTNFieldContext& fieldContext) const;
 	void rotateField(const FTNFieldContext& fieldContext);
 	TTetrominoCoordinate getRotatedCoordinate(E_TNTetrominoType type, int32 rotationState) const;
 
