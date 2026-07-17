@@ -42,8 +42,8 @@ public:
 	void StartSoftDrop();
 	void StopSoftDrop();
 
-	void RotateClockWise();
-	void RotateCounterClockWise();
+	void RotateClockWise() const;
+	void RotateCounterClockWise() const;
 
 	void Hold();
 	void ToggleSpaceInversion();
@@ -67,7 +67,7 @@ private:
 	void setMoveDirection(E_TNTetrominoDirection tetrominoDirection, bool pressed);
 
 	void tetrominoFall(float deltaTime);
-	void setMoveState(float deltaTime, FTNMoveDirectionState& moveState, E_TNTetrominoDirection tetrominoDirection);
+	void setMoveState(float deltaTime, FTNMoveDirectionState& moveState, E_TNTetrominoDirection tetrominoDirection) const;
 	void updateLockDown(float deltaTime);
 	void updateLineDelete(float deltaTime);
 
