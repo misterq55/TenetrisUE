@@ -135,7 +135,7 @@ void FTNFieldModel::Hold()
 	const E_TNTetrominoType currentTetrominoType = CurrentTetromino->GetTetrominoType();
 	
 	FieldContext.HoldTetrominoType = currentTetrominoType;
-	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateHoldTetromino);
+	updateHoldTetromino();
 
 	CurrentTime = 0.f;
 	
@@ -269,21 +269,20 @@ void FTNFieldModel::updateTetromino() const
 
 void FTNFieldModel::checkLineDelete(const TArray<int32>& heights)
 {
-	TArray<int32> linesToDelete;
-
 	// 각 높이에 대해 삭제 될 줄 여부를 검사합니다.
 	for (int32 height : heights)
 	{
 		if (isLineDeleted(height))
 		{
-			linesToDelete.AddUnique(height);
+			DeletedLines.AddUnique(height);
 		}
 	}
 
 	// 삭제될 줄이 있는 경우 처리합니다.
-	if (linesToDelete.Num() > 0)
+	if (DeletedLines.Num() > 0)
 	{
-		handleLineDeletion(linesToDelete);
+		// 줄 삭제 플래그를 설정합니다.
+		bLineDeleting = true;
 	}
 }
 
@@ -540,20 +539,12 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 	}
 }
 
-void FTNFieldModel::lineDelete()
-{
-	if (CurrentTetromino.IsValid())
-	{
-		checkLineDelete(CurrentTetromino->GetMinoHeights());
-	}
-}
-
 void FTNFieldModel::doLockDown()
 {
 	if (CurrentTetromino.IsValid())
 	{
 		CurrentTetromino->LockDown();
-		lineDelete();
+		checkLineDelete(CurrentTetromino->GetMinoHeights());
 		bWaitForSpawn = true;
 
 		OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::LockDown);
@@ -567,18 +558,6 @@ void FTNFieldModel::waitForSpawn()
 		spawn();
 		bWaitForSpawn = false;
 	}
-}
-
-void FTNFieldModel::handleLineDeletion(const TArray<int32>& linesToDelete)
-{
-	// 삭제될 줄을 처리 목록에 추가합니다.
-	for (int32 height : linesToDelete)
-	{
-		DeletedLines.AddUnique(height);
-	}
-
-	// 줄 삭제 플래그를 설정합니다.
-	bLineDeleting = true;
 }
 
 void FTNFieldModel::spawnNextTetromino() const
