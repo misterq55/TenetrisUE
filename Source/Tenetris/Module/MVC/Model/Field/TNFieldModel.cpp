@@ -109,12 +109,12 @@ void FTNFieldModel::StopSoftDrop()
 	bSoftDrop = false;
 }
 
-void FTNFieldModel::RotateClockWise()
+void FTNFieldModel::RotateClockWise() const
 {
 	rotateTetromino(E_TNTetrominoRotation::ClockWise);
 }
 
-void FTNFieldModel::RotateCounterClockWise()
+void FTNFieldModel::RotateCounterClockWise() const
 {
 	rotateTetromino(E_TNTetrominoRotation::CounterClockWise);
 }
@@ -426,7 +426,7 @@ void FTNFieldModel::tetrominoFall(float deltaTime)
 	}
 }
 
-void FTNFieldModel::setMoveState(float deltaTime, FTNMoveDirectionState& moveState, E_TNTetrominoDirection tetrominoDirection)
+void FTNFieldModel::setMoveState(float deltaTime, FTNMoveDirectionState& moveState, E_TNTetrominoDirection tetrominoDirection) const
 {
 	if (bWaitForSpawn)
 	{
