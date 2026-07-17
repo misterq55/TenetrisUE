@@ -76,7 +76,7 @@ private:
 	void waitForSpawn();
 	void handleLineDeletion(const TArray<int32>& linesToDelete);
 	void initializeBuffers();
-	void createBuffer(TArray<TArray<E_TNTetrominoType>>& buffer) const;
+	void createBuffer(TArray<TArray<FTNCellInfo>>& buffer) const;
 
 	void spawnNextTetromino() const;
 	void updateHoldTetromino() const;
@@ -100,9 +100,9 @@ private:
 	float TetrominoFallingSpeed = 1.f;
 	float CurrentTime = 0.f;
 	float RotationPauseRemainingTime = 0.f;
-	TArray<TArray<E_TNTetrominoType>> CheckBuffer;
-	TArray<TArray<E_TNTetrominoType>> ReversedBuffer;
-
+	TArray<TArray<FTNCellInfo>> CheckBuffer;
+	TArray<TArray<FTNCellInfo>> ReversedBuffer;
+	
 	TArray<int32> DeletedLines;
 	float DeleteLineCheckTime = 0.f;
 	bool bLineDeleting = false;

@@ -61,6 +61,7 @@ public:
 	TArray<int32> GetMinoHeights() const;
 	void SetTetrominoPosition(const int32 x, const int32 y) const;
 	void ApplyTetrominoType(const E_TNTetrominoType currentTetrominoType);
+	int32 GetId() const;
 	E_TNTetrominoType GetTetrominoType() const;
 	void SetStartingLocation(const int32 x, const int32 y);
 	void SetStartingLocation(const FVector2D& startingLocation);

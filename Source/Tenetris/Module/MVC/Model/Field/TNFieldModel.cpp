@@ -137,15 +137,15 @@ void FTNFieldModel::Hold()
 	FieldContext.HoldTetrominoType = currentTetrominoType;
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateHoldTetromino);
 
+	CurrentTime = 0.f;
+	
 	if (holdTetrominoType != E_TNTetrominoType::None)
 	{
-		CurrentTime = 0.f;
 		CurrentTetromino->ApplyTetrominoType(holdTetrominoType);
 		CurrentTetromino->Spawn();
 	}
 	else
 	{
-		CurrentTime = 0.f;
 		spawnNextTetromino();
 		updatePreviewTetrominoes();
 	}
@@ -188,21 +188,24 @@ void FTNFieldModel::HardDrop()
 
 E_TNTetrominoType FTNFieldModel::getValueFromCheckBuffer(const int32 x, const int32 y) const
 {
-	const TArray<TArray<E_TNTetrominoType>>& bufferToUse = FieldContext.bSpaceInverted ? ReversedBuffer : CheckBuffer;
+	const TArray<TArray<FTNCellInfo>>& bufferToUse = FieldContext.bSpaceInverted ? ReversedBuffer : CheckBuffer;
 	
-	return bufferToUse[y + 1][x + 1];
+	return bufferToUse[y + 1][x + 1].Type;
 }
 
 void FTNFieldModel::setValueToCheckBuffer(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
 {
-	TArray<TArray<E_TNTetrominoType>>& currentBuffer = FieldContext.bSpaceInverted ? ReversedBuffer : CheckBuffer;
-	TArray<TArray<E_TNTetrominoType>>& otherBuffer = FieldContext.bSpaceInverted ? CheckBuffer : ReversedBuffer;
+	TArray<TArray<FTNCellInfo>>& currentBuffer = FieldContext.bSpaceInverted ? ReversedBuffer : CheckBuffer;
+	TArray<TArray<FTNCellInfo>>& otherBuffer = FieldContext.bSpaceInverted ? CheckBuffer : ReversedBuffer;
 	
-	currentBuffer[y + 1][x + 1] = tetrominoType;
-	otherBuffer[y + 1][Width - x] = tetrominoType;
+	const int32 tetrominoId = CurrentTetromino->GetId();
+	
+	const FTNCellInfo cellInfo{ tetrominoId, tetrominoType };
+	currentBuffer[y + 1][x + 1] = cellInfo;
+	otherBuffer[y + 1][Width - x] = cellInfo;
 	
 	const int32 lockedGridX = FieldContext.bSpaceInverted ? Width - x : x + 1;
-	FieldContext.LockedGrid[y + 1][lockedGridX] = tetrominoType;
+	FieldContext.LockedGrid[y + 1][lockedGridX] = cellInfo;
 }
 
 void FTNFieldModel::initializeBuffers()
@@ -212,24 +215,25 @@ void FTNFieldModel::initializeBuffers()
 	createBuffer(FieldContext.LockedGrid);
 }
 
-void FTNFieldModel::createBuffer(TArray<TArray<E_TNTetrominoType>>& buffer) const
+void FTNFieldModel::createBuffer(TArray<TArray<FTNCellInfo>>& buffer) const
 {
 	buffer.Empty();
 	buffer.Reserve(Height * 2 + 2);
 
 	for (int32 i = 0; i < Height * 2 + 2; i++)
 	{
-		TArray<E_TNTetrominoType> row;
+		TArray<FTNCellInfo> row;
 		row.Reserve(Width + 2);
+		
 		for (int32 j = 0; j < Width + 2; j++)
 		{
 			if (i == 0 || j == 0 || j == Width + 2 - 1)
 			{
-				row.Add(E_TNTetrominoType::Obstacle);
+				row.Emplace(-1, E_TNTetrominoType::Obstacle);
 			}
 			else
 			{
-				row.Add(E_TNTetrominoType::None);
+				row.Emplace(-1, E_TNTetrominoType::None);
 			}
 		}
 
@@ -515,14 +519,14 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 
 			for (int32 i = 0; i < Height; i++)
 			{
-				int32 lineChecValue = lineChecker[i];
+				const int32 lineCheckValue = lineChecker[i];
 
-				if (lineChecValue != -1)
+				if (lineCheckValue != -1)
 				{
 					for (int32 j = 0; j < Width; j++)
 					{
 						const E_TNTetrominoType value = getValueFromCheckBuffer(j, i);
-						setValueToCheckBuffer(j, i - lineChecValue, value);
+						setValueToCheckBuffer(j, i - lineCheckValue, value);
 					}
 				}
 			}

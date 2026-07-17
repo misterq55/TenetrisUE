@@ -140,6 +140,7 @@ void FTNTetromino::Spawn()
 
 	TetrominoInfo->SetPosition(StartingLocation.X, StartingLocation.Y);
 	TetrominoInfo->RotationState = 0;
+	TetrominoInfo->Id++;
 	
 	calculateGuideTetromino();
 	updateTetromino();
@@ -231,6 +232,16 @@ void FTNTetromino::ApplyTetrominoType(const E_TNTetrominoType currentTetrominoTy
 	{
 		Coordinate = TetrominoCoordinatesByType[typeIndex];
 	}
+}
+
+int32 FTNTetromino::GetId() const
+{
+	if (TetrominoInfo.IsValid())
+	{
+		return TetrominoInfo->Id;
+	}
+
+	return -1;
 }
 
 E_TNTetrominoType FTNTetromino::GetTetrominoType() const
