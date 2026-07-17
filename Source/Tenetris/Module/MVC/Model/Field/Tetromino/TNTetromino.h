@@ -4,7 +4,7 @@
 
 #include "Tenetris/TenetrisDefine.h"
 
-DECLARE_DELEGATE_ThreeParams(FMoveTetrominoToCheckBufferDelegate, const int32, const int32, const E_TNTetrominoType);
+DECLARE_DELEGATE_ThreeParams(FMoveTetrominoToCheckBufferDelegate, const int32, const int32, const FTNCellInfo&);
 DECLARE_DELEGATE_RetVal_TwoParams(bool, FCheckMinoDelegate, const int32, const int32);
 DECLARE_DELEGATE_RetVal_TwoParams(int32, FCalculateGuideMinoHeightDelegate, const int32, const int32);
 

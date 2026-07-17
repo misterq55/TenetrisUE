@@ -312,9 +312,11 @@ void FTNTetromino::moveTetrominoToCheckBuffer() const
 		return;
 	}
 	
+	const FTNCellInfo cellInfo(TetrominoInfo->Id, TetrominoInfo->CurrentType);
+	
 	for (const FVector2D& coord : Coordinate)
 	{
-		OnMoveTetrominoToCheckBuffer.ExecuteIfBound(coord.X + TetrominoInfo->CurrentPosition.X, coord.Y + TetrominoInfo->CurrentPosition.Y, TetrominoInfo->CurrentType);
+		OnMoveTetrominoToCheckBuffer.ExecuteIfBound(coord.X + TetrominoInfo->CurrentPosition.X, coord.Y + TetrominoInfo->CurrentPosition.Y, cellInfo);
 	}
 }
 

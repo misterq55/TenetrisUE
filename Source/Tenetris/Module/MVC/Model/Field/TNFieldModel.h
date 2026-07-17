@@ -50,8 +50,8 @@ public:
 	void HardDrop();
 
 private:
-	E_TNTetrominoType getValueFromCheckBuffer(const int32 x, const int32 y) const;
-	void setValueToCheckBuffer(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType);
+	FTNCellInfo getValueFromCheckBuffer(const int32 x, const int32 y) const;
+	void setValueToCheckBuffer(const int32 x, const int32 y, const FTNCellInfo& cellInfo);
 	bool checkMino(const int32 x, const int32 y) const;
 	int32 calculateGuideMinoHeight(const int32 x, const int32 y) const;
 	
