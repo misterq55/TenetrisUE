@@ -186,21 +186,18 @@ void FTNFieldModel::HardDrop()
 	}
 }
 
-E_TNTetrominoType FTNFieldModel::getValueFromCheckBuffer(const int32 x, const int32 y) const
+FTNCellInfo FTNFieldModel::getValueFromCheckBuffer(const int32 x, const int32 y) const
 {
 	const TArray<TArray<FTNCellInfo>>& bufferToUse = FieldContext.bSpaceInverted ? ReversedBuffer : CheckBuffer;
 	
-	return bufferToUse[y + 1][x + 1].Type;
+	return bufferToUse[y + 1][x + 1];
 }
 
-void FTNFieldModel::setValueToCheckBuffer(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
+void FTNFieldModel::setValueToCheckBuffer(const int32 x, const int32 y, const FTNCellInfo& cellInfo)
 {
 	TArray<TArray<FTNCellInfo>>& currentBuffer = FieldContext.bSpaceInverted ? ReversedBuffer : CheckBuffer;
 	TArray<TArray<FTNCellInfo>>& otherBuffer = FieldContext.bSpaceInverted ? CheckBuffer : ReversedBuffer;
 	
-	const int32 tetrominoId = CurrentTetromino->GetId();
-	
-	const FTNCellInfo cellInfo{ tetrominoId, tetrominoType };
 	currentBuffer[y + 1][x + 1] = cellInfo;
 	otherBuffer[y + 1][Width - x] = cellInfo;
 	
@@ -246,7 +243,7 @@ bool FTNFieldModel::checkMino(const int32 x, const int32 y) const
 	if (y < 0 || x < 0) return true;
 	if (y >= Height || x >= Width) return true;
 
-	return getValueFromCheckBuffer(x, y) != E_TNTetrominoType::None;
+	return getValueFromCheckBuffer(x, y).Type != E_TNTetrominoType::None;
 }
 
 int32 FTNFieldModel::calculateGuideMinoHeight(const int32 x, const int32 y) const
@@ -255,7 +252,7 @@ int32 FTNFieldModel::calculateGuideMinoHeight(const int32 x, const int32 y) cons
 
 	for (int32 i = y; i >= -1; i--)
 	{
-		if (getValueFromCheckBuffer(x, i) != E_TNTetrominoType::None)
+		if (getValueFromCheckBuffer(x, i).Type != E_TNTetrominoType::None)
 		{
 			height = i;
 			break;
@@ -295,7 +292,7 @@ bool FTNFieldModel::isLineDeleted(int32 height) const
 	// 주어진 높이에 대해 해당 칸이 모두 채워져있는지 확인합니다.
 	for (int32 j = 0; j < Width; ++j)
 	{
-		if (getValueFromCheckBuffer(j, height) == E_TNTetrominoType::None)
+		if (getValueFromCheckBuffer(j, height).Type == E_TNTetrominoType::None)
 		{
 			return false; // 하나의 칸이라도 비어있으면 완성된 줄이 아닙니다.
 		}
@@ -495,7 +492,7 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 		{
 			for (int32 j = 0; j < Width; j++)
 			{
-				setValueToCheckBuffer(j, deleteLine, E_TNTetrominoType::None);
+				setValueToCheckBuffer(j, deleteLine, FTNCellInfo());
 			}
 		}
 
@@ -525,7 +522,7 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 				{
 					for (int32 j = 0; j < Width; j++)
 					{
-						const E_TNTetrominoType value = getValueFromCheckBuffer(j, i);
+						const FTNCellInfo value = getValueFromCheckBuffer(j, i);
 						setValueToCheckBuffer(j, i - lineCheckValue, value);
 					}
 				}
