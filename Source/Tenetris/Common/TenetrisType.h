@@ -3,7 +3,7 @@
 #include "Tenetris/Common/TenetrisConstant.h"
 #include "Tenetris/Common/TenetrisEnum.h"
 
-typedef TArray<FVector2D> TTetrominoCoordinate;
+using TTetrominoCoordinate = TArray<FVector2D>;
 
 const TTetrominoCoordinate IMinoCoordinate = { FVector2D(-1.f, 0.f) , FVector2D(0.f, 0.f), FVector2D(1.f, 0.f), FVector2D(2.f, 0.f) };
 const TTetrominoCoordinate JMinoCoordinate = { FVector2D(-1.f, 0.f) , FVector2D(-1.f, 1.f), FVector2D(0.f, 0.f), FVector2D(1.f, 0.f) };
@@ -27,15 +27,8 @@ struct FTNTetrominoInfo
 {
 	public:
 	FTNTetrominoInfo()
-		: CurrentType(E_TNTetrominoType::None)
-		, CurrentPosition(FVector2D(1, 1))
-		, RotationState(0)
-	{
-		
-	}
-
-	FTNTetrominoInfo(E_TNTetrominoType currentTetrominoType)
-		: CurrentType(currentTetrominoType)
+		: Id(-1)
+		, CurrentType(E_TNTetrominoType::None)
 		, CurrentPosition(FVector2D(1, 1))
 		, RotationState(0)
 	{
@@ -47,6 +40,7 @@ struct FTNTetrominoInfo
 		CurrentPosition = FVector2D(x, y);
 	}
 
+	int32 Id;
 	E_TNTetrominoType CurrentType;
 	FVector2D CurrentPosition;
 	FVector2D GuideTetrominoPosition;
@@ -69,6 +63,27 @@ struct FTNMoveDirectionState
 	float AutoRepeatTime;
 };
 
+struct FTNCellInfo
+{
+	public:
+	FTNCellInfo()
+		: Id(-1)
+		, Type(E_TNTetrominoType::None)
+	{
+		
+	}
+	
+	FTNCellInfo(int32 id, E_TNTetrominoType type)
+		: Id(id)
+		, Type(type)
+	{
+		
+	}
+	
+	int32 Id;
+	E_TNTetrominoType Type;
+};
+
 struct FTNFieldContext
 {
 	public:
@@ -80,7 +95,7 @@ struct FTNFieldContext
 
 	E_TNFieldType FieldType;
 	bool bSpaceInverted = false;
-	TArray<TArray<E_TNTetrominoType>> LockedGrid;
+	TArray<TArray<FTNCellInfo>> LockedGrid;
 	TSharedPtr<FTNTetrominoInfo> PlayerTetrominoInfo;
 	int32 PreviewTetrominoNum;
 	E_TNTetrominoType HoldTetrominoType = E_TNTetrominoType::None;
