@@ -5,8 +5,10 @@
 // TODO 테트로미노 리스트 분리 [05/21/2024]
 #include "Tenetris/Module/MVC/Model/Field/TetrominoGenerator/TNTetrominoGenerator.h"
 
-FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext)
+FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext, int32 height, int32 width)
 	: FieldContext(MoveTemp(fieldContext))
+	, Height(height)
+	, Width(width)
 {
 	initializeBuffers();
 
@@ -197,9 +199,9 @@ void FTNFieldModel::setValueToCheckBuffer(const int32 x, const int32 y, const E_
 	TArray<TArray<E_TNTetrominoType>>& otherBuffer = FieldContext.bSpaceInverted ? CheckBuffer : ReversedBuffer;
 	
 	currentBuffer[y + 1][x + 1] = tetrominoType;
-	otherBuffer[y + 1][FieldContext.BufferWidth - x] = tetrominoType;
+	otherBuffer[y + 1][Width - x] = tetrominoType;
 	
-	const int32 lockedGridX = FieldContext.bSpaceInverted ? FieldContext.BufferWidth - x : x + 1;
+	const int32 lockedGridX = FieldContext.bSpaceInverted ? Width - x : x + 1;
 	FieldContext.LockedGrid[y + 1][lockedGridX] = tetrominoType;
 }
 
@@ -207,20 +209,21 @@ void FTNFieldModel::initializeBuffers()
 {
 	createBuffer(CheckBuffer);
 	createBuffer(ReversedBuffer);
+	createBuffer(FieldContext.LockedGrid);
 }
 
 void FTNFieldModel::createBuffer(TArray<TArray<E_TNTetrominoType>>& buffer) const
 {
 	buffer.Empty();
-	buffer.Reserve(FieldContext.BufferHeight * 2 + 2);
+	buffer.Reserve(Height * 2 + 2);
 
-	for (int32 i = 0; i < FieldContext.BufferHeight * 2 + 2; i++)
+	for (int32 i = 0; i < Height * 2 + 2; i++)
 	{
 		TArray<E_TNTetrominoType> row;
-		row.Reserve(FieldContext.BufferWidth + 2);
-		for (int32 j = 0; j < FieldContext.BufferWidth + 2; j++)
+		row.Reserve(Width + 2);
+		for (int32 j = 0; j < Width + 2; j++)
 		{
-			if (i == 0 || j == 0 || j == FieldContext.BufferWidth + 2 - 1)
+			if (i == 0 || j == 0 || j == Width + 2 - 1)
 			{
 				row.Add(E_TNTetrominoType::Obstacle);
 			}
@@ -237,7 +240,7 @@ void FTNFieldModel::createBuffer(TArray<TArray<E_TNTetrominoType>>& buffer) cons
 bool FTNFieldModel::checkMino(const int32 x, const int32 y) const
 {
 	if (y < 0 || x < 0) return true;
-	if (y >= FieldContext.BufferHeight || x >= FieldContext.BufferWidth) return true;
+	if (y >= Height || x >= Width) return true;
 
 	return getValueFromCheckBuffer(x, y) != E_TNTetrominoType::None;
 }
@@ -286,7 +289,7 @@ void FTNFieldModel::checkLineDelete(const TArray<int32>& heights)
 bool FTNFieldModel::isLineDeleted(int32 height) const
 {
 	// 주어진 높이에 대해 해당 칸이 모두 채워져있는지 확인합니다.
-	for (int32 j = 0; j < FieldContext.BufferWidth; ++j)
+	for (int32 j = 0; j < Width; ++j)
 	{
 		if (getValueFromCheckBuffer(j, height) == E_TNTetrominoType::None)
 		{
@@ -305,7 +308,7 @@ void FTNFieldModel::spawn()
 	bCanHold = true;
 }
 
-bool FTNFieldModel::moveTetromino(E_TNTetrominoDirection tetrominoDirection)
+bool FTNFieldModel::moveTetromino(E_TNTetrominoDirection tetrominoDirection) const
 {
 	if (isSpaceInverting())
 	{
@@ -328,7 +331,7 @@ bool FTNFieldModel::moveTetromino(E_TNTetrominoDirection tetrominoDirection)
 	return true;
 }
 
-void FTNFieldModel::rotateTetromino(E_TNTetrominoRotation tetrominoRotation)
+void FTNFieldModel::rotateTetromino(E_TNTetrominoRotation tetrominoRotation) const
 {
 	if (isSpaceInverting())
 	{
@@ -486,7 +489,7 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 	{
 		for (const int32 deleteLine : DeletedLines)
 		{
-			for (int32 j = 0; j < FieldContext.BufferWidth; j++)
+			for (int32 j = 0; j < Width; j++)
 			{
 				setValueToCheckBuffer(j, deleteLine, E_TNTetrominoType::None);
 			}
@@ -497,7 +500,7 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 			TArray<int32> lineChecker;
 			int32 lineDeleteValue = 0;
 
-			for (int32 i = 0; i < FieldContext.BufferHeight; i++)
+			for (int32 i = 0; i < Height; i++)
 			{
 				if (DeletedLines.Find(i) != -1)
 				{
@@ -510,13 +513,13 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 				}
 			}
 
-			for (int32 i = 0; i < FieldContext.BufferHeight; i++)
+			for (int32 i = 0; i < Height; i++)
 			{
 				int32 lineChecValue = lineChecker[i];
 
 				if (lineChecValue != -1)
 				{
-					for (int32 j = 0; j < FieldContext.BufferWidth; j++)
+					for (int32 j = 0; j < Width; j++)
 					{
 						const E_TNTetrominoType value = getValueFromCheckBuffer(j, i);
 						setValueToCheckBuffer(j, i - lineChecValue, value);
@@ -586,7 +589,7 @@ void FTNFieldModel::spawnNextTetromino() const
 	}
 }
 
-void FTNFieldModel::updateHoldTetromino()
+void FTNFieldModel::updateHoldTetromino() const
 {
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateHoldTetromino);
 }

@@ -74,16 +74,11 @@ struct FTNFieldContext
 	public:
 	FTNFieldContext(E_TNFieldType fieldType)
 		: FieldType(fieldType)
-		, BufferHeight(RowMax)
-		, BufferWidth(ColumnMax)
 	{
 		initializeTetrominoInfos();
-		initializeLockedGrid(LockedGrid);
 	}
 
 	E_TNFieldType FieldType;
-	int32 BufferHeight = 0;
-	int32 BufferWidth = 0;
 	bool bSpaceInverted = false;
 	TArray<TArray<E_TNTetrominoType>> LockedGrid;
 	TSharedPtr<FTNTetrominoInfo> PlayerTetrominoInfo;
@@ -96,28 +91,6 @@ struct FTNFieldContext
 		PlayerTetrominoInfo = MakeShareable(new FTNTetrominoInfo());
 		PreviewTetrominoNum = PreviewTetrominoMax;
 		PreviewTetrominoTypes.Init(E_TNTetrominoType::None, PreviewTetrominoNum);
-	}
-	
-	void initializeLockedGrid(TArray<TArray<E_TNTetrominoType>>& grid) const
-	{
-		for (int32 i = 0; i < BufferHeight * 2 + 2; i++)
-		{
-			TArray<E_TNTetrominoType> row;
-			row.Reserve(BufferWidth + 2);
-			for (int32 j = 0; j < BufferWidth + 2; j++)
-			{
-				if (i == 0 || j == 0 || j == BufferWidth + 2 - 1)
-				{
-					row.Add(E_TNTetrominoType::Obstacle);
-				}
-				else
-				{
-					row.Add(E_TNTetrominoType::None);
-				}
-			}
-
-			grid.Add(MoveTemp(row));
-		}
 	}
 };
 

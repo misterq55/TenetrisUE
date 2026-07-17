@@ -10,7 +10,7 @@ DECLARE_DELEGATE_TwoParams(FTNUpdateModel, const int32, const E_TNFieldModelStat
 class FTNFieldModel
 {
 public:
-	FTNFieldModel(FTNFieldContext fieldContext);
+	FTNFieldModel(FTNFieldContext fieldContext, int32 height, int32 width);
 	virtual ~FTNFieldModel() {}
 
 public:
@@ -62,8 +62,8 @@ private:
 
 	void spawn();
 
-	bool moveTetromino(E_TNTetrominoDirection tetrominoDirection);
-	void rotateTetromino(E_TNTetrominoRotation tetrominoRotation);
+	bool moveTetromino(E_TNTetrominoDirection tetrominoDirection) const;
+	void rotateTetromino(E_TNTetrominoRotation tetrominoRotation) const;
 	void setMoveDirection(E_TNTetrominoDirection tetrominoDirection, bool pressed);
 
 	void tetrominoFall(float deltaTime);
@@ -79,7 +79,7 @@ private:
 	void createBuffer(TArray<TArray<E_TNTetrominoType>>& buffer) const;
 
 	void spawnNextTetromino() const;
-	void updateHoldTetromino();
+	void updateHoldTetromino() const;
 	void updatePreviewTetrominoes();
 	float getFallingSpeed() const;
 	bool isSpaceInverting() const
@@ -90,6 +90,8 @@ private:
 private:
 	int32 Id = 0;
 	FTNFieldContext FieldContext;
+	int32 Height = 0;
+	int32 Width = 0;
 	FTNUpdateModel OnUpdateModel;
 
 	TSharedPtr<FTNTetromino> CurrentTetromino;

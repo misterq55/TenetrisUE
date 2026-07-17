@@ -16,8 +16,8 @@ public:
 	virtual ~ITNModel() {}
 	virtual void Init() = 0;
 	virtual void Tick(float deltaTime) = 0;
-	virtual void CreateFieldModel(FTNFieldContext fieldContext) = 0;
-	virtual void CreateFieldModel(FTNFieldContext fieldContext, ATNFieldBase* fieldActor) = 0;
+	virtual void CreateFieldModel(FTNFieldContext fieldContext, int32 height, int32 width) = 0;
+	virtual void CreateFieldModel(FTNFieldContext fieldContext, int32 height, int32 width, ATNFieldBase* fieldActor) = 0;
 	virtual void UpdateModel(const int32 modelKey, const E_TNFieldModelStateType state) = 0;
 	virtual FTNFieldContext GetFieldContext(const int32 modelKey) = 0;
 	virtual TSharedPtr<FTNFieldModel> GetPlayerFieldModel() = 0;

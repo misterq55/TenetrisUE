@@ -18,9 +18,9 @@ void FTNModel::Tick(float deltaTime)
 	}
 }
 
-void FTNModel::CreateFieldModel(FTNFieldContext fieldContext)
+void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, int32 height, int32 width)
 {
-	TSharedPtr<FTNFieldModel> fieldModel = MakeShareable(new FTNFieldModel(fieldContext));
+	TSharedPtr<FTNFieldModel> fieldModel = MakeShareable(new FTNFieldModel(fieldContext, height, width));
 	if (!fieldModel.IsValid())
 	{
 		return;
@@ -39,9 +39,9 @@ void FTNModel::CreateFieldModel(FTNFieldContext fieldContext)
 	ModelKey++;
 }
 
-void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, ATNFieldBase* fieldActor)
+void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, int32 height, int32 width, ATNFieldBase* fieldActor)
 {
-	TSharedPtr<FTNFieldModel> fieldModel = MakeShareable(new FTNFieldModel(fieldContext));
+	TSharedPtr<FTNFieldModel> fieldModel = MakeShareable(new FTNFieldModel(fieldContext, height, width));
 	if (!fieldModel.IsValid())
 	{
 		return;
