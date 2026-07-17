@@ -71,10 +71,8 @@ private:
 	void updateLockDown(float deltaTime);
 	void updateLineDelete(float deltaTime);
 
-	void lineDelete();
 	void doLockDown();
 	void waitForSpawn();
-	void handleLineDeletion(const TArray<int32>& linesToDelete);
 	void initializeBuffers();
 	void createBuffer(TArray<TArray<FTNCellInfo>>& buffer) const;
 
