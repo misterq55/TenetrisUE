@@ -82,6 +82,10 @@ void ATNElectronicDisplayField::HandleFieldState(const FTNFieldContext& fieldCon
 	case E_TNFieldModelStateType::LockDown:
 		lockDown(fieldContext);
 		break;
+		
+	case E_TNFieldModelStateType::LineClear:
+		lineClear(fieldContext);
+		break;
 
 	case E_TNFieldModelStateType::RotateField:
 		rotateField(fieldContext);
@@ -176,6 +180,34 @@ void ATNElectronicDisplayField::updatePreviewTetrominoes(const FTNFieldContext& 
 }
 
 void ATNElectronicDisplayField::lockDown(const FTNFieldContext& fieldContext) const
+{
+	if (!IsValid(TenetrisBufferComponent))
+	{
+		return;
+	}
+
+	TenetrisBufferComponent->CleanMinoBuffer();
+
+	TSharedPtr<FTNTetrominoInfo> tetrominoInfo = fieldContext.PlayerTetrominoInfo;
+
+	if (!tetrominoInfo.IsValid())
+	{
+		return;
+	}
+	
+	const TTetrominoCoordinate coordinate = getRotatedCoordinate(tetrominoInfo->CurrentType, tetrominoInfo->RotationState);
+	
+	for (const auto& coord : coordinate)
+	{
+		const int32 x = fieldContext.bSpaceInverted ? ColumnMax - 1 - (coord.X + tetrominoInfo->CurrentPosition.X) : coord.X + tetrominoInfo->CurrentPosition.X;
+		
+		TenetrisBufferComponent->SetBackgroundCubeType(x,
+											 coord.Y + tetrominoInfo->CurrentPosition.Y,
+											 tetrominoInfo->CurrentType);
+	}
+}
+
+void ATNElectronicDisplayField::lineClear(const FTNFieldContext& fieldContext) const
 {
 	constexpr int32 bufferHeight = RowMax;
 	constexpr int32 bufferWidth = ColumnMax;
