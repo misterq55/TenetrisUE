@@ -1,16 +1,16 @@
-#include "TNTenetrisGameMode.h"
+#include "TNTenetrisTestGameMode.h"
 #include "Tenetris/Module/MVC/Holder/TNMVCHolder.h"
 #include "Tenetris/Module/MVC/Model/TestModel/TNTestModel.h"
 #include "Tenetris/Module/MVC/View/TestView/TNTestView.h"
 #include "Tenetris/Module/MVC/Controller/TestController/TNTestController.h"
 
-ATNTenetrisGameMode::ATNTenetrisGameMode()
+ATNTenetrisTestGameMode::ATNTenetrisTestGameMode()
 {
 	PrimaryActorTick.bStartWithTickEnabled = true;
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void ATNTenetrisGameMode::StartPlay()
+void ATNTenetrisTestGameMode::StartPlay()
 {
 	Super::StartPlay();
 
@@ -48,7 +48,7 @@ void ATNTenetrisGameMode::StartPlay()
 	}
 }
 
-void ATNTenetrisGameMode::Tick(float deltaSeconds)
+void ATNTenetrisTestGameMode::Tick(float deltaSeconds)
 {
 	FTNMVCHolder& holder = FTNMVCHolder::GetInstance();
 
