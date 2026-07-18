@@ -3,7 +3,6 @@
 
 #include "TNTenetrisGameModeBase.h"
 #include "Tenetris/Actors/Pawn/TNTenetrisPawn.h"
-#include "Tenetris/Actors/Field/TNFieldBase.h"
 #include "Tenetris/PlayerController/TNTenetrisPlayerController.h"
 
 ATNTenetrisGameModeBase::ATNTenetrisGameModeBase(const FObjectInitializer& ObjectInitializer)
