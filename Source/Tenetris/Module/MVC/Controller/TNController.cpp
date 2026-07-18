@@ -11,6 +11,7 @@ void FTNController::Init()
 	
 	if (tnModel.IsValid() && tnView.IsValid())
 	{
+		tnModel->GetCreateFieldViewDelegate().BindSP(tnView.ToSharedRef(), &ITNView::CreateFieldView);
 		tnModel->GetCreateFieldViewWithFieldActorDelegate().BindSP(tnView.ToSharedRef(), &ITNView::CreateFieldViewWithFieldActor);
 		tnModel->GetUpdateFieldViewDelegate().BindSP(tnView.ToSharedRef(), &ITNView::UpdateFieldView);
 	}
