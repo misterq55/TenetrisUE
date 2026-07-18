@@ -3,19 +3,19 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "TNTenetrisGameModeBase.h"
-#include "TNTenetrisGameMode.generated.h"
+#include "Tenetris/GameMode/TNTenetrisGameModeBase.h"
+#include "TNTenetrisTestGameMode.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class TENETRIS_API ATNTenetrisGameMode : public ATNTenetrisGameModeBase
+class TENETRIS_API ATNTenetrisTestGameMode : public ATNTenetrisGameModeBase
 {
 	GENERATED_BODY()	
 
 public:
-	ATNTenetrisGameMode();
+	ATNTenetrisTestGameMode();
 
 	virtual void StartPlay() override;
 	virtual void Tick(float deltaSeconds) override;

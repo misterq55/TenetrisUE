@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
-#include "Tenetris/TenetrisDefine.h"
 #include "TNTenetrisPlayerController.generated.h"
 
 /**
