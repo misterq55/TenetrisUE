@@ -30,6 +30,22 @@ enum class E_TNTetrominoRotation : uint32
 	CounterClockWise,
 };
 
+enum class E_TNControlType : uint32
+{
+	StartMoveLeft,
+	StopMoveLeft,
+	StartMoveRight,
+	StopMoveRight,
+	StartSoftDrop,
+	StopSoftDrop,
+	RotateClockWise,
+	RotateCounterClockWise,
+	Hold,
+	RotateField,
+	Rewind,
+	HardDrop,
+};
+
 enum class E_TNTetrominoBufferDataType : uint32
 {
 	Blank,
@@ -53,4 +69,3 @@ enum class E_TNFieldModelStateType : uint32
 	LineClear,
 	RotateField,
 };
-

@@ -74,27 +74,69 @@ int32 FTNFieldModel::GetId() const
 	return Id;
 }
 
-void FTNFieldModel::StartMoveLeft()
+void FTNFieldModel::HandleControlInput(E_TNControlType controlType)
+{
+	switch (controlType)
+	{
+	case E_TNControlType::StartMoveLeft:
+		startMoveLeft();
+		break;
+	case E_TNControlType::StopMoveLeft:
+		stopMoveLeft();
+		break;
+	case E_TNControlType::StartMoveRight:
+		startMoveRight();
+		break;
+	case E_TNControlType::StopMoveRight:
+		stopMoveRight();
+		break;
+	case E_TNControlType::StartSoftDrop:
+		startSoftDrop();
+		break;
+	case E_TNControlType::StopSoftDrop:
+		stopSoftDrop();
+		break;
+	case E_TNControlType::RotateClockWise:
+		rotateClockWise();
+		break;
+	case E_TNControlType::RotateCounterClockWise:
+		rotateCounterClockWise();
+		break;
+	case E_TNControlType::Hold:
+		hold();
+		break;
+	case E_TNControlType::RotateField:
+		rotateField();
+		break;
+	case E_TNControlType::HardDrop:
+		hardDrop();
+		break;
+	default:
+		break;
+	}
+}
+
+void FTNFieldModel::startMoveLeft()
 {
 	setMoveDirection(E_TNTetrominoDirection::Left, true);
 }
 
-void FTNFieldModel::StopMoveLeft()
+void FTNFieldModel::stopMoveLeft()
 {
 	setMoveDirection(E_TNTetrominoDirection::Left, false);
 }
 
-void FTNFieldModel::StartMoveRight()
+void FTNFieldModel::startMoveRight()
 {
 	setMoveDirection(E_TNTetrominoDirection::Right, true);
 }
 
-void FTNFieldModel::StopMoveRight()
+void FTNFieldModel::stopMoveRight()
 {
 	setMoveDirection(E_TNTetrominoDirection::Right, false);
 }
 
-void FTNFieldModel::StartSoftDrop()
+void FTNFieldModel::startSoftDrop()
 {
 	if (isSpaceInverting())
 	{
@@ -104,22 +146,22 @@ void FTNFieldModel::StartSoftDrop()
 	bSoftDrop = true;
 }
 
-void FTNFieldModel::StopSoftDrop()
+void FTNFieldModel::stopSoftDrop()
 {
 	bSoftDrop = false;
 }
 
-void FTNFieldModel::RotateClockWise() const
+void FTNFieldModel::rotateClockWise() const
 {
 	rotateTetromino(E_TNTetrominoRotation::ClockWise);
 }
 
-void FTNFieldModel::RotateCounterClockWise() const
+void FTNFieldModel::rotateCounterClockWise() const
 {
 	rotateTetromino(E_TNTetrominoRotation::CounterClockWise);
 }
 
-void FTNFieldModel::Hold()
+void FTNFieldModel::hold()
 {
 	if (isSpaceInverting())
 	{
@@ -153,7 +195,7 @@ void FTNFieldModel::Hold()
 	bCanHold = false;
 }
 
-void FTNFieldModel::ToggleSpaceInversion()
+void FTNFieldModel::rotateField()
 {
 	if (isSpaceInverting())
 	{
@@ -172,7 +214,7 @@ void FTNFieldModel::ToggleSpaceInversion()
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::RotateField);
 }
 
-void FTNFieldModel::HardDrop()
+void FTNFieldModel::hardDrop()
 {
 	if (isSpaceInverting())
 	{

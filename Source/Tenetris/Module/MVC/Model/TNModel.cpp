@@ -88,90 +88,12 @@ TSharedPtr<FTNFieldModel> FTNModel::GetPlayerFieldModel()
 	return PlayerFieldModel;
 }
 
-void FTNModel::StartMoveLeft()
+void FTNModel::HandleControlInput(E_TNControlType controlType)
 {
-	if (PlayerFieldModel.IsValid())
+	if (!PlayerFieldModel.IsValid())
 	{
-		PlayerFieldModel->StartMoveLeft();
+		return;
 	}
-}
-
-void FTNModel::StopMoveLeft()
-{
-	if (PlayerFieldModel.IsValid())
-	{
-		PlayerFieldModel->StopMoveLeft();
-	}
-}
-
-void FTNModel::StartMoveRight()
-{
-	if (PlayerFieldModel.IsValid())
-	{
-		PlayerFieldModel->StartMoveRight();
-	}
-}
-
-void FTNModel::StopMoveRight()
-{
-	if (PlayerFieldModel.IsValid())
-	{
-		PlayerFieldModel->StopMoveRight();
-	}
-}
-
-void FTNModel::StartSoftDrop()
-{
-	if (PlayerFieldModel.IsValid())
-	{
-		PlayerFieldModel->StartSoftDrop();
-	}
-}
-
-void FTNModel::StopSoftDrop()
-{
-	if (PlayerFieldModel.IsValid())
-	{
-		PlayerFieldModel->StopSoftDrop();
-	}
-}
-
-void FTNModel::RotateClockWise()
-{
-	if (PlayerFieldModel.IsValid())
-	{
-		PlayerFieldModel->RotateClockWise();
-	}
-}
-
-void FTNModel::RotateCounterClockWise()
-{
-	if (PlayerFieldModel.IsValid())
-	{
-		PlayerFieldModel->RotateCounterClockWise();
-	}
-}
-
-void FTNModel::Hold()
-{
-	if (PlayerFieldModel.IsValid())
-	{
-		PlayerFieldModel->Hold();
-	}
-}
-
-void FTNModel::ToggleSpaceInversion()
-{
-	if (PlayerFieldModel.IsValid())
-	{
-		PlayerFieldModel->ToggleSpaceInversion();
-	}
-}
-
-void FTNModel::HardDrop()
-{
-	if (PlayerFieldModel.IsValid())
-	{
-		PlayerFieldModel->HardDrop();
-	}
+	
+	PlayerFieldModel->HandleControlInput(controlType);
 }

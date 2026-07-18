@@ -2,7 +2,6 @@
 
 #include "Tenetris/Module/Interface/ITNModel.h"
 
-
 class FTNModel : public ITNModel
 {
 public:
@@ -16,21 +15,7 @@ public:
 	virtual FTNFieldContext GetFieldContext(const int32 modelKey) override;
 	virtual TSharedPtr<FTNFieldModel> GetPlayerFieldModel() override;
 
-	virtual void StartMoveLeft() override;
-	virtual void StopMoveLeft() override;
-
-	virtual void StartMoveRight() override;
-	virtual void StopMoveRight() override;
-
-	virtual void StartSoftDrop() override;
-	virtual void StopSoftDrop() override;
-
-	virtual void RotateClockWise() override;
-	virtual void RotateCounterClockWise() override;
-
-	virtual void Hold() override;
-	virtual void ToggleSpaceInversion() override;
-	virtual void HardDrop() override;
+	virtual void HandleControlInput(E_TNControlType controlType) override;
 
 	virtual FTNCreateFieldView& GetCreateFieldViewDelegate() override { 
 		return CreateFieldViewDelegate; 
