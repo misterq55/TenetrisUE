@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Tenetris/TenetrisDefine.h"
+
 class FTNTetromino;
 class FTNTetrominoGenerator;
 class FTNLockDown;

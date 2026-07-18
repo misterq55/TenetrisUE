@@ -48,7 +48,7 @@ void FTNFieldModel::Initialize()
 {
 	if (CurrentTetromino.IsValid())
 	{
-		CurrentTetromino->SetStartingLocation(4, 18);
+		CurrentTetromino->SetStartingLocation(StartingPosition);
 	}
 
 	spawn();
