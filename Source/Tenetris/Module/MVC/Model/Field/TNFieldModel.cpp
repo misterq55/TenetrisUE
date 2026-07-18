@@ -532,7 +532,7 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 
 			DeletedLines.Empty();
 			
-			OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::LockDown);
+			OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::LineClear);
 		}
 
 		DeleteLineCheckTime += deltaTime;

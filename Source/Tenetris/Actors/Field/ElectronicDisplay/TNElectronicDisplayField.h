@@ -51,6 +51,7 @@ private:
 	void updateHoldTetromino(const FTNFieldContext& fieldContext) const;
 	void updatePreviewTetrominoes(const FTNFieldContext& fieldContext) const;
 	void lockDown(const FTNFieldContext& fieldContext) const;
+	void lineClear(const FTNFieldContext& fieldContext) const;
 	void rotateField(const FTNFieldContext& fieldContext);
 	TTetrominoCoordinate getRotatedCoordinate(E_TNTetrominoType type, int32 rotationState) const;
 
