@@ -35,6 +35,8 @@ void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, int32 height, int3
 	{
 		PlayerFieldModel = fieldModel;
 	}
+	
+	CreateFieldViewDelegate.ExecuteIfBound(ModelKey);
 
 	ModelKey++;
 }

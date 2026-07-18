@@ -7,6 +7,7 @@ class ATNFieldBase;
 
 struct FTNFieldContext;
 
+DECLARE_DELEGATE_OneParam(FTNCreateFieldView, const int32);
 DECLARE_DELEGATE_TwoParams(FTNCreateFieldViewWithFieldActor, const int32, ATNFieldBase* field);
 DECLARE_DELEGATE_ThreeParams(FTNUpdateFieldView, const int32, const FTNFieldContext&, const E_TNFieldModelStateType state);
 
@@ -38,6 +39,7 @@ public:
 	virtual void ToggleSpaceInversion() = 0;
 	virtual void HardDrop() = 0;
 
+	virtual FTNCreateFieldView& GetCreateFieldViewDelegate() = 0;
 	virtual FTNCreateFieldViewWithFieldActor& GetCreateFieldViewWithFieldActorDelegate() = 0;
 	virtual FTNUpdateFieldView& GetUpdateFieldViewDelegate() = 0;
 };

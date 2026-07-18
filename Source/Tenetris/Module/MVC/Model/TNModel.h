@@ -32,6 +32,10 @@ public:
 	virtual void ToggleSpaceInversion() override;
 	virtual void HardDrop() override;
 
+	virtual FTNCreateFieldView& GetCreateFieldViewDelegate() override { 
+		return CreateFieldViewDelegate; 
+	}
+	
 	virtual FTNCreateFieldViewWithFieldActor& GetCreateFieldViewWithFieldActorDelegate() override { 
 		return CreateFieldViewWithFieldActorDelegate; 
 	}
@@ -45,6 +49,7 @@ private:
 	TSharedPtr<FTNFieldModel> PlayerFieldModel;
 	int32 ModelKey = 0;
 
+	FTNCreateFieldView CreateFieldViewDelegate;
 	FTNCreateFieldViewWithFieldActor CreateFieldViewWithFieldActorDelegate;
 	FTNUpdateFieldView UpdateFieldViewDelegate;
 };
