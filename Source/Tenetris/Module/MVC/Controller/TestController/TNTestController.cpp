@@ -1,10 +1,10 @@
-#include "TNController.h"
+#include "TNTestController.h"
 
-#include "Module/MVC/View/TNView.h"
+#include "Tenetris/Module/MVC/View/TestView/TNTestView.h"
 #include "Tenetris/Module/MVC/Holder/TNMVCHolder.h"
-#include "Tenetris/Module/MVC/Model/TNModel.h"
+#include "Tenetris/Module/MVC/Model/TestModel/TNTestModel.h"
 
-void FTNController::Init()
+void FTNTestController::Init()
 {
 	TSharedPtr<ITNModel> tnModel = FTNMVCHolder::GetInstance().GetModel();
 	TSharedPtr<ITNView> tnView = FTNMVCHolder::GetInstance().GetView();
@@ -17,7 +17,7 @@ void FTNController::Init()
 	}
 }
 
-void FTNController::Tick(float deltaTime)
+void FTNTestController::Tick(float deltaTime)
 {
 	FTNMVCHolder& holder = FTNMVCHolder::GetInstance();
 
@@ -29,7 +29,7 @@ void FTNController::Tick(float deltaTime)
 	}
 }
 
-void FTNController::HandleControlInput(E_TNControlType controlType)
+void FTNTestController::HandleControlInput(E_TNControlType controlType)
 {
 	FTNMVCHolder& holder = FTNMVCHolder::GetInstance();
 	TSharedPtr<ITNModel> tnModel = holder.GetModel();
@@ -39,3 +39,4 @@ void FTNController::HandleControlInput(E_TNControlType controlType)
 		tnModel->HandleControlInput(controlType);
 	}
 }
+

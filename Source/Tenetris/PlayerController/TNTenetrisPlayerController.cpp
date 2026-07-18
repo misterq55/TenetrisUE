@@ -5,7 +5,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Tenetris/Module/MVC/Holder/TNMVCHolder.h"
-#include "Tenetris/Module/MVC/Controller/TNController.h"
+#include "Tenetris/Module/MVC/Controller/TestController/TNTestController.h"
 
 void ATNTenetrisPlayerController::BeginPlay()
 {

@@ -2,14 +2,15 @@
 
 #include "Tenetris/Module/Interface/ITNController.h"
 
-class FTNController : public ITNController
+class FTNTestController : public ITNController
 {
 public:
-	FTNController() {}
-	virtual ~FTNController() {}
+	FTNTestController() {}
+	virtual ~FTNTestController() {}
 	virtual void Init() override;
 	virtual void Tick(float deltaTime) override;
 	virtual void HandleControlInput(E_TNControlType controlType) override;
 private:
 
 };
+

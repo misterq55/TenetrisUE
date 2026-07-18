@@ -2,11 +2,11 @@
 
 #include "Tenetris/Module/Interface/ITNModel.h"
 
-class FTNModel : public ITNModel
+class FTNTestModel : public ITNModel
 {
 public:
-	FTNModel() {}
-	virtual ~FTNModel() override {}
+	FTNTestModel() {}
+	virtual ~FTNTestModel() override {}
 	virtual void Init() override;
 	virtual void Tick(float deltaTime) override;
 	virtual void CreateFieldModel(FTNFieldContext fieldContext, int32 height, int32 width) override;
@@ -38,3 +38,4 @@ private:
 	FTNCreateFieldViewWithFieldActor CreateFieldViewWithFieldActorDelegate;
 	FTNUpdateFieldView UpdateFieldViewDelegate;
 };
+
