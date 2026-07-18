@@ -25,5 +25,6 @@ public:
 	void SetPlayerField(ATNFieldBase* playerField);
 
 protected:
+	UPROPERTY()
 	TArray<ATNFieldBase*> Fields;
 };
