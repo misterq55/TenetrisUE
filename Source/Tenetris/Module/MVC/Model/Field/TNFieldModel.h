@@ -5,6 +5,7 @@
 class FTNTetromino;
 class FTNTetrominoGenerator;
 class FTNLockDown;
+class FTNRecorder;
 
 DECLARE_DELEGATE_TwoParams(FTNUpdateModel, const int32, const E_TNFieldModelStateType);
 
@@ -117,6 +118,7 @@ private:
 	float MoveSpeed = 0.05f;
 
 	TSharedPtr<FTNLockDown> LockDown;
+	TSharedPtr<FTNRecorder> Recorder;
 	bool bWaitForSpawn = false;
 	bool bCanHold = true;
 };

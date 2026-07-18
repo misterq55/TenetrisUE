@@ -1,6 +1,7 @@
 #include "TNFieldModel.h"
 #include "Tenetris/Module/MVC/Model/Field/Tetromino/TNTetromino.h"
 #include "Tenetris/Module/MVC/Model/Field/LockDown/TNLockDown.h"
+#include "Tenetris/Module/MVC/Model/Field/Recorder/TNRecorder.h"
 
 // TODO 테트로미노 리스트 분리 [05/21/2024]
 #include "Tenetris/Module/MVC/Model/Field/TetrominoGenerator/TNTetrominoGenerator.h"
@@ -41,6 +42,11 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext, int32 height, int32 w
 	if (!LockDown.IsValid())
 	{
 		LockDown = MakeShareable(new FTNLockDown());
+	}
+	
+	if (!Recorder.IsValid())
+	{
+		Recorder = MakeShareable(new FTNRecorder());
 	}
 }
 
