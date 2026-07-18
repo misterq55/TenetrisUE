@@ -33,21 +33,24 @@ public:
 
 	int32 GetId() const;
 
-	void StartMoveLeft();
-	void StopMoveLeft();
+	void HandleControlInput(E_TNControlType controlType);
+	
+private:
+	void startMoveLeft();
+	void stopMoveLeft();
 
-	void StartMoveRight();
-	void StopMoveRight();
+	void startMoveRight();
+	void stopMoveRight();
 
-	void StartSoftDrop();
-	void StopSoftDrop();
+	void startSoftDrop();
+	void stopSoftDrop();
 
-	void RotateClockWise() const;
-	void RotateCounterClockWise() const;
+	void rotateClockWise() const;
+	void rotateCounterClockWise() const;
 
-	void Hold();
-	void ToggleSpaceInversion();
-	void HardDrop();
+	void hold();
+	void rotateField();
+	void hardDrop();
 
 private:
 	FTNCellInfo getValueFromCheckBuffer(const int32 x, const int32 y) const;

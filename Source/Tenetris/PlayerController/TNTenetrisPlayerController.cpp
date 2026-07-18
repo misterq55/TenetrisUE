@@ -51,7 +51,7 @@ void ATNTenetrisPlayerController::startMoveLeft()
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
-		tnController->StartMoveLeft();
+		tnController->HandleControlInput(E_TNControlType::StartMoveLeft);
 	}
 }
 
@@ -60,7 +60,7 @@ void ATNTenetrisPlayerController::stopMoveLeft()
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
-		tnController->StopMoveLeft();
+		tnController->HandleControlInput(E_TNControlType::StopMoveLeft);
 	}
 }
 
@@ -69,7 +69,7 @@ void ATNTenetrisPlayerController::startMoveRight()
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
-		tnController->StartMoveRight();
+		tnController->HandleControlInput(E_TNControlType::StartMoveRight);
 	}
 }
 
@@ -78,7 +78,7 @@ void ATNTenetrisPlayerController::stopMoveRight()
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
-		tnController->StopMoveRight();
+		tnController->HandleControlInput(E_TNControlType::StopMoveRight);
 	}
 }
 
@@ -87,7 +87,7 @@ void ATNTenetrisPlayerController::startSoftDrop()
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
-		tnController->StartSoftDrop();
+		tnController->HandleControlInput(E_TNControlType::StartSoftDrop);
 	}
 }
 
@@ -96,7 +96,7 @@ void ATNTenetrisPlayerController::stopSoftDrop()
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
-		tnController->StopSoftDrop();
+		tnController->HandleControlInput(E_TNControlType::StopSoftDrop);
 	}
 }
 
@@ -105,7 +105,7 @@ void ATNTenetrisPlayerController::rotateClockWise()
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
-		tnController->RotateClockWise();
+		tnController->HandleControlInput(E_TNControlType::RotateClockWise);
 	}
 }
 
@@ -114,7 +114,7 @@ void ATNTenetrisPlayerController::rotateCounterClockWise()
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
-		tnController->RotateCounterClockWise();
+		tnController->HandleControlInput(E_TNControlType::RotateCounterClockWise);
 	}
 }
 
@@ -123,7 +123,7 @@ void ATNTenetrisPlayerController::hold()
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
-		tnController->Hold();
+		tnController->HandleControlInput(E_TNControlType::Hold);
 	}
 }
 
@@ -132,7 +132,7 @@ void ATNTenetrisPlayerController::toggleSpaceInversion()
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
-		tnController->ToggleSpaceInversion();
+		tnController->HandleControlInput(E_TNControlType::RotateField);
 	}
 }
 
@@ -141,6 +141,6 @@ void ATNTenetrisPlayerController::hardDrop()
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
-		tnController->HardDrop();
+		tnController->HandleControlInput(E_TNControlType::HardDrop);
 	}
 }
