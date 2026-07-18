@@ -1,11 +1,8 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "TNTenetrisGameMode.h"
 #include "Tenetris/Module/MVC/Holder/TNMVCHolder.h"
-#include "Tenetris/Module/MVC/Model/TNModel.h"
-#include "Tenetris/Module/MVC/View/TNView.h"
-#include "Tenetris/Module/MVC/Controller/TNController.h"
+#include "Tenetris/Module/MVC/Model/TestModel/TNTestModel.h"
+#include "Tenetris/Module/MVC/View/TestView/TNTestView.h"
+#include "Tenetris/Module/MVC/Controller/TestController/TNTestController.h"
 
 ATNTenetrisGameMode::ATNTenetrisGameMode()
 {
@@ -19,9 +16,9 @@ void ATNTenetrisGameMode::StartPlay()
 
 	FTNMVCHolder& holder = FTNMVCHolder::GetInstance();
 
-	holder.SetModel(MakeShareable(new FTNModel()));
-	holder.SetView(MakeShareable(new FTNView()));
-	holder.SetController(MakeShareable(new FTNController()));
+	holder.SetModel(MakeShareable(new FTNTestModel()));
+	holder.SetView(MakeShareable(new FTNTestView()));
+	holder.SetController(MakeShareable(new FTNTestController()));
 
 	TSharedPtr<ITNModel> tnModel = holder.GetModel();
 	if (tnModel.IsValid())

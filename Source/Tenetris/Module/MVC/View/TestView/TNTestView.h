@@ -2,11 +2,11 @@
 
 #include "Tenetris/Module/Interface/ITNView.h"
 
-class FTNView : public ITNView
+class FTNTestView : public ITNView
 {
 public:
-	FTNView() {}
-	virtual ~FTNView() {}
+	FTNTestView() {}
+	virtual ~FTNTestView() {}
 	virtual void Init() override;
 	virtual void Tick(float deltaTime) override;
 	virtual void CreateFieldView(const int32 key) override;
@@ -16,3 +16,4 @@ public:
 private:
 	TMap<int32, TSharedPtr<FTNFieldView>> FieldViewMap;
 };
+

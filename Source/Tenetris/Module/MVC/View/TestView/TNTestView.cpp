@@ -1,17 +1,16 @@
-#include "TNView.h"
-#include "Tenetris/Module/MVC/Model/Field/TNFieldModel.h"
+#include "TNTestView.h"
 #include "Tenetris/Module/MVC/View/Field/TNFieldView.h"
 
-void FTNView::Init()
+void FTNTestView::Init()
 {
 	
 }
 
-void FTNView::Tick(float deltaTime)
+void FTNTestView::Tick(float deltaTime)
 {
 }
 
-void FTNView::CreateFieldView(const int32 key)
+void FTNTestView::CreateFieldView(const int32 key)
 {
 	TSharedPtr<FTNFieldView> fieldView = MakeShareable(new FTNFieldView());
 	if (fieldView.IsValid())
@@ -20,7 +19,7 @@ void FTNView::CreateFieldView(const int32 key)
 	}
 }
 
-void FTNView::CreateFieldViewWithFieldActor(const int32 key, ATNFieldBase* fieldActor)
+void FTNTestView::CreateFieldViewWithFieldActor(const int32 key, ATNFieldBase* fieldActor)
 {
 	TSharedPtr<FTNFieldView> fieldView = MakeShareable(new FTNFieldView());
 	if (fieldView.IsValid())
@@ -30,7 +29,7 @@ void FTNView::CreateFieldViewWithFieldActor(const int32 key, ATNFieldBase* field
 	}
 }
 
-void FTNView::UpdateFieldView(const int32 modelKey, const FTNFieldContext& fieldContext,
+void FTNTestView::UpdateFieldView(const int32 modelKey, const FTNFieldContext& fieldContext,
 	const E_TNFieldModelStateType state)
 {
 	TSharedPtr<FTNFieldView>* fieldView = FieldViewMap.Find(modelKey);
@@ -39,3 +38,4 @@ void FTNView::UpdateFieldView(const int32 modelKey, const FTNFieldContext& field
 		(*fieldView)->Update(fieldContext, state);
 	}
 }
+

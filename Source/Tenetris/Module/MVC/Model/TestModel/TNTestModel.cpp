@@ -1,11 +1,11 @@
-#include "TNModel.h"
-#include "Field/TNFieldModel.h"
+#include "TNTestModel.h"
+#include "Tenetris/Module/MVC/Model/Field/TNFieldModel.h"
 
-void FTNModel::Init()
+void FTNTestModel::Init()
 {
 }
 
-void FTNModel::Tick(float deltaTime)
+void FTNTestModel::Tick(float deltaTime)
 {
 	for (const auto& [key, fieldModel] : FieldModelMap)
 	{
@@ -18,7 +18,7 @@ void FTNModel::Tick(float deltaTime)
 	}
 }
 
-void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, int32 height, int32 width)
+void FTNTestModel::CreateFieldModel(FTNFieldContext fieldContext, int32 height, int32 width)
 {
 	TSharedPtr<FTNFieldModel> fieldModel = MakeShareable(new FTNFieldModel(fieldContext, height, width));
 	if (!fieldModel.IsValid())
@@ -26,7 +26,7 @@ void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, int32 height, int3
 		return;
 	}
 
-	fieldModel->GetOnUpdateModelDelegate().BindRaw(this, &FTNModel::UpdateModel);
+	fieldModel->GetOnUpdateModelDelegate().BindRaw(this, &FTNTestModel::UpdateModel);
 	fieldModel->Initialize();
 	fieldModel->SetId(ModelKey);
 	FieldModelMap.Emplace(ModelKey, fieldModel);
@@ -41,7 +41,7 @@ void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, int32 height, int3
 	ModelKey++;
 }
 
-void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, int32 height, int32 width, ATNFieldBase* fieldActor)
+void FTNTestModel::CreateFieldModel(FTNFieldContext fieldContext, int32 height, int32 width, ATNFieldBase* fieldActor)
 {
 	TSharedPtr<FTNFieldModel> fieldModel = MakeShareable(new FTNFieldModel(fieldContext, height, width));
 	if (!fieldModel.IsValid())
@@ -49,7 +49,7 @@ void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, int32 height, int3
 		return;
 	}
 
-	fieldModel->GetOnUpdateModelDelegate().BindRaw(this, &FTNModel::UpdateModel);
+	fieldModel->GetOnUpdateModelDelegate().BindRaw(this, &FTNTestModel::UpdateModel);
 	fieldModel->SetId(ModelKey);
 	
 	FieldModelMap.Emplace(ModelKey, fieldModel);
@@ -66,13 +66,13 @@ void FTNModel::CreateFieldModel(FTNFieldContext fieldContext, int32 height, int3
 	ModelKey++;
 }
 
-void FTNModel::UpdateModel(const int32 modelKey, const E_TNFieldModelStateType state)
+void FTNTestModel::UpdateModel(const int32 modelKey, const E_TNFieldModelStateType state)
 {
 	FTNFieldContext fieldContext = GetFieldContext(modelKey);
 	UpdateFieldViewDelegate.ExecuteIfBound(modelKey, fieldContext, state);
 }
 
-FTNFieldContext FTNModel::GetFieldContext(const int32 modelKey)
+FTNFieldContext FTNTestModel::GetFieldContext(const int32 modelKey)
 {
 	const TSharedPtr<FTNFieldModel>* fieldModeltPtr = FieldModelMap.Find(modelKey);
 	if (fieldModeltPtr && fieldModeltPtr->IsValid())
@@ -83,12 +83,12 @@ FTNFieldContext FTNModel::GetFieldContext(const int32 modelKey)
 	return FTNFieldContext(E_TNFieldType::None);
 }
 
-TSharedPtr<FTNFieldModel> FTNModel::GetPlayerFieldModel()
+TSharedPtr<FTNFieldModel> FTNTestModel::GetPlayerFieldModel()
 {
 	return PlayerFieldModel;
 }
 
-void FTNModel::HandleControlInput(E_TNControlType controlType)
+void FTNTestModel::HandleControlInput(E_TNControlType controlType)
 {
 	if (!PlayerFieldModel.IsValid())
 	{
@@ -97,3 +97,4 @@ void FTNModel::HandleControlInput(E_TNControlType controlType)
 	
 	PlayerFieldModel->HandleControlInput(controlType);
 }
+
