@@ -20,7 +20,7 @@ public:
 	virtual void UpdateModel(const int32 modelKey, const E_TNFieldModelStateType state) = 0;
 	virtual FTNFieldContext GetFieldContext(const int32 modelKey) = 0;
 	virtual TSharedPtr<FTNFieldModel> GetPlayerFieldModel() = 0;
-	virtual void HandleControlInput(E_TNControlType controlType) = 0;
+	virtual void HandleControlInput(const E_TNControlType controlType) = 0;
 	virtual FTNCreateFieldView& GetCreateFieldViewDelegate() = 0;
 	virtual FTNCreateFieldViewWithFieldActor& GetCreateFieldViewWithFieldActorDelegate() = 0;
 	virtual FTNUpdateFieldView& GetUpdateFieldViewDelegate() = 0;

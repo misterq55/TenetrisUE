@@ -9,7 +9,7 @@ public:
 	virtual ~FTNTestController() {}
 	virtual void Init() override;
 	virtual void Tick(float deltaTime) override;
-	virtual void HandleControlInput(E_TNControlType controlType) override;
+	virtual void HandleControlInput(const E_TNControlType controlType) override;
 private:
 
 };

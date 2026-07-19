@@ -35,7 +35,7 @@ public:
 
 	int32 GetId() const;
 
-	void HandleControlInput(E_TNControlType controlType);
+	void HandleControlInput(const E_TNControlType controlType);
 	
 private:
 	void startMoveLeft();

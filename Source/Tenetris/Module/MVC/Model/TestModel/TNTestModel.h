@@ -15,7 +15,7 @@ public:
 	virtual FTNFieldContext GetFieldContext(const int32 modelKey) override;
 	virtual TSharedPtr<FTNFieldModel> GetPlayerFieldModel() override;
 
-	virtual void HandleControlInput(E_TNControlType controlType) override;
+	virtual void HandleControlInput(const E_TNControlType controlType) override;
 
 	virtual FTNCreateFieldView& GetCreateFieldViewDelegate() override { 
 		return CreateFieldViewDelegate; 

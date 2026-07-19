@@ -88,7 +88,7 @@ TSharedPtr<FTNFieldModel> FTNTestModel::GetPlayerFieldModel()
 	return PlayerFieldModel;
 }
 
-void FTNTestModel::HandleControlInput(E_TNControlType controlType)
+void FTNTestModel::HandleControlInput(const E_TNControlType controlType)
 {
 	if (!PlayerFieldModel.IsValid())
 	{
