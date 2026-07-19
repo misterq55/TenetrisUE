@@ -26,52 +26,35 @@ const TTetrominoCoordinate TetrominoCoordinatesByType[] =
 struct FTNTetrominoInfo
 {
 	public:
-	FTNTetrominoInfo()
-		: Id(-1)
-		, CurrentType(E_TNTetrominoType::None)
-		, CurrentPosition(FVector2D(1, 1))
-		, RotationState(0)
-	{
-		
-	}
+	FTNTetrominoInfo() = default;
 
 	void SetPosition(int32 x, int32 y)
 	{
 		CurrentPosition = FVector2D(x, y);
 	}
 
-	int32 Id;
-	E_TNTetrominoType CurrentType;
-	FVector2D CurrentPosition;
-	FVector2D GuideTetrominoPosition;
-	int32 RotationState;
+	int32 Id = -1;
+	E_TNTetrominoType CurrentType = E_TNTetrominoType::None;
+	FVector2D CurrentPosition = FVector2D(1, 1);
+	FVector2D GuideTetrominoPosition = FVector2D::ZeroVector;
+	int32 RotationState = 0;
 };
 
 struct FTNMoveDirectionState
 {
 	public:
-	FTNMoveDirectionState()
-		: Pressed(false)
-		, PressedTime(0.f)
-		, AutoRepeatKickIn(false)
-		, AutoRepeatTime(0.f)
-	{}
+	FTNMoveDirectionState() = default;
 
-	bool Pressed;
-	float PressedTime;
-	bool AutoRepeatKickIn;
-	float AutoRepeatTime;
+	bool Pressed = false;
+	float PressedTime = 0.f;
+	bool AutoRepeatKickIn = false;
+	float AutoRepeatTime = 0.f;
 };
 
 struct FTNCellInfo
 {
 	public:
-	FTNCellInfo()
-		: Id(-1)
-		, Type(E_TNTetrominoType::None)
-	{
-		
-	}
+	FTNCellInfo() = default;
 	
 	FTNCellInfo(int32 id, E_TNTetrominoType type)
 		: Id(id)
@@ -80,8 +63,8 @@ struct FTNCellInfo
 		
 	}
 	
-	int32 Id;
-	E_TNTetrominoType Type;
+	int32 Id = -1;
+	E_TNTetrominoType Type = E_TNTetrominoType::None;
 };
 
 struct FTNFieldContext
@@ -93,11 +76,11 @@ struct FTNFieldContext
 		initializeTetrominoInfos();
 	}
 
-	E_TNFieldType FieldType;
+	E_TNFieldType FieldType = E_TNFieldType::None;
 	bool bSpaceInverted = false;
 	TArray<TArray<FTNCellInfo>> LockedGrid;
 	TSharedPtr<FTNTetrominoInfo> PlayerTetrominoInfo;
-	int32 PreviewTetrominoNum;
+	int32 PreviewTetrominoNum = 0;
 	E_TNTetrominoType HoldTetrominoType = E_TNTetrominoType::None;
 	TArray<E_TNTetrominoType> PreviewTetrominoTypes;
 
