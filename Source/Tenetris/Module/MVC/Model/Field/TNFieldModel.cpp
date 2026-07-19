@@ -80,7 +80,7 @@ int32 FTNFieldModel::GetId() const
 	return Id;
 }
 
-void FTNFieldModel::HandleControlInput(E_TNControlType controlType)
+void FTNFieldModel::HandleControlInput(const E_TNControlType controlType)
 {
 	switch (controlType)
 	{

@@ -29,7 +29,7 @@ void FTNTestController::Tick(float deltaTime)
 	}
 }
 
-void FTNTestController::HandleControlInput(E_TNControlType controlType)
+void FTNTestController::HandleControlInput(const E_TNControlType controlType)
 {
 	FTNMVCHolder& holder = FTNMVCHolder::GetInstance();
 	TSharedPtr<ITNModel> tnModel = holder.GetModel();
