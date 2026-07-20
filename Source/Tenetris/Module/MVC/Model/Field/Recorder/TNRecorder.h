@@ -11,7 +11,7 @@ private:
 		Move,
 		Rotate,
 		Hold,
-		FieldRotate,
+		RotateField,
 		None,
 	};
 	
@@ -35,7 +35,7 @@ private:
 		void RecordBuffers(const TArray<TArray<FTNCellInfo>>& normalBuffer, const TArray<TArray<FTNCellInfo>>& reversedBuffer);
 	
 	private:
-		TArray<FTNTetrominoInfo> TetrominoInfos;
+		TArray<FTNBehavior> Behaviors;
 		E_TNTetrominoType HoldTetrominoType;
 		TArray<E_TNTetrominoType> PreviewTetrominoTypes;
 		TArray<TArray<FTNCellInfo>> NormalBuffer;
