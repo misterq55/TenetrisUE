@@ -11,7 +11,7 @@ bool FTNTetromino::Move(const E_TNTetrominoDirection tetrominoDirection)
 
 	if (!checkMino(simulationPosition))
 	{
-		TetrominoInfo->CurrentPosition = simulationPosition;
+		TetrominoInfo->Position = simulationPosition;
 		
 		if (tetrominoDirection == E_TNTetrominoDirection::Left || tetrominoDirection == E_TNTetrominoDirection::Right)
 		{
@@ -65,11 +65,11 @@ bool FTNTetromino::Rotate(const E_TNTetrominoRotation tetrominoRotation)
 
 	TArray<TArray<FVector2D>> offset;
 
-	if (TetrominoInfo->CurrentType == E_TNTetrominoType::I)
+	if (TetrominoInfo->TetrominoType == E_TNTetrominoType::I)
 	{
 		offset = IOffset;
 	}
-	else if (TetrominoInfo->CurrentType == E_TNTetrominoType::O)
+	else if (TetrominoInfo->TetrominoType == E_TNTetrominoType::O)
 	{
 		offset = OOffset;
 	}
@@ -90,7 +90,7 @@ bool FTNTetromino::Rotate(const E_TNTetrominoRotation tetrominoRotation)
 
 		// CheckMino 실행
 		bool simulationCheck = false;
-		const FVector2D& simulationPosition = TetrominoInfo->CurrentPosition + difference;
+		const FVector2D& simulationPosition = TetrominoInfo->Position + difference;
 		for (const FVector2D& coord : simulationCoordinates)
 		{
 			if (OnCheckMino.Execute(coord.X + simulationPosition.X, coord.Y + simulationPosition.Y))
@@ -114,7 +114,7 @@ bool FTNTetromino::Rotate(const E_TNTetrominoRotation tetrominoRotation)
 
 	if (!tetrominoCheck)
 	{
-		TetrominoInfo->CurrentPosition += kickOffset;
+		TetrominoInfo->Position += kickOffset;
 		Coordinate = simulationCoordinates;
 		
 		calculateGuideTetromino();
@@ -162,7 +162,7 @@ void FTNTetromino::calculateGuideTetromino() const
 
 	for (const FVector2D& coord : Coordinate)
 	{
-		const int32 height = OnCalculateGuideMino.Execute(coord.X + TetrominoInfo->CurrentPosition.X, coord.Y + TetrominoInfo->CurrentPosition.Y);
+		const int32 height = OnCalculateGuideMino.Execute(coord.X + TetrominoInfo->Position.X, coord.Y + TetrominoInfo->Position.Y);
 		checkHeightArray.Add(height);
 	}
 
@@ -176,7 +176,7 @@ void FTNTetromino::calculateGuideTetromino() const
 		}
 	}
 
-	TetrominoInfo->GuideTetrominoPosition = FVector2D(TetrominoInfo->CurrentPosition.X, TetrominoInfo->CurrentPosition.Y - minHeight);
+	TetrominoInfo->GuideTetrominoPosition = FVector2D(TetrominoInfo->Position.X, TetrominoInfo->Position.Y - minHeight);
 
 }
 
@@ -184,7 +184,7 @@ void FTNTetromino::HardDrop()
 {	
 	if (TetrominoInfo.IsValid())
 	{
-		TetrominoInfo->CurrentPosition = TetrominoInfo->GuideTetrominoPosition;
+		TetrominoInfo->Position = TetrominoInfo->GuideTetrominoPosition;
 	}
 	
 	calculateGuideTetromino();
@@ -202,7 +202,7 @@ TArray<int32> FTNTetromino::GetMinoHeights() const
 
 	for (const FVector2D& coord : Coordinate)
 	{
-		result.AddUnique(coord.Y + TetrominoInfo->CurrentPosition.Y);
+		result.AddUnique(coord.Y + TetrominoInfo->Position.Y);
 	}
 
 	return result;
@@ -225,7 +225,7 @@ void FTNTetromino::ApplyTetrominoType(const E_TNTetrominoType currentTetrominoTy
 		return;
 	}
 
-	TetrominoInfo->CurrentType = currentTetrominoType;
+	TetrominoInfo->TetrominoType = currentTetrominoType;
 	
 	const uint32 typeIndex = static_cast<uint32>(currentTetrominoType);
 	if (typeIndex < UE_ARRAY_COUNT(TetrominoCoordinatesByType))
@@ -248,7 +248,7 @@ E_TNTetrominoType FTNTetromino::GetTetrominoType() const
 {
 	if (TetrominoInfo.IsValid())
 	{
-		return TetrominoInfo->CurrentType;
+		return TetrominoInfo->TetrominoType;
 	}
 
 	return E_TNTetrominoType();
@@ -312,11 +312,11 @@ void FTNTetromino::moveTetrominoToCheckBuffer() const
 		return;
 	}
 	
-	const FTNCellInfo cellInfo(TetrominoInfo->Id, TetrominoInfo->CurrentType);
+	const FTNCellInfo cellInfo(TetrominoInfo->Id, TetrominoInfo->TetrominoType);
 	
 	for (const FVector2D& coord : Coordinate)
 	{
-		OnMoveTetrominoToCheckBuffer.ExecuteIfBound(coord.X + TetrominoInfo->CurrentPosition.X, coord.Y + TetrominoInfo->CurrentPosition.Y, cellInfo);
+		OnMoveTetrominoToCheckBuffer.ExecuteIfBound(coord.X + TetrominoInfo->Position.X, coord.Y + TetrominoInfo->Position.Y, cellInfo);
 	}
 }
 
@@ -327,7 +327,7 @@ FVector2D FTNTetromino::simulatePosition(const E_TNTetrominoDirection tetrominoD
 		return FVector2D::ZeroVector;
 	}
 
-	FVector2D simulationPosition = TetrominoInfo->CurrentPosition;
+	FVector2D simulationPosition = TetrominoInfo->Position;
 
 	switch (tetrominoDirection)
 	{
