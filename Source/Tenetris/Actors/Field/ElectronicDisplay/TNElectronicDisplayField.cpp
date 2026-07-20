@@ -128,13 +128,13 @@ void ATNElectronicDisplayField::updateTetromino(const FTNFieldContext& fieldCont
 		return;
 	}
 	
-	const TTetrominoCoordinate coordinate = getRotatedCoordinate(tetrominoInfo->CurrentType, tetrominoInfo->RotationState);
+	const TTetrominoCoordinate coordinate = getRotatedCoordinate(tetrominoInfo->TetrominoType, tetrominoInfo->RotationState);
 	
 	for (const auto& coord : coordinate)
 	{
-		TenetrisBufferComponent->SetMinoType(coord.X + tetrominoInfo->CurrentPosition.X,
-		                                     coord.Y + tetrominoInfo->CurrentPosition.Y,
-		                                     tetrominoInfo->CurrentType);
+		TenetrisBufferComponent->SetMinoType(coord.X + tetrominoInfo->Position.X,
+		                                     coord.Y + tetrominoInfo->Position.Y,
+		                                     tetrominoInfo->TetrominoType);
 	
 		TenetrisBufferComponent->SetMinoType(coord.X + tetrominoInfo->GuideTetrominoPosition.X,
 		                                     coord.Y + tetrominoInfo->GuideTetrominoPosition.Y,
@@ -195,15 +195,15 @@ void ATNElectronicDisplayField::lockDown(const FTNFieldContext& fieldContext) co
 		return;
 	}
 	
-	const TTetrominoCoordinate coordinate = getRotatedCoordinate(tetrominoInfo->CurrentType, tetrominoInfo->RotationState);
+	const TTetrominoCoordinate coordinate = getRotatedCoordinate(tetrominoInfo->TetrominoType, tetrominoInfo->RotationState);
 	
 	for (const auto& coord : coordinate)
 	{
-		const int32 x = fieldContext.bSpaceInverted ? ColumnMax - 1 - (coord.X + tetrominoInfo->CurrentPosition.X) : coord.X + tetrominoInfo->CurrentPosition.X;
+		const int32 x = fieldContext.bSpaceInverted ? ColumnMax - 1 - (coord.X + tetrominoInfo->Position.X) : coord.X + tetrominoInfo->Position.X;
 		
 		TenetrisBufferComponent->SetBackgroundCubeType(x,
-											 coord.Y + tetrominoInfo->CurrentPosition.Y,
-											 tetrominoInfo->CurrentType);
+											 coord.Y + tetrominoInfo->Position.Y,
+											 tetrominoInfo->TetrominoType);
 	}
 }
 

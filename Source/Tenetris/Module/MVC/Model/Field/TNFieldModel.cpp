@@ -47,6 +47,7 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext, int32 height, int32 w
 	if (!Recorder.IsValid())
 	{
 		Recorder = MakeShareable(new FTNRecorder());
+		Recorder->Initialize();
 	}
 }
 
@@ -217,6 +218,11 @@ void FTNFieldModel::rotateField()
 		CurrentTetromino->ResetGuideTetromino();
 	}
 	
+	if (Recorder.IsValid())
+	{
+		Recorder->RecordRotateField(FieldContext.bSpaceInverted);
+	}
+	
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::RotateField);
 }
 
@@ -353,6 +359,12 @@ void FTNFieldModel::spawn()
 	CurrentTime = 0.f;
 	spawnNextTetromino();
 	updatePreviewTetrominoes();
+	
+	if (Recorder.IsValid())
+	{
+		Recorder->RecordTetrominoType(CurrentTetromino->GetTetrominoType());
+	}
+	
 	bCanHold = true;
 }
 
@@ -370,6 +382,11 @@ bool FTNFieldModel::moveTetromino(E_TNTetrominoDirection tetrominoDirection) con
 			if (LockDown.IsValid())
 			{
 				LockDown->CheckRemainCount(tetrominoDirection);
+			}
+			
+			if (Recorder.IsValid())
+			{
+				Recorder->RecordPosition(CurrentTetromino->GetTetrominoInfo()->Position);
 			}
 
 			return false;
@@ -393,6 +410,12 @@ void FTNFieldModel::rotateTetromino(E_TNTetrominoRotation tetrominoRotation) con
 			if (LockDown.IsValid())
 			{
 				LockDown->CheckRemainCount();
+			}
+			
+			if (Recorder.IsValid())
+			{
+				Recorder->RecordRotation(CurrentTetromino->GetTetrominoInfo()->RotationState);
+				Recorder->RecordPosition(CurrentTetromino->GetTetrominoInfo()->Position);
 			}
 		}
 	}
@@ -595,6 +618,11 @@ void FTNFieldModel::doLockDown()
 		checkLineDelete(CurrentTetromino->GetMinoHeights());
 		bWaitForSpawn = true;
 
+		if (Recorder.IsValid())
+		{
+			Recorder->RecordBuffers(CheckBuffer, ReversedBuffer);
+		}
+		
 		OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::LockDown);
 	}
 }

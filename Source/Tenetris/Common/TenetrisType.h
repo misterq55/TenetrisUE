@@ -30,12 +30,12 @@ struct FTNTetrominoInfo
 
 	void SetPosition(int32 x, int32 y)
 	{
-		CurrentPosition = FVector2D(x, y);
+		Position = FVector2D(x, y);
 	}
 
 	int32 Id = -1;
-	E_TNTetrominoType CurrentType = E_TNTetrominoType::None;
-	FVector2D CurrentPosition = FVector2D(1, 1);
+	E_TNTetrominoType TetrominoType = E_TNTetrominoType::None;
+	FVector2D Position = FVector2D(1, 1);
 	FVector2D GuideTetrominoPosition = FVector2D::ZeroVector;
 	int32 RotationState = 0;
 };
