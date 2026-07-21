@@ -44,6 +44,7 @@ void ATNTenetrisPlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(HardDropAction, ETriggerEvent::Started, this, &ATNTenetrisPlayerController::hardDrop);
 	EnhancedInputComponent->BindAction(HoldAction, ETriggerEvent::Started, this, &ATNTenetrisPlayerController::hold);
 	EnhancedInputComponent->BindAction(SpaceInversionAction, ETriggerEvent::Started, this, &ATNTenetrisPlayerController::toggleSpaceInversion);
+	EnhancedInputComponent->BindAction(TimeInversionAction, ETriggerEvent::Started, this, &ATNTenetrisPlayerController::toggleTimeInversion);
 }
 
 void ATNTenetrisPlayerController::startMoveLeft()
@@ -133,6 +134,15 @@ void ATNTenetrisPlayerController::toggleSpaceInversion()
 	if (tnController.IsValid())
 	{
 		tnController->HandleControlInput(E_TNControlType::RotateField);
+	}
+}
+
+void ATNTenetrisPlayerController::toggleTimeInversion()
+{
+	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
+	if (tnController.IsValid())
+	{
+		tnController->HandleControlInput(E_TNControlType::Rewind);
 	}
 }
 

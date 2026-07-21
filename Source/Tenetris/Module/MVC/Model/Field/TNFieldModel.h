@@ -52,6 +52,7 @@ private:
 
 	void hold();
 	void rotateField();
+	void rewind();
 	void hardDrop();
 
 private:
@@ -120,5 +121,6 @@ private:
 	TSharedPtr<FTNLockDown> LockDown;
 	TSharedPtr<FTNRecorder> Recorder;
 	bool bWaitForSpawn = false;
-	bool bCanHold = true;
+	bool bCanHold = false;
+	bool bRewind = false;
 };

@@ -69,3 +69,11 @@ enum class E_TNFieldModelStateType : uint32
 	LineClear,
 	RotateField,
 };
+
+enum E_TNBehaviorState
+{
+	Transform,
+	Hold,
+	RotateField,
+	None,
+};

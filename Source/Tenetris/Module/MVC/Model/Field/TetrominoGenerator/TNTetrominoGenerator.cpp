@@ -31,6 +31,11 @@ E_TNTetrominoType FTNTetrominoGenerator::GetAt(const int32 index)
 	return TetrominoArray[index];
 }
 
+void FTNTetrominoGenerator::InsertTop(const E_TNTetrominoType type)
+{
+  TetrominoArray.Insert(type, 0);
+}
+
 void FTNTetrominoGenerator::shuffleTetrominoBag(TArray<E_TNTetrominoType>& bag)
 {
   const int32 lastIndex = bag.Num() - 1;
