@@ -63,11 +63,10 @@ public:
 
 	bool IsEmpty() const
 	{
-		return !CurrentFieldRecord.IsValid();
+		return FieldRecords.IsEmpty();
 	}
 
 private:
 	static constexpr int32 MaxRecords = 2;
-	TSharedPtr<FTNFieldRecord> CurrentFieldRecord;
 	TArray<TSharedPtr<FTNFieldRecord>> FieldRecords;
 };
