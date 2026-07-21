@@ -70,7 +70,52 @@ void FTNFieldModel::Tick(float deltaTime)
 {
 	if (bRewind)
 	{
+		if (!Recorder.IsValid())
+		{
+			return;
+		}
 		
+		// TODO 되감기 로직[07/21/2026]
+		if (!Recorder->IsEmpty())
+		{
+			CurrentTime += deltaTime;
+			if (CurrentTime >= RewindSpeed)
+			{
+				const FTNBehavior behavior = Recorder->ConsumeLastBehavior();
+				
+				switch (behavior.BehaviorState)
+				{
+				case E_TNBehaviorState::Transform:
+					{
+						const FVector2D position = behavior.Position;
+						const int32 rotationState = behavior.RotationState;
+					}
+					break;
+				case E_TNBehaviorState::RotateField:
+					{
+						const bool bRotateField = behavior.bRotateField;
+					}
+					break;
+					
+				case E_TNBehaviorState::Hold:
+					{
+						const E_TNTetrominoType currentTetrominoType = Recorder->ConsumeTetrominoType();
+						const E_TNTetrominoType holdTetrominoType = behavior.HoldTetrominoType;
+					}
+					break;
+					
+				default:
+					break;
+				}
+				
+				CurrentTime = 0.f;
+			}
+		}
+		else
+		{
+			Recorder->Initialize();
+			bRewind = false;
+		}
 	}
 	else
 	{
@@ -90,6 +135,11 @@ int32 FTNFieldModel::GetId() const
 
 void FTNFieldModel::HandleControlInput(const E_TNControlType controlType)
 {
+	if (bRewind)
+	{
+		return;
+	}
+	
 	switch (controlType)
 	{
 	case E_TNControlType::StartMoveLeft:
@@ -213,7 +263,8 @@ void FTNFieldModel::hold()
 	
 	if (Recorder.IsValid())
 	{
-		Recorder->RecordHold(bCanHold, FieldContext.HoldTetrominoType);
+		Recorder->RecordTetrominoType(holdTetrominoType);
+		Recorder->RecordHold(bCanHold, currentTetrominoType);
 	}
 }
 
@@ -244,6 +295,7 @@ void FTNFieldModel::rotateField()
 void FTNFieldModel::rewind()
 {
 	bRewind = true;
+	CurrentTime = 0.f;
 }
 
 void FTNFieldModel::hardDrop()

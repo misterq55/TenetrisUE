@@ -23,6 +23,8 @@ private:
 	public:
 		FTNBehavior GetLastBehavior() const;
 		E_TNTetrominoType GetTetrominoType() const;
+		TArray<TArray<FTNCellInfo>> GetNormalBuffer() const;
+		TArray<TArray<FTNCellInfo>> GetReversedBuffer() const;
 		void Pop();
 
 	public:
@@ -33,7 +35,7 @@ private:
 
 	private:
 		TArray<FTNBehavior> Behaviors;
-		E_TNTetrominoType CurrentTetrominoType = E_TNTetrominoType::None;
+		TArray<E_TNTetrominoType> TetrominoTypes;
 		TArray<TArray<FTNCellInfo>> NormalBuffer;
 		TArray<TArray<FTNCellInfo>> ReversedBuffer;
 	};
@@ -52,7 +54,9 @@ public:
 
 public:
 	FTNBehavior ConsumeLastBehavior() const;
-	E_TNTetrominoType GetTetrominoType() const;
+	E_TNTetrominoType ConsumeTetrominoType() const;
+	TArray<TArray<FTNCellInfo>> ConsumeNormalBuffer() const;
+	TArray<TArray<FTNCellInfo>> ConsumeReversedBuffer() const;
 	void Pop();
 
 	bool IsEmpty() const
