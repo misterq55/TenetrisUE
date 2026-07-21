@@ -121,7 +121,7 @@ void ATNElectronicDisplayField::updateTetromino(const FTNFieldContext& fieldCont
 
 	TenetrisBufferComponent->CleanMinoBuffer();
 
-	TSharedPtr<FTNTetrominoInfo> tetrominoInfo = fieldContext.PlayerTetrominoInfo;
+	TSharedPtr<FTNTetrominoInfo> tetrominoInfo = fieldContext.TetrominoInfo;
 
 	if (!tetrominoInfo.IsValid())
 	{
@@ -188,7 +188,7 @@ void ATNElectronicDisplayField::lockDown(const FTNFieldContext& fieldContext) co
 
 	TenetrisBufferComponent->CleanMinoBuffer();
 
-	TSharedPtr<FTNTetrominoInfo> tetrominoInfo = fieldContext.PlayerTetrominoInfo;
+	TSharedPtr<FTNTetrominoInfo> tetrominoInfo = fieldContext.TetrominoInfo;
 
 	if (!tetrominoInfo.IsValid())
 	{

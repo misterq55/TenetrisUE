@@ -234,6 +234,36 @@ void FTNTetromino::ApplyTetrominoType(const E_TNTetrominoType currentTetrominoTy
 	}
 }
 
+void FTNTetromino::SetTetrominoType(const E_TNTetrominoType tetrominoType) const
+{
+	if (!TetrominoInfo.IsValid())
+	{
+		return;
+	}
+	
+	TetrominoInfo->TetrominoType = tetrominoType;
+}
+
+void FTNTetromino::SetPosition(const FVector2D position) const
+{
+	if (!TetrominoInfo.IsValid())
+	{
+		return;
+	}
+	
+	TetrominoInfo->Position = position;
+}
+
+void FTNTetromino::SetRotationState(const int32 rotationState) const
+{
+	if (!TetrominoInfo.IsValid())
+	{
+		return;
+	}
+	
+	TetrominoInfo->RotationState = rotationState;
+}
+
 int32 FTNTetromino::GetId() const
 {
 	if (TetrominoInfo.IsValid())
