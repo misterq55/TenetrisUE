@@ -15,17 +15,18 @@ private:
 
 	public:
 		void RecordTetrominoType(E_TNTetrominoType tetrominoType);
+		void RecordSpawn();
 		void RecordTransform(FVector2D position, int32 rotationState);
 		void RecordRotateField(bool bRotateField);
 		void RecordHold(bool bCanHold, E_TNTetrominoType holdTetrominoType);
 		void RecordBuffers(const TArray<TArray<FTNCellInfo>>& normalBuffer, const TArray<TArray<FTNCellInfo>>& reversedBuffer);
 
 	public:
-		FTNBehavior GetLastBehavior() const;
-		E_TNTetrominoType GetTetrominoType() const;
+		FTNBehavior ConsumeLastBehavior() const;
+		E_TNTetrominoType ConsumeTetrominoType();
 		TArray<TArray<FTNCellInfo>> GetNormalBuffer() const;
 		TArray<TArray<FTNCellInfo>> GetReversedBuffer() const;
-		void Pop();
+		void PopBehavior();
 
 	public:
 		bool IsEmpty() const
@@ -47,6 +48,7 @@ public:
 public:
 	void Initialize();
 	void RecordTetrominoType(E_TNTetrominoType tetrominoType) const;
+	void RecordSpawn() const;
 	void RecordTransform(FVector2D position, int32 rotationState) const;
 	void RecordRotateField(bool bRotateField) const;
 	void RecordHold(bool bCanHold, E_TNTetrominoType holdTetrominoType) const;
@@ -57,11 +59,11 @@ public:
 	E_TNTetrominoType ConsumeTetrominoType() const;
 	TArray<TArray<FTNCellInfo>> ConsumeNormalBuffer() const;
 	TArray<TArray<FTNCellInfo>> ConsumeReversedBuffer() const;
-	void Pop();
+	void PopFieldRecord();
 
 	bool IsEmpty() const
 	{
-		return FieldRecords.IsEmpty();
+		return !CurrentFieldRecord.IsValid();
 	}
 
 private:

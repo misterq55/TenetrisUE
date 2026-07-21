@@ -72,8 +72,10 @@ enum class E_TNFieldModelStateType : uint32
 
 enum E_TNBehaviorState
 {
+	Spawn,
 	Transform,
 	Hold,
 	RotateField,
+	LockDown,
 	None,
 };

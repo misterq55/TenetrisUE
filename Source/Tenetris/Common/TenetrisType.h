@@ -74,14 +74,14 @@ struct FTNFieldContext
 	E_TNFieldType FieldType = E_TNFieldType::None;
 	bool bSpaceInverted = false;
 	TArray<TArray<FTNCellInfo>> LockedGrid;
-	TSharedPtr<FTNTetrominoInfo> PlayerTetrominoInfo;
+	TSharedPtr<FTNTetrominoInfo> TetrominoInfo;
 	int32 PreviewTetrominoNum = 0;
 	E_TNTetrominoType HoldTetrominoType = E_TNTetrominoType::None;
 	TArray<E_TNTetrominoType> PreviewTetrominoTypes;
 
 	void initializeTetrominoInfos()
 	{
-		PlayerTetrominoInfo = MakeShareable(new FTNTetrominoInfo());
+		TetrominoInfo = MakeShareable(new FTNTetrominoInfo());
 		PreviewTetrominoNum = PreviewTetrominoMax;
 		PreviewTetrominoTypes.Init(E_TNTetrominoType::None, PreviewTetrominoNum);
 	}

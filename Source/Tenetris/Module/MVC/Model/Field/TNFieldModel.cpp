@@ -20,7 +20,7 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext, int32 height, int32 w
 		{
 		case E_TNFieldType::Player:
 		{
-			CurrentTetromino = MakeShareable(new FTNTetromino(FieldContext.PlayerTetrominoInfo));
+			CurrentTetromino = MakeShareable(new FTNTetromino(FieldContext.TetrominoInfo));
 
 			CurrentTetromino->OnMoveTetrominoToCheckBuffer.BindRaw(this, &FTNFieldModel::setValueToCheckBuffer);
 			CurrentTetromino->OnCheckMino.BindRaw(this, &FTNFieldModel::checkMino);
@@ -85,25 +85,63 @@ void FTNFieldModel::Tick(float deltaTime)
 				
 				switch (behavior.BehaviorState)
 				{
+				case E_TNBehaviorState::Spawn:
+					{
+						Recorder->PopFieldRecord();
+					}
+					break;
+					
 				case E_TNBehaviorState::Transform:
 					{
 						const FVector2D position = behavior.Position;
 						const int32 rotationState = behavior.RotationState;
+						
+						if (CurrentTetromino.IsValid())
+						{
+							CurrentTetromino->SetPosition(position);
+							CurrentTetromino->SetRotationState(rotationState);
+						}
+						
+						OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateTetromino);
 					}
 					break;
+					
 				case E_TNBehaviorState::RotateField:
 					{
 						const bool bRotateField = behavior.bRotateField;
+						rotateField();
+						
+						OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::RotateField);
 					}
 					break;
 					
 				case E_TNBehaviorState::Hold:
 					{
+						const bool bSavedCanHold = behavior.bCanHold;
 						const E_TNTetrominoType currentTetrominoType = Recorder->ConsumeTetrominoType();
 						const E_TNTetrominoType holdTetrominoType = behavior.HoldTetrominoType;
+						
+						OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateHoldTetromino);
 					}
 					break;
-					
+				
+				case E_TNBehaviorState::LockDown:
+					{
+						const E_TNTetrominoType tetrominoType = Recorder->ConsumeTetrominoType();
+						const TArray<TArray<FTNCellInfo>> normalBuffer = Recorder->ConsumeNormalBuffer();
+						const TArray<TArray<FTNCellInfo>> reversedBuffer = Recorder->ConsumeReversedBuffer();
+						
+						if (CurrentTetromino.IsValid())
+						{
+							CurrentTetromino->ApplyTetrominoType(tetrominoType);
+						}
+						
+						CheckBuffer = normalBuffer;
+						ReversedBuffer = reversedBuffer;
+						
+						OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::LockDown);
+					}
+					break;
 				default:
 					break;
 				}
@@ -435,6 +473,7 @@ void FTNFieldModel::spawn()
 	if (Recorder.IsValid())
 	{
 		Recorder->RecordTetrominoType(CurrentTetromino->GetTetrominoType());
+		Recorder->RecordSpawn();
 	}
 	
 	bCanHold = true;
@@ -692,6 +731,7 @@ void FTNFieldModel::doLockDown()
 		if (Recorder.IsValid())
 		{
 			Recorder->RecordBuffers(CheckBuffer, ReversedBuffer);
+			Recorder->RecordTransform(CurrentTetromino->GetTetrominoInfo()->Position, CurrentTetromino->GetTetrominoInfo()->RotationState);
 		}
 		
 		OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::LockDown);
