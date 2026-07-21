@@ -102,6 +102,7 @@ private:
 	TSharedPtr<FTNTetrominoGenerator> TetrominoGenerator;
 
 	float TetrominoFallingSpeed = 1.f;
+	float RewindSpeed = 0.25f;
 	float CurrentTime = 0.f;
 	float RotationPauseRemainingTime = 0.f;
 	TArray<TArray<FTNCellInfo>> CheckBuffer;
