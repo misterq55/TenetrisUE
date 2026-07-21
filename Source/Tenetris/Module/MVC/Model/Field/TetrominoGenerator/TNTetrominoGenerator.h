@@ -15,6 +15,7 @@ public:
 
 	E_TNTetrominoType GetTop();
 	E_TNTetrominoType GetAt(const int32 index);
+	void InsertTop(const E_TNTetrominoType type);
 
 private:
 	static void shuffleTetrominoBag(TArray<E_TNTetrominoType>& bag);

@@ -50,6 +50,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> SpaceInversionAction;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> TimeInversionAction;
+	
 protected:
 	void startMoveLeft();
 	void stopMoveLeft();
@@ -65,5 +68,6 @@ protected:
 
 	void hold();
 	void toggleSpaceInversion();
+	void toggleTimeInversion();
 	void hardDrop();
 };

@@ -68,12 +68,19 @@ void FTNFieldModel::SetId(const int32 id)
 
 void FTNFieldModel::Tick(float deltaTime)
 {
-	tetrominoFall(deltaTime);
-	setMoveState(deltaTime, LeftDirectionState, E_TNTetrominoDirection::Left);
-	setMoveState(deltaTime, RightDirectionState, E_TNTetrominoDirection::Right);
-	updateLockDown(deltaTime);
-	waitForSpawn();
-	updateLineDelete(deltaTime);
+	if (bRewind)
+	{
+		
+	}
+	else
+	{
+		tetrominoFall(deltaTime);
+		setMoveState(deltaTime, LeftDirectionState, E_TNTetrominoDirection::Left);
+		setMoveState(deltaTime, RightDirectionState, E_TNTetrominoDirection::Right);
+		updateLockDown(deltaTime);
+		waitForSpawn();
+		updateLineDelete(deltaTime);	
+	}
 }
 
 int32 FTNFieldModel::GetId() const
@@ -114,6 +121,9 @@ void FTNFieldModel::HandleControlInput(const E_TNControlType controlType)
 		break;
 	case E_TNControlType::RotateField:
 		rotateField();
+		break;
+	case E_TNControlType::Rewind:
+		rewind();
 		break;
 	case E_TNControlType::HardDrop:
 		hardDrop();
@@ -200,6 +210,11 @@ void FTNFieldModel::hold()
 	}
 
 	bCanHold = false;
+	
+	if (Recorder.IsValid())
+	{
+		Recorder->RecordHold(bCanHold, FieldContext.HoldTetrominoType);
+	}
 }
 
 void FTNFieldModel::rotateField()
@@ -224,6 +239,11 @@ void FTNFieldModel::rotateField()
 	}
 	
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::RotateField);
+}
+
+void FTNFieldModel::rewind()
+{
+	bRewind = true;
 }
 
 void FTNFieldModel::hardDrop()
@@ -386,7 +406,7 @@ bool FTNFieldModel::moveTetromino(E_TNTetrominoDirection tetrominoDirection) con
 			
 			if (Recorder.IsValid())
 			{
-				Recorder->RecordPosition(CurrentTetromino->GetTetrominoInfo()->Position);
+				Recorder->RecordTransform(CurrentTetromino->GetTetrominoInfo()->Position, CurrentTetromino->GetTetrominoInfo()->RotationState);
 			}
 
 			return false;
@@ -414,8 +434,7 @@ void FTNFieldModel::rotateTetromino(E_TNTetrominoRotation tetrominoRotation) con
 			
 			if (Recorder.IsValid())
 			{
-				Recorder->RecordRotation(CurrentTetromino->GetTetrominoInfo()->RotationState);
-				Recorder->RecordPosition(CurrentTetromino->GetTetrominoInfo()->Position);
+				Recorder->RecordTransform(CurrentTetromino->GetTetrominoInfo()->Position, CurrentTetromino->GetTetrominoInfo()->RotationState);
 			}
 		}
 	}

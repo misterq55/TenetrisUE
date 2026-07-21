@@ -138,7 +138,7 @@ void FTNTetromino::Spawn()
 		return;
 	}
 
-	TetrominoInfo->SetPosition(StartingLocation.X, StartingLocation.Y);
+	TetrominoInfo->Position = StartingLocation;
 	TetrominoInfo->RotationState = 0;
 	TetrominoInfo->Id++;
 	
@@ -215,7 +215,7 @@ void FTNTetromino::SetTetrominoPosition(const int32 x, const int32 y) const
 		return;
 	}
 
-	TetrominoInfo->SetPosition(x, y);
+	TetrominoInfo->Position = FVector2D(x, y);
 }
 
 void FTNTetromino::ApplyTetrominoType(const E_TNTetrominoType currentTetrominoType)

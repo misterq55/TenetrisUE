@@ -28,14 +28,9 @@ struct FTNTetrominoInfo
 	public:
 	FTNTetrominoInfo() = default;
 
-	void SetPosition(int32 x, int32 y)
-	{
-		Position = FVector2D(x, y);
-	}
-
 	int32 Id = -1;
 	E_TNTetrominoType TetrominoType = E_TNTetrominoType::None;
-	FVector2D Position = FVector2D(1, 1);
+	FVector2D Position = FVector2D::ZeroVector;
 	FVector2D GuideTetrominoPosition = FVector2D::ZeroVector;
 	int32 RotationState = 0;
 };
@@ -92,3 +87,15 @@ struct FTNFieldContext
 	}
 };
 
+struct FTNBehavior
+{
+	FTNBehavior() = default;
+	~FTNBehavior() = default;
+
+	E_TNBehaviorState BehaviorState = E_TNBehaviorState::None;
+	FVector2D Position = FVector2D::ZeroVector;
+	bool bRotateField = false;
+	E_TNTetrominoType HoldTetrominoType = E_TNTetrominoType::None;
+	bool bCanHold = false;
+	int32 RotationState = 0;
+};
