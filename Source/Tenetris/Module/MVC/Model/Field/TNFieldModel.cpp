@@ -67,6 +67,8 @@ void FTNFieldModel::Initialize()
 	{
 		CurrentTetromino->SetStartingLocation(StartingPosition);
 	}
+	
+	updatePreviewTetrominoes();
 }
 
 void FTNFieldModel::SetId(const int32 id)
