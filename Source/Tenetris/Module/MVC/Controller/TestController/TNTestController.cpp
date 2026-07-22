@@ -13,6 +13,7 @@ void FTNTestController::Init()
 	{
 		tnModel->GetCreateFieldViewDelegate().BindSP(tnView.ToSharedRef(), &ITNView::CreateFieldView);
 		tnModel->GetCreateFieldViewWithFieldActorDelegate().BindSP(tnView.ToSharedRef(), &ITNView::CreateFieldViewWithFieldActor);
+		tnModel->GetStartPlayDelegate().BindSP(tnView.ToSharedRef(), &ITNView::StartPlay);
 		tnModel->GetUpdateFieldViewDelegate().BindSP(tnView.ToSharedRef(), &ITNView::UpdateFieldView);
 	}
 }
@@ -26,6 +27,17 @@ void FTNTestController::Tick(float deltaTime)
 	if (tnModel.IsValid())
 	{
 		tnModel->Tick(deltaTime);
+	}
+}
+
+void FTNTestController::StartPlay()
+{
+	FTNMVCHolder& holder = FTNMVCHolder::GetInstance();
+	TSharedPtr<ITNModel> tnModel = holder.GetModel();
+	
+	if (tnModel.IsValid())
+	{
+		tnModel->StartPlay();
 	}
 }
 

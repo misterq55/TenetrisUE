@@ -46,6 +46,11 @@ void ATNTenetrisTestGameMode::StartPlay()
 			tnModel->CreateFieldModel(fieldContext, RowMax, ColumnMax, fieldActor);
 		}
 	}
+	
+	if (tnController.IsValid())
+	{
+		tnController->StartPlay();
+	}
 }
 
 void ATNTenetrisTestGameMode::Tick(float deltaSeconds)
