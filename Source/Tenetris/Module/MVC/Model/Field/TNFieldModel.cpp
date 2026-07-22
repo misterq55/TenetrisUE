@@ -168,6 +168,20 @@ void FTNFieldModel::Tick(float deltaTime)
 		{
 			Recorder->Initialize();
 			bRewind = false;
+			
+			// TODO 회전 상태 불일치 발생[07/23/2026]
+			// FTNTetromino의 Coordinate가 갱신되지 않아서 발생
+			if (CurrentTetromino.IsValid())
+			{
+				CurrentTetromino->Spawn();
+			}
+			
+			if (Recorder.IsValid())
+			{
+				Recorder->RecordTetrominoType(CurrentTetromino->GetTetrominoType());
+				Recorder->RecordSpawn();
+				Recorder->RecordTransform(CurrentTetromino->GetTetrominoInfo()->Position, CurrentTetromino->GetTetrominoInfo()->RotationState);
+			}
 		}
 	}
 	else
@@ -489,6 +503,7 @@ void FTNFieldModel::spawn()
 	{
 		Recorder->RecordTetrominoType(CurrentTetromino->GetTetrominoType());
 		Recorder->RecordSpawn();
+		Recorder->RecordTransform(CurrentTetromino->GetTetrominoInfo()->Position, CurrentTetromino->GetTetrominoInfo()->RotationState);
 	}
 	
 	bCanHold = true;
