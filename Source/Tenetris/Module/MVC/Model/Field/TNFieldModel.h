@@ -16,9 +16,10 @@ public:
 	virtual ~FTNFieldModel() {}
 
 public:
-	void Initialize();
-	void SetId(const int32 id);
-	void Tick(float deltaTime);
+	virtual void Initialize();
+	virtual void SetId(const int32 id);
+	virtual void StartPlay();
+	virtual void Tick(float deltaTime);
 
 	FTNFieldContext& GetFieldContext() {
 		return FieldContext;

@@ -9,6 +9,7 @@ public:
 	virtual ~FTNTestModel() override {}
 	virtual void Init() override;
 	virtual void Tick(float deltaTime) override;
+	virtual void StartPlay() override;
 	virtual void CreateFieldModel(FTNFieldContext fieldContext, int32 height, int32 width) override;
 	virtual void CreateFieldModel(FTNFieldContext fieldContext, int32 height, int32 width, ATNFieldBase* fieldActor) override;
 	virtual void UpdateModel(const int32 modelKey, const E_TNFieldModelStateType state) override;
@@ -29,6 +30,11 @@ public:
 		return UpdateFieldViewDelegate;
 	}
 
+	virtual FTNStartPlay& GetStartPlayDelegate() override
+	{
+		return StartPlayDelegate;
+	}
+	
 private:
 	TMap<int32, TSharedPtr<FTNFieldModel>> FieldModelMap;
 	TSharedPtr<FTNFieldModel> PlayerFieldModel;
@@ -37,5 +43,6 @@ private:
 	FTNCreateFieldView CreateFieldViewDelegate;
 	FTNCreateFieldViewWithFieldActor CreateFieldViewWithFieldActorDelegate;
 	FTNUpdateFieldView UpdateFieldViewDelegate;
+	FTNStartPlay StartPlayDelegate;
 };
 

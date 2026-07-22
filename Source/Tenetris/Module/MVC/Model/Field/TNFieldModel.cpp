@@ -53,17 +53,30 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext, int32 height, int32 w
 
 void FTNFieldModel::Initialize()
 {
+	if (!TetrominoGenerator.IsValid())
+	{
+		TetrominoGenerator->Initialize();
+	}
+	
+	if (!Recorder.IsValid())
+	{
+		Recorder->Initialize();
+	}
+	
 	if (CurrentTetromino.IsValid())
 	{
 		CurrentTetromino->SetStartingLocation(StartingPosition);
 	}
-
-	spawn();
 }
 
 void FTNFieldModel::SetId(const int32 id)
 {
 	Id = id;
+}
+
+void FTNFieldModel::StartPlay()
+{
+	spawn();
 }
 
 void FTNFieldModel::Tick(float deltaTime)

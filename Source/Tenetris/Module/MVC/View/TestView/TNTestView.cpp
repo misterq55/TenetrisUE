@@ -10,6 +10,10 @@ void FTNTestView::Tick(float deltaTime)
 {
 }
 
+void FTNTestView::StartPlay()
+{
+}
+
 void FTNTestView::CreateFieldView(const int32 key)
 {
 	TSharedPtr<FTNFieldView> fieldView = MakeShareable(new FTNFieldView());

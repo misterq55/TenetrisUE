@@ -18,6 +18,19 @@ void FTNTestModel::Tick(float deltaTime)
 	}
 }
 
+void FTNTestModel::StartPlay()
+{
+	for (const auto& [key, fieldModel] : FieldModelMap)
+	{
+		if (!fieldModel.IsValid())
+		{
+			continue;
+		}
+
+		fieldModel->StartPlay();
+	}
+}
+
 void FTNTestModel::CreateFieldModel(FTNFieldContext fieldContext, int32 height, int32 width)
 {
 	TSharedPtr<FTNFieldModel> fieldModel = MakeShareable(new FTNFieldModel(fieldContext, height, width));
