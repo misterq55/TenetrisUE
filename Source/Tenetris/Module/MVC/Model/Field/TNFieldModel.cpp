@@ -36,7 +36,6 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext, int32 height, int32 w
 	if (!TetrominoGenerator.IsValid())
 	{
 		TetrominoGenerator = MakeShareable(new FTNTetrominoGenerator());
-		TetrominoGenerator->Initialize();
 	}
 	
 	if (!LockDown.IsValid())
@@ -47,7 +46,6 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext, int32 height, int32 w
 	if (!Recorder.IsValid())
 	{
 		Recorder = MakeShareable(new FTNRecorder());
-		Recorder->Initialize();
 	}
 }
 
@@ -174,6 +172,7 @@ void FTNFieldModel::Tick(float deltaTime)
 			if (CurrentTetromino.IsValid())
 			{
 				CurrentTetromino->Spawn();
+				CurrentTetromino->ResetCoordinate(CurrentTetromino->GetTetrominoType());
 			}
 			
 			if (Recorder.IsValid())
@@ -762,6 +761,7 @@ void FTNFieldModel::doLockDown()
 		{
 			Recorder->RecordBuffers(CheckBuffer, ReversedBuffer);
 			Recorder->RecordTransform(CurrentTetromino->GetTetrominoInfo()->Position, CurrentTetromino->GetTetrominoInfo()->RotationState);
+			Recorder->Initialize();
 		}
 		
 		OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::LockDown);

@@ -227,7 +227,12 @@ void FTNTetromino::ApplyTetrominoType(const E_TNTetrominoType currentTetrominoTy
 
 	TetrominoInfo->TetrominoType = currentTetrominoType;
 	
-	const uint32 typeIndex = static_cast<uint32>(currentTetrominoType);
+	ResetCoordinate(currentTetrominoType);
+}
+
+void FTNTetromino::ResetCoordinate(const E_TNTetrominoType tetrominoType)
+{
+	const uint32 typeIndex = static_cast<uint32>(tetrominoType);
 	if (typeIndex < UE_ARRAY_COUNT(TetrominoCoordinatesByType))
 	{
 		Coordinate = TetrominoCoordinatesByType[typeIndex];
