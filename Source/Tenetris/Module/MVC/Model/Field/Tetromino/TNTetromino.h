@@ -71,6 +71,7 @@ public:
 	void SetStartingLocation(const FVector2D& startingLocation);
 	FVector2D GetStaringLocation() const;
 	TSharedPtr<FTNTetrominoInfo> GetTetrominoInfo() const;
+	void SetShowGuideTetromino(const bool showGuideTetromino) const;
 
 private:
 	bool checkMino(const FVector2D& simulationPosition) const;

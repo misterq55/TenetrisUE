@@ -41,12 +41,22 @@ void FTNRecorder::FTNFieldRecord::RecordHold(bool bCanHold, E_TNTetrominoType ho
 void FTNRecorder::FTNFieldRecord::RecordBuffers(const TArray<TArray<FTNCellInfo>>& normalBuffer,
 	const TArray<TArray<FTNCellInfo>>& reversedBuffer)
 {
+	NormalBuffer = normalBuffer;
+	ReversedBuffer = reversedBuffer;
+}
+
+void FTNRecorder::FTNFieldRecord::RecordLockDown()
+{
 	FTNBehavior behavior;
 	behavior.BehaviorState = E_TNBehaviorState::LockDown;
 	Behaviors.Add(behavior);
-	
-	NormalBuffer = normalBuffer;
-	ReversedBuffer = reversedBuffer;
+}
+
+void FTNRecorder::FTNFieldRecord::RecordLineClear()
+{
+	FTNBehavior behavior;
+	behavior.BehaviorState = E_TNBehaviorState::LineClear;
+	Behaviors.Add(behavior);
 }
 
 FTNBehavior FTNRecorder::FTNFieldRecord::ConsumeLastBehavior() const
@@ -162,6 +172,26 @@ void FTNRecorder::RecordBuffers(const TArray<TArray<FTNCellInfo>>& normalBuffer,
 	{
 		FieldRecords.RemoveAt(0);
 	}
+}
+
+void FTNRecorder::RecordLockDown() const
+{
+	if (FieldRecords.IsEmpty())
+	{
+		return;
+	}
+	
+	FieldRecords.Last()->RecordLockDown();
+}
+
+void FTNRecorder::RecordLineClear() const
+{
+	if (FieldRecords.IsEmpty())
+	{
+		return;
+	}
+	
+	FieldRecords.Last()->RecordLineClear();
 }
 
 FTNBehavior FTNRecorder::ConsumeLastBehavior() const
