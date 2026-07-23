@@ -20,6 +20,8 @@ private:
 		void RecordRotateField(bool bRotateField);
 		void RecordHold(bool bCanHold, E_TNTetrominoType holdTetrominoType);
 		void RecordBuffers(const TArray<TArray<FTNCellInfo>>& normalBuffer, const TArray<TArray<FTNCellInfo>>& reversedBuffer);
+		void RecordLockDown();
+		void RecordLineClear();
 
 	public:
 		FTNBehavior ConsumeLastBehavior() const;
@@ -53,6 +55,8 @@ public:
 	void RecordRotateField(bool bRotateField) const;
 	void RecordHold(bool bCanHold, E_TNTetrominoType holdTetrominoType) const;
 	void RecordBuffers(const TArray<TArray<FTNCellInfo>>& normalBuffer, const TArray<TArray<FTNCellInfo>>& reversedBuffer);
+	void RecordLockDown() const;
+	void RecordLineClear() const;
 
 public:
 	FTNBehavior ConsumeLastBehavior() const;

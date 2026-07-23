@@ -136,9 +136,12 @@ void ATNElectronicDisplayField::updateTetromino(const FTNFieldContext& fieldCont
 		                                     coord.Y + tetrominoInfo->Position.Y,
 		                                     tetrominoInfo->TetrominoType);
 	
-		TenetrisBufferComponent->SetMinoType(coord.X + tetrominoInfo->GuideTetrominoPosition.X,
-		                                     coord.Y + tetrominoInfo->GuideTetrominoPosition.Y,
-		                                     E_TNTetrominoType::Guide);
+		if (tetrominoInfo->bShowGuideTetromino)
+		{
+			TenetrisBufferComponent->SetMinoType(coord.X + tetrominoInfo->GuideTetrominoPosition.X,
+												 coord.Y + tetrominoInfo->GuideTetrominoPosition.Y,
+												 E_TNTetrominoType::Guide);
+		}
 	}
 }
 

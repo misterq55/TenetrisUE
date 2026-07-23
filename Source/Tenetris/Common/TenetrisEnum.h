@@ -77,5 +77,6 @@ enum E_TNBehaviorState
 	Hold,
 	RotateField,
 	LockDown,
+	LineClear,
 	None,
 };

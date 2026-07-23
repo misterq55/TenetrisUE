@@ -140,6 +140,7 @@ void FTNTetromino::Spawn()
 
 	TetrominoInfo->Position = StartingLocation;
 	TetrominoInfo->RotationState = 0;
+	TetrominoInfo->bShowGuideTetromino = true;
 	TetrominoInfo->Id++;
 	
 	calculateGuideTetromino();
@@ -312,6 +313,16 @@ void FTNTetromino::updateTetromino() const
 TSharedPtr<FTNTetrominoInfo> FTNTetromino::GetTetrominoInfo() const
 {
 	return TetrominoInfo;
+}
+
+void FTNTetromino::SetShowGuideTetromino(const bool showGuideTetromino) const
+{
+	if (!TetrominoInfo.IsValid())
+	{
+		return;
+	}
+	
+	TetrominoInfo->bShowGuideTetromino = showGuideTetromino;
 }
 
 bool FTNTetromino::checkMino(const FVector2D& simulationPosition) const

@@ -31,6 +31,7 @@ struct FTNTetrominoInfo
 	int32 Id = -1;
 	E_TNTetrominoType TetrominoType = E_TNTetrominoType::None;
 	FVector2D Position = FVector2D::ZeroVector;
+	bool bShowGuideTetromino = false;
 	FVector2D GuideTetrominoPosition = FVector2D::ZeroVector;
 	int32 RotationState = 0;
 };
