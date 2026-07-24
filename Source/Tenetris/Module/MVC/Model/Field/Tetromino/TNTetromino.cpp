@@ -128,7 +128,14 @@ bool FTNTetromino::Rotate(const E_TNTetrominoRotation tetrominoRotation)
 
 void FTNTetromino::LockDown()
 {
-	moveTetrominoToCheckBuffer();
+	const FTNCellInfo cellInfo(TetrominoInfo->Id, TetrominoInfo->TetrominoType);
+	updateCheckBuffer(cellInfo);
+}
+
+void FTNTetromino::ReverseLockDown()
+{
+	const FTNCellInfo cellInfo(-1, E_TNTetrominoType::None);
+	updateCheckBuffer(cellInfo);
 }
 
 void FTNTetromino::Spawn()
@@ -145,6 +152,16 @@ void FTNTetromino::Spawn()
 	
 	calculateGuideTetromino();
 	updateTetromino();
+}
+
+void FTNTetromino::Despawn()
+{
+	if (!TetrominoInfo.IsValid())
+	{
+		return;
+	}
+	
+	TetrominoInfo->Id--;
 }
 
 void FTNTetromino::calculateGuideTetromino() const
@@ -351,18 +368,16 @@ bool FTNTetromino::checkMino(const FVector2D& simulationPosition) const
 	return tetrominoCheck;
 }
 
-void FTNTetromino::moveTetrominoToCheckBuffer() const
+void FTNTetromino::updateCheckBuffer(const FTNCellInfo& cellInfo) const
 {
 	if (!TetrominoInfo.IsValid())
 	{
 		return;
 	}
-	
-	const FTNCellInfo cellInfo(TetrominoInfo->Id, TetrominoInfo->TetrominoType);
-	
+
 	for (const FVector2D& coord : Coordinate)
 	{
-		OnMoveTetrominoToCheckBuffer.ExecuteIfBound(coord.X + TetrominoInfo->Position.X, coord.Y + TetrominoInfo->Position.Y, cellInfo);
+		OnUpdateCheckBuffer.ExecuteIfBound(coord.X + TetrominoInfo->Position.X, coord.Y + TetrominoInfo->Position.Y, cellInfo);
 	}
 }
 

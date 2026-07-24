@@ -4,7 +4,7 @@
 
 #include "Tenetris/TenetrisDefine.h"
 
-DECLARE_DELEGATE_ThreeParams(FMoveTetrominoToCheckBufferDelegate, const int32, const int32, const FTNCellInfo&);
+DECLARE_DELEGATE_ThreeParams(FUpdateCheckBufferDelegate, const int32, const int32, const FTNCellInfo&);
 DECLARE_DELEGATE_RetVal_TwoParams(bool, FCheckMinoDelegate, const int32, const int32);
 DECLARE_DELEGATE_RetVal_TwoParams(int32, FCalculateGuideMinoHeightDelegate, const int32, const int32);
 
@@ -50,7 +50,9 @@ public:
 	virtual bool Move(const E_TNTetrominoDirection tetrominoDirection);
 	virtual bool Rotate(const E_TNTetrominoRotation tetrominoRotation);
 	virtual void LockDown();
+	virtual void ReverseLockDown();
 	virtual void Spawn();
+	virtual void Despawn();
 	virtual void HardDrop();
 	virtual void ResetGuideTetromino()
 	{
@@ -75,14 +77,14 @@ public:
 
 private:
 	bool checkMino(const FVector2D& simulationPosition) const;
-	void moveTetrominoToCheckBuffer() const;
+	void updateCheckBuffer(const FTNCellInfo& cellInfo) const;
 	void calculateGuideTetromino() const;
 	void updateTetromino() const;
 	FVector2D simulatePosition(const E_TNTetrominoDirection tetrominoDirection) const;
 	static int32 mod(int32 n, int32 m) { return ((n % m) + m) % m; }
 
 public:
-	FMoveTetrominoToCheckBufferDelegate OnMoveTetrominoToCheckBuffer;
+	FUpdateCheckBufferDelegate OnUpdateCheckBuffer;
 	FCheckMinoDelegate OnCheckMino;
 	FCalculateGuideMinoHeightDelegate OnCalculateGuideMino;
 	FUpdateTetromino OnUpdateTetromino;
