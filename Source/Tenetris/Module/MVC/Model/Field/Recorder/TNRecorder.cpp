@@ -12,10 +12,10 @@ void FTNRecorder::FTNFieldRecord::RecordSpawn()
 	Behaviors.Add(behavior);
 }
 
-void FTNRecorder::FTNFieldRecord::RecordTransform(FVector2D position, int32 rotationState)
+void FTNRecorder::FTNFieldRecord::RecordTransform(FVector2D position, int32 rotationState, E_TNBehaviorState reason)
 {
 	FTNBehavior behavior;
-	behavior.BehaviorState = E_TNBehaviorState::Transform;
+	behavior.BehaviorState = reason;
 	behavior.Position = position;
 	behavior.RotationState = rotationState;
 	Behaviors.Add(behavior);
@@ -117,24 +117,14 @@ void FTNRecorder::RecordTetrominoType(E_TNTetrominoType tetrominoType) const
 	FieldRecords.Last()->RecordTetrominoType(tetrominoType);
 }
 
-void FTNRecorder::RecordSpawn() const
+void FTNRecorder::RecordTransform(FVector2D position, int32 rotationState, E_TNBehaviorState reason) const
 {
 	if (FieldRecords.IsEmpty())
 	{
 		return;
 	}
 	
-	FieldRecords.Last()->RecordSpawn();
-}
-
-void FTNRecorder::RecordTransform(FVector2D position, int32 rotationState) const
-{
-	if (FieldRecords.IsEmpty())
-	{
-		return;
-	}
-	
-	FieldRecords.Last()->RecordTransform(position, rotationState);
+	FieldRecords.Last()->RecordTransform(position, rotationState, reason);
 }
 
 void FTNRecorder::RecordRotateField(bool bRotateField) const
@@ -172,16 +162,6 @@ void FTNRecorder::RecordBuffers(const TArray<TArray<FTNCellInfo>>& normalBuffer,
 	{
 		FieldRecords.RemoveAt(0);
 	}
-}
-
-void FTNRecorder::RecordLockDown() const
-{
-	if (FieldRecords.IsEmpty())
-	{
-		return;
-	}
-	
-	FieldRecords.Last()->RecordLockDown();
 }
 
 void FTNRecorder::RecordLineClear() const

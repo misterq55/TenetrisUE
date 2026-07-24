@@ -34,34 +34,21 @@ bool FTNTetromino::Rotate(const E_TNTetrominoRotation tetrominoRotation)
 	}
 
 	// Super Rotation System
-	// 별도 클래스로 분리할 계획
-	TArray<FVector2D> simulationCoordinates;
-	TArray<FVector2D> clockwiseRotateMatrix = { FVector2D(0, -1), FVector2D(1, 0) };
-	TArray<FVector2D> counterClockwiseRotateMatrix = { FVector2D(0, 1), FVector2D(-1, 0) };
-	TArray<FVector2D> rotateMatrix;
-
 	const int32 oldRotationState = TetrominoInfo->RotationState;
 
+	int32 newRotationState = oldRotationState;
 	if (tetrominoRotation == E_TNTetrominoRotation::ClockWise)
 	{
-		rotateMatrix = clockwiseRotateMatrix;
-		TetrominoInfo->RotationState += 1;
+		newRotationState += 1;
 	}
 	else if (tetrominoRotation == E_TNTetrominoRotation::CounterClockWise)
 	{
-		rotateMatrix = counterClockwiseRotateMatrix;
-		TetrominoInfo->RotationState -= 1;
+		newRotationState -= 1;
 	}
+	newRotationState = mod(newRotationState, 4);
 
-	TetrominoInfo->RotationState = mod(TetrominoInfo->RotationState, 4);
-	
-	for (const FVector2D& coord : Coordinate)
-	{
-		const int32 newX = (rotateMatrix[0].X * coord.X) + (rotateMatrix[1].X * coord.Y);
-		const int32 newY = (rotateMatrix[0].Y * coord.X) + (rotateMatrix[1].Y * coord.Y);
-	
-		simulationCoordinates.Emplace(newX, newY);
-	}
+	const TTetrominoCoordinate simulationCoordinates = calculateRotatedCoordinates(newRotationState);
+	TetrominoInfo->RotationState = newRotationState;
 
 	TArray<TArray<FVector2D>> offset;
 
@@ -248,6 +235,11 @@ void FTNTetromino::ApplyTetrominoType(const E_TNTetrominoType currentTetrominoTy
 	ResetCoordinate(currentTetrominoType);
 }
 
+void FTNTetromino::ApplyRotationState(const int32 rotationState)
+{
+	Coordinate = calculateRotatedCoordinates(rotationState);
+}
+
 void FTNTetromino::ResetCoordinate(const E_TNTetrominoType tetrominoType)
 {
 	const uint32 typeIndex = static_cast<uint32>(tetrominoType);
@@ -409,4 +401,48 @@ FVector2D FTNTetromino::simulatePosition(const E_TNTetrominoDirection tetrominoD
 	}
 
 	return MoveTemp(simulationPosition);
+}
+
+TTetrominoCoordinate FTNTetromino::calculateRotatedCoordinates(const int32 newRotationState) const
+{
+	// 스폰 상태(state 0) 기준 좌표에서 절대 회전값으로 계산
+	const uint32 typeIndex = static_cast<uint32>(TetrominoInfo->TetrominoType);
+	if (typeIndex >= UE_ARRAY_COUNT(TetrominoCoordinatesByType))
+	{
+		return Coordinate;
+	}
+
+	const TTetrominoCoordinate& baseCoordinates = TetrominoCoordinatesByType[typeIndex];
+
+	TTetrominoCoordinate result;
+
+	// 기존 코드의 회전 방향 컨벤션 그대로 사용:
+	// CW:  (x, y) -> ( y, -x)
+	// 180: (x, y) -> (-x, -y)
+	// CCW: (x, y) -> (-y,  x)
+	for (const FVector2D& coord : baseCoordinates)
+	{
+		FVector2D rotated;
+		switch (mod(newRotationState, 4))
+		{
+		case 0:
+			rotated = coord;
+			break;
+		case 1: // 90° CW
+			rotated = FVector2D(coord.Y, -coord.X);
+			break;
+		case 2: // 180°
+			rotated = FVector2D(-coord.X, -coord.Y);
+			break;
+		case 3: // 270° CW (= 90° CCW)
+			rotated = FVector2D(-coord.Y, coord.X);
+			break;
+		default:
+			rotated = coord;
+			break;
+		}
+		result.Add(rotated);
+	}
+
+	return result;
 }

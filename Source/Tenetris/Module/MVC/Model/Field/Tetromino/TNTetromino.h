@@ -63,6 +63,7 @@ public:
 	TArray<int32> GetMinoHeights() const;
 	void SetTetrominoPosition(const int32 x, const int32 y) const;
 	void ApplyTetrominoType(const E_TNTetrominoType currentTetrominoType);
+	void ApplyRotationState(const int32 rotationState);
 	void ResetCoordinate(const E_TNTetrominoType tetrominoType);
 	void SetTetrominoType(const E_TNTetrominoType tetrominoType) const;
 	void SetPosition(const FVector2D position) const;
@@ -81,6 +82,7 @@ private:
 	void calculateGuideTetromino() const;
 	void updateTetromino() const;
 	FVector2D simulatePosition(const E_TNTetrominoDirection tetrominoDirection) const;
+	TTetrominoCoordinate calculateRotatedCoordinates(int32 newRotationState) const;
 	static int32 mod(int32 n, int32 m) { return ((n % m) + m) % m; }
 
 public:
