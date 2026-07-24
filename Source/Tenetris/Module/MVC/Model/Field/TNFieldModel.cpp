@@ -22,7 +22,7 @@ FTNFieldModel::FTNFieldModel(FTNFieldContext fieldContext, int32 height, int32 w
 		{
 			CurrentTetromino = MakeShareable(new FTNTetromino(FieldContext.TetrominoInfo));
 
-			CurrentTetromino->OnMoveTetrominoToCheckBuffer.BindRaw(this, &FTNFieldModel::setValueToCheckBuffer);
+			CurrentTetromino->OnUpdateCheckBuffer.BindRaw(this, &FTNFieldModel::setValueToCheckBuffer);
 			CurrentTetromino->OnCheckMino.BindRaw(this, &FTNFieldModel::checkMino);
 			CurrentTetromino->OnCalculateGuideMino.BindRaw(this, &FTNFieldModel::calculateGuideMinoHeight);
 			CurrentTetromino->OnUpdateTetromino.BindRaw(this, &FTNFieldModel::updateTetromino);
@@ -101,6 +101,11 @@ void FTNFieldModel::Tick(float deltaTime)
 				case E_TNBehaviorState::Spawn:
 					{
 						Recorder->PopFieldRecord();
+
+						if (CurrentTetromino.IsValid())
+						{
+							CurrentTetromino->Despawn();
+						}
 					}
 					break;
 					
@@ -142,22 +147,20 @@ void FTNFieldModel::Tick(float deltaTime)
 					{
 						const E_TNTetrominoType tetrominoType = Recorder->ConsumeTetrominoType();
 						
+						// TODO 락다운된 테트로미노 복구시 방향에 따른 Coordinate 재조정 필요 [07/24/2026]
 						if (CurrentTetromino.IsValid())
 						{
 							CurrentTetromino->ApplyTetrominoType(tetrominoType);
+							CurrentTetromino->ReverseLockDown();
 						}
 						
-						// TODO buffer에서 테트로미노 제거 [07/24/2026]
-						// E_TNFieldModelStateType::ReverseLockDown을 새로 팔지, 아니면 FieldContext에 bool을 넣을지 결정 필요
-						
-						OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::LockDown);
+						OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::ReverseLockDown);
 					}
 					break;
 					
 				case E_TNBehaviorState::LineClear:
 					{
 						// TODO 버퍼 복구시 방향 고민 [07/24/2026]
-						// E_TNFieldModelStateType::ReverseLineClear를 새로 팔지, 아니면 FieldContext에 bool을 넣을지 결정 필요
 						
 						const TArray<TArray<FTNCellInfo>> normalBuffer = Recorder->ConsumeNormalBuffer();
 						const TArray<TArray<FTNCellInfo>> reversedBuffer = Recorder->ConsumeReversedBuffer();
@@ -167,7 +170,7 @@ void FTNFieldModel::Tick(float deltaTime)
 						
 						FieldContext.LockedGrid = FieldContext.bSpaceInverted ? ReversedBuffer : CheckBuffer;
 						
-						OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::LineClear);
+						OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::ReverseLineClear);
 					}
 					break;
 				default:
@@ -765,6 +768,7 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 			// bLineDeleting이 true인 경우, 즉 라인 삭제가 일어나므로, 기록을 추가 생성해야 한다
 			if (Recorder.IsValid())
 			{
+				Recorder->RecordLineClear();
 				Recorder->RecordBuffers(CheckBuffer, ReversedBuffer);
 				Recorder->Initialize();
 			}

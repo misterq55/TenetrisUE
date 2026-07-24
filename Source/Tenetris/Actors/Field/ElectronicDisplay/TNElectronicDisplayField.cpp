@@ -82,8 +82,16 @@ void ATNElectronicDisplayField::HandleFieldState(const FTNFieldContext& fieldCon
 	case E_TNFieldModelStateType::LockDown:
 		lockDown(fieldContext);
 		break;
+
+	case E_TNFieldModelStateType::ReverseLockDown:
+		reverseLockDown(fieldContext);
+		break;
 		
 	case E_TNFieldModelStateType::LineClear:
+		lineClear(fieldContext);
+		break;
+
+	case E_TNFieldModelStateType::ReverseLineClear:
 		lineClear(fieldContext);
 		break;
 
@@ -207,6 +215,40 @@ void ATNElectronicDisplayField::lockDown(const FTNFieldContext& fieldContext) co
 		TenetrisBufferComponent->SetBackgroundCubeType(x,
 											 coord.Y + tetrominoInfo->Position.Y,
 											 tetrominoInfo->TetrominoType);
+	}
+}
+
+void ATNElectronicDisplayField::reverseLockDown(const FTNFieldContext& fieldContext) const
+{
+	if (!IsValid(TenetrisBufferComponent))
+	{
+		return;
+	}
+
+	TenetrisBufferComponent->CleanMinoBuffer();
+
+	TSharedPtr<FTNTetrominoInfo> tetrominoInfo = fieldContext.TetrominoInfo;
+
+	if (!tetrominoInfo.IsValid())
+	{
+		return;
+	}
+
+	const TTetrominoCoordinate coordinate = getRotatedCoordinate(tetrominoInfo->TetrominoType, tetrominoInfo->RotationState);
+
+	for (const auto& coord : coordinate)
+	{
+		const int32 oldX = fieldContext.bSpaceInverted ? ColumnMax - 1 - (coord.X + tetrominoInfo->Position.X) : coord.X + tetrominoInfo->Position.X;
+
+		TenetrisBufferComponent->SetBackgroundCubeType(oldX,
+			coord.Y + tetrominoInfo->Position.Y,
+			E_TNTetrominoType::None);
+
+		const int32 x = coord.X + tetrominoInfo->Position.X;
+
+		TenetrisBufferComponent->SetMinoType(x,
+			coord.Y + tetrominoInfo->Position.Y,
+			tetrominoInfo->TetrominoType);
 	}
 }
 
