@@ -26,8 +26,8 @@ private:
 	public:
 		FTNBehavior ConsumeLastBehavior() const;
 		E_TNTetrominoType ConsumeTetrominoType();
-		TArray<TArray<FTNCellInfo>> GetNormalBuffer() const;
-		TArray<TArray<FTNCellInfo>> GetReversedBuffer() const;
+		TArray<TArray<FTNCellInfo>> ConsumeNormalBuffer();
+		TArray<TArray<FTNCellInfo>> ConsumeReversedBuffer();
 		void PopBehavior();
 
 	public:
@@ -39,8 +39,8 @@ private:
 	private:
 		TArray<FTNBehavior> Behaviors;
 		TArray<E_TNTetrominoType> TetrominoTypes;
-		TArray<TArray<FTNCellInfo>> NormalBuffer;
-		TArray<TArray<FTNCellInfo>> ReversedBuffer;
+		TArray<TArray<TArray<FTNCellInfo>>> NormalBuffers;
+		TArray<TArray<TArray<FTNCellInfo>>> ReversedBuffers;
 	};
 
 public:
@@ -48,7 +48,7 @@ public:
 	~FTNRecorder() = default;
 
 public:
-	void Initialize();
+	void AddFieldRecord();
 	void RecordTetrominoType(E_TNTetrominoType tetrominoType) const;
 	void RecordTransform(FVector2D position, int32 rotationState, E_TNBehaviorState reason = E_TNBehaviorState::Transform) const;
 	void RecordRotateField(bool bRotateField) const;

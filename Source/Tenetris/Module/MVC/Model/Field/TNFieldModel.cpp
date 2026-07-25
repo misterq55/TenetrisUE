@@ -58,7 +58,7 @@ void FTNFieldModel::Initialize()
 	
 	if (Recorder.IsValid())
 	{
-		Recorder->Initialize();
+		Recorder->AddFieldRecord();
 	}
 	
 	if (CurrentTetromino.IsValid())
@@ -135,8 +135,6 @@ void FTNFieldModel::Tick(float deltaTime)
 					{
 						const bool bRotateField = behavior.bRotateField;
 						rotateField();
-						
-						OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::RotateField);
 					}
 					break;
 					
@@ -152,6 +150,20 @@ void FTNFieldModel::Tick(float deltaTime)
 				
 				case E_TNBehaviorState::LockDown:
 					{
+						// TODO 버퍼와 락다운의 이벤트가 꼬임 설계에 대한 고민이 필요 [07/26/2026]
+						// 일단은 LockDown 내에서 강제로 버퍼를 갱신시켜서 처리는 했는데 동작은 하니, 이걸 기반으로 다시 풀어나가야 함
+						{
+							const TArray<TArray<FTNCellInfo>> normalBuffer = Recorder->ConsumeNormalBuffer();
+							const TArray<TArray<FTNCellInfo>> reversedBuffer = Recorder->ConsumeReversedBuffer();
+						
+							CheckBuffer = normalBuffer;
+							ReversedBuffer = reversedBuffer;
+						
+							FieldContext.LockedGrid = FieldContext.bSpaceInverted ? ReversedBuffer : CheckBuffer;
+						
+							OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::ReverseLineClear);
+						}
+						
 						const E_TNTetrominoType tetrominoType = Recorder->ConsumeTetrominoType();
 						const FVector2D position = behavior.Position;
 						const int32 rotationState = behavior.RotationState;
@@ -166,9 +178,9 @@ void FTNFieldModel::Tick(float deltaTime)
 						// TODO 락다운된 테트로미노 복구시 방향에 따른 Coordinate 재조정 필요 [07/24/2026]
 						if (CurrentTetromino.IsValid())
 						{
-							CurrentTetromino->ApplyTetrominoType(tetrominoType);
 							CurrentTetromino->SetPosition(position);
 							CurrentTetromino->SetRotationState(rotationState);
+							CurrentTetromino->ApplyTetrominoType(tetrominoType);
 							CurrentTetromino->ApplyRotationState(rotationState);
 							CurrentTetromino->ReverseLockDown();
 						}
@@ -203,7 +215,7 @@ void FTNFieldModel::Tick(float deltaTime)
 		{
 			// TODO spawn과 로직이 괴리되는 것에 대해 판단 필요 [07/24/2026]
 			
-			Recorder->Initialize();
+			Recorder->AddFieldRecord();
 			bRewind = false;
 			
 			if (CurrentTetromino.IsValid())
@@ -782,12 +794,11 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 
 			DeletedLines.Empty();
 			
-			// bLineDeleting이 true인 경우, 즉 라인 삭제가 일어나므로, 기록을 추가 생성해야 한다
 			if (Recorder.IsValid())
 			{
 				Recorder->RecordLineClear();
 				Recorder->RecordBuffers(CheckBuffer, ReversedBuffer);
-				Recorder->Initialize();
+				Recorder->AddFieldRecord();
 			}
 			
 			OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::LineClear);
@@ -807,16 +818,13 @@ void FTNFieldModel::doLockDown()
 
 		if (Recorder.IsValid())
 		{
-			// Recorder->RecordLockDown();
-			// Recorder->RecordTransform(CurrentTetromino->GetTetrominoInfo()->Position, CurrentTetromino->GetTetrominoInfo()->RotationState);
-			
 			Recorder->RecordTransform(CurrentTetromino->GetTetrominoInfo()->Position, CurrentTetromino->GetTetrominoInfo()->RotationState, E_TNBehaviorState::LockDown);
+			Recorder->RecordBuffers(CheckBuffer, ReversedBuffer);
 			
 			// bLineDeleting이 false인 경우, 즉 라인 삭제가 일어나지 않으므로, 기록을 추가 생성해야 한다
 			if (!bLineDeleting)
 			{
-				Recorder->RecordBuffers(CheckBuffer, ReversedBuffer);
-				Recorder->Initialize();
+				Recorder->AddFieldRecord();
 			}
 		}
 		
