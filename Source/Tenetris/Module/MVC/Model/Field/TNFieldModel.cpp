@@ -144,26 +144,29 @@ void FTNFieldModel::Tick(float deltaTime)
 						const E_TNTetrominoType currentTetrominoType = Recorder->ConsumeTetrominoType();
 						const E_TNTetrominoType holdTetrominoType = behavior.HoldTetrominoType;
 						
+						if (currentTetrominoType == E_TNTetrominoType::None)
+						{
+							if (TetrominoGenerator.IsValid() && CurrentTetromino.IsValid())
+							{
+								TetrominoGenerator->InsertTop(CurrentTetromino->GetTetrominoType());
+							}
+							
+							updatePreviewTetrominoes();
+						}
+						
+						FieldContext.HoldTetrominoType = currentTetrominoType;
+						CurrentTetromino->ApplyTetrominoType(holdTetrominoType);
+						
+						bCanHold = !bSavedCanHold;
+						
+						updateHoldTetromino();
+						
 						OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateHoldTetromino);
 					}
 					break;
 				
 				case E_TNBehaviorState::LockDown:
-					{
-						// TODO 버퍼와 락다운의 이벤트가 꼬임 설계에 대한 고민이 필요 [07/26/2026]
-						// 일단은 LockDown 내에서 강제로 버퍼를 갱신시켜서 처리는 했는데 동작은 하니, 이걸 기반으로 다시 풀어나가야 함
-						{
-							const TArray<TArray<FTNCellInfo>> normalBuffer = Recorder->ConsumeNormalBuffer();
-							const TArray<TArray<FTNCellInfo>> reversedBuffer = Recorder->ConsumeReversedBuffer();
-						
-							CheckBuffer = normalBuffer;
-							ReversedBuffer = reversedBuffer;
-						
-							FieldContext.LockedGrid = FieldContext.bSpaceInverted ? ReversedBuffer : CheckBuffer;
-						
-							OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::ReverseLineClear);
-						}
-						
+					{	
 						const E_TNTetrominoType tetrominoType = Recorder->ConsumeTetrominoType();
 						const FVector2D position = behavior.Position;
 						const int32 rotationState = behavior.RotationState;
@@ -175,7 +178,7 @@ void FTNFieldModel::Tick(float deltaTime)
 
 						updatePreviewTetrominoes();
 						
-						// TODO 락다운된 테트로미노 복구시 방향에 따른 Coordinate 재조정 필요 [07/24/2026]
+						// 락다운된 테트로미노 복구시 방향에 따른 Coordinate 재조정 [07/24/2026]
 						if (CurrentTetromino.IsValid())
 						{
 							CurrentTetromino->SetPosition(position);
@@ -349,7 +352,7 @@ void FTNFieldModel::hold()
 		return;
 	}
 	
-	if (!bCanHold || !CurrentTetromino.IsValid())
+	if (!bCanHold || !CurrentTetromino.IsValid() || !Recorder.IsValid())
 	{
 		return;
 	}
@@ -797,7 +800,6 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 			if (Recorder.IsValid())
 			{
 				Recorder->RecordLineClear();
-				Recorder->RecordBuffers(CheckBuffer, ReversedBuffer);
 				Recorder->AddFieldRecord();
 			}
 			
