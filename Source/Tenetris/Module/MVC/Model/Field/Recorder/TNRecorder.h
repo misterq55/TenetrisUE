@@ -14,17 +14,17 @@ private:
 		~FTNFieldRecord() = default;
 
 	public:
-		void RecordTetrominoType(E_TNTetrominoType tetrominoType);
-		void RecordTransform(FVector2D position, int32 rotationState, E_TNBehaviorState reason = E_TNBehaviorState::Transform);
+		void RecordSpawn(FVector2D position, int32 rotationState);
+		void RecordTransform(FVector2D position, int32 rotationState);
+		void RecordLockDown(FVector2D position, int32 rotationState, E_TNTetrominoType tetrominoType);
 		void RecordRotateField(bool bRotateField);
-		void RecordHold(bool bCanHold, E_TNTetrominoType holdTetrominoType);
+		void RecordHold(bool bCanHold, E_TNTetrominoType currentTetrominoType, E_TNTetrominoType holdTetrominoType);
 		void RecordBuffers(const TArray<TArray<FTNCellInfo>>& normalBuffer, const TArray<TArray<FTNCellInfo>>& reversedBuffer);
 		void RecordLockDown();
 		void RecordLineClear();
 
 	public:
 		FTNBehavior ConsumeLastBehavior() const;
-		E_TNTetrominoType ConsumeTetrominoType();
 		TArray<TArray<FTNCellInfo>> GetNormalBuffer() const;
 		TArray<TArray<FTNCellInfo>> GetReversedBuffer() const;
 		void PopBehavior();
@@ -37,7 +37,6 @@ private:
 
 	private:
 		TArray<FTNBehavior> Behaviors;
-		TArray<E_TNTetrominoType> TetrominoTypes;
 		TArray<TArray<FTNCellInfo>> NormalBuffer;
 		TArray<TArray<FTNCellInfo>> ReversedBuffer;
 	};
@@ -48,16 +47,16 @@ public:
 
 public:
 	void AddFieldRecord();
-	void RecordTetrominoType(E_TNTetrominoType tetrominoType) const;
-	void RecordTransform(FVector2D position, int32 rotationState, E_TNBehaviorState reason = E_TNBehaviorState::Transform) const;
+	void RecordSpawn(FVector2D position, int32 rotationState) const;
+	void RecordTransform(FVector2D position, int32 rotationState) const;
+	void RecordLockDown(FVector2D position, int32 rotationState, E_TNTetrominoType tetrominoType);
 	void RecordRotateField(bool bRotateField) const;
-	void RecordHold(bool bCanHold, E_TNTetrominoType holdTetrominoType) const;
+	void RecordHold(bool bCanHold, E_TNTetrominoType currentTetrominoType, E_TNTetrominoType holdTetrominoType) const;
 	void RecordBuffers(const TArray<TArray<FTNCellInfo>>& normalBuffer, const TArray<TArray<FTNCellInfo>>& reversedBuffer);
 	void RecordLineClear() const;
 
 public:
 	FTNBehavior ConsumeLastBehavior() const;
-	E_TNTetrominoType ConsumeTetrominoType() const;
 	TArray<TArray<FTNCellInfo>> ConsumeNormalBuffer() const;
 	TArray<TArray<FTNCellInfo>> ConsumeReversedBuffer() const;
 	void PopFieldRecord();
