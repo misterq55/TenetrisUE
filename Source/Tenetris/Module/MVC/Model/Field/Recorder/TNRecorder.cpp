@@ -56,11 +56,10 @@ void FTNRecorder::FTNFieldRecord::RecordRotateField(bool bRotateField)
 	Behaviors.Add(behavior);
 }
 
-void FTNRecorder::FTNFieldRecord::RecordHold(bool bCanHold, E_TNTetrominoType currentTetrominoType, E_TNTetrominoType holdTetrominoType)
+void FTNRecorder::FTNFieldRecord::RecordHold(E_TNTetrominoType currentTetrominoType, E_TNTetrominoType holdTetrominoType)
 {
 	FTNBehavior behavior;
 	behavior.BehaviorState = E_TNBehaviorState::Hold;
-	behavior.bCanHold = bCanHold;
 	behavior.CurrentTetrominoType = currentTetrominoType;
 	behavior.HoldTetrominoType = holdTetrominoType;
 	Behaviors.Add(behavior);
@@ -142,14 +141,14 @@ void FTNRecorder::RecordRotateField(bool bRotateField) const
 	FieldRecords.Last()->RecordRotateField(bRotateField);
 }
 
-void FTNRecorder::RecordHold(bool bCanHold, E_TNTetrominoType currentTetrominoType, E_TNTetrominoType holdTetrominoType) const
+void FTNRecorder::RecordHold(E_TNTetrominoType currentTetrominoType, E_TNTetrominoType holdTetrominoType) const
 {
 	if (FieldRecords.IsEmpty())
 	{
 		return;
 	}
 	
-	FieldRecords.Last()->RecordHold(bCanHold, currentTetrominoType, holdTetrominoType);
+	FieldRecords.Last()->RecordHold(currentTetrominoType, holdTetrominoType);
 }
 
 void FTNRecorder::RecordBuffers(const TArray<TArray<FTNCellInfo>>& normalBuffer,
