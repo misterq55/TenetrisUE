@@ -140,7 +140,6 @@ void FTNFieldModel::Tick(float deltaTime)
 					
 				case E_TNBehaviorState::Hold:
 					{
-						const bool bSavedCanHold = behavior.bCanHold;
 						const E_TNTetrominoType currentTetrominoType = behavior.CurrentTetrominoType;
 						const E_TNTetrominoType holdTetrominoType = behavior.HoldTetrominoType;
 						
@@ -157,7 +156,8 @@ void FTNFieldModel::Tick(float deltaTime)
 						FieldContext.HoldTetrominoType = currentTetrominoType;
 						CurrentTetromino->ApplyTetrominoType(holdTetrominoType);
 						
-						bCanHold = !bSavedCanHold;
+						// hold()는 bCanHold == true 일 때만 진입하므로 되감기 시 항상 true로 복원
+						bCanHold = true;
 						
 						updateHoldTetromino();
 						
@@ -379,7 +379,7 @@ void FTNFieldModel::hold()
 	
 	if (Recorder.IsValid())
 	{
-		Recorder->RecordHold(bCanHold, holdTetrominoType,currentTetrominoType);
+		Recorder->RecordHold(holdTetrominoType, currentTetrominoType);
 	}
 }
 
