@@ -5,13 +5,6 @@ void FTNRecorder::FTNFieldRecord::RecordTetrominoType(E_TNTetrominoType tetromin
 	TetrominoTypes.Add(tetrominoType);
 }
 
-void FTNRecorder::FTNFieldRecord::RecordSpawn()
-{
-	FTNBehavior behavior;
-	behavior.BehaviorState = E_TNBehaviorState::Spawn;
-	Behaviors.Add(behavior);
-}
-
 void FTNRecorder::FTNFieldRecord::RecordTransform(FVector2D position, int32 rotationState, E_TNBehaviorState reason)
 {
 	FTNBehavior behavior;
@@ -41,8 +34,8 @@ void FTNRecorder::FTNFieldRecord::RecordHold(bool bCanHold, E_TNTetrominoType ho
 void FTNRecorder::FTNFieldRecord::RecordBuffers(const TArray<TArray<FTNCellInfo>>& normalBuffer,
 	const TArray<TArray<FTNCellInfo>>& reversedBuffer)
 {
-	NormalBuffers.Add(normalBuffer);
-	ReversedBuffers.Add(reversedBuffer);
+	NormalBuffer = normalBuffer;
+	ReversedBuffer = reversedBuffer;
 }
 
 void FTNRecorder::FTNFieldRecord::RecordLockDown()
@@ -82,30 +75,14 @@ E_TNTetrominoType FTNRecorder::FTNFieldRecord::ConsumeTetrominoType()
 	return tetrominoType;
 }
 
-TArray<TArray<FTNCellInfo>> FTNRecorder::FTNFieldRecord::ConsumeNormalBuffer()
+TArray<TArray<FTNCellInfo>> FTNRecorder::FTNFieldRecord::GetNormalBuffer() const
 {
-	if (NormalBuffers.IsEmpty())
-	{
-		return TArray<TArray<FTNCellInfo>>();
-	}
-
-	const TArray<TArray<FTNCellInfo>> normalBuffer = NormalBuffers.Last();
-	NormalBuffers.Pop();
-	
-	return normalBuffer;
+	return NormalBuffer;
 }
 
-TArray<TArray<FTNCellInfo>> FTNRecorder::FTNFieldRecord::ConsumeReversedBuffer()
+TArray<TArray<FTNCellInfo>> FTNRecorder::FTNFieldRecord::GetReversedBuffer() const
 {
-	if (ReversedBuffers.IsEmpty())
-	{
-		return TArray<TArray<FTNCellInfo>>();
-	}
-
-	const TArray<TArray<FTNCellInfo>> reversedBuffer = ReversedBuffers.Last();
-	ReversedBuffers.Pop();
-	
-	return reversedBuffer;
+	return ReversedBuffer;
 }
 
 void FTNRecorder::FTNFieldRecord::PopBehavior()
@@ -220,7 +197,7 @@ TArray<TArray<FTNCellInfo>> FTNRecorder::ConsumeNormalBuffer() const
 		return TArray<TArray<FTNCellInfo>>();
 	}
 	
-	return FieldRecords.Last()->ConsumeNormalBuffer();
+	return FieldRecords.Last()->GetNormalBuffer();
 }
 
 TArray<TArray<FTNCellInfo>> FTNRecorder::ConsumeReversedBuffer() const
@@ -230,7 +207,7 @@ TArray<TArray<FTNCellInfo>> FTNRecorder::ConsumeReversedBuffer() const
 		return TArray<TArray<FTNCellInfo>>();
 	}
 	
-	return FieldRecords.Last()->ConsumeReversedBuffer();
+	return FieldRecords.Last()->GetReversedBuffer();
 }
 
 void FTNRecorder::PopFieldRecord()
