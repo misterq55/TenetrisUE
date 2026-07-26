@@ -96,6 +96,7 @@ struct FTNBehavior
 	E_TNBehaviorState BehaviorState = E_TNBehaviorState::None;
 	FVector2D Position = FVector2D::ZeroVector;
 	bool bRotateField = false;
+	E_TNTetrominoType CurrentTetrominoType = E_TNTetrominoType::None;
 	E_TNTetrominoType HoldTetrominoType = E_TNTetrominoType::None;
 	bool bCanHold = false;
 	int32 RotationState = 0;

@@ -141,7 +141,7 @@ void FTNFieldModel::Tick(float deltaTime)
 				case E_TNBehaviorState::Hold:
 					{
 						const bool bSavedCanHold = behavior.bCanHold;
-						const E_TNTetrominoType currentTetrominoType = Recorder->ConsumeTetrominoType();
+						const E_TNTetrominoType currentTetrominoType = behavior.CurrentTetrominoType;
 						const E_TNTetrominoType holdTetrominoType = behavior.HoldTetrominoType;
 						
 						if (currentTetrominoType == E_TNTetrominoType::None)
@@ -167,7 +167,7 @@ void FTNFieldModel::Tick(float deltaTime)
 				
 				case E_TNBehaviorState::LockDown:
 					{	
-						const E_TNTetrominoType tetrominoType = Recorder->ConsumeTetrominoType();
+						const E_TNTetrominoType tetrominoType = behavior.CurrentTetrominoType;
 						const FVector2D position = behavior.Position;
 						const int32 rotationState = behavior.RotationState;
 
@@ -229,8 +229,7 @@ void FTNFieldModel::Tick(float deltaTime)
 			
 			if (Recorder.IsValid())
 			{
-				Recorder->RecordTetrominoType(CurrentTetromino->GetTetrominoType());
-				Recorder->RecordTransform(CurrentTetromino->GetTetrominoInfo()->Position, CurrentTetromino->GetTetrominoInfo()->RotationState, E_TNBehaviorState::Spawn);
+				Recorder->RecordSpawn(CurrentTetromino->GetTetrominoInfo()->Position, CurrentTetromino->GetTetrominoInfo()->RotationState);
 			}
 		}
 	}
@@ -380,8 +379,7 @@ void FTNFieldModel::hold()
 	
 	if (Recorder.IsValid())
 	{
-		Recorder->RecordTetrominoType(holdTetrominoType);
-		Recorder->RecordHold(bCanHold, currentTetrominoType);
+		Recorder->RecordHold(bCanHold, holdTetrominoType,currentTetrominoType);
 	}
 }
 
@@ -556,8 +554,7 @@ void FTNFieldModel::spawn()
 	
 	if (Recorder.IsValid())
 	{
-		Recorder->RecordTetrominoType(CurrentTetromino->GetTetrominoType());
-		Recorder->RecordTransform(CurrentTetromino->GetTetrominoInfo()->Position, CurrentTetromino->GetTetrominoInfo()->RotationState, E_TNBehaviorState::Spawn);
+		Recorder->RecordSpawn(CurrentTetromino->GetTetrominoInfo()->Position, CurrentTetromino->GetTetrominoInfo()->RotationState);
 	}
 	
 	bCanHold = true;
@@ -820,7 +817,7 @@ void FTNFieldModel::doLockDown()
 
 		if (Recorder.IsValid())
 		{
-			Recorder->RecordTransform(CurrentTetromino->GetTetrominoInfo()->Position, CurrentTetromino->GetTetrominoInfo()->RotationState, E_TNBehaviorState::LockDown);
+			Recorder->RecordLockDown(CurrentTetromino->GetTetrominoInfo()->Position, CurrentTetromino->GetTetrominoInfo()->RotationState, CurrentTetromino->GetTetrominoType());
 			Recorder->RecordBuffers(CheckBuffer, ReversedBuffer);
 			
 			// bLineDeleting이 false인 경우, 즉 라인 삭제가 일어나지 않으므로, 기록을 추가 생성해야 한다
