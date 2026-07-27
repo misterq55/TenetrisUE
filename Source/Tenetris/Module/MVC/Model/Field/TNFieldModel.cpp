@@ -88,6 +88,17 @@ void FTNFieldModel::Tick(float deltaTime)
 			return;
 		}
 		
+		if (isSpaceInverting())
+		{
+			RotationPauseRemainingTime -= deltaTime;
+			if (RotationPauseRemainingTime < 0.f)
+			{
+				RotationPauseRemainingTime = 0.f;
+			}
+			
+			return;
+		}
+		
 		// TODO 되감기 로직 [07/21/2026]
 		if (!Recorder->IsEmpty())
 		{
@@ -194,15 +205,14 @@ void FTNFieldModel::Tick(float deltaTime)
 					
 				case E_TNBehaviorState::LineClear:
 					{
-						// TODO 버퍼 복구시 방향 고민 [07/24/2026]
-						
+						// 라인 클리어가 기록된 시점의 공간 반전 상태를 기준으로 LockedGrid를 복원한다
 						const TArray<TArray<FTNCellInfo>> normalBuffer = Recorder->ConsumeNormalBuffer();
 						const TArray<TArray<FTNCellInfo>> reversedBuffer = Recorder->ConsumeReversedBuffer();
 						
 						CheckBuffer = normalBuffer;
 						ReversedBuffer = reversedBuffer;
 						
-						FieldContext.LockedGrid = FieldContext.bSpaceInverted ? ReversedBuffer : CheckBuffer;
+						FieldContext.LockedGrid = behavior.bSpaceInverted ? ReversedBuffer : CheckBuffer;
 						
 						OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::ReverseLineClear);
 					}
@@ -287,6 +297,12 @@ void FTNFieldModel::HandleControlInput(const E_TNControlType controlType)
 		break;
 	case E_TNControlType::RotateField:
 		rotateField();
+		
+		if (Recorder.IsValid())
+		{
+			Recorder->RecordRotateField(FieldContext.bSpaceInverted);
+		}
+		
 		break;
 	case E_TNControlType::Rewind:
 		rewind();
@@ -397,11 +413,6 @@ void FTNFieldModel::rotateField()
 	if (CurrentTetromino.IsValid())
 	{
 		CurrentTetromino->ResetGuideTetromino();
-	}
-	
-	if (Recorder.IsValid())
-	{
-		Recorder->RecordRotateField(FieldContext.bSpaceInverted);
 	}
 	
 	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::RotateField);
@@ -796,7 +807,7 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 			
 			if (Recorder.IsValid())
 			{
-				Recorder->RecordLineClear();
+				Recorder->RecordLineClear(FieldContext.bSpaceInverted);
 				Recorder->AddFieldRecord();
 			}
 			

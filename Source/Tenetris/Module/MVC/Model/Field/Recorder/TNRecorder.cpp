@@ -79,10 +79,11 @@ void FTNRecorder::FTNFieldRecord::RecordLockDown()
 	Behaviors.Add(behavior);
 }
 
-void FTNRecorder::FTNFieldRecord::RecordLineClear()
+void FTNRecorder::FTNFieldRecord::RecordLineClear(bool bSpaceInverted)
 {
 	FTNBehavior behavior;
 	behavior.BehaviorState = E_TNBehaviorState::LineClear;
+	behavior.bSpaceInverted = bSpaceInverted;
 	Behaviors.Add(behavior);
 }
 
@@ -168,14 +169,14 @@ void FTNRecorder::RecordBuffers(const TArray<TArray<FTNCellInfo>>& normalBuffer,
 	}
 }
 
-void FTNRecorder::RecordLineClear() const
+void FTNRecorder::RecordLineClear(bool bSpaceInverted) const
 {
 	if (FieldRecords.IsEmpty())
 	{
 		return;
 	}
 	
-	FieldRecords.Last()->RecordLineClear();
+	FieldRecords.Last()->RecordLineClear(bSpaceInverted);
 }
 
 FTNBehavior FTNRecorder::ConsumeLastBehavior() const
