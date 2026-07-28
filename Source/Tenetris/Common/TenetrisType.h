@@ -99,5 +99,4 @@ struct FTNBehavior
 	E_TNTetrominoType CurrentTetrominoType = E_TNTetrominoType::None;
 	E_TNTetrominoType HoldTetrominoType = E_TNTetrominoType::None;
 	int32 RotationState = 0;
-	bool bSpaceInverted = false;
 };
