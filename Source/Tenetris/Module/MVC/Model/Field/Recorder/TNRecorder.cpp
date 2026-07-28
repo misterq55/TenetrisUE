@@ -1,11 +1,12 @@
 #include "TNRecorder.h"
 
-void FTNRecorder::FTNFieldRecord::RecordSpawn(FVector2D position, int32 rotationState)
+void FTNRecorder::FTNFieldRecord::RecordSpawn(FVector2D position, int32 rotationState, E_TNTetrominoType tetrominoType)
 {
 	FTNBehavior behavior;
 	behavior.BehaviorState = E_TNBehaviorState::Spawn;
 	behavior.Position = position;
 	behavior.RotationState = rotationState;
+	behavior.CurrentTetrominoType = tetrominoType;
 	Behaviors.Add(behavior);
 }
 
@@ -19,14 +20,14 @@ void FTNRecorder::FTNFieldRecord::RecordLockDown(FVector2D position, int32 rotat
 	Behaviors.Add(behavior);
 }
 
-void FTNRecorder::RecordSpawn(FVector2D position, int32 rotationState) const
+void FTNRecorder::RecordSpawn(FVector2D position, int32 rotationState, E_TNTetrominoType tetrominoType) const
 {
 	if (FieldRecords.IsEmpty())
 	{
 		return;
 	}
 	
-	FieldRecords.Last()->RecordSpawn(position, rotationState);
+	FieldRecords.Last()->RecordSpawn(position, rotationState, tetrominoType);
 }
 
 void FTNRecorder::RecordLockDown(FVector2D position, int32 rotationState, E_TNTetrominoType tetrominoType)
@@ -79,11 +80,10 @@ void FTNRecorder::FTNFieldRecord::RecordLockDown()
 	Behaviors.Add(behavior);
 }
 
-void FTNRecorder::FTNFieldRecord::RecordLineClear(bool bSpaceInverted)
+void FTNRecorder::FTNFieldRecord::RecordLineClear()
 {
 	FTNBehavior behavior;
 	behavior.BehaviorState = E_TNBehaviorState::LineClear;
-	behavior.bSpaceInverted = bSpaceInverted;
 	Behaviors.Add(behavior);
 }
 
@@ -97,12 +97,12 @@ FTNBehavior FTNRecorder::FTNFieldRecord::ConsumeLastBehavior() const
 	return Behaviors.Last();
 }
 
-TArray<TArray<FTNCellInfo>> FTNRecorder::FTNFieldRecord::GetNormalBuffer() const
+const TArray<TArray<FTNCellInfo>>& FTNRecorder::FTNFieldRecord::GetNormalBuffer() const
 {
 	return NormalBuffer;
 }
 
-TArray<TArray<FTNCellInfo>> FTNRecorder::FTNFieldRecord::GetReversedBuffer() const
+const TArray<TArray<FTNCellInfo>>& FTNRecorder::FTNFieldRecord::GetReversedBuffer() const
 {
 	return ReversedBuffer;
 }
@@ -120,6 +120,13 @@ void FTNRecorder::FTNFieldRecord::PopBehavior()
 void FTNRecorder::AddFieldRecord()
 {
 	FieldRecords.Emplace(MakeShareable(new FTNFieldRecord()));
+
+	// pruning은 새 레코드가 추가될 때 일괄 처리하여 다른 Record* API와 정책을 통일한다.
+	// (이전에는 RecordBuffers에서만 pruning되어 락다운 이외의 조작 기록이 비대칭으로 남았음)
+	while (FieldRecords.Num() > MaxRecords)
+	{
+		FieldRecords.RemoveAt(0);
+	}
 }
 
 void FTNRecorder::RecordTransform(FVector2D position, int32 rotationState) const
@@ -161,22 +168,16 @@ void FTNRecorder::RecordBuffers(const TArray<TArray<FTNCellInfo>>& normalBuffer,
 	}
 	
 	FieldRecords.Last()->RecordBuffers(normalBuffer, reversedBuffer);
-
-	const int32 recordsNum = FieldRecords.Num();
-	if (recordsNum > MaxRecords)
-	{
-		FieldRecords.RemoveAt(0);
-	}
 }
 
-void FTNRecorder::RecordLineClear(bool bSpaceInverted) const
+void FTNRecorder::RecordLineClear() const
 {
 	if (FieldRecords.IsEmpty())
 	{
 		return;
 	}
 	
-	FieldRecords.Last()->RecordLineClear(bSpaceInverted);
+	FieldRecords.Last()->RecordLineClear();
 }
 
 FTNBehavior FTNRecorder::ConsumeLastBehavior() const
@@ -192,21 +193,23 @@ FTNBehavior FTNRecorder::ConsumeLastBehavior() const
 	return lastBehavior;
 }
 
-TArray<TArray<FTNCellInfo>> FTNRecorder::ConsumeNormalBuffer() const
+const TArray<TArray<FTNCellInfo>>& FTNRecorder::GetNormalBuffer() const
 {
+	static const TArray<TArray<FTNCellInfo>> EmptyBuffer;
 	if (FieldRecords.IsEmpty())
 	{
-		return TArray<TArray<FTNCellInfo>>();
+		return EmptyBuffer;
 	}
 	
 	return FieldRecords.Last()->GetNormalBuffer();
 }
 
-TArray<TArray<FTNCellInfo>> FTNRecorder::ConsumeReversedBuffer() const
+const TArray<TArray<FTNCellInfo>>& FTNRecorder::GetReversedBuffer() const
 {
+	static const TArray<TArray<FTNCellInfo>> EmptyBuffer;
 	if (FieldRecords.IsEmpty())
 	{
-		return TArray<TArray<FTNCellInfo>>();
+		return EmptyBuffer;
 	}
 	
 	return FieldRecords.Last()->GetReversedBuffer();

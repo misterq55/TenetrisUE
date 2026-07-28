@@ -14,19 +14,19 @@ private:
 		~FTNFieldRecord() = default;
 
 	public:
-		void RecordSpawn(FVector2D position, int32 rotationState);
+		void RecordSpawn(FVector2D position, int32 rotationState, E_TNTetrominoType tetrominoType);
 		void RecordTransform(FVector2D position, int32 rotationState);
 		void RecordLockDown(FVector2D position, int32 rotationState, E_TNTetrominoType tetrominoType);
 		void RecordRotateField(bool bRotateField);
 		void RecordHold(E_TNTetrominoType currentTetrominoType, E_TNTetrominoType holdTetrominoType);
 		void RecordBuffers(const TArray<TArray<FTNCellInfo>>& normalBuffer, const TArray<TArray<FTNCellInfo>>& reversedBuffer);
 		void RecordLockDown();
-		void RecordLineClear(bool bSpaceInverted);
+		void RecordLineClear();
 
 	public:
 		FTNBehavior ConsumeLastBehavior() const;
-		TArray<TArray<FTNCellInfo>> GetNormalBuffer() const;
-		TArray<TArray<FTNCellInfo>> GetReversedBuffer() const;
+		const TArray<TArray<FTNCellInfo>>& GetNormalBuffer() const;
+		const TArray<TArray<FTNCellInfo>>& GetReversedBuffer() const;
 		void PopBehavior();
 
 	public:
@@ -47,18 +47,18 @@ public:
 
 public:
 	void AddFieldRecord();
-	void RecordSpawn(FVector2D position, int32 rotationState) const;
+	void RecordSpawn(FVector2D position, int32 rotationState, E_TNTetrominoType tetrominoType) const;
 	void RecordTransform(FVector2D position, int32 rotationState) const;
 	void RecordLockDown(FVector2D position, int32 rotationState, E_TNTetrominoType tetrominoType);
 	void RecordRotateField(bool bRotateField) const;
 	void RecordHold(E_TNTetrominoType currentTetrominoType, E_TNTetrominoType holdTetrominoType) const;
 	void RecordBuffers(const TArray<TArray<FTNCellInfo>>& normalBuffer, const TArray<TArray<FTNCellInfo>>& reversedBuffer);
-	void RecordLineClear(bool bSpaceInverted) const;
+	void RecordLineClear() const;
 
 public:
 	FTNBehavior ConsumeLastBehavior() const;
-	TArray<TArray<FTNCellInfo>> ConsumeNormalBuffer() const;
-	TArray<TArray<FTNCellInfo>> ConsumeReversedBuffer() const;
+	const TArray<TArray<FTNCellInfo>>& GetNormalBuffer() const;
+	const TArray<TArray<FTNCellInfo>>& GetReversedBuffer() const;
 	void PopFieldRecord();
 
 	bool IsEmpty() const
