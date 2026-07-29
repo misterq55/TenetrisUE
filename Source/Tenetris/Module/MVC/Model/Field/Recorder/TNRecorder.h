@@ -6,7 +6,15 @@
 class FTNRecorder
 {
 private:
-	
+	struct FTNBehavior
+	{
+		E_TNBehaviorState BehaviorState = E_TNBehaviorState::None;
+		FVector2D Position = FVector2D::ZeroVector;
+		E_TNTetrominoType CurrentTetrominoType = E_TNTetrominoType::None;
+		E_TNTetrominoType HoldTetrominoType = E_TNTetrominoType::None;
+		int32 RotationState = 0;
+	};
+
 	class FTNFieldRecord
 	{
 	public:
@@ -20,14 +28,18 @@ private:
 		void RecordRotateField();
 		void RecordHold(E_TNTetrominoType currentTetrominoType, E_TNTetrominoType holdTetrominoType);
 		void RecordBuffers(const TArray<TArray<FTNCellInfo>>& normalBuffer, const TArray<TArray<FTNCellInfo>>& reversedBuffer);
-		void RecordLockDown();
 		void RecordLineClear();
 
 	public:
-		FTNBehavior ConsumeLastBehavior() const;
+		E_TNBehaviorState PeekLastBehaviorState() const;
+		FVector2D GetLastPosition() const;
+		int32 GetLastRotationState() const;
+		E_TNTetrominoType GetLastCurrentTetrominoType() const;
+		E_TNTetrominoType GetLastHoldTetrominoType() const;
+		void PopLastBehavior();
+
 		const TArray<TArray<FTNCellInfo>>& GetNormalBuffer() const;
 		const TArray<TArray<FTNCellInfo>>& GetReversedBuffer() const;
-		void PopBehavior();
 
 	public:
 		bool IsEmpty() const
@@ -56,7 +68,13 @@ public:
 	void RecordLineClear() const;
 
 public:
-	FTNBehavior ConsumeLastBehavior() const;
+	E_TNBehaviorState PeekLastBehaviorState() const;
+	FVector2D GetLastPosition() const;
+	int32 GetLastRotationState() const;
+	E_TNTetrominoType GetLastCurrentTetrominoType() const;
+	E_TNTetrominoType GetLastHoldTetrominoType() const;
+	void PopLastBehavior() const;
+
 	const TArray<TArray<FTNCellInfo>>& GetNormalBuffer() const;
 	const TArray<TArray<FTNCellInfo>>& GetReversedBuffer() const;
 	void PopFieldRecord();

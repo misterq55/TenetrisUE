@@ -72,13 +72,6 @@ void FTNRecorder::FTNFieldRecord::RecordBuffers(const TArray<TArray<FTNCellInfo>
 	ReversedBuffer = reversedBuffer;
 }
 
-void FTNRecorder::FTNFieldRecord::RecordLockDown()
-{
-	FTNBehavior behavior;
-	behavior.BehaviorState = E_TNBehaviorState::LockDown;
-	Behaviors.Add(behavior);
-}
-
 void FTNRecorder::FTNFieldRecord::RecordLineClear()
 {
 	FTNBehavior behavior;
@@ -86,14 +79,54 @@ void FTNRecorder::FTNFieldRecord::RecordLineClear()
 	Behaviors.Add(behavior);
 }
 
-FTNBehavior FTNRecorder::FTNFieldRecord::ConsumeLastBehavior() const
+E_TNBehaviorState FTNRecorder::FTNFieldRecord::PeekLastBehaviorState() const
 {
 	if (Behaviors.IsEmpty())
 	{
-		return FTNBehavior();
+		return E_TNBehaviorState::None;
 	}
 	
-	return Behaviors.Last();
+	return Behaviors.Last().BehaviorState;
+}
+
+FVector2D FTNRecorder::FTNFieldRecord::GetLastPosition() const
+{
+	if (Behaviors.IsEmpty())
+	{
+		return FVector2D::ZeroVector;
+	}
+	
+	return Behaviors.Last().Position;
+}
+
+int32 FTNRecorder::FTNFieldRecord::GetLastRotationState() const
+{
+	if (Behaviors.IsEmpty())
+	{
+		return 0;
+	}
+	
+	return Behaviors.Last().RotationState;
+}
+
+E_TNTetrominoType FTNRecorder::FTNFieldRecord::GetLastCurrentTetrominoType() const
+{
+	if (Behaviors.IsEmpty())
+	{
+		return E_TNTetrominoType::None;
+	}
+	
+	return Behaviors.Last().CurrentTetrominoType;
+}
+
+E_TNTetrominoType FTNRecorder::FTNFieldRecord::GetLastHoldTetrominoType() const
+{
+	if (Behaviors.IsEmpty())
+	{
+		return E_TNTetrominoType::None;
+	}
+	
+	return Behaviors.Last().HoldTetrominoType;
 }
 
 const TArray<TArray<FTNCellInfo>>& FTNRecorder::FTNFieldRecord::GetNormalBuffer() const
@@ -106,7 +139,7 @@ const TArray<TArray<FTNCellInfo>>& FTNRecorder::FTNFieldRecord::GetReversedBuffe
 	return ReversedBuffer;
 }
 
-void FTNRecorder::FTNFieldRecord::PopBehavior()
+void FTNRecorder::FTNFieldRecord::PopLastBehavior()
 {
 	if (Behaviors.IsEmpty())
 	{
@@ -179,17 +212,64 @@ void FTNRecorder::RecordLineClear() const
 	FieldRecords.Last()->RecordLineClear();
 }
 
-FTNBehavior FTNRecorder::ConsumeLastBehavior() const
+E_TNBehaviorState FTNRecorder::PeekLastBehaviorState() const
 {
 	if (FieldRecords.IsEmpty())
 	{
-		return FTNBehavior();
+		return E_TNBehaviorState::None;
 	}
 	
-	const FTNBehavior lastBehavior = FieldRecords.Last()->ConsumeLastBehavior();
-	FieldRecords.Last()->PopBehavior();
+	return FieldRecords.Last()->PeekLastBehaviorState();
+}
+
+FVector2D FTNRecorder::GetLastPosition() const
+{
+	if (FieldRecords.IsEmpty())
+	{
+		return FVector2D::ZeroVector;
+	}
 	
-	return lastBehavior;
+	return FieldRecords.Last()->GetLastPosition();
+}
+
+int32 FTNRecorder::GetLastRotationState() const
+{
+	if (FieldRecords.IsEmpty())
+	{
+		return 0;
+	}
+	
+	return FieldRecords.Last()->GetLastRotationState();
+}
+
+E_TNTetrominoType FTNRecorder::GetLastCurrentTetrominoType() const
+{
+	if (FieldRecords.IsEmpty())
+	{
+		return E_TNTetrominoType::None;
+	}
+	
+	return FieldRecords.Last()->GetLastCurrentTetrominoType();
+}
+
+E_TNTetrominoType FTNRecorder::GetLastHoldTetrominoType() const
+{
+	if (FieldRecords.IsEmpty())
+	{
+		return E_TNTetrominoType::None;
+	}
+	
+	return FieldRecords.Last()->GetLastHoldTetrominoType();
+}
+
+void FTNRecorder::PopLastBehavior() const
+{
+	if (FieldRecords.IsEmpty())
+	{
+		return;
+	}
+	
+	FieldRecords.Last()->PopLastBehavior();
 }
 
 const TArray<TArray<FTNCellInfo>>& FTNRecorder::GetNormalBuffer() const
