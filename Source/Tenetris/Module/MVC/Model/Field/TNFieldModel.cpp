@@ -83,165 +83,7 @@ void FTNFieldModel::Tick(float deltaTime)
 {
 	if (bRewind)
 	{
-		if (!Recorder.IsValid())
-		{
-			return;
-		}
-		
-		if (isSpaceInverting())
-		{
-			RotationPauseRemainingTime -= deltaTime;
-			if (RotationPauseRemainingTime < 0.f)
-			{
-				RotationPauseRemainingTime = 0.f;
-			}
-			
-			return;
-		}
-		
-		// TODO 되감기 로직 [07/21/2026]
-		if (!Recorder->IsEmpty())
-		{
-			CurrentTime += deltaTime;
-			if (CurrentTime >= RewindSpeed)
-			{
-				const FTNBehavior behavior = Recorder->ConsumeLastBehavior();
-				
-				switch (behavior.BehaviorState)
-				{
-				case E_TNBehaviorState::Spawn:
-					{
-						const FVector2D position = behavior.Position;
-						const int32 rotationState = behavior.RotationState;
-						const E_TNTetrominoType tetrominoType = behavior.CurrentTetrominoType;
-						
-						if (CurrentTetromino.IsValid())
-						{
-							CurrentTetromino->SetPosition(position);
-							CurrentTetromino->SetRotationState(rotationState);
-							CurrentTetromino->Despawn();
-						}
-						
-						// 스폰 시 generator에서 pop되었던 미노를 top으로 복귀시켜, forward 기록과 대칭성을 유지한다.
-						// 이로써 되감기 종료 시점에 generator top이 초기 스폰 미노와 일치하게 되어 spawn()을 그대로 재사용할 수 있다.
-						if (TetrominoGenerator.IsValid() && tetrominoType != E_TNTetrominoType::None)
-						{
-							TetrominoGenerator->InsertTop(tetrominoType);
-						}
-						
-						updatePreviewTetrominoes();
-						
-						Recorder->PopFieldRecord();
-						
-						OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateTetromino);
-					}
-					break;
-					
-				case E_TNBehaviorState::Transform:
-					{
-						const FVector2D position = behavior.Position;
-						const int32 rotationState = behavior.RotationState;
-						
-						if (CurrentTetromino.IsValid())
-						{
-							CurrentTetromino->SetPosition(position);
-							CurrentTetromino->SetRotationState(rotationState);
-						}
-						
-						OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateTetromino);
-					}
-					break;
-					
-				case E_TNBehaviorState::RotateField:
-					{
-						const bool bRotateField = behavior.bRotateField;
-						rotateField();
-					}
-					break;
-					
-				case E_TNBehaviorState::Hold:
-					{
-						const E_TNTetrominoType currentTetrominoType = behavior.CurrentTetrominoType;
-						const E_TNTetrominoType holdTetrominoType = behavior.HoldTetrominoType;
-						
-						if (currentTetrominoType == E_TNTetrominoType::None)
-						{
-							if (TetrominoGenerator.IsValid() && CurrentTetromino.IsValid())
-							{
-								TetrominoGenerator->InsertTop(CurrentTetromino->GetTetrominoType());
-							}
-							
-							updatePreviewTetrominoes();
-						}
-						
-						FieldContext.HoldTetrominoType = currentTetrominoType;
-						CurrentTetromino->ApplyTetrominoType(holdTetrominoType);
-						
-						// hold()는 bCanHold == true 일 때만 진입하므로 되감기 시 항상 true로 복원
-						bCanHold = true;
-						
-						updateHoldTetromino();
-						
-						OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateHoldTetromino);
-					}
-					break;
-				
-				case E_TNBehaviorState::LockDown:
-					{	
-						const E_TNTetrominoType tetrominoType = behavior.CurrentTetrominoType;
-						const FVector2D position = behavior.Position;
-						const int32 rotationState = behavior.RotationState;
-
-						// NOTE: 이전에는 여기서 TetrominoGenerator->InsertTop(현재 미노 타입)을 호출하여
-						// "락다운 후 이어진 spawn이 pop했던 미노"를 되돌렸다. 이제는 Spawn 되감기 케이스가
-						// 대칭적으로 InsertTop을 처리하므로 여기서 다시 호출하면 중복 삽입이 된다.
-						
-						// 락다운된 테트로미노 복구시 방향에 따른 Coordinate 재조정 [07/24/2026]
-						if (CurrentTetromino.IsValid())
-						{
-							CurrentTetromino->SetPosition(position);
-							CurrentTetromino->SetRotationState(rotationState);
-							CurrentTetromino->ApplyTetrominoType(tetrominoType);
-							CurrentTetromino->ApplyRotationState(rotationState);
-							CurrentTetromino->ReverseLockDown();
-						}
-						
-						OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::ReverseLockDown);
-					}
-					break;
-					
-				case E_TNBehaviorState::LineClear:
-					{
-						// 라인 삭제 직전(락다운 직후) 시점의 버퍼로 복원한다.
-						// LockedGrid는 setValueToCheckBuffer의 불변식상 항상 CheckBuffer(월드 좌표계)와 동일하므로
-						// bSpaceInverted에 관계없이 CheckBuffer를 그대로 사용한다.
-						const TArray<TArray<FTNCellInfo>>& normalBuffer = Recorder->GetNormalBuffer();
-						const TArray<TArray<FTNCellInfo>>& reversedBuffer = Recorder->GetReversedBuffer();
-						
-						CheckBuffer = normalBuffer;
-						ReversedBuffer = reversedBuffer;
-						FieldContext.LockedGrid = CheckBuffer;
-						
-						OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::ReverseLineClear);
-					}
-					break;
-				default:
-					break;
-				}
-				
-				CurrentTime = 0.f;
-			}
-		}
-		else
-		{
-			// 되감기 종료: Spawn behavior의 미노 타입 저장 + Spawn 되감기 시 InsertTop으로
-			// generator를 대칭 복구했으므로, 이 시점 generator top은 되감기 시작 지점의 미노와 일치한다.
-			// 따라서 정상 스폰 로직(spawn())을 그대로 재사용해 상태(CurrentTime/bCanHold/Preview)와
-			// 기록(RecordSpawn)까지 일관되게 처리한다.
-			Recorder->AddFieldRecord();
-			bRewind = false;
-			spawn();
-		}
+		rewind(deltaTime);
 	}
 	else
 	{
@@ -296,23 +138,10 @@ void FTNFieldModel::HandleControlInput(const E_TNControlType controlType)
 		hold();
 		break;
 	case E_TNControlType::RotateField:
-		// 라인 삭제 애니메이션(0.5s) 또는 스폰 대기 중에는 반전 상태 토글을 막는다.
-		// 그렇지 않으면 락다운 시점과 실제 반전 상태가 어긋나 되감기 중 RotateField behavior와의 정합성이 깨진다.
-		if (bLineDeleting || bWaitForSpawn)
-		{
-			break;
-		}
-
-		rotateField();
-		
-		if (Recorder.IsValid())
-		{
-			Recorder->RecordRotateField(FieldContext.bSpaceInverted);
-		}
-		
+		handleRotateField();
 		break;
 	case E_TNControlType::Rewind:
-		rewind();
+		handleRewind();
 		break;
 	case E_TNControlType::HardDrop:
 		hardDrop();
@@ -406,30 +235,33 @@ void FTNFieldModel::hold()
 	}
 }
 
-void FTNFieldModel::rotateField()
+void FTNFieldModel::handleRotateField()
 {
-	if (isSpaceInverting())
+	// 라인 삭제 애니메이션(0.5s) 또는 스폰 대기 중에는 반전 상태 토글을 막는다.
+		// 그렇지 않으면 락다운 시점과 실제 반전 상태가 어긋나 되감기 중 RotateField behavior와의 정합성이 깨진다.
+	if (bLineDeleting || bWaitForSpawn)
 	{
 		return;
 	}
 
-	FieldContext.bSpaceInverted = !FieldContext.bSpaceInverted;
-	RotationPauseRemainingTime = RotationDuration;
-	CurrentTime = 0.f;
-	
-	if (CurrentTetromino.IsValid())
+	rotateField();
+
+	if (Recorder.IsValid())
 	{
-		CurrentTetromino->ResetGuideTetromino();
+		Recorder->RecordRotateField();
 	}
-	
-	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::RotateField);
 }
 
-void FTNFieldModel::rewind()
+void FTNFieldModel::handleRewind()
 {
-	bRewind = true;
+	if (bLineDeleting || bWaitForSpawn)
+	{
+		return;
+	}
+    
+    bRewind = true;
 	CurrentTime = 0.f;
-	
+
 	if (CurrentTetromino.IsValid())
 	{
 		CurrentTetromino->SetShowGuideTetromino(false);
@@ -467,39 +299,6 @@ void FTNFieldModel::setValueToCheckBuffer(const int32 x, const int32 y, const FT
 	
 	const int32 lockedGridX = FieldContext.bSpaceInverted ? Width - x : x + 1;
 	FieldContext.LockedGrid[y + 1][lockedGridX] = cellInfo;
-}
-
-void FTNFieldModel::initializeBuffers()
-{
-	createBuffer(CheckBuffer);
-	createBuffer(ReversedBuffer);
-	createBuffer(FieldContext.LockedGrid);
-}
-
-void FTNFieldModel::createBuffer(TArray<TArray<FTNCellInfo>>& buffer) const
-{
-	buffer.Empty();
-	buffer.Reserve(Height * 2 + 2);
-
-	for (int32 i = 0; i < Height * 2 + 2; i++)
-	{
-		TArray<FTNCellInfo> row;
-		row.Reserve(Width + 2);
-		
-		for (int32 j = 0; j < Width + 2; j++)
-		{
-			if (i == 0 || j == 0 || j == Width + 2 - 1)
-			{
-				row.Emplace(-1, E_TNTetrominoType::Obstacle);
-			}
-			else
-			{
-				row.Emplace(-1, E_TNTetrominoType::None);
-			}
-		}
-
-		buffer.Add(MoveTemp(row));
-	}
 }
 
 bool FTNFieldModel::checkMino(const int32 x, const int32 y) const
@@ -849,12 +648,233 @@ void FTNFieldModel::doLockDown()
 	}
 }
 
+void FTNFieldModel::rotateField()
+{
+	if (isSpaceInverting())
+	{
+		return;
+	}
+
+	FieldContext.bSpaceInverted = !FieldContext.bSpaceInverted;
+	RotationPauseRemainingTime = RotationDuration;
+	CurrentTime = 0.f;
+	
+	if (CurrentTetromino.IsValid())
+	{
+		CurrentTetromino->ResetGuideTetromino();
+	}
+	
+	OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::RotateField);
+}
+
+void FTNFieldModel::rewind(float deltaTime)
+{
+	if (!Recorder.IsValid())
+	{
+		return;
+	}
+
+	if (isSpaceInverting())
+	{
+		RotationPauseRemainingTime -= deltaTime;
+		if (RotationPauseRemainingTime < 0.f)
+		{
+			RotationPauseRemainingTime = 0.f;
+		}
+
+		return;
+	}
+
+	// 되감기 로직
+	if (!Recorder->IsEmpty())
+	{
+		CurrentTime += deltaTime;
+		if (CurrentTime >= RewindSpeed)
+		{
+			const FTNBehavior behavior = Recorder->ConsumeLastBehavior();
+
+			switch (behavior.BehaviorState)
+			{
+			case E_TNBehaviorState::Spawn:
+			{
+				const FVector2D position = behavior.Position;
+				const int32 rotationState = behavior.RotationState;
+				const E_TNTetrominoType tetrominoType = behavior.CurrentTetrominoType;
+
+				if (CurrentTetromino.IsValid())
+				{
+					CurrentTetromino->SetPosition(position);
+					CurrentTetromino->SetRotationState(rotationState);
+					CurrentTetromino->Despawn();
+				}
+
+				// 스폰 시 generator에서 pop되었던 미노를 top으로 복귀시켜, forward 기록과 대칭성을 유지한다.
+				// 이로써 되감기 종료 시점에 generator top이 초기 스폰 미노와 일치하게 되어 spawn()을 그대로 재사용할 수 있다.
+				if (TetrominoGenerator.IsValid() && tetrominoType != E_TNTetrominoType::None)
+				{
+					TetrominoGenerator->InsertTop(tetrominoType);
+				}
+
+				updatePreviewTetrominoes();
+
+				Recorder->PopFieldRecord();
+
+				OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateTetromino);
+			}
+			break;
+
+			case E_TNBehaviorState::Transform:
+			{
+				const FVector2D position = behavior.Position;
+				const int32 rotationState = behavior.RotationState;
+
+				if (CurrentTetromino.IsValid())
+				{
+					CurrentTetromino->SetPosition(position);
+					CurrentTetromino->SetRotationState(rotationState);
+				}
+
+				OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateTetromino);
+			}
+			break;
+
+			case E_TNBehaviorState::RotateField:
+			{
+				rotateField();
+			}
+			break;
+
+			case E_TNBehaviorState::Hold:
+			{
+				const E_TNTetrominoType currentTetrominoType = behavior.CurrentTetrominoType;
+				const E_TNTetrominoType holdTetrominoType = behavior.HoldTetrominoType;
+
+				if (currentTetrominoType == E_TNTetrominoType::None)
+				{
+					if (TetrominoGenerator.IsValid() && CurrentTetromino.IsValid())
+					{
+						TetrominoGenerator->InsertTop(CurrentTetromino->GetTetrominoType());
+					}
+
+					updatePreviewTetrominoes();
+				}
+
+				FieldContext.HoldTetrominoType = currentTetrominoType;
+				CurrentTetromino->ApplyTetrominoType(holdTetrominoType);
+
+				// hold()는 bCanHold == true 일 때만 진입하므로 되감기 시 항상 true로 복원
+				bCanHold = true;
+
+				updateHoldTetromino();
+
+				OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateHoldTetromino);
+			}
+			break;
+
+			case E_TNBehaviorState::LockDown:
+			{
+				const E_TNTetrominoType tetrominoType = behavior.CurrentTetrominoType;
+				const FVector2D position = behavior.Position;
+				const int32 rotationState = behavior.RotationState;
+
+				// NOTE: 이전에는 여기서 TetrominoGenerator->InsertTop(현재 미노 타입)을 호출하여
+				// "락다운 후 이어진 spawn이 pop했던 미노"를 되돌렸다. 이제는 Spawn 되감기 케이스가
+				// 대칭적으로 InsertTop을 처리하므로 여기서 다시 호출하면 중복 삽입이 된다.
+
+				// 락다운된 테트로미노 복구시 방향에 따른 Coordinate 재조정 [07/24/2026]
+				if (CurrentTetromino.IsValid())
+				{
+					CurrentTetromino->SetPosition(position);
+					CurrentTetromino->SetRotationState(rotationState);
+					CurrentTetromino->ApplyTetrominoType(tetrominoType);
+					CurrentTetromino->ApplyRotationState(rotationState);
+					CurrentTetromino->ReverseLockDown();
+				}
+
+				OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::ReverseLockDown);
+			}
+			break;
+
+			case E_TNBehaviorState::LineClear:
+			{
+				// 라인 삭제 직전(락다운 직후) 시점의 버퍼로 복원한다.
+				// LockedGrid는 setValueToCheckBuffer의 불변식상 항상 CheckBuffer(월드 좌표계)와 동일하므로
+				// bSpaceInverted에 관계없이 CheckBuffer를 그대로 사용한다.
+				const TArray<TArray<FTNCellInfo>>& normalBuffer = Recorder->GetNormalBuffer();
+				const TArray<TArray<FTNCellInfo>>& reversedBuffer = Recorder->GetReversedBuffer();
+
+				CheckBuffer = normalBuffer;
+				ReversedBuffer = reversedBuffer;
+				FieldContext.LockedGrid = CheckBuffer;
+
+				OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::ReverseLineClear);
+			}
+			break;
+			default:
+				break;
+			}
+
+			CurrentTime = 0.f;
+		}
+	}
+	else
+	{
+		// 되감기 종료: Spawn behavior의 미노 타입 저장 + Spawn 되감기 시 InsertTop으로
+		// generator를 대칭 복구했으므로, 이 시점 generator top은 되감기 시작 지점의 미노와 일치한다.
+		// 따라서 정상 스폰 로직(spawn())을 그대로 재사용해 상태(CurrentTime/bCanHold/Preview)와
+		// 기록(RecordSpawn)까지 일관되게 처리한다.
+		Recorder->AddFieldRecord();
+		bRewind = false;
+		
+		// 되감기 도중 라인 삭제/스폰 대기 상태로 진입했을 수 있으므로 명시적 리셋
+		bLineDeleting = false;
+		DeletedLines.Empty();
+		DeleteLineCheckTime = 0.f;
+		bWaitForSpawn = false;
+		
+		spawn();
+	}
+}
+
 void FTNFieldModel::waitForSpawn()
 {
 	if (bWaitForSpawn && !bLineDeleting)
 	{
 		spawn();
 		bWaitForSpawn = false;
+	}
+}
+
+void FTNFieldModel::initializeBuffers()
+{
+	createBuffer(CheckBuffer);
+	createBuffer(ReversedBuffer);
+	createBuffer(FieldContext.LockedGrid);
+}
+
+void FTNFieldModel::createBuffer(TArray<TArray<FTNCellInfo>>& buffer) const
+{
+	buffer.Empty();
+	buffer.Reserve(Height * 2 + 2);
+
+	for (int32 i = 0; i < Height * 2 + 2; i++)
+	{
+		TArray<FTNCellInfo> row;
+		row.Reserve(Width + 2);
+		
+		for (int32 j = 0; j < Width + 2; j++)
+		{
+			if (i == 0 || j == 0 || j == Width + 2 - 1)
+			{
+				row.Emplace(-1, E_TNTetrominoType::Obstacle);
+			}
+			else
+			{
+				row.Emplace(-1, E_TNTetrominoType::None);
+			}
+		}
+
+		buffer.Add(MoveTemp(row));
 	}
 }
 
