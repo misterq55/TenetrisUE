@@ -87,15 +87,3 @@ struct FTNFieldContext
 		PreviewTetrominoTypes.Init(E_TNTetrominoType::None, PreviewTetrominoNum);
 	}
 };
-
-struct FTNBehavior
-{
-	FTNBehavior() = default;
-	~FTNBehavior() = default;
-
-	E_TNBehaviorState BehaviorState = E_TNBehaviorState::None;
-	FVector2D Position = FVector2D::ZeroVector;
-	E_TNTetrominoType CurrentTetrominoType = E_TNTetrominoType::None;
-	E_TNTetrominoType HoldTetrominoType = E_TNTetrominoType::None;
-	int32 RotationState = 0;
-};
