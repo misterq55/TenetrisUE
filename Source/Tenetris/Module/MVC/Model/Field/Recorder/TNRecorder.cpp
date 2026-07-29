@@ -49,11 +49,10 @@ void FTNRecorder::FTNFieldRecord::RecordTransform(FVector2D position, int32 rota
 	Behaviors.Add(behavior);
 }
 
-void FTNRecorder::FTNFieldRecord::RecordRotateField(bool bRotateField)
+void FTNRecorder::FTNFieldRecord::RecordRotateField()
 {
 	FTNBehavior behavior;
 	behavior.BehaviorState = E_TNBehaviorState::RotateField;
-	behavior.bRotateField = bRotateField;
 	Behaviors.Add(behavior);
 }
 
@@ -139,14 +138,14 @@ void FTNRecorder::RecordTransform(FVector2D position, int32 rotationState) const
 	FieldRecords.Last()->RecordTransform(position, rotationState);
 }
 
-void FTNRecorder::RecordRotateField(bool bRotateField) const
+void FTNRecorder::RecordRotateField() const
 {
 	if (FieldRecords.IsEmpty())
 	{
 		return;
 	}
 	
-	FieldRecords.Last()->RecordRotateField(bRotateField);
+	FieldRecords.Last()->RecordRotateField();
 }
 
 void FTNRecorder::RecordHold(E_TNTetrominoType currentTetrominoType, E_TNTetrominoType holdTetrominoType) const

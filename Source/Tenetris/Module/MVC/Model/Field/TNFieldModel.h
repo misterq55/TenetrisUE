@@ -52,8 +52,8 @@ private:
 	void rotateCounterClockWise() const;
 
 	void hold();
-	void rotateField();
-	void rewind();
+	void handleRotateField();
+	void handleRewind();
 	void hardDrop();
 
 private:
@@ -79,6 +79,8 @@ private:
 	void updateLineDelete(float deltaTime);
 
 	void doLockDown();
+	void rotateField();
+	void rewind(float detatime);
 	void waitForSpawn();
 	void initializeBuffers();
 	void createBuffer(TArray<TArray<FTNCellInfo>>& buffer) const;
