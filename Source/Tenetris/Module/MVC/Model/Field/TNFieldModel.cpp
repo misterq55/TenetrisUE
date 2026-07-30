@@ -691,15 +691,14 @@ void FTNFieldModel::rewind(float deltaTime)
 		CurrentTime += deltaTime;
 		if (CurrentTime >= RewindSpeed)
 		{
-			const E_TNBehaviorState state = Recorder->PeekLastBehaviorState();
-
-			switch (state)
+			switch (Recorder->PeekLastBehaviorState())
 			{
 			case E_TNBehaviorState::Spawn:
 			{
-				const FVector2D position = Recorder->GetLastPosition();
-				const int32 rotationState = Recorder->GetLastRotationState();
-				const E_TNTetrominoType tetrominoType = Recorder->GetLastCurrentTetrominoType();
+				FVector2D position = FVector2D::ZeroVector;
+				int32 rotationState = 0;
+				E_TNTetrominoType tetrominoType = E_TNTetrominoType::None;
+				Recorder->PopSpawnValues(position, rotationState, tetrominoType);
 
 				if (CurrentTetromino.IsValid())
 				{
@@ -716,7 +715,6 @@ void FTNFieldModel::rewind(float deltaTime)
 
 				updatePreviewTetrominoes();
 
-				Recorder->PopLastBehavior();
 				Recorder->PopFieldRecord();
 
 				OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateTetromino);
@@ -725,8 +723,9 @@ void FTNFieldModel::rewind(float deltaTime)
 
 			case E_TNBehaviorState::Transform:
 			{
-				const FVector2D position = Recorder->GetLastPosition();
-				const int32 rotationState = Recorder->GetLastRotationState();
+				FVector2D position = FVector2D::ZeroVector;
+				int32 rotationState = 0;
+				Recorder->PopTransformValues(position, rotationState);
 
 				if (CurrentTetromino.IsValid())
 				{
@@ -734,23 +733,22 @@ void FTNFieldModel::rewind(float deltaTime)
 					CurrentTetromino->SetRotationState(rotationState);
 				}
 
-				Recorder->PopLastBehavior();
-
 				OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateTetromino);
 			}
 			break;
 
 			case E_TNBehaviorState::RotateField:
 			{
-				Recorder->PopLastBehavior();
+				Recorder->PopRotateField();
 				rotateField();
 			}
 			break;
 
 			case E_TNBehaviorState::Hold:
 			{
-				const E_TNTetrominoType currentTetrominoType = Recorder->GetLastCurrentTetrominoType();
-				const E_TNTetrominoType holdTetrominoType = Recorder->GetLastHoldTetrominoType();
+				E_TNTetrominoType currentTetrominoType = E_TNTetrominoType::None;
+				E_TNTetrominoType holdTetrominoType = E_TNTetrominoType::None;
+				Recorder->PopHoldValues(currentTetrominoType, holdTetrominoType);
 
 				if (currentTetrominoType == E_TNTetrominoType::None)
 				{
@@ -769,17 +767,16 @@ void FTNFieldModel::rewind(float deltaTime)
 
 				updateHoldTetromino();
 
-				Recorder->PopLastBehavior();
-
 				OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::UpdateHoldTetromino);
 			}
 			break;
 
 			case E_TNBehaviorState::LockDown:
 			{
-				const FVector2D position = Recorder->GetLastPosition();
-				const int32 rotationState = Recorder->GetLastRotationState();
-				const E_TNTetrominoType tetrominoType = Recorder->GetLastCurrentTetrominoType();
+				FVector2D position = FVector2D::ZeroVector;
+				int32 rotationState = 0;
+				E_TNTetrominoType tetrominoType = E_TNTetrominoType::None;
+				Recorder->PopLockDownValues(position, rotationState, tetrominoType);
 
 				// 락다운된 테트로미노 복구시 방향에 따른 Coordinate 재조정 [07/24/2026]
 				if (CurrentTetromino.IsValid())
@@ -791,8 +788,6 @@ void FTNFieldModel::rewind(float deltaTime)
 					CurrentTetromino->ReverseLockDown();
 				}
 
-				Recorder->PopLastBehavior();
-
 				OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::ReverseLockDown);
 			}
 			break;
@@ -800,14 +795,8 @@ void FTNFieldModel::rewind(float deltaTime)
 			case E_TNBehaviorState::LineClear:
 			{
 				// 라인 삭제 직전(락다운 직후) 시점의 버퍼로 복원한다.
-				const TArray<TArray<FTNCellInfo>>& normalBuffer = Recorder->GetNormalBuffer();
-				const TArray<TArray<FTNCellInfo>>& reversedBuffer = Recorder->GetReversedBuffer();
-
-				CheckBuffer = normalBuffer;
-				ReversedBuffer = reversedBuffer;
+				Recorder->PopLineClearBuffers(CheckBuffer, ReversedBuffer);
 				FieldContext.LockedGrid = CheckBuffer;
-
-				Recorder->PopLastBehavior();
 
 				OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::ReverseLineClear);
 			}
