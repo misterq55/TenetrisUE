@@ -32,14 +32,15 @@ private:
 
 	public:
 		E_TNBehaviorState PeekLastBehaviorState() const;
-		FVector2D GetLastPosition() const;
-		int32 GetLastRotationState() const;
-		E_TNTetrominoType GetLastCurrentTetrominoType() const;
-		E_TNTetrominoType GetLastHoldTetrominoType() const;
-		void PopLastBehavior();
 
-		const TArray<TArray<FTNCellInfo>>& GetNormalBuffer() const;
-		const TArray<TArray<FTNCellInfo>>& GetReversedBuffer() const;
+		// behavior별 pop: 필요한 값들을 out-param으로 채운 뒤 해당 behavior를 소비한다.
+		// 사전조건은 각 함수 내부의 ensure로 검증한다.
+		void PopSpawnValues(FVector2D& outPosition, int32& outRotationState, E_TNTetrominoType& outType);
+		void PopTransformValues(FVector2D& outPosition, int32& outRotationState);
+		void PopRotateField();
+		void PopHoldValues(E_TNTetrominoType& outCurrentType, E_TNTetrominoType& outHoldType);
+		void PopLockDownValues(FVector2D& outPosition, int32& outRotationState, E_TNTetrominoType& outType);
+		void PopLineClearBuffers(TArray<TArray<FTNCellInfo>>& outNormalBuffer, TArray<TArray<FTNCellInfo>>& outReversedBuffer);
 
 	public:
 		bool IsEmpty() const
@@ -69,14 +70,15 @@ public:
 
 public:
 	E_TNBehaviorState PeekLastBehaviorState() const;
-	FVector2D GetLastPosition() const;
-	int32 GetLastRotationState() const;
-	E_TNTetrominoType GetLastCurrentTetrominoType() const;
-	E_TNTetrominoType GetLastHoldTetrominoType() const;
-	void PopLastBehavior() const;
 
-	const TArray<TArray<FTNCellInfo>>& GetNormalBuffer() const;
-	const TArray<TArray<FTNCellInfo>>& GetReversedBuffer() const;
+	// behavior별 pop: FTNFieldRecord로 위임한다. FieldRecords가 비어 있으면 no-op이며 out-param은 기본값을 갖는다.
+	void PopSpawnValues(FVector2D& outPosition, int32& outRotationState, E_TNTetrominoType& outType) const;
+	void PopTransformValues(FVector2D& outPosition, int32& outRotationState) const;
+	void PopRotateField() const;
+	void PopHoldValues(E_TNTetrominoType& outCurrentType, E_TNTetrominoType& outHoldType) const;
+	void PopLockDownValues(FVector2D& outPosition, int32& outRotationState, E_TNTetrominoType& outType) const;
+	void PopLineClearBuffers(TArray<TArray<FTNCellInfo>>& outNormalBuffer, TArray<TArray<FTNCellInfo>>& outReversedBuffer) const;
+
 	void PopFieldRecord();
 
 	bool IsEmpty() const

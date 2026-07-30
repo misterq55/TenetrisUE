@@ -89,63 +89,100 @@ E_TNBehaviorState FTNRecorder::FTNFieldRecord::PeekLastBehaviorState() const
 	return Behaviors.Last().BehaviorState;
 }
 
-FVector2D FTNRecorder::FTNFieldRecord::GetLastPosition() const
-{
-	if (Behaviors.IsEmpty())
-	{
-		return FVector2D::ZeroVector;
-	}
-	
-	return Behaviors.Last().Position;
-}
-
-int32 FTNRecorder::FTNFieldRecord::GetLastRotationState() const
-{
-	if (Behaviors.IsEmpty())
-	{
-		return 0;
-	}
-	
-	return Behaviors.Last().RotationState;
-}
-
-E_TNTetrominoType FTNRecorder::FTNFieldRecord::GetLastCurrentTetrominoType() const
-{
-	if (Behaviors.IsEmpty())
-	{
-		return E_TNTetrominoType::None;
-	}
-	
-	return Behaviors.Last().CurrentTetrominoType;
-}
-
-E_TNTetrominoType FTNRecorder::FTNFieldRecord::GetLastHoldTetrominoType() const
-{
-	if (Behaviors.IsEmpty())
-	{
-		return E_TNTetrominoType::None;
-	}
-	
-	return Behaviors.Last().HoldTetrominoType;
-}
-
-const TArray<TArray<FTNCellInfo>>& FTNRecorder::FTNFieldRecord::GetNormalBuffer() const
-{
-	return NormalBuffer;
-}
-
-const TArray<TArray<FTNCellInfo>>& FTNRecorder::FTNFieldRecord::GetReversedBuffer() const
-{
-	return ReversedBuffer;
-}
-
-void FTNRecorder::FTNFieldRecord::PopLastBehavior()
+void FTNRecorder::FTNFieldRecord::PopSpawnValues(FVector2D& outPosition, int32& outRotationState, E_TNTetrominoType& outType)
 {
 	if (Behaviors.IsEmpty())
 	{
 		return;
 	}
 
+	const FTNBehavior& behavior = Behaviors.Last();
+	ensureMsgf(behavior.BehaviorState == E_TNBehaviorState::Spawn,
+		TEXT("PopSpawnValues called with mismatched behavior state (%d)"), static_cast<int32>(behavior.BehaviorState));
+
+	outPosition = behavior.Position;
+	outRotationState = behavior.RotationState;
+	outType = behavior.CurrentTetrominoType;
+	Behaviors.Pop();
+}
+
+void FTNRecorder::FTNFieldRecord::PopTransformValues(FVector2D& outPosition, int32& outRotationState)
+{
+	if (Behaviors.IsEmpty())
+	{
+		return;
+	}
+
+	const FTNBehavior& behavior = Behaviors.Last();
+	ensureMsgf(behavior.BehaviorState == E_TNBehaviorState::Transform,
+		TEXT("PopTransformValues called with mismatched behavior state (%d)"), static_cast<int32>(behavior.BehaviorState));
+
+	outPosition = behavior.Position;
+	outRotationState = behavior.RotationState;
+	Behaviors.Pop();
+}
+
+void FTNRecorder::FTNFieldRecord::PopRotateField()
+{
+	if (Behaviors.IsEmpty())
+	{
+		return;
+	}
+
+	ensureMsgf(Behaviors.Last().BehaviorState == E_TNBehaviorState::RotateField,
+		TEXT("PopRotateField called with mismatched behavior state (%d)"), static_cast<int32>(Behaviors.Last().BehaviorState));
+
+	Behaviors.Pop();
+}
+
+void FTNRecorder::FTNFieldRecord::PopHoldValues(E_TNTetrominoType& outCurrentType, E_TNTetrominoType& outHoldType)
+{
+	if (Behaviors.IsEmpty())
+	{
+		return;
+	}
+
+	const FTNBehavior& behavior = Behaviors.Last();
+	ensureMsgf(behavior.BehaviorState == E_TNBehaviorState::Hold,
+		TEXT("PopHoldValues called with mismatched behavior state (%d)"), static_cast<int32>(behavior.BehaviorState));
+
+	outCurrentType = behavior.CurrentTetrominoType;
+	outHoldType = behavior.HoldTetrominoType;
+	Behaviors.Pop();
+}
+
+void FTNRecorder::FTNFieldRecord::PopLockDownValues(FVector2D& outPosition, int32& outRotationState, E_TNTetrominoType& outType)
+{
+	if (Behaviors.IsEmpty())
+	{
+		return;
+	}
+
+	const FTNBehavior& behavior = Behaviors.Last();
+	ensureMsgf(behavior.BehaviorState == E_TNBehaviorState::LockDown,
+		TEXT("PopLockDownValues called with mismatched behavior state (%d)"), static_cast<int32>(behavior.BehaviorState));
+
+	outPosition = behavior.Position;
+	outRotationState = behavior.RotationState;
+	outType = behavior.CurrentTetrominoType;
+	Behaviors.Pop();
+}
+
+void FTNRecorder::FTNFieldRecord::PopLineClearBuffers(TArray<TArray<FTNCellInfo>>& outNormalBuffer, TArray<TArray<FTNCellInfo>>& outReversedBuffer)
+{
+	if (Behaviors.IsEmpty())
+	{
+		return;
+	}
+
+	ensureMsgf(Behaviors.Last().BehaviorState == E_TNBehaviorState::LineClear,
+		TEXT("PopLineClearBuffers called with mismatched behavior state (%d)"), static_cast<int32>(Behaviors.Last().BehaviorState));
+
+	// 버퍼는 이 LineClear behavior 전용 데이터이므로 이동시켜 복사 비용을 회피한다.
+	outNormalBuffer = MoveTemp(NormalBuffer);
+	outReversedBuffer = MoveTemp(ReversedBuffer);
+	NormalBuffer.Reset();
+	ReversedBuffer.Reset();
 	Behaviors.Pop();
 }
 
@@ -222,76 +259,64 @@ E_TNBehaviorState FTNRecorder::PeekLastBehaviorState() const
 	return FieldRecords.Last()->PeekLastBehaviorState();
 }
 
-FVector2D FTNRecorder::GetLastPosition() const
-{
-	if (FieldRecords.IsEmpty())
-	{
-		return FVector2D::ZeroVector;
-	}
-	
-	return FieldRecords.Last()->GetLastPosition();
-}
-
-int32 FTNRecorder::GetLastRotationState() const
-{
-	if (FieldRecords.IsEmpty())
-	{
-		return 0;
-	}
-	
-	return FieldRecords.Last()->GetLastRotationState();
-}
-
-E_TNTetrominoType FTNRecorder::GetLastCurrentTetrominoType() const
-{
-	if (FieldRecords.IsEmpty())
-	{
-		return E_TNTetrominoType::None;
-	}
-	
-	return FieldRecords.Last()->GetLastCurrentTetrominoType();
-}
-
-E_TNTetrominoType FTNRecorder::GetLastHoldTetrominoType() const
-{
-	if (FieldRecords.IsEmpty())
-	{
-		return E_TNTetrominoType::None;
-	}
-	
-	return FieldRecords.Last()->GetLastHoldTetrominoType();
-}
-
-void FTNRecorder::PopLastBehavior() const
+void FTNRecorder::PopSpawnValues(FVector2D& outPosition, int32& outRotationState, E_TNTetrominoType& outType) const
 {
 	if (FieldRecords.IsEmpty())
 	{
 		return;
 	}
-	
-	FieldRecords.Last()->PopLastBehavior();
+
+	FieldRecords.Last()->PopSpawnValues(outPosition, outRotationState, outType);
 }
 
-const TArray<TArray<FTNCellInfo>>& FTNRecorder::GetNormalBuffer() const
+void FTNRecorder::PopTransformValues(FVector2D& outPosition, int32& outRotationState) const
 {
-	static const TArray<TArray<FTNCellInfo>> EmptyBuffer;
 	if (FieldRecords.IsEmpty())
 	{
-		return EmptyBuffer;
+		return;
 	}
-	
-	return FieldRecords.Last()->GetNormalBuffer();
+
+	FieldRecords.Last()->PopTransformValues(outPosition, outRotationState);
 }
 
-const TArray<TArray<FTNCellInfo>>& FTNRecorder::GetReversedBuffer() const
+void FTNRecorder::PopRotateField() const
 {
-	static const TArray<TArray<FTNCellInfo>> EmptyBuffer;
 	if (FieldRecords.IsEmpty())
 	{
-		return EmptyBuffer;
+		return;
 	}
-	
-	return FieldRecords.Last()->GetReversedBuffer();
+
+	FieldRecords.Last()->PopRotateField();
+}
+
+void FTNRecorder::PopHoldValues(E_TNTetrominoType& outCurrentType, E_TNTetrominoType& outHoldType) const
+{
+	if (FieldRecords.IsEmpty())
+	{
+		return;
+	}
+
+	FieldRecords.Last()->PopHoldValues(outCurrentType, outHoldType);
+}
+
+void FTNRecorder::PopLockDownValues(FVector2D& outPosition, int32& outRotationState, E_TNTetrominoType& outType) const
+{
+	if (FieldRecords.IsEmpty())
+	{
+		return;
+	}
+
+	FieldRecords.Last()->PopLockDownValues(outPosition, outRotationState, outType);
+}
+
+void FTNRecorder::PopLineClearBuffers(TArray<TArray<FTNCellInfo>>& outNormalBuffer, TArray<TArray<FTNCellInfo>>& outReversedBuffer) const
+{
+	if (FieldRecords.IsEmpty())
+	{
+		return;
+	}
+
+	FieldRecords.Last()->PopLineClearBuffers(outNormalBuffer, outReversedBuffer);
 }
 
 void FTNRecorder::PopFieldRecord()
