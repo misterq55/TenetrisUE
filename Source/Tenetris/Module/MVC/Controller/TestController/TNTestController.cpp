@@ -11,6 +11,8 @@ void FTNTestController::Init()
 	
 	if (tnModel.IsValid() && tnView.IsValid())
 	{
+		tnModel->Init();
+		tnView->Init();
 		tnModel->GetCreateFieldViewDelegate().BindSP(tnView.ToSharedRef(), &ITNView::CreateFieldView);
 		tnModel->GetCreateFieldViewWithFieldActorDelegate().BindSP(tnView.ToSharedRef(), &ITNView::CreateFieldViewWithFieldActor);
 		tnModel->GetStartPlayDelegate().BindSP(tnView.ToSharedRef(), &ITNView::StartPlay);
