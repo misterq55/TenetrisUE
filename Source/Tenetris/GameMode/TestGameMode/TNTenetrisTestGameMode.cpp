@@ -21,16 +21,6 @@ void ATNTenetrisTestGameMode::StartPlay()
 	holder.SetController(MakeShareable(new FTNTestController()));
 
 	TSharedPtr<ITNModel> tnModel = holder.GetModel();
-	if (tnModel.IsValid())
-	{
-		tnModel->Init();
-	}
-
-	TSharedPtr<ITNView> tnView = holder.GetView();
-	if (tnView.IsValid())
-	{
-		tnView->Init();
-	}
 	
 	TSharedPtr<ITNController> tnController = holder.GetController();
 	if (tnController.IsValid())
