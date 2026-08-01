@@ -31,7 +31,8 @@ void FTNTestModel::StartPlay()
 	}
 }
 
-void FTNTestModel::CreateFieldModel(FTNFieldContext fieldContext, int32 height, int32 width)
+
+void FTNTestModel::CreateFieldModel(const int32 modelKey, FTNFieldContext fieldContext, int32 height, int32 width)
 {
 	TSharedPtr<FTNFieldModel> fieldModel = MakeShareable(new FTNFieldModel(fieldContext, height, width));
 	if (!fieldModel.IsValid())
@@ -40,43 +41,17 @@ void FTNTestModel::CreateFieldModel(FTNFieldContext fieldContext, int32 height, 
 	}
 
 	fieldModel->GetOnUpdateModelDelegate().BindRaw(this, &FTNTestModel::UpdateModel);
-	fieldModel->Initialize();
-	fieldModel->SetId(ModelKey);
-	FieldModelMap.Emplace(ModelKey, fieldModel);
-
-	if (fieldContext.FieldType == E_TNFieldType::Player)
-	{
-		PlayerFieldModel = fieldModel;
-	}
+	fieldModel->SetId(modelKey);
 	
-	CreateFieldViewDelegate.ExecuteIfBound(ModelKey);
-
-	ModelKey++;
-}
-
-void FTNTestModel::CreateFieldModel(FTNFieldContext fieldContext, int32 height, int32 width, ATNFieldBase* fieldActor)
-{
-	TSharedPtr<FTNFieldModel> fieldModel = MakeShareable(new FTNFieldModel(fieldContext, height, width));
-	if (!fieldModel.IsValid())
-	{
-		return;
-	}
-
-	fieldModel->GetOnUpdateModelDelegate().BindRaw(this, &FTNTestModel::UpdateModel);
-	fieldModel->SetId(ModelKey);
-	
-	FieldModelMap.Emplace(ModelKey, fieldModel);
+	FieldModelMap.Emplace(modelKey, fieldModel);
 
 	if (fieldContext.FieldType == E_TNFieldType::Player)
 	{
 		PlayerFieldModel = fieldModel;
 	}
 
-	CreateFieldViewWithFieldActorDelegate.ExecuteIfBound(ModelKey, fieldActor);
 
 	fieldModel->Initialize();
-
-	ModelKey++;
 }
 
 void FTNTestModel::UpdateModel(const int32 modelKey, const E_TNFieldModelStateType state)

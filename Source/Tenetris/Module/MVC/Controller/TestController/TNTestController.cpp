@@ -6,6 +6,8 @@
 
 void FTNTestController::Init()
 {
+	NextFieldModelId = 0;
+
 	TSharedPtr<ITNModel> tnModel = FTNMVCHolder::GetInstance().GetModel();
 	TSharedPtr<ITNView> tnView = FTNMVCHolder::GetInstance().GetView();
 	
@@ -13,9 +15,6 @@ void FTNTestController::Init()
 	{
 		tnModel->Init();
 		tnView->Init();
-		tnModel->GetCreateFieldViewDelegate().BindSP(tnView.ToSharedRef(), &ITNView::CreateFieldView);
-		tnModel->GetCreateFieldViewWithFieldActorDelegate().BindSP(tnView.ToSharedRef(), &ITNView::CreateFieldViewWithFieldActor);
-		tnModel->GetStartPlayDelegate().BindSP(tnView.ToSharedRef(), &ITNView::StartPlay);
 		tnModel->GetUpdateFieldViewDelegate().BindSP(tnView.ToSharedRef(), &ITNView::UpdateFieldView);
 	}
 }
@@ -32,14 +31,40 @@ void FTNTestController::Tick(float deltaTime)
 	}
 }
 
+
+void FTNTestController::CreateField(FTNFieldContext fieldContext, int32 height, int32 width, ATNFieldBase* fieldActor)
+{
+	FTNMVCHolder& holder = FTNMVCHolder::GetInstance();
+	TSharedPtr<ITNModel> tnModel = holder.GetModel();
+	TSharedPtr<ITNView> tnView = holder.GetView();
+
+	if (tnModel.IsValid())
+	{
+		tnModel->CreateFieldModel(NextFieldModelId, fieldContext, height, width);	
+	}
+	
+	if (tnView.IsValid())
+	{
+		tnView->CreateFieldView(NextFieldModelId, fieldActor);
+	}
+	
+	++NextFieldModelId;
+}
+
 void FTNTestController::StartPlay()
 {
 	FTNMVCHolder& holder = FTNMVCHolder::GetInstance();
 	TSharedPtr<ITNModel> tnModel = holder.GetModel();
+	TSharedPtr<ITNView> tnView = holder.GetView();
 	
 	if (tnModel.IsValid())
 	{
 		tnModel->StartPlay();
+	}
+	
+	if (tnView.IsValid())
+	{
+		tnView->StartPlay();
 	}
 }
 

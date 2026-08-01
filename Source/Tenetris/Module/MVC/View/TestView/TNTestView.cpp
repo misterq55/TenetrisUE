@@ -14,16 +14,8 @@ void FTNTestView::StartPlay()
 {
 }
 
-void FTNTestView::CreateFieldView(const int32 key)
-{
-	TSharedPtr<FTNFieldView> fieldView = MakeShareable(new FTNFieldView());
-	if (fieldView.IsValid())
-	{
-		FieldViewMap.Emplace(key, fieldView);
-	}
-}
 
-void FTNTestView::CreateFieldViewWithFieldActor(const int32 key, ATNFieldBase* fieldActor)
+void FTNTestView::CreateFieldView(const int32 key, ATNFieldBase* fieldActor)
 {
 	TSharedPtr<FTNFieldView> fieldView = MakeShareable(new FTNFieldView());
 	if (fieldView.IsValid())
