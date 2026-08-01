@@ -20,20 +20,18 @@ void ATNTenetrisTestGameMode::StartPlay()
 	holder.SetView(MakeShareable(new FTNTestView()));
 	holder.SetController(MakeShareable(new FTNTestController()));
 
-	TSharedPtr<ITNModel> tnModel = holder.GetModel();
-	
 	TSharedPtr<ITNController> tnController = holder.GetController();
 	if (tnController.IsValid())
 	{
 		tnController->Init();
 	}
 
-	if (tnModel.IsValid())
+	if (tnController.IsValid())
 	{
 		for (const auto& fieldActor : Fields)
 		{
 			FTNFieldContext fieldContext(E_TNFieldType::Player);
-			tnModel->CreateFieldModel(fieldContext, RowMax, ColumnMax, fieldActor);
+			tnController->CreateField(fieldContext, RowMax, ColumnMax, fieldActor);
 		}
 	}
 	
