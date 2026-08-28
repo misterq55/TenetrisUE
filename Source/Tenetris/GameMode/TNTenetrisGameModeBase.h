@@ -26,5 +26,8 @@ public:
 
 protected:
 	UPROPERTY()
+	ATNFieldBase* PlayerField;
+
+	UPROPERTY()
 	TArray<ATNFieldBase*> Fields;
 };

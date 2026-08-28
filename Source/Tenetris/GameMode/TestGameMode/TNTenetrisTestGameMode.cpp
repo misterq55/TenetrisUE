@@ -28,11 +28,8 @@ void ATNTenetrisTestGameMode::StartPlay()
 
 	if (tnController.IsValid())
 	{
-		for (const auto& fieldActor : Fields)
-		{
-			FTNFieldContext fieldContext(E_TNFieldType::Player);
-			tnController->CreateField(fieldContext, RowMax, ColumnMax, fieldActor);
-		}
+		FTNFieldContext fieldContext(E_TNFieldType::Player);
+		tnController->CreateField(fieldContext, RowMax, ColumnMax, PlayerField);
 	}
 	
 	if (tnController.IsValid())
