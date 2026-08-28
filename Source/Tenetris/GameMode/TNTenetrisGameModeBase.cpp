@@ -19,5 +19,5 @@ void ATNTenetrisGameModeBase::AddFields(ATNFieldBase* field)
 
 void ATNTenetrisGameModeBase::SetPlayerField(ATNFieldBase* playerField)
 {
-	AddFields(playerField);
+	PlayerField = playerField;
 }
