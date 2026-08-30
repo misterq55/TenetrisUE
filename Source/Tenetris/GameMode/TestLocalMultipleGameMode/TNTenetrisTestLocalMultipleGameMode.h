@@ -21,8 +21,15 @@ public:
 	virtual void Tick(float deltaSeconds) override;
 
 private:
-	ATNFieldBase* spawnField(FVector location);
+	ATNFieldBase* spawnField(const FVector& location, const FVector& scale);
 
 public:
 	TSubclassOf<ATNFieldBase> FieldClass;
+	
+protected:
+	UPROPERTY()
+	AActor* PlayerFieldPositionActor;
+
+	UPROPERTY()
+	TArray<AActor*> FieldsPositionActors;
 };

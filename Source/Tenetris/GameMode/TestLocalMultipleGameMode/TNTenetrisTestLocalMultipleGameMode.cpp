@@ -33,15 +33,39 @@ void ATNTenetrisTestLocalMultipleGameMode::StartPlay()
 
 	if (tnController.IsValid())
 	{
-		FTNFieldContext fieldContext(E_TNFieldType::Player);
-		tnController->CreateField(fieldContext, RowMax, ColumnMax, PlayerField);
+		if (IsValid(PlayerFieldPositionActor))
+		{
+			PlayerField = spawnField(PlayerFieldPositionActor->GetActorLocation(), FVector(1.f, 1.f, 1.f));
+			FTNFieldContext fieldContext(E_TNFieldType::Player);
+			tnController->CreateField(fieldContext, RowMax, ColumnMax, PlayerField);
+		}
 
+		for (AActor* fieldsPositionActor : FieldsPositionActors)
+		{
+			if (!IsValid(fieldsPositionActor))
+			{
+				continue;
+			}
+
+			ATNFieldBase* field = spawnField(fieldsPositionActor->GetActorLocation(), FVector(0.5f, 0.5f, 0.5f));
+			if (!IsValid(field))
+			{
+				continue;
+			}
+
+			field->ApplyHoldVisible(false);
+			field->ApplyPreviewVisible(false);
+			
+			Fields.Add(field);
+		}
+		
 		for (ATNFieldBase* field : Fields)
 		{
 			if (field == PlayerField)
 			{
 				continue;
 			}
+			
 			FTNFieldContext enemyFieldContext(E_TNFieldType::Enemy);
 			tnController->CreateField(enemyFieldContext, RowMax, ColumnMax, field);
 		}
@@ -64,13 +88,17 @@ void ATNTenetrisTestLocalMultipleGameMode::Tick(float deltaSeconds)
 	}
 }
 
-ATNFieldBase* ATNTenetrisTestLocalMultipleGameMode::spawnField(FVector location)
+ATNFieldBase* ATNTenetrisTestLocalMultipleGameMode::spawnField(const FVector& location, const FVector& scale)
 {
 	UWorld* world = GetWorld();
+	
 	if (!IsValid(world))
 	{
 		return nullptr;
 	}
-
-	return world->SpawnActorDeferred<ATNFieldBase>(FieldClass, FTransform(location), this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	
+	ATNFieldBase* field = world->SpawnActorDeferred<ATNFieldBase>(FieldClass, FTransform(location), this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	field->SetActorScale3D(scale);
+	
+	return field;
 }
