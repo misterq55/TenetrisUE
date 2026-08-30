@@ -34,6 +34,16 @@ public:
 		return CurrentTetromino;
 	}
 
+	// Returns the latest confirmed (locked) logic buffer. This is the "current"
+	// buffer used for checks; when the field is inverted, ReversedBuffer becomes
+	// the current one. Which orientation buffer to expose is the writer's (model's)
+	// decision, used when writing the whole buffer into FTNFieldStateProvider.
+	// (Exposes the logic buffer used for checks, not the display-only LockedGrid.)
+	const TArray<TArray<FTNCellInfo>>& GetLatestConfirmedBuffer() const
+	{
+		return FieldContext.bSpaceInverted ? ReversedBuffer : CheckBuffer;
+	}
+
 	int32 GetId() const;
 
 	void HandleControlInput(const E_TNControlType controlType);
