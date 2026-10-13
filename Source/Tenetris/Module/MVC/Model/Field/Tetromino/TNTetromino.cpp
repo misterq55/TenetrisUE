@@ -446,3 +446,23 @@ TTetrominoCoordinate FTNTetromino::calculateRotatedCoordinates(const int32 newRo
 
 	return result;
 }
+
+bool FTNTetromino::IsOverlapping() const
+{
+	// Block-out check: true if any occupied cell at the current position collides
+	// with a wall or the existing stack. Reuses OnCheckMino like Move/Rotate.
+	if (!TetrominoInfo.IsValid() || !OnCheckMino.IsBound())
+	{
+		return false;
+	}
+
+	for (const FVector2D& coord : Coordinate)
+	{
+		if (OnCheckMino.Execute(coord.X + TetrominoInfo->Position.X, coord.Y + TetrominoInfo->Position.Y))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}

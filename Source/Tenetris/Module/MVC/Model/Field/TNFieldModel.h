@@ -9,6 +9,11 @@ class FTNRecorder;
 
 DECLARE_DELEGATE_TwoParams(FTNUpdateModel, const int32, const E_TNFieldModelStateType);
 
+// Game-rule notifications, kept separate from FTNUpdateModel (which is view-update only).
+// The model stays a pure board simulation; score/level/game-over rules live outside (game mode).
+DECLARE_DELEGATE_OneParam(FTNLinesCleared, const int32 /*lineCount*/);
+DECLARE_DELEGATE(FTNGameOver);
+
 class FTNFieldModel
 {
 public:
@@ -27,6 +32,15 @@ public:
 
 	virtual FTNUpdateModel& GetOnUpdateModelDelegate() {
 		return OnUpdateModel;
+	}
+
+	// Game-rule hooks bound by the game mode (see FTNLinesCleared / FTNGameOver).
+	FTNLinesCleared& GetOnLinesClearedDelegate() {
+		return OnLinesCleared;
+	}
+
+	FTNGameOver& GetOnGameOverDelegate() {
+		return OnGameOver;
 	}
 
 	TSharedPtr<FTNTetromino> GetCurrentTetromino() const
@@ -100,6 +114,10 @@ private:
 	int32 Height = 0;
 	int32 Width = 0;
 	FTNUpdateModel OnUpdateModel;
+
+	// Game-rule notifications (bound by the game mode); separate from view-update OnUpdateModel.
+	FTNLinesCleared OnLinesCleared;
+	FTNGameOver OnGameOver;
 
 	TSharedPtr<FTNTetromino> CurrentTetromino;
 	TSharedPtr<FTNTetrominoGenerator> TetrominoGenerator;

@@ -61,6 +61,7 @@ public:
 	}
 
 	TArray<int32> GetMinoHeights() const;
+	bool IsOverlapping() const;
 	void SetTetrominoPosition(const int32 x, const int32 y) const;
 	void ApplyTetrominoType(const E_TNTetrominoType currentTetrominoType);
 	void ApplyRotationState(const int32 rotationState);
