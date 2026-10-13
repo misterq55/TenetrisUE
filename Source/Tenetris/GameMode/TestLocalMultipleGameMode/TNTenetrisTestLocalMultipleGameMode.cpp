@@ -4,9 +4,9 @@
 #include "GameMode/TestLocalMultipleGameMode/TNTenetrisTestLocalMultipleGameMode.h"
 #include "Module/MVC/Holder/TNMVCHolder.h"
 #include "Tenetris/Module/MVC/Holder/TNMVCHolder.h"
-#include "Tenetris/Module/MVC/Model/TestModel/TNTestModel.h"
+#include "Tenetris/Module/MVC/Model/TestLocalMultipleModel/TNTestLocalMultipleModel.h"
 #include "Tenetris/Module/MVC/View/TestView/TNTestView.h"
-#include "Tenetris/Module/MVC/Controller/TestController/TNTestController.h"
+#include "Tenetris/Module/MVC/Controller/TestLocalMultipleController/TNTestLocalMultipleController.h"
 #include "Tenetris/Actors/Field/TNFieldBase.h"
 
 ATNTenetrisTestLocalMultipleGameMode::ATNTenetrisTestLocalMultipleGameMode()
@@ -21,9 +21,9 @@ void ATNTenetrisTestLocalMultipleGameMode::StartPlay()
 
 	FTNMVCHolder& holder = FTNMVCHolder::GetInstance();
 
-	holder.SetModel(MakeShareable(new FTNTestModel()));
+	holder.SetModel(MakeShareable(new FTNTestLocalMultipleModel()));
 	holder.SetView(MakeShareable(new FTNTestView()));
-	holder.SetController(MakeShareable(new FTNTestController()));
+	holder.SetController(MakeShareable(new FTNTestLocalMultipleController()));
 
 	TSharedPtr<ITNController> tnController = holder.GetController();
 	if (tnController.IsValid())
