@@ -375,6 +375,13 @@ void FTNFieldModel::spawn()
 	}
 	
 	bCanHold = true;
+
+	// Block-out: if the freshly spawned piece already overlaps the stack/walls, the board tops out.
+	// The model only reports game over; score/termination rules are handled by the game mode.
+	if (CurrentTetromino.IsValid() && CurrentTetromino->IsOverlapping())
+	{
+		OnGameOver.ExecuteIfBound();
+	}
 }
 
 bool FTNFieldModel::moveTetromino(E_TNTetrominoDirection tetrominoDirection) const
@@ -609,12 +616,21 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 			DeleteLineCheckTime = 0.f;
 			bLineDeleting = false;
 
+			// Capture the cleared-line count before DeletedLines is emptied, then notify the
+			// game-rule layer (score/level). View update is still signaled via OnUpdateModel below.
+			const int32 clearedLineCount = DeletedLines.Num();
+
 			DeletedLines.Empty();
 			
 			if (Recorder.IsValid())
 			{
 				Recorder->RecordLineClear();
 				Recorder->AddFieldRecord();
+			}
+
+			if (clearedLineCount > 0)
+			{
+				OnLinesCleared.ExecuteIfBound(clearedLineCount);
 			}
 			
 			OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::LineClear);
