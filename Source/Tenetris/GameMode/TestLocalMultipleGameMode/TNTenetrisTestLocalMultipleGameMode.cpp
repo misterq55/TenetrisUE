@@ -8,6 +8,7 @@
 #include "Tenetris/Module/MVC/View/TestView/TNTestView.h"
 #include "Tenetris/Module/MVC/Controller/TestLocalMultipleController/TNTestLocalMultipleController.h"
 #include "Tenetris/Actors/Field/TNFieldBase.h"
+#include "Kismet/GameplayStatics.h"
 
 ATNTenetrisTestLocalMultipleGameMode::ATNTenetrisTestLocalMultipleGameMode()
 {
@@ -99,6 +100,7 @@ ATNFieldBase* ATNTenetrisTestLocalMultipleGameMode::spawnField(const FVector& lo
 	
 	ATNFieldBase* field = world->SpawnActorDeferred<ATNFieldBase>(FieldClass, FTransform(location), this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	field->SetActorScale3D(scale);
+	UGameplayStatics::FinishSpawningActor(field, FTransform(location));
 	
 	return field;
 }

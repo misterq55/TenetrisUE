@@ -24,6 +24,7 @@ private:
 	ATNFieldBase* spawnField(const FVector& location, const FVector& scale);
 
 public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "TenetrisGameMode")
 	TSubclassOf<ATNFieldBase> FieldClass;
 	
 protected:

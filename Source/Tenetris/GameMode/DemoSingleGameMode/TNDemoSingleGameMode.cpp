@@ -8,6 +8,8 @@
 #include "Tenetris/Module/MVC/Controller/TestController/TNTestController.h"
 #include "Tenetris/Module/MVC/Model/Field/TNFieldModel.h"
 #include "Tenetris/Actors/Field/TNFieldBase.h"
+#include "Kismet/GameplayStatics.h"
+#include "Blueprint/UserWidget.h"
 
 ATNDemoSingleGameMode::ATNDemoSingleGameMode()
 {
@@ -33,9 +35,13 @@ void ATNDemoSingleGameMode::StartPlay()
 
   tnController->Init();
 
-  if (IsValid(PlayerFieldPositionActor))
+  TArray<AActor*> playerFieldStartActors;
+  UGameplayStatics::GetAllActorsWithTag(GetWorld(), FName("PlayerFieldStart"), playerFieldStartActors);
+  if (playerFieldStartActors.Num() > 0 && IsValid(playerFieldStartActors[0]))
   {
-    PlayerField = spawnField(PlayerFieldPositionActor->GetActorLocation(), FVector(1.f, 1.f, 1.f));
+    AActor* positionActor = playerFieldStartActors[0];
+    positionActor->SetActorHiddenInGame(true);
+    PlayerField = spawnField(positionActor->GetActorLocation(), FVector(1.f, 1.f, 1.f));
     FTNFieldContext fieldContext(E_TNFieldType::Player);
     tnController->CreateField(fieldContext, RowMax, ColumnMax, PlayerField);
   }
@@ -53,6 +59,17 @@ void ATNDemoSingleGameMode::StartPlay()
   }
 
   tnController->StartPlay();
+
+  if (HUDWidgetClass)
+  {
+    if (APlayerController* playerController = UGameplayStatics::GetPlayerController(this, 0))
+    {
+      if (UUserWidget* hudWidget = CreateWidget<UUserWidget>(playerController, HUDWidgetClass))
+      {
+        hudWidget->AddToViewport();
+      }
+    }
+  }
 }
 
 void ATNDemoSingleGameMode::Tick(float deltaSeconds)
@@ -86,13 +103,28 @@ void ATNDemoSingleGameMode::handleLinesCleared(const int32 lineCount)
   Level = (TotalLines / LinesPerLevel) + 1;
 
   // TODO: Feed Level into the board's fall speed (getFallingSpeed) once a setter/hook exists.
+
+  OnScoreChanged.Broadcast(Score, Level, TotalLines);
 }
 
 void ATNDemoSingleGameMode::handleGameOver()
 {
   bGameOver = true;
 
-  // TODO: Show result UI / offer restart.
+  OnGameOverUI.Broadcast();
+}
+
+void ATNDemoSingleGameMode::RestartMatch()
+{
+  UWorld* world = GetWorld();
+  if (!IsValid(world))
+  {
+    return;
+  }
+
+  // Reload the current level to replay from scratch.
+  const FName currentLevelName(*UGameplayStatics::GetCurrentLevelName(world, true));
+  UGameplayStatics::OpenLevel(world, currentLevelName);
 }
 
 int32 ATNDemoSingleGameMode::scoreForLines(const int32 lineCount) const
@@ -119,6 +151,7 @@ ATNFieldBase* ATNDemoSingleGameMode::spawnField(const FVector& location, const F
 
   ATNFieldBase* field = world->SpawnActorDeferred<ATNFieldBase>(FieldClass, FTransform(location), this, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
   field->SetActorScale3D(scale);
+  UGameplayStatics::FinishSpawningActor(field, FTransform(location));
 
   return field;
 }

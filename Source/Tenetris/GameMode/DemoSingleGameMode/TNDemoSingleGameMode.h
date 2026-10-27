@@ -6,6 +6,12 @@
 #include "GameMode/TNTenetrisGameModeBase.h"
 #include "TNDemoSingleGameMode.generated.h"
 
+// Broadcast whenever the match score/level/total-lines change (for HUD binding).
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FTNScoreChanged, int32, Score, int32, Level, int32, TotalLines);
+
+// Broadcast once when the board tops out (for HUD game-over panel).
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTNGameOverUI);
+
 // Demo single-player game mode.
 //
 // Minimal match rules living OUTSIDE the board model (the model stays a pure board simulation):
@@ -26,10 +32,28 @@ public:
   virtual void Tick(float deltaSeconds) override;
 
 public:
+  UFUNCTION(BlueprintPure, Category = "TenetrisGameMode")
   int32 GetScore() const { return Score; }
-  int32 GetLevel() const { return Level; }
+
+  UFUNCTION(BlueprintPure, Category = "TenetrisGameMode")
+  int32 GetMatchLevel() const { return Level; }
+
+  UFUNCTION(BlueprintPure, Category = "TenetrisGameMode")
   int32 GetTotalLines() const { return TotalLines; }
+
+  UFUNCTION(BlueprintPure, Category = "TenetrisGameMode")
   bool IsGameOver() const { return bGameOver; }
+
+  // Restart the match from scratch (reloads the current level). Bound to the HUD replay button.
+  UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
+  void RestartMatch();
+
+public:
+  UPROPERTY(BlueprintAssignable, Category = "TenetrisGameMode")
+  FTNScoreChanged OnScoreChanged;
+
+  UPROPERTY(BlueprintAssignable, Category = "TenetrisGameMode")
+  FTNGameOverUI OnGameOverUI;
 
 private:
   ATNFieldBase* spawnField(const FVector& location, const FVector& scale);
@@ -42,11 +66,12 @@ private:
   int32 scoreForLines(const int32 lineCount) const;
 
 public:
+  UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "TenetrisGameMode")
   TSubclassOf<ATNFieldBase> FieldClass;
 
-protected:
-  UPROPERTY()
-  AActor* PlayerFieldPositionActor;
+  // HUD widget (e.g. WBP_ScoreHUD) created and shown on StartPlay. Demo-only; assigned in the BP.
+  UPROPERTY(EditDefaultsOnly, Category = "TenetrisGameMode")
+  TSubclassOf<UUserWidget> HUDWidgetClass;
 
 private:
   // Match state (outside the model).
@@ -57,6 +82,4 @@ private:
 
   // TODO: Expose these as tunable settings.
   static constexpr int32 LinesPerLevel = 10;
-
-  ATNFieldBase* PlayerField = nullptr;
 };
