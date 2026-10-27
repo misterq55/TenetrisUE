@@ -67,17 +67,17 @@ void UTNScoreHUDWidget::handleScoreChanged(const int32 Score, const int32 Level,
 {
 	if (IsValid(ScoreText))
 	{
-		ScoreText->SetText(FText::AsNumber(Score));
+		ScoreText->SetText(FText::Format(NSLOCTEXT("TNScoreHUD", "ScoreFmt", "Score: {0}"), FText::AsNumber(Score)));
 	}
 
 	if (IsValid(LevelText))
 	{
-		LevelText->SetText(FText::AsNumber(Level));
+		LevelText->SetText(FText::Format(NSLOCTEXT("TNScoreHUD", "LevelFmt", "Level: {0}"), FText::AsNumber(Level)));
 	}
 
 	if (IsValid(LinesText))
 	{
-		LinesText->SetText(FText::AsNumber(TotalLines));
+		LinesText->SetText(FText::Format(NSLOCTEXT("TNScoreHUD", "LinesFmt", "Lines: {0}"), FText::AsNumber(TotalLines)));
 	}
 }
 
