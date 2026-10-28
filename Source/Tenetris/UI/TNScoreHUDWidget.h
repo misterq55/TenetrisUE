@@ -37,6 +37,9 @@ private:
 	UFUNCTION()
 	void onReplayClicked();
 
+	UFUNCTION()
+	void onMainMenuClicked();
+
 protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTextBlock> ScoreText;
@@ -53,6 +56,9 @@ protected:
 
 	UPROPERTY(meta = (BindWidgetOptional))
 	TObjectPtr<UButton> ReplayButton;
+
+	UPROPERTY(meta = (BindWidgetOptional))
+	TObjectPtr<UButton> MainMenuButton;
 
 private:
 	UPROPERTY()

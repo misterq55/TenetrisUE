@@ -48,6 +48,10 @@ public:
   UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
   void RestartMatch();
 
+  // Return to the title/main-menu level. Bound to the HUD main-menu button.
+  UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
+  void ReturnToTitle();
+
 public:
   UPROPERTY(BlueprintAssignable, Category = "TenetrisGameMode")
   FTNScoreChanged OnScoreChanged;
@@ -72,6 +76,10 @@ public:
   // HUD widget (e.g. WBP_ScoreHUD) created and shown on StartPlay. Demo-only; assigned in the BP.
   UPROPERTY(EditDefaultsOnly, Category = "TenetrisGameMode")
   TSubclassOf<UUserWidget> HUDWidgetClass;
+
+  // Level opened when returning to the title (set in the BP).
+  UPROPERTY(EditDefaultsOnly, Category = "TenetrisGameMode")
+  FName TitleLevelName = FName("TitleMap");
 
 private:
   // Match state (outside the model).

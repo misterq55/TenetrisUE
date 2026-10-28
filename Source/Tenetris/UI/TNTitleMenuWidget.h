@@ -49,8 +49,12 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> QuitButton;
 
+	// Main menu buttons container; hidden while How To Play is shown.
+	UPROPERTY(meta = (BindWidget))
+	TObjectPtr<UWidget> MainMenuPanel;
+
 	// Shown when How To Play is pressed (hidden by default).
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UWidget> HowToPlayPanel;
 
 	// Closes the How To Play panel.
