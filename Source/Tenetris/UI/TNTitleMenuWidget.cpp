@@ -72,6 +72,11 @@ void UTNTitleMenuWidget::onPlayClicked()
 
 void UTNTitleMenuWidget::onHowToPlayClicked()
 {
+	if (IsValid(MainMenuPanel))
+	{
+		MainMenuPanel->SetVisibility(ESlateVisibility::Collapsed);
+	}
+
 	if (IsValid(HowToPlayPanel))
 	{
 		HowToPlayPanel->SetVisibility(ESlateVisibility::Visible);
@@ -83,6 +88,11 @@ void UTNTitleMenuWidget::onCloseHowToPlayClicked()
 	if (IsValid(HowToPlayPanel))
 	{
 		HowToPlayPanel->SetVisibility(ESlateVisibility::Collapsed);
+	}
+
+	if (IsValid(MainMenuPanel))
+	{
+		MainMenuPanel->SetVisibility(ESlateVisibility::Visible);
 	}
 }
 

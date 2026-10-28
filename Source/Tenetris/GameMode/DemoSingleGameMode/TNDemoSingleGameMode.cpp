@@ -127,6 +127,16 @@ void ATNDemoSingleGameMode::RestartMatch()
   UGameplayStatics::OpenLevel(world, currentLevelName);
 }
 
+void ATNDemoSingleGameMode::ReturnToTitle()
+{
+  if (TitleLevelName.IsNone())
+  {
+    return;
+  }
+
+  UGameplayStatics::OpenLevel(this, TitleLevelName);
+}
+
 int32 ATNDemoSingleGameMode::scoreForLines(const int32 lineCount) const
 {
   // Standard-guideline-like base points (before level scaling).

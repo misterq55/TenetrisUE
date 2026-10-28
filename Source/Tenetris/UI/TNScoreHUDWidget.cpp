@@ -17,6 +17,11 @@ void UTNScoreHUDWidget::NativeConstruct()
 		ReplayButton->OnClicked.AddDynamic(this, &UTNScoreHUDWidget::onReplayClicked);
 	}
 
+	if (IsValid(MainMenuButton))
+	{
+		MainMenuButton->OnClicked.AddDynamic(this, &UTNScoreHUDWidget::onMainMenuClicked);
+	}
+
 	if (IsValid(GameOverPanel))
 	{
 		GameOverPanel->SetVisibility(ESlateVisibility::Collapsed);
@@ -36,6 +41,11 @@ void UTNScoreHUDWidget::NativeDestruct()
 	if (IsValid(ReplayButton))
 	{
 		ReplayButton->OnClicked.RemoveDynamic(this, &UTNScoreHUDWidget::onReplayClicked);
+	}
+
+	if (IsValid(MainMenuButton))
+	{
+		MainMenuButton->OnClicked.RemoveDynamic(this, &UTNScoreHUDWidget::onMainMenuClicked);
 	}
 
 	Super::NativeDestruct();
@@ -94,5 +104,13 @@ void UTNScoreHUDWidget::onReplayClicked()
 	if (IsValid(GameMode))
 	{
 		GameMode->RestartMatch();
+	}
+}
+
+void UTNScoreHUDWidget::onMainMenuClicked()
+{
+	if (IsValid(GameMode))
+	{
+		GameMode->ReturnToTitle();
 	}
 }

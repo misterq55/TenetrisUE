@@ -19,6 +19,13 @@ void ATNTenetrisPlayerController::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+
+	// Each screen sets its own input state on entry; reset to game input so that
+	// a UI-only mode left over from a previous level (e.g. the title menu) does not
+	// swallow gameplay input. GameAndUI keeps HUD buttons clickable.
+	FInputModeGameAndUI inputMode;
+	inputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	SetInputMode(inputMode);
 }
 
 void ATNTenetrisPlayerController::SetupInputComponent()
