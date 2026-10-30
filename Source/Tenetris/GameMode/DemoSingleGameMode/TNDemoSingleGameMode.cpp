@@ -10,6 +10,8 @@
 #include "Tenetris/Actors/Field/TNFieldBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
+#include "Tenetris/Audio/TNAudioSubsystem.h"
+#include "Tenetris/Audio/TNAudioData.h"
 
 ATNDemoSingleGameMode::ATNDemoSingleGameMode()
 {
@@ -55,10 +57,17 @@ void ATNDemoSingleGameMode::StartPlay()
     {
       playerFieldModel->GetOnLinesClearedDelegate().BindUObject(this, &ATNDemoSingleGameMode::handleLinesCleared);
       playerFieldModel->GetOnGameOverDelegate().BindUObject(this, &ATNDemoSingleGameMode::handleGameOver);
+      playerFieldModel->GetOnRewindStartedDelegate().BindUObject(this, &ATNDemoSingleGameMode::handleRewindStarted);
+      playerFieldModel->GetOnRewindEndedDelegate().BindUObject(this, &ATNDemoSingleGameMode::handleRewindEnded);
     }
   }
 
   tnController->StartPlay();
+
+  if (UTNAudioSubsystem* audio = getAudioSubsystem())
+  {
+    audio->PlayBGM(TNSoundKeys::Bgm);
+  }
 
   if (HUDWidgetClass)
   {
@@ -105,6 +114,11 @@ void ATNDemoSingleGameMode::handleLinesCleared(const int32 lineCount)
   // TODO: Feed Level into the board's fall speed (getFallingSpeed) once a setter/hook exists.
 
   OnScoreChanged.Broadcast(Score, Level, TotalLines);
+
+  if (UTNAudioSubsystem* audio = getAudioSubsystem())
+  {
+    audio->PlaySFX(TNSoundKeys::LineClear);
+  }
 }
 
 void ATNDemoSingleGameMode::handleGameOver()
@@ -112,6 +126,40 @@ void ATNDemoSingleGameMode::handleGameOver()
   bGameOver = true;
 
   OnGameOverUI.Broadcast();
+
+  if (UTNAudioSubsystem* audio = getAudioSubsystem())
+  {
+    audio->StopBGM();
+    audio->PlaySFX(TNSoundKeys::GameOver);
+  }
+}
+
+void ATNDemoSingleGameMode::handleRewindStarted()
+{
+  if (UTNAudioSubsystem* audio = getAudioSubsystem())
+  {
+    audio->PauseBGM();
+    audio->PlayLoop(TNSoundKeys::TimeInversion);
+  }
+}
+
+void ATNDemoSingleGameMode::handleRewindEnded()
+{
+  if (UTNAudioSubsystem* audio = getAudioSubsystem())
+  {
+    audio->StopLoop();
+    audio->ResumeBGM();
+  }
+}
+
+UTNAudioSubsystem* ATNDemoSingleGameMode::getAudioSubsystem() const
+{
+  if (const UGameInstance* gameInstance = GetGameInstance())
+  {
+    return gameInstance->GetSubsystem<UTNAudioSubsystem>();
+  }
+
+  return nullptr;
 }
 
 void ATNDemoSingleGameMode::RestartMatch()

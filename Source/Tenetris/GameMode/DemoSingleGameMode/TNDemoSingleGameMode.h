@@ -66,6 +66,14 @@ private:
   void handleLinesCleared(const int32 lineCount);
   void handleGameOver();
 
+  // Bound to the player board's rewind lifecycle: pause/resume the main BGM and
+  // play a looping rewind track for the (variable-length) rewind duration.
+  void handleRewindStarted();
+  void handleRewindEnded();
+
+  // Convenience accessor for the game-instance audio subsystem (may be null).
+  class UTNAudioSubsystem* getAudioSubsystem() const;
+
   // Lines cleared at once -> points (before level scaling).
   int32 scoreForLines(const int32 lineCount) const;
 

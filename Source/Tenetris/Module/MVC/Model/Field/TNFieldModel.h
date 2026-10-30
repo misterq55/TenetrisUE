@@ -14,6 +14,12 @@ DECLARE_DELEGATE_TwoParams(FTNUpdateModel, const int32, const E_TNFieldModelStat
 DECLARE_DELEGATE_OneParam(FTNLinesCleared, const int32 /*lineCount*/);
 DECLARE_DELEGATE(FTNGameOver);
 
+// Rewind lifecycle notifications (bound by the game mode). Rewind is variable
+// length (it ends when the recorder empties), so START and END must both be
+// signalled rather than inferred from the input alone.
+DECLARE_DELEGATE(FTNRewindStarted);
+DECLARE_DELEGATE(FTNRewindEnded);
+
 class FTNFieldModel
 {
 public:
@@ -41,6 +47,14 @@ public:
 
 	FTNGameOver& GetOnGameOverDelegate() {
 		return OnGameOver;
+	}
+
+	FTNRewindStarted& GetOnRewindStartedDelegate() {
+		return OnRewindStarted;
+	}
+
+	FTNRewindEnded& GetOnRewindEndedDelegate() {
+		return OnRewindEnded;
 	}
 
 	TSharedPtr<FTNTetromino> GetCurrentTetromino() const
@@ -128,6 +142,8 @@ private:
 	// Game-rule notifications (bound by the game mode); separate from view-update OnUpdateModel.
 	FTNLinesCleared OnLinesCleared;
 	FTNGameOver OnGameOver;
+	FTNRewindStarted OnRewindStarted;
+	FTNRewindEnded OnRewindEnded;
 
 	TSharedPtr<FTNTetromino> CurrentTetromino;
 	TSharedPtr<FTNTetrominoGenerator> TetrominoGenerator;
