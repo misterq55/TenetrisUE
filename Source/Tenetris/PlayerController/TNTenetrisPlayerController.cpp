@@ -6,6 +6,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "Tenetris/Module/MVC/Holder/TNMVCHolder.h"
 #include "Tenetris/Module/Interface/ITNController.h"
+#include "Tenetris/Audio/TNAudioSubsystem.h"
+#include "Tenetris/Audio/TNAudioData.h"
 
 void ATNTenetrisPlayerController::BeginPlay()
 {
@@ -142,6 +144,14 @@ void ATNTenetrisPlayerController::toggleSpaceInversion()
 	{
 		tnController->HandleControlInput(E_TNControlType::RotateField);
 	}
+
+	if (UGameInstance* gameInstance = GetGameInstance())
+	{
+		if (UTNAudioSubsystem* audio = gameInstance->GetSubsystem<UTNAudioSubsystem>())
+		{
+			audio->PlaySFX(TNSoundKeys::SpaceInversion);
+		}
+	}
 }
 
 void ATNTenetrisPlayerController::toggleTimeInversion()
@@ -159,5 +169,13 @@ void ATNTenetrisPlayerController::hardDrop()
 	if (tnController.IsValid())
 	{
 		tnController->HandleControlInput(E_TNControlType::HardDrop);
+	}
+
+	if (UGameInstance* gameInstance = GetGameInstance())
+	{
+		if (UTNAudioSubsystem* audio = gameInstance->GetSubsystem<UTNAudioSubsystem>())
+		{
+			audio->PlaySFX(TNSoundKeys::HardDrop);
+		}
 	}
 }

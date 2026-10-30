@@ -266,6 +266,8 @@ void FTNFieldModel::handleRewind()
 	{
 		CurrentTetromino->SetShowGuideTetromino(false);
 	}
+
+	OnRewindStarted.ExecuteIfBound();
 }
 
 void FTNFieldModel::hardDrop()
@@ -841,6 +843,8 @@ void FTNFieldModel::rewind(float deltaTime)
 		bWaitForSpawn = false;
 		
 		spawn();
+
+		OnRewindEnded.ExecuteIfBound();
 	}
 }
 
