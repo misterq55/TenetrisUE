@@ -16,8 +16,9 @@ namespace TNSoundKeys
 	const FName LineClear(TEXT("LineClear"));
 	const FName HardDrop(TEXT("HardDrop"));
 	const FName SpaceInversion(TEXT("SpaceInversion"));
-	const FName ReversedBgm(TEXT("ReversedBgm"));
+	const FName TimeInversion(TEXT("TimeInversion"));
 	const FName Bgm(TEXT("Bgm"));
+	const FName ReversedBgm(TEXT("ReversedBgm"));
 	const FName GameOver(TEXT("GameOver"));
 	const FName MenuClick(TEXT("MenuClick"));
 }
