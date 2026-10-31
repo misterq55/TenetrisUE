@@ -139,7 +139,7 @@ void ATNDemoSingleGameMode::handleRewindStarted()
   if (UTNAudioSubsystem* audio = getAudioSubsystem())
   {
     audio->PauseBGM();
-    audio->PlayLoop(TNSoundKeys::TimeInversion);
+    audio->PlayLoop(TNSoundKeys::ReversedBgm);
   }
 }
 
