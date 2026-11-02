@@ -14,6 +14,7 @@ class USoundBase;
 namespace TNSoundKeys
 {
 	const FName LineClear(TEXT("LineClear"));
+	const FName LockDown(TEXT("LockDown"));
 	const FName HardDrop(TEXT("HardDrop"));
 	const FName SpaceInversion(TEXT("SpaceInversion"));
 	const FName TimeInversion(TEXT("TimeInversion"));

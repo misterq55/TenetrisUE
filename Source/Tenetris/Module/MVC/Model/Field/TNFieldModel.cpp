@@ -280,7 +280,7 @@ void FTNFieldModel::hardDrop()
 	if (CurrentTetromino.IsValid())
 	{
 		CurrentTetromino->HardDrop();
-		doLockDown();
+		doLockDown(true);
 	}
 }
 
@@ -348,6 +348,11 @@ void FTNFieldModel::checkLineDelete(const TArray<int32>& heights)
 	{
 		// 줄 삭제 플래그를 설정합니다.
 		bLineDeleting = true;
+
+		// Notify the game-rule layer (score/level + line-clear SFX) at detection time so the
+		// sound is in sync with the start of the clear animation, instead of 0.5s later when
+		// the row-collapse completes in updateLineDelete.
+		OnLinesCleared.ExecuteIfBound(DeletedLines.Num());
 	}
 }
 
@@ -618,10 +623,6 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 			DeleteLineCheckTime = 0.f;
 			bLineDeleting = false;
 
-			// Capture the cleared-line count before DeletedLines is emptied, then notify the
-			// game-rule layer (score/level). View update is still signaled via OnUpdateModel below.
-			const int32 clearedLineCount = DeletedLines.Num();
-
 			DeletedLines.Empty();
 			
 			if (Recorder.IsValid())
@@ -630,11 +631,6 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 				Recorder->AddFieldRecord();
 			}
 
-			if (clearedLineCount > 0)
-			{
-				OnLinesCleared.ExecuteIfBound(clearedLineCount);
-			}
-			
 			OnUpdateModel.ExecuteIfBound(Id, E_TNFieldModelStateType::LineClear);
 		}
 
@@ -642,11 +638,20 @@ void FTNFieldModel::updateLineDelete(float deltaTime)
 	}
 }
 
-void FTNFieldModel::doLockDown()
+void FTNFieldModel::doLockDown(bool bFromHardDrop)
 {
 	if (CurrentTetromino.IsValid())
 	{
 		CurrentTetromino->LockDown();
+
+		// Lock SFX plays only for gravity/soft-drop landings. Hard drops already have
+		// their own drop sound (TNSoundKeys::HardDrop) played at the input site, so firing
+		// the lock sound here too would double up.
+		if (!bFromHardDrop)
+		{
+			OnLockDown.ExecuteIfBound();
+		}
+
 		checkLineDelete(CurrentTetromino->GetMinoHeights());
 		bWaitForSpawn = true;
 
