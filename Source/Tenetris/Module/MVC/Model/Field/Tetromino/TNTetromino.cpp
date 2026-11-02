@@ -48,7 +48,6 @@ bool FTNTetromino::Rotate(const E_TNTetrominoRotation tetrominoRotation)
 	newRotationState = mod(newRotationState, 4);
 
 	const TTetrominoCoordinate simulationCoordinates = calculateRotatedCoordinates(newRotationState);
-	TetrominoInfo->RotationState = newRotationState;
 
 	TArray<TArray<FVector2D>> offset;
 
@@ -66,7 +65,7 @@ bool FTNTetromino::Rotate(const E_TNTetrominoRotation tetrominoRotation)
 	}
 
 	const TArray<FVector2D>& oldOffset = offset[oldRotationState];
-	const TArray<FVector2D>& newOffset = offset[TetrominoInfo->RotationState];
+	const TArray<FVector2D>& newOffset = offset[newRotationState];
 
 	// 킥 오프셋 구하기
 	FVector2D kickOffset(0, 0);
@@ -101,6 +100,12 @@ bool FTNTetromino::Rotate(const E_TNTetrominoRotation tetrominoRotation)
 
 	if (!tetrominoCheck)
 	{
+		// Commit the rotation state only when a valid placement (including kicks)
+		// is found. If RotationState were updated while the rotation is blocked,
+		// it would desync from Coordinate/Position (still the old orientation),
+		// causing the display to draw the wrong orientation and index out of the
+		// buffer range.
+		TetrominoInfo->RotationState = newRotationState;
 		TetrominoInfo->Position += kickOffset;
 		Coordinate = simulationCoordinates;
 		

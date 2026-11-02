@@ -150,8 +150,19 @@ void UTNTenetrisBufferComponent::SetMinoClassType(const TSubclassOf<ATNMinoBase>
 	MinoClass = minoClass;
 }
 
+bool UTNTenetrisBufferComponent::isValidCell(const TArray<TArray<ATNMinoBase*>>& targetBuffer, const int32 x, const int32 y) const
+{
+	return targetBuffer.IsValidIndex(y) && targetBuffer[y].IsValidIndex(x);
+}
+
 void UTNTenetrisBufferComponent::SetBackgroundCubeType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
 {
+	if (!isValidCell(BackgroundCubeBuffer, x, y))
+	{
+		ensureMsgf(false, TEXT("SetBackgroundCubeType out-of-range (x=%d, y=%d)"), x, y);
+		return;
+	}
+
 	ATNMinoBase* const mino = BackgroundCubeBuffer[y][x];
 
 	if (IsValid(mino))
@@ -163,6 +174,12 @@ void UTNTenetrisBufferComponent::SetBackgroundCubeType(const int32 x, const int3
 
 void UTNTenetrisBufferComponent::SetVisibilityBackgroundCube(const int32 x, const int32 y, const bool visible)
 {
+	if (!isValidCell(BackgroundCubeBuffer, x, y))
+	{
+		ensureMsgf(false, TEXT("SetVisibilityBackgroundCube out-of-range (x=%d, y=%d)"), x, y);
+		return;
+	}
+
 	ATNMinoBase* const mino = BackgroundCubeBuffer[y][x];
 
 	if (IsValid(mino))
@@ -173,6 +190,12 @@ void UTNTenetrisBufferComponent::SetVisibilityBackgroundCube(const int32 x, cons
 
 void UTNTenetrisBufferComponent::SetMinoType(const int32 x, const int32 y, const E_TNTetrominoType tetrominoType)
 {
+	if (!isValidCell(MinoBuffer, x, y))
+	{
+		ensureMsgf(false, TEXT("SetMinoType out-of-range (x=%d, y=%d)"), x, y);
+		return;
+	}
+
 	ATNMinoBase* const mino = MinoBuffer[y][x];
 
 	if (IsValid(mino))
@@ -184,6 +207,12 @@ void UTNTenetrisBufferComponent::SetMinoType(const int32 x, const int32 y, const
 
 void UTNTenetrisBufferComponent::SetVisibilityMino(const int32 x, const int32 y, const bool visible)
 {
+	if (!isValidCell(MinoBuffer, x, y))
+	{
+		ensureMsgf(false, TEXT("SetVisibilityMino out-of-range (x=%d, y=%d)"), x, y);
+		return;
+	}
+
 	ATNMinoBase* const mino = MinoBuffer[y][x];
 
 	if (IsValid(mino))
