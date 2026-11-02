@@ -40,6 +40,7 @@ public:
 private:
 	void buildMinoLayer(USceneComponent* pivot, TArray<TArray<ATNMinoBase*>>& targetBuffer);
 	void cleanBuffer(TArray<TArray<ATNMinoBase*>>& targetBuffer);
+	bool isValidCell(const TArray<TArray<ATNMinoBase*>>& targetBuffer, const int32 x, const int32 y) const;
 	
 private:
 	TArray<TArray<ATNMinoBase*>> BackgroundCubeBuffer;
