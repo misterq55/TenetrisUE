@@ -65,6 +65,7 @@ private:
   // Bound to the player board's game-rule delegates.
   void handleLinesCleared(const int32 lineCount);
   void handleGameOver();
+  void handleLockDown();
 
   // Bound to the player board's rewind lifecycle: pause/resume the main BGM and
   // play a looping rewind track for the (variable-length) rewind duration.

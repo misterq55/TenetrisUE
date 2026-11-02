@@ -13,6 +13,7 @@ DECLARE_DELEGATE_TwoParams(FTNUpdateModel, const int32, const E_TNFieldModelStat
 // The model stays a pure board simulation; score/level/game-over rules live outside (game mode).
 DECLARE_DELEGATE_OneParam(FTNLinesCleared, const int32 /*lineCount*/);
 DECLARE_DELEGATE(FTNGameOver);
+DECLARE_DELEGATE(FTNPieceLocked);
 
 // Rewind lifecycle notifications (bound by the game mode). Rewind is variable
 // length (it ends when the recorder empties), so START and END must both be
@@ -47,6 +48,11 @@ public:
 
 	FTNGameOver& GetOnGameOverDelegate() {
 		return OnGameOver;
+	}
+
+	// Fired when a piece locks via gravity/soft-drop (NOT hard drop, which has its own SFX).
+	FTNPieceLocked& GetOnLockDownDelegate() {
+		return OnLockDown;
 	}
 
 	FTNRewindStarted& GetOnRewindStartedDelegate() {
@@ -116,7 +122,7 @@ private:
 	void updateLockDown(float deltaTime);
 	void updateLineDelete(float deltaTime);
 
-	void doLockDown();
+	void doLockDown(bool bFromHardDrop = false);
 	void rotateField();
 	void rewind(float detatime);
 	void waitForSpawn();
@@ -142,6 +148,7 @@ private:
 	// Game-rule notifications (bound by the game mode); separate from view-update OnUpdateModel.
 	FTNLinesCleared OnLinesCleared;
 	FTNGameOver OnGameOver;
+	FTNPieceLocked OnLockDown;
 	FTNRewindStarted OnRewindStarted;
 	FTNRewindEnded OnRewindEnded;
 

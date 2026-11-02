@@ -57,6 +57,7 @@ void ATNDemoSingleGameMode::StartPlay()
     {
       playerFieldModel->GetOnLinesClearedDelegate().BindUObject(this, &ATNDemoSingleGameMode::handleLinesCleared);
       playerFieldModel->GetOnGameOverDelegate().BindUObject(this, &ATNDemoSingleGameMode::handleGameOver);
+      playerFieldModel->GetOnLockDownDelegate().BindUObject(this, &ATNDemoSingleGameMode::handleLockDown);
       playerFieldModel->GetOnRewindStartedDelegate().BindUObject(this, &ATNDemoSingleGameMode::handleRewindStarted);
       playerFieldModel->GetOnRewindEndedDelegate().BindUObject(this, &ATNDemoSingleGameMode::handleRewindEnded);
     }
@@ -118,6 +119,14 @@ void ATNDemoSingleGameMode::handleLinesCleared(const int32 lineCount)
   if (UTNAudioSubsystem* audio = getAudioSubsystem())
   {
     audio->PlaySFX(TNSoundKeys::LineClear);
+  }
+}
+
+void ATNDemoSingleGameMode::handleLockDown()
+{
+  if (UTNAudioSubsystem* audio = getAudioSubsystem())
+  {
+    audio->PlaySFX(TNSoundKeys::LockDown);
   }
 }
 
