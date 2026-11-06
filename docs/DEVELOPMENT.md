@@ -99,7 +99,7 @@ space-inversion SFX in `ATNTenetrisPlayerController`.
   `UAudioComponent`s (`SetVolumeMultiplier`); SFX volume is passed to `PlaySound2D`.
 - Persisted via `SaveVolumes()` / loaded in `Initialize` from `GGameUserSettingsIni`,
   section `Tenetris.Audio`.
-- UI never holds volume logic: `UTNOptionsWidget` only calls the setters/getters.
+- UI never holds volume logic: `UTNAudioSettingsWidget` only calls the setters/getters.
 - `SetLoopSuspended(bool)` pauses only the rewind loop track while the game is paused;
   the main BGM keeps playing so volume changes stay audible in the pause menu.
   BGM pause state is tracked separately (`bBgmPaused`), so a rewind-paused BGM is never
@@ -130,8 +130,11 @@ Code (done):
 - `ATNTenetrisPlayerController`: `PauseAction` (Enhanced Input) → `togglePause`.
   `SetGameplayInputBlocked(true)` ignores all gameplay input and first releases held
   left/right/soft-drop so the piece does not keep moving after resume.
-- `UTNOptionsWidget` (3 sliders + optional close button, `OnCloseRequested`) is reused
-  by the title menu (`OptionsButton`/`OptionsPanel`, both optional) and the pause menu.
+- `UTNOptionsWidget` is the options container (reused by the title menu
+  (`OptionsButton`/`OptionsPanel`, both optional) and the pause menu). It hosts two
+  sections, `UTNAudioSettingsWidget` (3 volume sliders) and `UTNControlsSettingsWidget`
+  (key bindings; skeleton only, rebinding not implemented yet), switched by optional
+  tab buttons, plus an optional close button (`OnCloseRequested`).
 
 Editor setup and play-test verification are tracked as TODO checklists in section 5
 (Next steps / backlog → "Pause/Options TODO").
@@ -169,8 +172,12 @@ Note: some BPs were moved to `Content/BluePrint/` leaving UE redirectors — run
     `P`, gamepad `Special Right` (Esc ends PIE in the editor → test with `P`).
   - [ ] Player controller BP: assign `PauseAction` = `IA_Pause` (unassigned = no pause
     + error log).
-  - [ ] `WBP_Options` (parent `TNOptionsWidget`): required `MasterSlider`, `BGMSlider`,
-    `SFXSlider` (range 0..1); optional `CloseButton`. Names must match exactly.
+  - [ ] `WBP_AudioSettings` (parent `TNAudioSettingsWidget`): required `MasterSlider`,
+    `BGMSlider`, `SFXSlider` (range 0..1). Names must match exactly.
+  - [ ] `WBP_ControlsSettings` (parent `TNControlsSettingsWidget`): placeholder for now.
+  - [ ] `WBP_Options` (parent `TNOptionsWidget`): required `AudioSettings`
+    (`WBP_AudioSettings`) and `ControlsSettings` (`WBP_ControlsSettings`); optional
+    `AudioTabButton`, `ControlsTabButton`, `CloseButton`.
   - [ ] `WBP_PauseMenu` (parent `TNPauseMenuWidget`): required `ResumeButton`,
     `QuitToTitleButton`; optional `OptionsButton`, `MainMenuPanel` (button container),
     `OptionsPanel` (a `WBP_Options` instance placed OUTSIDE `MainMenuPanel`).

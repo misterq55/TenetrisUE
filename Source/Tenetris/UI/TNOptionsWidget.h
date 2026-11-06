@@ -6,27 +6,33 @@
 #include "Blueprint/UserWidget.h"
 #include "TNOptionsWidget.generated.h"
 
-class USlider;
 class UButton;
-class UTNAudioSubsystem;
+class UTNAudioSettingsWidget;
+class UTNControlsSettingsWidget;
 
 // Fired when the user presses the close/back button.
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTNOptionsCloseRequested);
 
-// Audio options panel (Master / BGM / SFX volume).
+// Options container with Audio / Controls sections.
 //
-// Reusable from the title menu and the in-game pause menu. It only talks to
-// UTNAudioSubsystem; the visual layout lives in a WBP subclass whose widgets must be
-// named exactly like the BindWidget properties below.
+// Reusable from the title menu and the in-game pause menu. The visual layout lives in a
+// WBP subclass whose widgets must be named exactly like the BindWidget properties below.
+// Only one section is visible at a time; the tab buttons switch between them.
 UCLASS()
 class TENETRIS_API UTNOptionsWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
 public:
-	// Re-reads the current volumes into the sliders (call when the panel is shown).
+	// Refreshes both sections and shows the Audio section (call when the panel is shown).
 	UFUNCTION(BlueprintCallable, Category = "Options")
 	void RefreshFromSettings();
+
+	UFUNCTION(BlueprintCallable, Category = "Options")
+	void ShowAudioSection();
+
+	UFUNCTION(BlueprintCallable, Category = "Options")
+	void ShowControlsSection();
 
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Options")
@@ -37,33 +43,27 @@ protected:
 	virtual void NativeDestruct() override;
 
 private:
-	UTNAudioSubsystem* getAudioSubsystem() const;
+	UFUNCTION()
+	void onAudioTabClicked();
 
 	UFUNCTION()
-	void onMasterChanged(float value);
-
-	UFUNCTION()
-	void onBgmChanged(float value);
-
-	UFUNCTION()
-	void onSfxChanged(float value);
-
-	// Slider released: persist the volumes and play a sample so the SFX level can be heard.
-	UFUNCTION()
-	void onSliderReleased();
+	void onControlsTabClicked();
 
 	UFUNCTION()
 	void onCloseClicked();
 
 protected:
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<USlider> MasterSlider;
+	TObjectPtr<UTNAudioSettingsWidget> AudioSettings;
 
 	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<USlider> BGMSlider;
+	TObjectPtr<UTNControlsSettingsWidget> ControlsSettings;
 
-	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<USlider> SFXSlider;
+	UPROPERTY(meta = (BindWidgetOptional))
+	TObjectPtr<UButton> AudioTabButton;
+
+	UPROPERTY(meta = (BindWidgetOptional))
+	TObjectPtr<UButton> ControlsTabButton;
 
 	UPROPERTY(meta = (BindWidgetOptional))
 	TObjectPtr<UButton> CloseButton;
