@@ -12,6 +12,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Tenetris/Audio/TNAudioSubsystem.h"
 #include "Tenetris/Audio/TNAudioData.h"
+#include "Tenetris/PlayerController/TNTenetrisPlayerController.h"
 
 ATNDemoSingleGameMode::ATNDemoSingleGameMode()
 {
@@ -84,8 +85,8 @@ void ATNDemoSingleGameMode::StartPlay()
 
 void ATNDemoSingleGameMode::Tick(float deltaSeconds)
 {
-  // Once the board tops out, stop driving the simulation.
-  if (bGameOver)
+  // Once the board tops out (or while paused), stop driving the simulation.
+  if (bGameOver || bPaused)
   {
     return;
   }
@@ -96,6 +97,85 @@ void ATNDemoSingleGameMode::Tick(float deltaSeconds)
   if (tnController.IsValid())
   {
     tnController->Tick(deltaSeconds);
+  }
+}
+
+void ATNDemoSingleGameMode::EndPlay(const EEndPlayReason::Type endPlayReason)
+{
+  // The audio subsystem outlives the level; never leave the loop track suspended behind.
+  if (bPaused)
+  {
+    if (UTNAudioSubsystem* audio = getAudioSubsystem())
+    {
+      audio->SetLoopSuspended(false);
+    }
+
+    bPaused = false;
+  }
+
+  Super::EndPlay(endPlayReason);
+}
+
+void ATNDemoSingleGameMode::TogglePause()
+{
+  if (bGameOver)
+  {
+    return;
+  }
+
+  SetGamePaused(!bPaused);
+}
+
+void ATNDemoSingleGameMode::SetGamePaused(const bool bShouldPause)
+{
+  if (bPaused == bShouldPause || (bShouldPause && bGameOver))
+  {
+    return;
+  }
+
+  bPaused = bShouldPause;
+
+  if (UTNAudioSubsystem* audio = getAudioSubsystem())
+  {
+    audio->SetLoopSuspended(bPaused);
+  }
+
+  APlayerController* playerController = UGameplayStatics::GetPlayerController(this, 0);
+
+  if (ATNTenetrisPlayerController* tnPlayerController = Cast<ATNTenetrisPlayerController>(playerController))
+  {
+    tnPlayerController->SetGameplayInputBlocked(bPaused);
+  }
+
+  if (bPaused)
+  {
+    if (IsValid(playerController))
+    {
+      bCursorWasVisible = playerController->bShowMouseCursor;
+      playerController->bShowMouseCursor = true;
+
+      if (PauseMenuWidgetClass)
+      {
+        PauseMenuWidget = CreateWidget<UUserWidget>(playerController, PauseMenuWidgetClass);
+        if (IsValid(PauseMenuWidget))
+        {
+          PauseMenuWidget->AddToViewport(100);
+        }
+      }
+    }
+  }
+  else
+  {
+    if (IsValid(PauseMenuWidget))
+    {
+      PauseMenuWidget->RemoveFromParent();
+      PauseMenuWidget = nullptr;
+    }
+
+    if (IsValid(playerController))
+    {
+      playerController->bShowMouseCursor = bCursorWasVisible;
+    }
   }
 }
 

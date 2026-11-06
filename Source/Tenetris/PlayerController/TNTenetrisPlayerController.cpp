@@ -8,6 +8,8 @@
 #include "Tenetris/Module/Interface/ITNController.h"
 #include "Tenetris/Audio/TNAudioSubsystem.h"
 #include "Tenetris/Audio/TNAudioData.h"
+#include "Tenetris/GameMode/DemoSingleGameMode/TNDemoSingleGameMode.h"
+#include "Kismet/GameplayStatics.h"
 
 void ATNTenetrisPlayerController::BeginPlay()
 {
@@ -54,10 +56,43 @@ void ATNTenetrisPlayerController::SetupInputComponent()
 	EnhancedInputComponent->BindAction(HoldAction, ETriggerEvent::Started, this, &ATNTenetrisPlayerController::hold);
 	EnhancedInputComponent->BindAction(SpaceInversionAction, ETriggerEvent::Started, this, &ATNTenetrisPlayerController::toggleSpaceInversion);
 	EnhancedInputComponent->BindAction(TimeInversionAction, ETriggerEvent::Started, this, &ATNTenetrisPlayerController::toggleTimeInversion);
+
+	EnhancedInputComponent->BindAction(PauseAction, ETriggerEvent::Started, this, &ATNTenetrisPlayerController::togglePause);
+}
+
+void ATNTenetrisPlayerController::togglePause()
+{
+	if (ATNDemoSingleGameMode* gameMode = Cast<ATNDemoSingleGameMode>(UGameplayStatics::GetGameMode(this)))
+	{
+		gameMode->TogglePause();
+	}
+}
+
+void ATNTenetrisPlayerController::SetGameplayInputBlocked(const bool bBlocked)
+{
+	if (bGameplayInputBlocked == bBlocked)
+	{
+		return;
+	}
+
+	if (bBlocked)
+	{
+		// Release anything held before ignoring input so the piece does not keep moving after resume.
+		stopMoveLeft();
+		stopMoveRight();
+		stopSoftDrop();
+	}
+
+	bGameplayInputBlocked = bBlocked;
 }
 
 void ATNTenetrisPlayerController::startMoveLeft()
 {
+	if (bGameplayInputBlocked)
+	{
+		return;
+	}
+
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
@@ -67,6 +102,11 @@ void ATNTenetrisPlayerController::startMoveLeft()
 
 void ATNTenetrisPlayerController::stopMoveLeft()
 {
+	if (bGameplayInputBlocked)
+	{
+		return;
+	}
+
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
@@ -76,6 +116,11 @@ void ATNTenetrisPlayerController::stopMoveLeft()
 
 void ATNTenetrisPlayerController::startMoveRight()
 {
+	if (bGameplayInputBlocked)
+	{
+		return;
+	}
+
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
@@ -85,6 +130,11 @@ void ATNTenetrisPlayerController::startMoveRight()
 
 void ATNTenetrisPlayerController::stopMoveRight()
 {
+	if (bGameplayInputBlocked)
+	{
+		return;
+	}
+
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
@@ -94,6 +144,11 @@ void ATNTenetrisPlayerController::stopMoveRight()
 
 void ATNTenetrisPlayerController::startSoftDrop()
 {
+	if (bGameplayInputBlocked)
+	{
+		return;
+	}
+
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
@@ -103,6 +158,11 @@ void ATNTenetrisPlayerController::startSoftDrop()
 
 void ATNTenetrisPlayerController::stopSoftDrop()
 {
+	if (bGameplayInputBlocked)
+	{
+		return;
+	}
+
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
@@ -112,6 +172,11 @@ void ATNTenetrisPlayerController::stopSoftDrop()
 
 void ATNTenetrisPlayerController::rotateClockWise()
 {
+	if (bGameplayInputBlocked)
+	{
+		return;
+	}
+
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
@@ -121,6 +186,11 @@ void ATNTenetrisPlayerController::rotateClockWise()
 
 void ATNTenetrisPlayerController::rotateCounterClockWise()
 {
+	if (bGameplayInputBlocked)
+	{
+		return;
+	}
+
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
@@ -130,6 +200,11 @@ void ATNTenetrisPlayerController::rotateCounterClockWise()
 
 void ATNTenetrisPlayerController::hold()
 {
+	if (bGameplayInputBlocked)
+	{
+		return;
+	}
+
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
@@ -139,6 +214,11 @@ void ATNTenetrisPlayerController::hold()
 
 void ATNTenetrisPlayerController::toggleSpaceInversion()
 {
+	if (bGameplayInputBlocked)
+	{
+		return;
+	}
+
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
@@ -156,6 +236,11 @@ void ATNTenetrisPlayerController::toggleSpaceInversion()
 
 void ATNTenetrisPlayerController::toggleTimeInversion()
 {
+	if (bGameplayInputBlocked)
+	{
+		return;
+	}
+
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
@@ -165,6 +250,11 @@ void ATNTenetrisPlayerController::toggleTimeInversion()
 
 void ATNTenetrisPlayerController::hardDrop()
 {
+	if (bGameplayInputBlocked)
+	{
+		return;
+	}
+
 	TSharedPtr<ITNController> tnController = FTNMVCHolder::GetInstance().GetController();
 	if (tnController.IsValid())
 	{
