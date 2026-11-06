@@ -1,31 +1,22 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Tenetris/UI/TNOptionsWidget.h"
-#include "Components/Slider.h"
 #include "Components/Button.h"
-#include "Tenetris/Audio/TNAudioSubsystem.h"
-#include "Tenetris/Audio/TNAudioData.h"
+#include "Tenetris/UI/TNAudioSettingsWidget.h"
+#include "Tenetris/UI/TNControlsSettingsWidget.h"
 
 void UTNOptionsWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	if (IsValid(MasterSlider))
+	if (IsValid(AudioTabButton))
 	{
-		MasterSlider->OnValueChanged.AddDynamic(this, &UTNOptionsWidget::onMasterChanged);
-		MasterSlider->OnMouseCaptureEnd.AddDynamic(this, &UTNOptionsWidget::onSliderReleased);
+		AudioTabButton->OnClicked.AddDynamic(this, &UTNOptionsWidget::onAudioTabClicked);
 	}
 
-	if (IsValid(BGMSlider))
+	if (IsValid(ControlsTabButton))
 	{
-		BGMSlider->OnValueChanged.AddDynamic(this, &UTNOptionsWidget::onBgmChanged);
-		BGMSlider->OnMouseCaptureEnd.AddDynamic(this, &UTNOptionsWidget::onSliderReleased);
-	}
-
-	if (IsValid(SFXSlider))
-	{
-		SFXSlider->OnValueChanged.AddDynamic(this, &UTNOptionsWidget::onSfxChanged);
-		SFXSlider->OnMouseCaptureEnd.AddDynamic(this, &UTNOptionsWidget::onSliderReleased);
+		ControlsTabButton->OnClicked.AddDynamic(this, &UTNOptionsWidget::onControlsTabClicked);
 	}
 
 	if (IsValid(CloseButton))
@@ -38,22 +29,14 @@ void UTNOptionsWidget::NativeConstruct()
 
 void UTNOptionsWidget::NativeDestruct()
 {
-	if (IsValid(MasterSlider))
+	if (IsValid(AudioTabButton))
 	{
-		MasterSlider->OnValueChanged.RemoveDynamic(this, &UTNOptionsWidget::onMasterChanged);
-		MasterSlider->OnMouseCaptureEnd.RemoveDynamic(this, &UTNOptionsWidget::onSliderReleased);
+		AudioTabButton->OnClicked.RemoveDynamic(this, &UTNOptionsWidget::onAudioTabClicked);
 	}
 
-	if (IsValid(BGMSlider))
+	if (IsValid(ControlsTabButton))
 	{
-		BGMSlider->OnValueChanged.RemoveDynamic(this, &UTNOptionsWidget::onBgmChanged);
-		BGMSlider->OnMouseCaptureEnd.RemoveDynamic(this, &UTNOptionsWidget::onSliderReleased);
-	}
-
-	if (IsValid(SFXSlider))
-	{
-		SFXSlider->OnValueChanged.RemoveDynamic(this, &UTNOptionsWidget::onSfxChanged);
-		SFXSlider->OnMouseCaptureEnd.RemoveDynamic(this, &UTNOptionsWidget::onSliderReleased);
+		ControlsTabButton->OnClicked.RemoveDynamic(this, &UTNOptionsWidget::onControlsTabClicked);
 	}
 
 	if (IsValid(CloseButton))
@@ -64,79 +47,67 @@ void UTNOptionsWidget::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-UTNAudioSubsystem* UTNOptionsWidget::getAudioSubsystem() const
-{
-	if (const UGameInstance* gameInstance = GetGameInstance())
-	{
-		return gameInstance->GetSubsystem<UTNAudioSubsystem>();
-	}
-
-	return nullptr;
-}
-
 void UTNOptionsWidget::RefreshFromSettings()
 {
-	const UTNAudioSubsystem* audio = getAudioSubsystem();
-	if (!IsValid(audio))
+	if (IsValid(AudioSettings))
 	{
-		return;
+		AudioSettings->RefreshFromSettings();
 	}
 
-	// SetValue does not broadcast OnValueChanged, so this will not re-apply the volumes.
-	if (IsValid(MasterSlider))
+	if (IsValid(ControlsSettings))
 	{
-		MasterSlider->SetValue(audio->GetMasterVolume());
+		ControlsSettings->RefreshFromSettings();
 	}
 
-	if (IsValid(BGMSlider))
+	ShowAudioSection();
+}
+
+void UTNOptionsWidget::ShowAudioSection()
+{
+	if (IsValid(AudioSettings))
 	{
-		BGMSlider->SetValue(audio->GetBGMVolume());
+		AudioSettings->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
 
-	if (IsValid(SFXSlider))
+	if (IsValid(ControlsSettings))
 	{
-		SFXSlider->SetValue(audio->GetSFXVolume());
+		ControlsSettings->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }
 
-void UTNOptionsWidget::onMasterChanged(const float value)
+void UTNOptionsWidget::ShowControlsSection()
 {
-	if (UTNAudioSubsystem* audio = getAudioSubsystem())
+	if (IsValid(AudioSettings))
 	{
-		audio->SetMasterVolume(value);
+		AudioSettings->SetVisibility(ESlateVisibility::Collapsed);
+	}
+
+	if (IsValid(ControlsSettings))
+	{
+		ControlsSettings->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
 	}
 }
 
-void UTNOptionsWidget::onBgmChanged(const float value)
+void UTNOptionsWidget::onAudioTabClicked()
 {
-	if (UTNAudioSubsystem* audio = getAudioSubsystem())
-	{
-		audio->SetBGMVolume(value);
-	}
+	ShowAudioSection();
 }
 
-void UTNOptionsWidget::onSfxChanged(const float value)
+void UTNOptionsWidget::onControlsTabClicked()
 {
-	if (UTNAudioSubsystem* audio = getAudioSubsystem())
-	{
-		audio->SetSFXVolume(value);
-	}
-}
-
-void UTNOptionsWidget::onSliderReleased()
-{
-	if (UTNAudioSubsystem* audio = getAudioSubsystem())
-	{
-		audio->SaveVolumes();
-		audio->PlaySFX(TNSoundKeys::MenuClick);
-	}
+	ShowControlsSection();
 }
 
 void UTNOptionsWidget::onCloseClicked()
 {
-	if (UTNAudioSubsystem* audio = getAudioSubsystem())
+	if (IsValid(AudioSettings))
 	{
-		audio->SaveVolumes();
+		AudioSettings->SaveSettings();
+	}
+
+	if (IsValid(ControlsSettings))
+	{
+		ControlsSettings->SaveSettings();
 	}
 
 	OnCloseRequested.Broadcast();
