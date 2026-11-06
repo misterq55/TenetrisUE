@@ -22,6 +22,14 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 
+public:
+	// While blocked, gameplay input is ignored (e.g. pause menu open). Blocking also
+	// releases any held movement/soft-drop so nothing stays stuck across the pause.
+	void SetGameplayInputBlocked(const bool bBlocked);
+
+protected:
+	void togglePause();
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category="Input")
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
@@ -52,6 +60,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> TimeInversionAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UInputAction> PauseAction;
 	
 protected:
 	void startMoveLeft();
@@ -70,4 +81,7 @@ protected:
 	void toggleSpaceInversion();
 	void toggleTimeInversion();
 	void hardDrop();
+
+private:
+	bool bGameplayInputBlocked = false;
 };

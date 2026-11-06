@@ -50,8 +50,41 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Audio")
 	void StopLoop();
 
+	// Suspends/resumes only the secondary loop track (e.g. the rewind BGM) while the game is
+	// paused. The main BGM keeps playing so volume changes stay audible in the pause menu.
+	UFUNCTION(BlueprintCallable, Category = "Audio")
+	void SetLoopSuspended(const bool bSuspended);
+
+	// Volumes are linear 0..1. Final volume = Master * (BGM or SFX).
+	UFUNCTION(BlueprintCallable, Category = "Audio|Volume")
+	void SetMasterVolume(const float volume);
+
+	UFUNCTION(BlueprintCallable, Category = "Audio|Volume")
+	void SetBGMVolume(const float volume);
+
+	UFUNCTION(BlueprintCallable, Category = "Audio|Volume")
+	void SetSFXVolume(const float volume);
+
+	UFUNCTION(BlueprintPure, Category = "Audio|Volume")
+	float GetMasterVolume() const { return MasterVolume; }
+
+	UFUNCTION(BlueprintPure, Category = "Audio|Volume")
+	float GetBGMVolume() const { return BGMVolume; }
+
+	UFUNCTION(BlueprintPure, Category = "Audio|Volume")
+	float GetSFXVolume() const { return SFXVolume; }
+
+	// Persists the current volumes to the user settings ini.
+	UFUNCTION(BlueprintCallable, Category = "Audio|Volume")
+	void SaveVolumes() const;
+
 private:
 	USoundBase* findSound(const FName key) const;
+
+	void loadVolumes();
+	void applyBgmState();
+	void applyLoopState();
+	void applyVolumes();
 
 	UPROPERTY()
 	TObjectPtr<UTNAudioData> AudioData;
@@ -61,4 +94,11 @@ private:
 
 	UPROPERTY(Transient)
 	TObjectPtr<UAudioComponent> LoopComponent;
+
+	float MasterVolume = 1.f;
+	float BGMVolume = 1.f;
+	float SFXVolume = 1.f;
+
+	bool bBgmPaused = false;
+	bool bLoopSuspended = false;
 };

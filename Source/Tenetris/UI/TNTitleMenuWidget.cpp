@@ -2,6 +2,7 @@
 
 #include "Tenetris/UI/TNTitleMenuWidget.h"
 #include "Components/Button.h"
+#include "Tenetris/UI/TNOptionsWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -33,10 +34,31 @@ void UTNTitleMenuWidget::NativeConstruct()
 	{
 		HowToPlayPanel->SetVisibility(ESlateVisibility::Collapsed);
 	}
+
+	if (IsValid(OptionsButton))
+	{
+		OptionsButton->OnClicked.AddDynamic(this, &UTNTitleMenuWidget::onOptionsClicked);
+	}
+
+	if (IsValid(OptionsPanel))
+	{
+		OptionsPanel->OnCloseRequested.AddDynamic(this, &UTNTitleMenuWidget::onOptionsCloseRequested);
+		OptionsPanel->SetVisibility(ESlateVisibility::Collapsed);
+	}
 }
 
 void UTNTitleMenuWidget::NativeDestruct()
 {
+	if (IsValid(OptionsButton))
+	{
+		OptionsButton->OnClicked.RemoveDynamic(this, &UTNTitleMenuWidget::onOptionsClicked);
+	}
+
+	if (IsValid(OptionsPanel))
+	{
+		OptionsPanel->OnCloseRequested.RemoveDynamic(this, &UTNTitleMenuWidget::onOptionsCloseRequested);
+	}
+
 	if (IsValid(PlayButton))
 	{
 		PlayButton->OnClicked.RemoveDynamic(this, &UTNTitleMenuWidget::onPlayClicked);
@@ -88,6 +110,33 @@ void UTNTitleMenuWidget::onCloseHowToPlayClicked()
 	if (IsValid(HowToPlayPanel))
 	{
 		HowToPlayPanel->SetVisibility(ESlateVisibility::Collapsed);
+	}
+
+	if (IsValid(MainMenuPanel))
+	{
+		MainMenuPanel->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void UTNTitleMenuWidget::onOptionsClicked()
+{
+	if (IsValid(MainMenuPanel))
+	{
+		MainMenuPanel->SetVisibility(ESlateVisibility::Collapsed);
+	}
+
+	if (IsValid(OptionsPanel))
+	{
+		OptionsPanel->RefreshFromSettings();
+		OptionsPanel->SetVisibility(ESlateVisibility::Visible);
+	}
+}
+
+void UTNTitleMenuWidget::onOptionsCloseRequested()
+{
+	if (IsValid(OptionsPanel))
+	{
+		OptionsPanel->SetVisibility(ESlateVisibility::Collapsed);
 	}
 
 	if (IsValid(MainMenuPanel))

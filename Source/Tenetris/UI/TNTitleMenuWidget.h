@@ -8,6 +8,7 @@
 
 class UButton;
 class UWidget;
+class UTNOptionsWidget;
 
 // Title/main-menu widget.
 //
@@ -35,6 +36,12 @@ private:
 	UFUNCTION()
 	void onQuitClicked();
 
+	UFUNCTION()
+	void onOptionsClicked();
+
+	UFUNCTION()
+	void onOptionsCloseRequested();
+
 protected:
 	// Level opened when Play is pressed (set in the WBP; defaults to the demo level).
 	UPROPERTY(EditAnywhere, Category = "Title")
@@ -60,4 +67,12 @@ protected:
 	// Closes the How To Play panel.
 	UPROPERTY(meta = (BindWidgetOptional))
 	TObjectPtr<UButton> CloseHowToPlayButton;
+
+	// Opens the options panel (optional so existing WBPs keep working).
+	UPROPERTY(meta = (BindWidgetOptional))
+	TObjectPtr<UButton> OptionsButton;
+
+	// Audio options panel (hidden by default); closing it returns to the main menu.
+	UPROPERTY(meta = (BindWidgetOptional))
+	TObjectPtr<UTNOptionsWidget> OptionsPanel;
 };

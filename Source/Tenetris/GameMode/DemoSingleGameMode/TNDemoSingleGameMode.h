@@ -30,6 +30,7 @@ public:
   ATNDemoSingleGameMode();
   virtual void StartPlay() override;
   virtual void Tick(float deltaSeconds) override;
+  virtual void EndPlay(const EEndPlayReason::Type endPlayReason) override;
 
 public:
   UFUNCTION(BlueprintPure, Category = "TenetrisGameMode")
@@ -43,6 +44,17 @@ public:
 
   UFUNCTION(BlueprintPure, Category = "TenetrisGameMode")
   bool IsGameOver() const { return bGameOver; }
+
+  UFUNCTION(BlueprintPure, Category = "TenetrisGameMode")
+  bool IsGamePaused() const { return bPaused; }
+
+  // Toggles the pause menu (ignored after game over).
+  UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
+  void TogglePause();
+
+  // Pauses/resumes the simulation, music and gameplay input and shows/hides the pause menu.
+  UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
+  void SetGamePaused(const bool bShouldPause);
 
   // Restart the match from scratch (reloads the current level). Bound to the HUD replay button.
   UFUNCTION(BlueprintCallable, Category = "TenetrisGameMode")
@@ -86,6 +98,10 @@ public:
   UPROPERTY(EditDefaultsOnly, Category = "TenetrisGameMode")
   TSubclassOf<UUserWidget> HUDWidgetClass;
 
+  // Pause menu widget (e.g. WBP_PauseMenu, based on UTNPauseMenuWidget) shown while paused.
+  UPROPERTY(EditDefaultsOnly, Category = "TenetrisGameMode")
+  TSubclassOf<UUserWidget> PauseMenuWidgetClass;
+
   // Level opened when returning to the title (set in the BP).
   UPROPERTY(EditDefaultsOnly, Category = "TenetrisGameMode")
   FName TitleLevelName = FName("TitleMap");
@@ -96,6 +112,11 @@ private:
   int32 TotalLines = 0;
   int32 Level = 1;
   bool bGameOver = false;
+  bool bPaused = false;
+  bool bCursorWasVisible = false;
+
+  UPROPERTY(Transient)
+  TObjectPtr<UUserWidget> PauseMenuWidget;
 
   // TODO: Expose these as tunable settings.
   static constexpr int32 LinesPerLevel = 10;

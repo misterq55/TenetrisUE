@@ -31,7 +31,7 @@ Space-Inversion 180° flip animation needs real 3D rotation, which UMG can't do.
 ### UI (UMG with C++ base + WBP design)
 Pattern used throughout: a **C++ `UUserWidget` base** holds logic and binds named
 widgets via `meta=(BindWidget)`; a **WBP subclass** does the visual layout. Examples:
-`UTNScoreHUDWidget`, `UTNTitleMenuWidget`.
+`UTNScoreHUDWidget`, `UTNTitleMenuWidget`, `UTNOptionsWidget`, `UTNPauseMenuWidget`.
 
 ### Two-layer delegate pattern (important)
 Events cross layers via two distinct delegate tiers:
@@ -93,13 +93,48 @@ model exposes START/END delegates. Demo GameMode reacts:
 Call sites: line-clear/game-over SFX + BGM in `ATNDemoSingleGameMode`; hard-drop /
 space-inversion SFX in `ATNTenetrisPlayerController`.
 
+### Volume control
+`UTNAudioSubsystem` owns `Master/BGM/SFX` volumes (0..1; final = Master × channel).
+- Setters `SetMasterVolume/SetBGMVolume/SetSFXVolume` apply live to the BGM/Loop
+  `UAudioComponent`s (`SetVolumeMultiplier`); SFX volume is passed to `PlaySound2D`.
+- Persisted via `SaveVolumes()` / loaded in `Initialize` from `GGameUserSettingsIni`,
+  section `Tenetris.Audio`.
+- UI never holds volume logic: `UTNOptionsWidget` only calls the setters/getters.
+- `SetLoopSuspended(bool)` pauses only the rewind loop track while the game is paused;
+  the main BGM keeps playing so volume changes stay audible in the pause menu.
+  BGM pause state is tracked separately (`bBgmPaused`), so a rewind-paused BGM is never
+  resumed by a pause/resume cycle.
+
 ### Audio = still needs editor setup (NOT done yet)
 1. Create **`DA_TNAudio`** (UTNAudioData). Add map entries keyed EXACTLY:
    `LineClear, HardDrop, SpaceInversion, TimeInversion, Bgm` (+ optional
-   `GameOver, MenuClick`).
+   `GameOver, MenuClick`). `MenuClick` is also the sample played when an options
+   slider is released.
 2. Create **`BP_TNGameInstance`** (UTNGameInstance), assign `DA_TNAudio`.
 3. Project Settings → Maps & Modes → **GameInstance Class = BP_TNGameInstance**.
 4. Import 8-bit sounds. Mark `Bgm` and `TimeInversion` as **Looping**.
+
+---
+
+## 3b. Pause & Options
+
+Code (done):
+- `ATNDemoSingleGameMode::TogglePause/SetGamePaused`: `bPaused` makes `Tick` skip the
+  controller tick (same pattern as `bGameOver`). All model timers (fall, rewind,
+  rotation) advance only via `deltaTime`, so skipping Tick freezes them safely — this
+  includes pausing mid-rewind. `SetGamePaused` is NOT `UGameplayStatics::SetGamePaused`
+  (that would also stall audio components). Blocked after game over.
+- On pause: loop track suspended, cursor shown, `PauseMenuWidgetClass` created
+  (new instance each time so it always opens on the main panel). `EndPlay` clears the
+  loop suspension because the audio subsystem outlives the level.
+- `ATNTenetrisPlayerController`: `PauseAction` (Enhanced Input) → `togglePause`.
+  `SetGameplayInputBlocked(true)` ignores all gameplay input and first releases held
+  left/right/soft-drop so the piece does not keep moving after resume.
+- `UTNOptionsWidget` (3 sliders + optional close button, `OnCloseRequested`) is reused
+  by the title menu (`OptionsButton`/`OptionsPanel`, both optional) and the pause menu.
+
+Editor setup and play-test verification are tracked as TODO checklists in section 5
+(Next steps / backlog → "Pause/Options TODO").
 
 ---
 
@@ -129,6 +164,27 @@ Note: some BPs were moved to `Content/BluePrint/` leaving UE redirectors — run
 - **Audio editor setup** (section 3) — wire DA/GameInstance, import 8-bit sounds.
   Minimal set agreed: BGM + LineClear (+ SpaceInversion as the signature). Hard-drop
   and rewind are nice-to-have.
+- **Pause/Options TODO** (code done & compiled; design in section 3b). Editor setup:
+  - [ ] `IA_Pause` (Input Action, Digital/bool); add to the mapping context: `Escape`,
+    `P`, gamepad `Special Right` (Esc ends PIE in the editor → test with `P`).
+  - [ ] Player controller BP: assign `PauseAction` = `IA_Pause` (unassigned = no pause
+    + error log).
+  - [ ] `WBP_Options` (parent `TNOptionsWidget`): required `MasterSlider`, `BGMSlider`,
+    `SFXSlider` (range 0..1); optional `CloseButton`. Names must match exactly.
+  - [ ] `WBP_PauseMenu` (parent `TNPauseMenuWidget`): required `ResumeButton`,
+    `QuitToTitleButton`; optional `OptionsButton`, `MainMenuPanel` (button container),
+    `OptionsPanel` (a `WBP_Options` instance placed OUTSIDE `MainMenuPanel`).
+  - [ ] Title WBP: add `OptionsButton` and a `WBP_Options` instance named
+    `OptionsPanel`, outside `MainMenuPanel`.
+  - [ ] Demo game-mode BP: set `PauseMenuWidgetClass` = `WBP_PauseMenu`.
+  - [ ] `DA_TNAudio`: register `MenuClick`.
+
+  Play-test verification (not yet tested in editor):
+  - [ ] Options sliders work on the title screen; values persist after restart.
+  - [ ] Pause freezes the game, BGM keeps playing, resume continues seamlessly.
+  - [ ] Pause during rewind: only the reverse loop stops; resume continues the rewind.
+  - [ ] Holding a move key while pausing does not move the piece by itself on resume.
+  - [ ] Quit to Title from the pause menu leaves no suspended audio behind.
 - Feed `Level` into the board fall speed (TODO in `handleLinesCleared`).
 - Optional: menu-click SFX, game-over SFX, multi-mode audio (subscribe same delegates).
 - Optional: reverse the ghost/background polish, unlit mino materials.
