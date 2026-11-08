@@ -174,15 +174,36 @@ Note: some BPs were moved to `Content/BluePrint/` leaving UE redirectors — run
     + error log).
   - [ ] `WBP_AudioSettings` (parent `TNAudioSettingsWidget`): required `MasterSlider`,
     `BGMSlider`, `SFXSlider` (range 0..1). Names must match exactly.
-  - [ ] `WBP_ControlsSettings` (parent `TNControlsSettingsWidget`): placeholder for now.
+    - Root `CanvasPanel`, anchor Stretch (0,0)-(1,1), offsets 0.
+    - `VerticalBox "ContentBox"` as a Canvas child: anchor Center (0.5,0.5), alignment
+      (0.5,0.5), fixed width (e.g. 400) or Auto size.
+    - One row per slider (`HorizontalBox` of a label `TextBlock` + the named `Slider`).
+  - [ ] `WBP_ControlsSettings` (parent `TNControlsSettingsWidget`): placeholder for now
+    (empty `CanvasPanel` + a "Coming soon" `TextBlock` is enough). Required because
+    `WBP_Options` needs an instance to satisfy its `ControlsSettings` BindWidget.
   - [ ] `WBP_Options` (parent `TNOptionsWidget`): required `AudioSettings`
-    (`WBP_AudioSettings`) and `ControlsSettings` (`WBP_ControlsSettings`); optional
-    `AudioTabButton`, `ControlsTabButton`, `CloseButton`.
+    (`WBP_AudioSettings` instance) and `ControlsSettings` (`WBP_ControlsSettings`
+    instance); optional `AudioTabButton`, `ControlsTabButton`, `CloseButton`.
+    - Root `CanvasPanel`, anchor Stretch; optional dim/background `Border` behind
+      everything.
+    - `HorizontalBox "TabBar"` (Audio/Controls buttons): anchor Top-Center (0.5,0),
+      alignment (0.5,0), position e.g. (0,20).
+    - `Overlay "SectionArea"` holding BOTH the `AudioSettings` and `ControlsSettings`
+      instances stacked on top of each other: anchor Center, alignment (0.5,0.5),
+      fixed size (e.g. 500x400). No `WidgetSwitcher` needed — C++ toggles
+      `SetVisibility(Collapsed/SelfHitTestInvisible)` on each.
+    - `CloseButton`: anchor Bottom-Center, position e.g. (0,-20).
   - [ ] `WBP_PauseMenu` (parent `TNPauseMenuWidget`): required `ResumeButton`,
     `QuitToTitleButton`; optional `OptionsButton`, `MainMenuPanel` (button container),
     `OptionsPanel` (a `WBP_Options` instance placed OUTSIDE `MainMenuPanel`).
-  - [ ] Title WBP: add `OptionsButton` and a `WBP_Options` instance named
-    `OptionsPanel`, outside `MainMenuPanel`.
+    - Root `CanvasPanel`, anchor Stretch; a dim background `Border`/`Image` behind.
+    - `VerticalBox "MainMenuPanel"` (Resume/Options/Quit buttons): anchor Center,
+      alignment (0.5,0.5).
+    - `OptionsPanel` (`WBP_Options` instance) as a sibling of `MainMenuPanel`, same
+      Center anchor (overlap is fine; only one is `Visible` at a time).
+  - [ ] Title WBP: add a `Button "OptionsButton"` inside the existing `MainMenuPanel`
+    (same level as Play/How To Play/Quit), and a `WBP_Options` instance named
+    `OptionsPanel` as a sibling OUTSIDE `MainMenuPanel`, same anchor as it.
   - [ ] Demo game-mode BP: set `PauseMenuWidgetClass` = `WBP_PauseMenu`.
   - [ ] `DA_TNAudio`: register `MenuClick`.
 
