@@ -10,7 +10,6 @@
  * 
  */
 
-class UInputMappingContext;
 class UInputAction;
 
 UCLASS()
@@ -31,9 +30,6 @@ protected:
 	void togglePause();
 
 protected:
-	UPROPERTY(EditDefaultsOnly, Category="Input")
-	TObjectPtr<UInputMappingContext> DefaultMappingContext;
-	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Input", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UInputAction> MoveLeftAction;
 
