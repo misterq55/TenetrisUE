@@ -163,7 +163,15 @@ void ATNElectronicDisplayField::updateHoldTetromino(const FTNFieldContext& field
 	HoldBufferComponent->CleanMinoBuffer();
 	
 	const E_TNTetrominoType holdTetrominoType = fieldContext.HoldTetrominoType;
-	for (const auto& coord : TetrominoCoordinatesByType[static_cast<uint32>(holdTetrominoType)])
+	const uint32 typeIndex = static_cast<uint32>(holdTetrominoType);
+
+	// None (empty hold, e.g. after rewinding the first hold) leaves the buffer cleared.
+	if (typeIndex >= UE_ARRAY_COUNT(TetrominoCoordinatesByType))
+	{
+		return;
+	}
+
+	for (const auto& coord : TetrominoCoordinatesByType[typeIndex])
 	{
 		HoldBufferComponent->SetMinoType(coord.X + HoldTetrominoPosition.X, coord.Y + HoldTetrominoPosition.Y, holdTetrominoType);
 	}	
@@ -182,8 +190,14 @@ void ATNElectronicDisplayField::updatePreviewTetrominoes(const FTNFieldContext& 
 	{
 		const E_TNTetrominoType tetrominoType = fieldContext.PreviewTetrominoTypes[i];
 		const FVector2D pos = PreviewTetrominoPositions[i];
+		const uint32 typeIndex = static_cast<uint32>(tetrominoType);
 
-		for (const auto& coord : TetrominoCoordinatesByType[static_cast<uint32>(tetrominoType)])
+		if (typeIndex >= UE_ARRAY_COUNT(TetrominoCoordinatesByType))
+		{
+			continue;
+		}
+
+		for (const auto& coord : TetrominoCoordinatesByType[typeIndex])
 		{
 			PreviewBufferComponent->SetMinoType(coord.X + pos.X, coord.Y + pos.Y, tetrominoType);
 		}
