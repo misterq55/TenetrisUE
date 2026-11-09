@@ -133,8 +133,24 @@ Code (done):
 - `UTNOptionsWidget` is the options container (reused by the title menu
   (`OptionsButton`/`OptionsPanel`, both optional) and the pause menu). It hosts two
   sections, `UTNAudioSettingsWidget` (3 volume sliders) and `UTNControlsSettingsWidget`
-  (key bindings; skeleton only, rebinding not implemented yet), switched by optional
+  (key bindings, see below), switched by optional
   tab buttons, plus an optional close button (`OnCloseRequested`).
+- Key rebinding uses the engine's **Enhanced Input User Settings** (`Config/DefaultInput.ini`,
+  `[/Script/EnhancedInput.EnhancedInputDeveloperSettings]`): `bEnableUserSettings=True`, and
+  `IMC_Tenetris` is a Default Mapping Context (Add Immediately + Register With User Settings),
+  so the engine adds it to every local player (title and game) and the player controller no
+  longer adds it. Rebindable mappings are those with Player Mappable Key Settings (set on
+  the 9 gameplay Input Actions; `IA_Pause` has none, so pause stays fixed). The engine saves
+  the player's keys to the `EnhancedInputUserSettings` SaveGame slot and applies changes
+  immediately.
+  `UTNInputBindingSubsystem` (LocalPlayer subsystem, `Source/Tenetris/Input`) is a stateless
+  policy layer over `UEnhancedInputUserSettings`: 1 keyboard column + 1 gamepad column per
+  action (column = the player mapping whose IMC default key is keyboard/gamepad), no
+  clearing, conflicts swap, reserved keys (Esc, Enter, Tilde, F1-F12, pad Special L/R, keys
+  of non-mappable mappings such as P) and mouse/axis keys are rejected. Reset =
+  `ResetKeyProfileIdToDefault`, save = `SaveSettings`.
+  `UTNControlsSettingsWidget` builds the rows with `UTNKeyBindingSelector`; a column whose
+  action has no IMC mapping for that device is disabled.
 
 Editor setup and play-test verification are tracked as TODO checklists in section 5
 (Next steps / backlog → "Pause/Options TODO").
@@ -178,9 +194,16 @@ Note: some BPs were moved to `Content/BluePrint/` leaving UE redirectors — run
     - `VerticalBox "ContentBox"` as a Canvas child: anchor Center (0.5,0.5), alignment
       (0.5,0.5), fixed width (e.g. 400) or Auto size.
     - One row per slider (`HorizontalBox` of a label `TextBlock` + the named `Slider`).
-  - [x] `WB_ControlSettings` (parent `TNControlsSettingsWidget`): placeholder for now
-    (empty `CanvasPanel` + a "Coming soon" `TextBlock` is enough). Required because
-    `WB_Options` needs an instance to satisfy its `ControlsSettings` BindWidget.
+  - [ ] `WB_ControlSettings` (parent `TNControlsSettingsWidget`): key rebinding panel.
+    Add a `VerticalBox` named `BindingList` (Is Variable; Canvas child, anchor Center,
+    alignment (0.5,0.5), width ~700). Rows are built in C++. Optional: `ResetButton`
+    (Button) and `MessageText` (TextBlock).
+  - [ ] Key rebinding assets: on each of the 9 gameplay Input Actions set
+    User Settings → Player Mappable Key Settings with a unique `Name` (e.g. `MoveLeft`) and
+    `DisplayName`; leave `IA_Pause` without it. `IMC_Tenetris` should have exactly one
+    keyboard and one gamepad mapping per rebindable action. Check Project Settings →
+    Enhanced Input (Enable User Settings, Default Mapping Contexts = `IMC_Tenetris`).
+    The player controller BP no longer has a mapping context property.
   - [x] `WB_Options` (parent `TNOptionsWidget`): required `AudioSettings`
     (`WB_AudioSettings` instance) and `ControlsSettings` (`WB_ControlSettings`
     instance); optional `AudioTabButton`, `ControlsTabButton`, `CloseButton`.

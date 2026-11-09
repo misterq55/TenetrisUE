@@ -14,15 +14,10 @@
 void ATNTenetrisPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	if (ULocalPlayer* LocalPlayer = GetLocalPlayer())
-	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem =
-			LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>())
-		{
-			Subsystem->AddMappingContext(DefaultMappingContext, 0);
-		}
-	}
+
+	// The mapping context is not added here: IMC_Tenetris is listed in Project Settings >
+	// Enhanced Input > Default Mapping Contexts, so the engine applies it to the local player
+	// and registers it with the Enhanced Input user settings (player key rebinding).
 
 	// Each screen sets its own input state on entry; reset to game input so that
 	// a UI-only mode left over from a previous level (e.g. the title menu) does not
