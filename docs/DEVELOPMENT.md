@@ -156,7 +156,7 @@ Done (committed):
   wiring). **Latest commit `b36519a`.**
 
 Editor-side assets the user maintains: `DemoSingle.umap`, `DemoTitle.umap`,
-`Content/BluePrint/*` game-mode BPs, `WB_TNDemoScore`, `WB_TNDemoTitle`, `M_BG`.
+`Content/BluePrint/*` game-mode BPs, `WB_DemoScore`, `WB_DemoTitle` (renamed from `WB_TNDemoScore`/`WB_TNDemoTitle`), `WB_AudioSettings`, `WB_ControlSettings`, `WB_Options`, `WB_PauseMenu`, `M_BG`.
 Note: some BPs were moved to `Content/BluePrint/` leaving UE redirectors — run
 "Fix Up Redirectors" when convenient.
 
@@ -172,17 +172,17 @@ Note: some BPs were moved to `Content/BluePrint/` leaving UE redirectors — run
     `P`, gamepad `Special Right` (Esc ends PIE in the editor → test with `P`).
   - [ ] Player controller BP: assign `PauseAction` = `IA_Pause` (unassigned = no pause
     + error log).
-  - [ ] `WBP_AudioSettings` (parent `TNAudioSettingsWidget`): required `MasterSlider`,
+  - [x] `WB_AudioSettings` (parent `TNAudioSettingsWidget`): required `MasterSlider`,
     `BGMSlider`, `SFXSlider` (range 0..1). Names must match exactly.
     - Root `CanvasPanel`, anchor Stretch (0,0)-(1,1), offsets 0.
     - `VerticalBox "ContentBox"` as a Canvas child: anchor Center (0.5,0.5), alignment
       (0.5,0.5), fixed width (e.g. 400) or Auto size.
     - One row per slider (`HorizontalBox` of a label `TextBlock` + the named `Slider`).
-  - [ ] `WBP_ControlsSettings` (parent `TNControlsSettingsWidget`): placeholder for now
+  - [x] `WB_ControlSettings` (parent `TNControlsSettingsWidget`): placeholder for now
     (empty `CanvasPanel` + a "Coming soon" `TextBlock` is enough). Required because
-    `WBP_Options` needs an instance to satisfy its `ControlsSettings` BindWidget.
-  - [ ] `WBP_Options` (parent `TNOptionsWidget`): required `AudioSettings`
-    (`WBP_AudioSettings` instance) and `ControlsSettings` (`WBP_ControlsSettings`
+    `WB_Options` needs an instance to satisfy its `ControlsSettings` BindWidget.
+  - [x] `WB_Options` (parent `TNOptionsWidget`): required `AudioSettings`
+    (`WB_AudioSettings` instance) and `ControlsSettings` (`WB_ControlSettings`
     instance); optional `AudioTabButton`, `ControlsTabButton`, `CloseButton`.
     - Root `CanvasPanel`, anchor Stretch; optional dim/background `Border` behind
       everything.
@@ -193,18 +193,18 @@ Note: some BPs were moved to `Content/BluePrint/` leaving UE redirectors — run
       fixed size (e.g. 500x400). No `WidgetSwitcher` needed — C++ toggles
       `SetVisibility(Collapsed/SelfHitTestInvisible)` on each.
     - `CloseButton`: anchor Bottom-Center, position e.g. (0,-20).
-  - [ ] `WBP_PauseMenu` (parent `TNPauseMenuWidget`): required `ResumeButton`,
+  - [x] `WB_PauseMenu` (parent `TNPauseMenuWidget`): required `ResumeButton`,
     `QuitToTitleButton`; optional `OptionsButton`, `MainMenuPanel` (button container),
-    `OptionsPanel` (a `WBP_Options` instance placed OUTSIDE `MainMenuPanel`).
+    `OptionsPanel` (a `WB_Options` instance placed OUTSIDE `MainMenuPanel`).
     - Root `CanvasPanel`, anchor Stretch; a dim background `Border`/`Image` behind.
     - `VerticalBox "MainMenuPanel"` (Resume/Options/Quit buttons): anchor Center,
       alignment (0.5,0.5).
-    - `OptionsPanel` (`WBP_Options` instance) as a sibling of `MainMenuPanel`, same
+    - `OptionsPanel` (`WB_Options` instance) as a sibling of `MainMenuPanel`, same
       Center anchor (overlap is fine; only one is `Visible` at a time).
-  - [ ] Title WBP: add a `Button "OptionsButton"` inside the existing `MainMenuPanel`
-    (same level as Play/How To Play/Quit), and a `WBP_Options` instance named
+  - [x] Title WBP: add a `Button "OptionsButton"` inside the existing `MainMenuPanel`
+    (same level as Play/How To Play/Quit), and a `WB_Options` instance named
     `OptionsPanel` as a sibling OUTSIDE `MainMenuPanel`, same anchor as it.
-  - [ ] Demo game-mode BP: set `PauseMenuWidgetClass` = `WBP_PauseMenu`.
+  - [ ] Demo game-mode BP: set `PauseMenuWidgetClass` = `WB_PauseMenu`.
   - [ ] `DA_TNAudio`: register `MenuClick`.
 
   Play-test verification (not yet tested in editor):
