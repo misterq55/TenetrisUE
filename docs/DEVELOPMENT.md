@@ -227,6 +227,10 @@ Note: some BPs were moved to `Content/BluePrint/` leaving UE redirectors — run
   - [x] Title WBP: add a `Button "OptionsButton"` inside the existing `MainMenuPanel`
     (same level as Play/How To Play/Quit), and a `WB_Options` instance named
     `OptionsPanel` as a sibling OUTSIDE `MainMenuPanel`, same anchor as it.
+  - [ ] Title WBP: add a `TextBlock "VersionText"` (optional) anchored Bottom-Right
+    (1,1), alignment (1,1), position e.g. (-20,-20). C++ fills it with
+    `Build <ProjectVersion>`; `Config/DefaultGame.ini` keeps `ProjectVersion=local` and CI
+    overwrites it with the Jenkins build number (`57`, `57-dev`) at build time.
   - [ ] Demo game-mode BP: set `PauseMenuWidgetClass` = `WB_PauseMenu`.
   - [ ] `DA_TNAudio`: register `MenuClick`.
 

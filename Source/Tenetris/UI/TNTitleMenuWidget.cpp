@@ -2,6 +2,8 @@
 
 #include "Tenetris/UI/TNTitleMenuWidget.h"
 #include "Components/Button.h"
+#include "Components/TextBlock.h"
+#include "GeneralProjectSettings.h"
 #include "Tenetris/UI/TNOptionsWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -44,6 +46,12 @@ void UTNTitleMenuWidget::NativeConstruct()
 	{
 		OptionsPanel->OnCloseRequested.AddDynamic(this, &UTNTitleMenuWidget::onOptionsCloseRequested);
 		OptionsPanel->SetVisibility(ESlateVisibility::Collapsed);
+	}
+
+	if (IsValid(VersionText))
+	{
+		const FString& version = GetDefault<UGeneralProjectSettings>()->ProjectVersion;
+		VersionText->SetText(FText::FromString(FString::Printf(TEXT("Build %s"), *version)));
 	}
 }
 

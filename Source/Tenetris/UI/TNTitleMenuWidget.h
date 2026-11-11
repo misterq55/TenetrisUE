@@ -7,6 +7,7 @@
 #include "TNTitleMenuWidget.generated.h"
 
 class UButton;
+class UTextBlock;
 class UWidget;
 class UTNOptionsWidget;
 
@@ -75,4 +76,8 @@ protected:
 	// Audio options panel (hidden by default); closing it returns to the main menu.
 	UPROPERTY(meta = (BindWidgetOptional))
 	TObjectPtr<UTNOptionsWidget> OptionsPanel;
+
+	// Filled with "Build <ProjectVersion>" (the CI build number, or "local").
+	UPROPERTY(meta = (BindWidgetOptional))
+	TObjectPtr<UTextBlock> VersionText;
 };
