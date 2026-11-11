@@ -73,6 +73,9 @@ public:
 	// Writes the player's keys to the user settings save slot.
 	void Save() const;
 
+	// Compact label for the controls settings ("A", "LB", ...) instead of the engine's long gamepad names.
+	static FText GetKeyShortName(const FKey& key);
+
 private:
 	UEnhancedInputUserSettings* getUserSettings() const;
 
