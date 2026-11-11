@@ -16,8 +16,8 @@ enum class E_TNBindingDevice : uint8;
 // Key binding settings panel, hosted by UTNOptionsWidget.
 //
 // Rows (action label + keyboard selector + gamepad selector) are created in C++ inside
-// the BindingList box. The WBP subclass only needs a VerticalBox named exactly
-// "BindingList"; the other widgets are optional.
+// the BindingList box. The WBP subclass must contain widgets named exactly like the
+// BindWidget properties below.
 UCLASS()
 class TENETRIS_API UTNControlsSettingsWidget : public UUserWidget
 {
@@ -49,15 +49,15 @@ private:
 	void onResetClicked();
 
 	// Container the rows are added to.
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UVerticalBox> BindingList;
 
 	// Restores the default keys.
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> ResetButton;
 
 	// Short feedback line (reserved key, swapped keys).
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTextBlock> MessageText;
 
 	UPROPERTY(Transient)

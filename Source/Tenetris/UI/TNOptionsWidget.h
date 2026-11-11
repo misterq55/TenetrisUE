@@ -59,12 +59,12 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTNControlsSettingsWidget> ControlsSettings;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> AudioTabButton;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> ControlsTabButton;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> CloseButton;
 };

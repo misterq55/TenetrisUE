@@ -50,14 +50,14 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTextBlock> LinesText;
 
-	// Optional panel shown on game over (BindWidgetOptional so the WBP can omit it).
-	UPROPERTY(meta = (BindWidgetOptional))
+	// Panel shown on game over (hidden by default).
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UWidget> GameOverPanel;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> ReplayButton;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> MainMenuButton;
 
 private:
