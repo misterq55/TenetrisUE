@@ -274,3 +274,45 @@ bool UTNInputBindingSubsystem::isKeyForDevice(const FKey& key, const E_TNBinding
 
 	return key.IsGamepadKey() == (device == E_TNBindingDevice::Gamepad);
 }
+
+FText UTNInputBindingSubsystem::GetKeyShortName(const FKey& key)
+{
+	// Xbox-style labels, the common default for PC gamepads.
+	static const TMap<FKey, FText> GamepadShortNames =
+	{
+		{ EKeys::Gamepad_FaceButton_Bottom, INVTEXT("A") },
+		{ EKeys::Gamepad_FaceButton_Right, INVTEXT("B") },
+		{ EKeys::Gamepad_FaceButton_Left, INVTEXT("X") },
+		{ EKeys::Gamepad_FaceButton_Top, INVTEXT("Y") },
+		{ EKeys::Gamepad_LeftShoulder, INVTEXT("LB") },
+		{ EKeys::Gamepad_RightShoulder, INVTEXT("RB") },
+		{ EKeys::Gamepad_LeftTrigger, INVTEXT("LT") },
+		{ EKeys::Gamepad_RightTrigger, INVTEXT("RT") },
+		{ EKeys::Gamepad_LeftTriggerAxis, INVTEXT("LT") },
+		{ EKeys::Gamepad_RightTriggerAxis, INVTEXT("RT") },
+		{ EKeys::Gamepad_LeftThumbstick, INVTEXT("LS") },
+		{ EKeys::Gamepad_RightThumbstick, INVTEXT("RS") },
+		{ EKeys::Gamepad_Special_Left, INVTEXT("View") },
+		{ EKeys::Gamepad_Special_Right, INVTEXT("Menu") },
+		{ EKeys::Gamepad_DPad_Up, INVTEXT("DPad Up") },
+		{ EKeys::Gamepad_DPad_Down, INVTEXT("DPad Down") },
+		{ EKeys::Gamepad_DPad_Left, INVTEXT("DPad Left") },
+		{ EKeys::Gamepad_DPad_Right, INVTEXT("DPad Right") },
+		{ EKeys::Gamepad_LeftStick_Up, INVTEXT("LS Up") },
+		{ EKeys::Gamepad_LeftStick_Down, INVTEXT("LS Down") },
+		{ EKeys::Gamepad_LeftStick_Left, INVTEXT("LS Left") },
+		{ EKeys::Gamepad_LeftStick_Right, INVTEXT("LS Right") },
+		{ EKeys::Gamepad_RightStick_Up, INVTEXT("RS Up") },
+		{ EKeys::Gamepad_RightStick_Down, INVTEXT("RS Down") },
+		{ EKeys::Gamepad_RightStick_Left, INVTEXT("RS Left") },
+		{ EKeys::Gamepad_RightStick_Right, INVTEXT("RS Right") },
+	};
+
+	if (const FText* shortName = GamepadShortNames.Find(key))
+	{
+		return *shortName;
+	}
+
+	// The engine's short name falls back to the long one when a key has none.
+	return key.GetDisplayName(false);
+}
