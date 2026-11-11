@@ -131,10 +131,12 @@ Code (done):
   `SetGameplayInputBlocked(true)` ignores all gameplay input and first releases held
   left/right/soft-drop so the piece does not keep moving after resume.
 - `UTNOptionsWidget` is the options container (reused by the title menu
-  (`OptionsButton`/`OptionsPanel`, both optional) and the pause menu). It hosts two
+  (`OptionsButton`/`OptionsPanel`) and the pause menu). It hosts two
   sections, `UTNAudioSettingsWidget` (3 volume sliders) and `UTNControlsSettingsWidget`
-  (key bindings, see below), switched by optional
-  tab buttons, plus an optional close button (`OnCloseRequested`).
+  (key bindings, see below), switched by
+  tab buttons, plus a close button (`OnCloseRequested`).
+- All C++-bound UMG widgets use `meta=(BindWidget)` (required, no `BindWidgetOptional`):
+  a missing or misnamed widget is a WBP compile error, which also fails the cook in CI.
 - Key rebinding uses the engine's **Enhanced Input User Settings** (`Config/DefaultInput.ini`,
   `[/Script/EnhancedInput.EnhancedInputDeveloperSettings]`): `bEnableUserSettings=True`, and
   `IMC_Tenetris` is a Default Mapping Context (Add Immediately + Register With User Settings),
@@ -194,10 +196,14 @@ Note: some BPs were moved to `Content/BluePrint/` leaving UE redirectors — run
     - `VerticalBox "ContentBox"` as a Canvas child: anchor Center (0.5,0.5), alignment
       (0.5,0.5), fixed width (e.g. 400) or Auto size.
     - One row per slider (`HorizontalBox` of a label `TextBlock` + the named `Slider`).
-  - [ ] `WB_ControlSettings` (parent `TNControlsSettingsWidget`): key rebinding panel.
-    Add a `VerticalBox` named `BindingList` (Is Variable; Canvas child, anchor Center,
-    alignment (0.5,0.5), width ~700). Rows are built in C++. Optional: `ResetButton`
-    (Button) and `MessageText` (TextBlock).
+  - [x] `WB_ControlSettings` (parent `TNControlsSettingsWidget`): key rebinding panel.
+    Required `BindingList` (VerticalBox; rows are built in C++), `ResetButton` (Button)
+    and `MessageText` (TextBlock, empty by default).
+    - Root `CanvasPanel`; `VerticalBox "ContentBox"` anchor Center, alignment (0.5,0.5).
+    - Inside it: `BindingList`, then a `SizeBox` (HeightOverride ~30) holding
+      `MessageText` (H-Align Center), then `ResetButton` (H-Align Right).
+    - TODO: `MessageText` did not appear in a quick test; re-check later (Enter/F1 →
+      reserved message, an in-use key → swapped message).
   - [ ] Key rebinding assets: on each of the 9 gameplay Input Actions set
     User Settings → Player Mappable Key Settings with a unique `Name` (e.g. `MoveLeft`) and
     `DisplayName`; leave `IA_Pause` without it. `IMC_Tenetris` should have exactly one
@@ -206,7 +212,7 @@ Note: some BPs were moved to `Content/BluePrint/` leaving UE redirectors — run
     The player controller BP no longer has a mapping context property.
   - [x] `WB_Options` (parent `TNOptionsWidget`): required `AudioSettings`
     (`WB_AudioSettings` instance) and `ControlsSettings` (`WB_ControlSettings`
-    instance); optional `AudioTabButton`, `ControlsTabButton`, `CloseButton`.
+    instance), `AudioTabButton`, `ControlsTabButton`, `CloseButton`.
     - Root `CanvasPanel`, anchor Stretch; optional dim/background `Border` behind
       everything.
     - `HorizontalBox "TabBar"` (Audio/Controls buttons): anchor Top-Center (0.5,0),
@@ -217,7 +223,7 @@ Note: some BPs were moved to `Content/BluePrint/` leaving UE redirectors — run
       `SetVisibility(Collapsed/SelfHitTestInvisible)` on each.
     - `CloseButton`: anchor Bottom-Center, position e.g. (0,-20).
   - [x] `WB_PauseMenu` (parent `TNPauseMenuWidget`): required `ResumeButton`,
-    `QuitToTitleButton`; optional `OptionsButton`, `MainMenuPanel` (button container),
+    `QuitToTitleButton`, `OptionsButton`, `MainMenuPanel` (button container),
     `OptionsPanel` (a `WB_Options` instance placed OUTSIDE `MainMenuPanel`).
     - Root `CanvasPanel`, anchor Stretch; a dim background `Border`/`Image` behind.
     - `VerticalBox "MainMenuPanel"` (Resume/Options/Quit buttons): anchor Center,
@@ -227,7 +233,7 @@ Note: some BPs were moved to `Content/BluePrint/` leaving UE redirectors — run
   - [x] Title WBP: add a `Button "OptionsButton"` inside the existing `MainMenuPanel`
     (same level as Play/How To Play/Quit), and a `WB_Options` instance named
     `OptionsPanel` as a sibling OUTSIDE `MainMenuPanel`, same anchor as it.
-  - [ ] Title WBP: add a `TextBlock "VersionText"` (optional) anchored Bottom-Right
+  - [x] Title WBP: add a `TextBlock "VersionText"` anchored Bottom-Right
     (1,1), alignment (1,1), position e.g. (-20,-20). C++ fills it with
     `Build <ProjectVersion>`; `Config/DefaultGame.ini` keeps `ProjectVersion=local` and CI
     overwrites it with the Jenkins build number (`57`, `57-dev`) at build time.

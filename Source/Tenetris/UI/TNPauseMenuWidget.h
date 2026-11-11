@@ -43,17 +43,17 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> ResumeButton;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> OptionsButton;
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> QuitToTitleButton;
 
 	// Container for the buttons above; hidden while the options panel is shown.
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UWidget> MainMenuPanel;
 
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTNOptionsWidget> OptionsPanel;
 
 private:

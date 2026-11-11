@@ -66,18 +66,18 @@ protected:
 	TObjectPtr<UWidget> HowToPlayPanel;
 
 	// Closes the How To Play panel.
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> CloseHowToPlayButton;
 
-	// Opens the options panel (optional so existing WBPs keep working).
-	UPROPERTY(meta = (BindWidgetOptional))
+	// Opens the options panel.
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> OptionsButton;
 
 	// Audio options panel (hidden by default); closing it returns to the main menu.
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTNOptionsWidget> OptionsPanel;
 
 	// Filled with "Build <ProjectVersion>" (the CI build number, or "local").
-	UPROPERTY(meta = (BindWidgetOptional))
+	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTextBlock> VersionText;
 };
