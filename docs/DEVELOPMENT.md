@@ -279,3 +279,49 @@ Note: some BPs were moved to `Content/BluePrint/` leaving UE redirectors — run
   (~60-70s; "License not activated" warning is harmless).
 - Commit code and content assets; keep local junk (`.idea/`, `*.user`, `*.zip`) out.
 - Commits use a `Co-authored-by: Copilot` trailer.
+
+---
+
+## 8. CI (Jenkins)
+
+Pipelines live in `CI/Jenkinsfiles/`, one `<Purpose>.Jenkinsfile` per job, so pipelines
+with a different purpose can be added side by side. `CI/Scripts/*.py` (engine Python,
+standard library only) do the work, UAT `BuildCookRun` builds.
+
+`Build.Jenkinsfile` (manual job) compiles, cooks, packages and distributes the game:
+
+- **Flow**: `Prepare` pins one commit SHA (and creates a draft GitHub Release for Shipping)
+  → `Build` is a `matrix` over `TARGET` = win | mac (agent `ue5-<target>`, `failFast`); each
+  cell runs Checkout (pinned SHA) → Compile (`build.py compile`, BuildCookRun `-build`) →
+  Cook & Package (`build.py cook` with no `-build`, then `package.py`) → Upload, all in one
+  workspace → `Publish Release` (Shipping only). On failure
+  the draft is deleted, so a release is published only when every platform succeeded.
+- **Parameters**: `BUILD_TYPE` = Development | Shipping, `PLATFORM` = Both | Win | Mac.
+- **Version**: the Jenkins build number (shared by both types). `version.py` writes it into
+  the workspace `DefaultGame.ini` `ProjectVersion` before building (`57` for Shipping,
+  `57-dev` otherwise); the title shows `Build 57`. Never committed.
+- **Outputs** (`Saved/CI/Dist/`): Win64 `.zip`, Mac `.dmg` (Universal, unsigned).
+  - Shipping → GitHub Release `build-N` (tag created on publish, at the pinned SHA); notes
+    from `git log <previous build tag>..SHA`. Symbols (.pdb/.dSYM) are stripped and sent to
+    Drive `symbols/<platform>/`.
+  - Development → Drive `dev/<platform>/`, symbols included, newest 5 kept.
+- **Scripts**: `config.py` (paths; CLI arg → env var → OS default), `version.py`,
+  `build.py compile|cook` (`--dry-run` prints the UAT command), `package.py`, `publish.py`
+  (`release-draft|release-upload|release-publish|release-delete|drive-upload`).
+  Local check: `python CI/Scripts/build.py cook --build-type Shipping --dry-run`.
+
+Jenkins setup:
+- Job: Pipeline, "Pipeline script from SCM", Git `https://github.com/misterq55/TenetrisUE.git`,
+  branch `*/master`, Script Path `CI/Jenkinsfiles/Build.Jenkinsfile`. No build triggers.
+- Nodes: controller 0 executors; agents labelled `ue5-win` and `ue5-mac`, 1 executor each,
+  node environment variable `UE_ROOT` (engine root). Keep the Windows workspace path short
+  (e.g. remote root `C:\J`); disable sleep/auto-reboot on agents.
+- Tools on both agents: `git`, `gh`, `rclone` (Mac also Xcode for `hdiutil`/`ditto`). If the
+  agent service cannot see them on PATH, set `GH_PATH` / `RCLONE_PATH` node variables.
+- Credentials: `tenetris-github-token` (Secret text; fine-grained token, Contents read/write
+  on this repo) and `tenetris-rclone-conf` (Secret file; rclone config with a `gdrive`
+  remote — override with `RCLONE_REMOTE`, root folder `RCLONE_ROOT`, default `Tenetris`).
+  Use your own Google OAuth client in **Production** status; in Testing, refresh tokens
+  expire after 7 days.
+- Large artifacts are never archived to the controller (`archiveArtifacts` unused).
+- `notify()` in the Jenkinsfile is a stub for future notifications (e.g. Discord).
