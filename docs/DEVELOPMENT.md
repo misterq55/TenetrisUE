@@ -291,7 +291,7 @@ standard library only) do the work, UAT `BuildCookRun` builds.
 `Build.Jenkinsfile` (manual job) compiles, cooks, packages and distributes the game:
 
 - **Flow**: `Prepare` pins one commit SHA (and creates a draft GitHub Release for Shipping)
-  → `Build` is a `matrix` over `TARGET` = win | mac (agent `ue5-<target>`, `failFast`); each
+  → `Build` is a `matrix` over `TARGET` = WindowsMini | MacMini (node name, `failFast`); each
   cell runs Checkout (pinned SHA) → Compile (`build.py compile`, BuildCookRun `-build`) →
   Cook & Package (`build.py cook` with no `-build`, then `package.py`) → Upload, all in one
   workspace → `Publish Release` (Shipping only). On failure
@@ -313,7 +313,8 @@ standard library only) do the work, UAT `BuildCookRun` builds.
 Jenkins setup:
 - Job: Pipeline, "Pipeline script from SCM", Git `https://github.com/misterq55/TenetrisUE.git`,
   branch `*/master`, Script Path `CI/Jenkinsfiles/Build.Jenkinsfile`. No build triggers.
-- Nodes: controller 0 executors; agents labelled `ue5-win` and `ue5-mac`, 1 executor each,
+- Nodes: controller 0 executors; agents named `WindowsMini` and `MacMini` (selected by node
+  name, no extra labels needed), 1 executor each,
   node environment variable `UE_ROOT` (engine root). Keep the Windows workspace path short
   (e.g. remote root `C:\J`); disable sleep/auto-reboot on agents.
 - Tools on both agents: `git`, `gh`, `rclone` (Mac also Xcode for `hdiutil`/`ditto`). If the
