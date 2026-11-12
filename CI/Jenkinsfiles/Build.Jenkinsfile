@@ -1,8 +1,9 @@
 // Tenetris build pipeline: compile, cook, package and distribute (manual trigger only).
 // Jenkins job Script Path: CI/Jenkinsfiles/Build.Jenkinsfile
 //
-// Nodes: the controller has no executors; 'ue5-win' and 'ue5-mac' agents must define the
-// UE_ROOT environment variable (Manage Nodes -> node -> Environment variables).
+// Nodes: the controller has no executors; agents are selected by node name ('WindowsMini',
+// 'MacMini') and must define the UE_ROOT environment variable
+// (Manage Nodes -> node -> Environment variables).
 // Credentials: 'tenetris-github-token' (Secret text), 'tenetris-rclone-conf' (Secret file).
 //
 // Flow: Prepare pins one commit (and creates a draft release for Shipping), a matrix builds
@@ -13,8 +14,13 @@ def isShipping() {
     return params.BUILD_TYPE == 'Shipping'
 }
 
-def wantsPlatform(String target) {
-    return params.PLATFORM == 'Both' || params.PLATFORM.toLowerCase() == target
+// Jenkins node names per PLATFORM parameter value.
+def platformNodes() {
+    return [Win: 'WindowsMini', Mac: 'MacMini']
+}
+
+def wantsPlatform(String nodeName) {
+    return params.PLATFORM == 'Both' || platformNodes()[params.PLATFORM] == nodeName
 }
 
 // Checks out the commit resolved in Prepare, so every agent builds the same source even if
@@ -90,7 +96,7 @@ pipeline {
 
     stages {
         stage('Prepare') {
-            agent { label 'ue5-win || ue5-mac' }
+            agent { label 'WindowsMini || MacMini' }
             steps {
                 script {
                     def scmVars = checkout scm
@@ -112,11 +118,11 @@ pipeline {
         stage('Build') {
             failFast true
             matrix {
-                // Agent labels are 'ue5-<target>'; the PLATFORM parameter picks the cells.
+                // TARGET is the Jenkins node name; the PLATFORM parameter picks the cells.
                 axes {
                     axis {
                         name 'TARGET'
-                        values 'win', 'mac'
+                        values 'WindowsMini', 'MacMini'
                     }
                 }
                 when {
@@ -124,7 +130,7 @@ pipeline {
                     expression { wantsPlatform(env.TARGET) }
                 }
                 // One agent for the whole cell: Compile and Cook share its workspace.
-                agent { label "ue5-${TARGET}" }
+                agent { label "${TARGET}" }
                 options { timeout(time: 3, unit: 'HOURS') }
                 stages {
                     stage('Checkout') {
@@ -159,7 +165,7 @@ pipeline {
                 beforeAgent true
                 expression { isShipping() }
             }
-            agent { label 'ue5-win || ue5-mac' }
+            agent { label 'WindowsMini || MacMini' }
             steps {
                 script {
                     checkoutPinned()
@@ -176,7 +182,7 @@ pipeline {
             script {
                 // Never leave a half-uploaded draft behind.
                 if (env.DRAFT_CREATED == 'true') {
-                    node('ue5-win || ue5-mac') {
+                    node('WindowsMini || MacMini') {
                         checkoutPinned()
                         withGitHub {
                             py("CI/Scripts/publish.py release-delete --tag ${env.RELEASE_TAG}")
