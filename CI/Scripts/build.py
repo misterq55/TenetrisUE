@@ -1,7 +1,8 @@
 """Runs UAT BuildCookRun for the host platform, in two steps so Jenkins shows them separately.
 
-  compile  Stamps the build number and compiles the game and editor targets (the editor is
-           needed by the cook). Starts from a clean Saved/CI folder.
+  compile  Stamps the build number and compiles the game target (named explicitly with -target)
+           and the editor target (needed by the cook). Starts from a clean Saved/CI folder and
+           fails if the game target receipt is missing afterwards.
   cook     Cooks with the editor built above, then stages, paks and archives together with the
            game binaries from the compile step into Saved/CI/Archive/<UE platform folder>.
 
@@ -34,8 +35,9 @@ def common_args(build_type):
 
 
 STEP_ARGS = {
-    # BuildCookRun always adds the project's editor target to -build.
-    "compile": ["-build"],
+    # Without -target, -build here compiled only the editor target and Stage then failed on the
+    # missing game receipt, so the game target is named explicitly.
+    "compile": ["-build", f"-target={config.PROJECT_NAME}"],
     # No -build: reuses the binaries from the compile step.
     "cook": [
         "-cook",
@@ -49,6 +51,13 @@ STEP_ARGS = {
         f"-archivedirectory={config.ARCHIVE_DIR}",
     ],
 }
+
+
+def game_receipt(build_type):
+    """Receipt UBT writes for the game target; Stage needs it to find the game binaries."""
+    platform = config.ue_platform()
+    name = config.PROJECT_NAME if build_type == "Development" else f"{config.PROJECT_NAME}-{platform}-{build_type}"
+    return config.PROJECT_ROOT / "Binaries" / platform / f"{name}.target"
 
 
 def uat_command(root, step, build_type):
@@ -79,6 +88,11 @@ def main():
         config.ARCHIVE_DIR.mkdir(parents=True, exist_ok=True)
 
     config.run(cmd, cwd=config.PROJECT_ROOT)
+
+    if args.step == "compile":
+        receipt = game_receipt(args.build_type)
+        if not receipt.is_file():
+            config.fail(f"Game target was not built: missing receipt {receipt}")
 
 
 if __name__ == "__main__":
