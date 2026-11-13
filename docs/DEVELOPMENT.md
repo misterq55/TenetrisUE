@@ -292,7 +292,7 @@ standard library only) do the work, UAT `BuildCookRun` builds.
 
 - **Flow**: `Prepare` pins one commit SHA (and creates a draft GitHub Release for Shipping)
   → `Build` is a `matrix` over `TARGET` = WindowsMini | MacMini (node name, `failFast`); each
-  cell runs Checkout (pinned SHA) → Compile (`build.py compile`, BuildCookRun `-build`) →
+  cell runs Checkout (pinned SHA) → Compile (`build.py compile`, BuildCookRun `-build -target=Tenetris`) →
   Cook & Package (`build.py cook` with no `-build`, then `package.py`) → Upload, all in one
   workspace → `Publish Release` (Shipping only). On failure
   the draft is deleted, so a release is published only when every platform succeeded.
