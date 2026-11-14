@@ -113,6 +113,16 @@ void ATNDemoSingleGameMode::EndPlay(const EEndPlayReason::Type endPlayReason)
     bPaused = false;
   }
 
+  // The audio subsystem persists across levels, so stop the tracks explicitly when leaving this level.
+  if (endPlayReason == EEndPlayReason::LevelTransition)
+  {
+    if (UTNAudioSubsystem* audio = getAudioSubsystem())
+    {
+      audio->StopBGM();
+      audio->StopLoop();
+    }
+  }
+
   Super::EndPlay(endPlayReason);
 }
 
