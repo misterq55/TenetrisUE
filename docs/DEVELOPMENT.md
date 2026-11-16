@@ -308,7 +308,20 @@ standard library only) do the work, UAT `BuildCookRun` builds.
   Cook & Package (`build.py cook` with no `-build`, then `package.py`) → Upload, all in one
   workspace → `Publish Release` (Shipping only). On failure
   the draft is deleted, so a release is published only when every platform succeeded.
-- **Parameters**: `BUILD_TYPE` = Development | Shipping, `PLATFORM` = Both | Win | Mac.
+- **Parameters**: `BUILD_TYPE` = Development | Shipping, `PLATFORM` = Both | Win | Mac,
+  `COOK_MODE` = Auto | Incremental | Full, `CLEAN` (bool).
+- **Cook policy** (resolved in `config.resolve_cook_mode`): compiling is always incremental
+  (UBT, workspace kept). The cook is a full recook by default in UE 5.7
+  (`CookIncrementalDefaultIncremental=false`), so `Auto` adds `-cookincremental` for
+  Development (speed) and cooks Shipping fully (a release build depends only on its commit,
+  never on a previous cook). Incremental Shipping can still be chosen explicitly: it logs a
+  warning and is recorded as `"cook"` in `manifest.json` and in the build description.
+  `CLEAN` passes UAT `-clean` (deletes build products and cooked data) and forces a full cook;
+  use it when an incremental result looks wrong. (`-iterate` is the legacy iterative cook and
+  is not used.) Revisit the Shipping default if full cooks become too slow.
+  - [ ] Verify: run the same commit twice with Development; the second cook log must not
+    say `FULL COOK`. The per-build `ProjectVersion` stamp in `DefaultGame.ini` may invalidate
+    the incremental cook; if so, move the version out of the cooked config.
 - **Version**: the Jenkins build number (shared by both types). `version.py` writes it into
   the workspace `DefaultGame.ini` `ProjectVersion` before building (`57` for Shipping,
   `57-dev` otherwise); the title shows `Build 57`. Never committed.
@@ -320,7 +333,8 @@ standard library only) do the work, UAT `BuildCookRun` builds.
 - **Scripts**: `config.py` (paths; CLI arg → env var → OS default), `version.py`,
   `build.py compile|cook` (`--dry-run` prints the UAT command), `package.py`, `publish.py`
   (`release-draft|release-upload|release-publish|release-delete|drive-upload`).
-  Local check: `python CI/Scripts/build.py cook --build-type Shipping --dry-run`.
+  Local check: `python CI/Scripts/build.py cook --build-type Shipping --dry-run`
+  (add `--cook-mode Incremental` / `--clean` to see the cook flags).
 
 Jenkins setup:
 - Job: Pipeline, "Pipeline script from SCM", Git `https://github.com/misterq55/TenetrisUE.git`,

@@ -6,6 +6,10 @@
   cook     Cooks with the editor built above, then stages, paks and archives together with the
            game binaries from the compile step into Saved/CI/Archive/<UE platform folder>.
 
+Cook mode (--cook-mode): Auto cooks incrementally for Development and fully for Shipping;
+Incremental / Full force one or the other. --clean rebuilds the code and forces a full cook
+(UAT -clean also deletes the previously cooked data).
+
 Both steps must run in the same workspace, with the same build type.
 """
 
@@ -53,6 +57,16 @@ STEP_ARGS = {
 }
 
 
+def step_args(step, build_type, cook_mode, clean):
+    args = list(STEP_ARGS[step])
+    if clean:
+        args.append("-clean")
+    if step == "cook" and config.resolve_cook_mode(cook_mode, build_type, clean) == "Incremental":
+        # Reuses the previous cook in Saved/Cooked; only changed packages are cooked again.
+        args.append("-cookincremental")
+    return args
+
+
 def game_receipt(build_type):
     """Receipt UBT writes for the game target; Stage needs it to find the game binaries."""
     platform = config.ue_platform()
@@ -60,8 +74,16 @@ def game_receipt(build_type):
     return config.PROJECT_ROOT / "Binaries" / platform / f"{name}.target"
 
 
-def uat_command(root, step, build_type):
-    return [config.run_uat_path(root), "BuildCookRun", *common_args(build_type), *STEP_ARGS[step]]
+def uat_command(root, step, build_type, cook_mode, clean):
+    return [config.run_uat_path(root), "BuildCookRun", *common_args(build_type), *step_args(step, build_type, cook_mode, clean)]
+
+
+def report_cook_mode(build_type, cook_mode, clean):
+    resolved = config.resolve_cook_mode(cook_mode, build_type, clean)
+    print(f"Cook: {resolved} (requested {cook_mode}{', clean' if clean else ''}, {build_type})", flush=True)
+    if build_type == "Shipping" and resolved == "Incremental":
+        print("WARNING: Shipping build with an incremental cook; the result depends on the previous "
+              "cook in this workspace. Recorded in manifest.json.", flush=True)
 
 
 def main():
@@ -73,7 +95,10 @@ def main():
     args = parser.parse_args()
 
     root = config.ue_root(args.ue_root)
-    cmd = uat_command(root, args.step, args.build_type)
+    cmd = uat_command(root, args.step, args.build_type, args.cook_mode, args.clean)
+
+    if args.step == "cook":
+        report_cook_mode(args.build_type, args.cook_mode, args.clean)
 
     if args.dry_run:
         print(" ".join(str(c) for c in cmd))

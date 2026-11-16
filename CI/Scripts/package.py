@@ -127,6 +127,9 @@ def main():
         "platform": config.ue_platform(),
         "game": game.name,
         "symbols": symbols.name if symbols else None,
+        # How the content was cooked, so an incremental Shipping build stays traceable.
+        "cook": config.resolve_cook_mode(args.cook_mode, args.build_type, args.clean),
+        "clean": args.clean,
     }
     config.MANIFEST.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     print(json.dumps(manifest, indent=2), flush=True)

@@ -27,6 +27,9 @@ RELEASE_NOTES = CI_DIR / "release-notes.md"
 
 BUILD_TYPES = ("Development", "Shipping")
 
+# Auto: incremental for Development, full for Shipping (reproducible release builds).
+COOK_MODES = ("Auto", "Incremental", "Full")
+
 _DEFAULT_UE_ROOT = {
     "Windows": r"C:\Program Files\Epic Games\UE_5.7",
     "Darwin": "/Users/Shared/Epic Games/UE_5.7",
@@ -116,6 +119,23 @@ def fail(message, code=1):
     sys.exit(code)
 
 
+def resolve_cook_mode(cook_mode, build_type, clean):
+    """The cook actually run: "Incremental" or "Full". A clean build always cooks from scratch."""
+    if clean:
+        return "Full"
+    if cook_mode == "Auto":
+        return "Full" if build_type == "Shipping" else "Incremental"
+    return cook_mode
+
+
+def _env_flag(name):
+    return os.environ.get(name, "").strip().lower() in ("1", "true", "yes")
+
+
 def add_build_args(parser):
     parser.add_argument("--build-type", choices=BUILD_TYPES, default=os.environ.get("BUILD_TYPE", "Development"))
     parser.add_argument("--build-number", default=os.environ.get("BUILD_NUMBER", "0"))
+    parser.add_argument("--cook-mode", choices=COOK_MODES, default=os.environ.get("COOK_MODE", "Auto"),
+                        help="Auto = Incremental for Development, Full for Shipping")
+    parser.add_argument("--clean", action="store_true", default=_env_flag("CLEAN"),
+                        help="Rebuild the code and cook everything from scratch")

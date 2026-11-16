@@ -59,7 +59,10 @@ def withDrive(Closure body) {
 }
 
 def buildArgs() {
-    return "--build-type ${params.BUILD_TYPE} --build-number ${env.BUILD_NUMBER}"
+    // Parameters are null on the first run after they are added to the job.
+    def cookMode = params.COOK_MODE ?: 'Auto'
+    def clean = params.CLEAN ? ' --clean' : ''
+    return "--build-type ${params.BUILD_TYPE} --build-number ${env.BUILD_NUMBER} --cook-mode ${cookMode}${clean}"
 }
 
 def upload() {
@@ -88,6 +91,9 @@ pipeline {
     parameters {
         choice(name: 'BUILD_TYPE', choices: ['Development', 'Shipping'], description: 'Shipping publishes a GitHub Release.')
         choice(name: 'PLATFORM', choices: ['Both', 'Win', 'Mac'], description: 'Target platform(s).')
+        choice(name: 'COOK_MODE', choices: ['Auto', 'Incremental', 'Full'],
+               description: 'Auto = Incremental for Development, Full for Shipping. Incremental Shipping is allowed but recorded.')
+        booleanParam(name: 'CLEAN', defaultValue: false, description: 'Rebuild the code and cook everything from scratch.')
     }
 
     environment {
@@ -103,7 +109,7 @@ pipeline {
                     env.BUILD_SHA = scmVars.GIT_COMMIT
 
                     currentBuild.displayName = "#${env.BUILD_NUMBER} ${params.BUILD_TYPE} ${params.PLATFORM}"
-                    currentBuild.description = env.BUILD_SHA.substring(0, 8)
+                    currentBuild.description = "${env.BUILD_SHA.substring(0, 8)} cook:${params.COOK_MODE ?: 'Auto'}${params.CLEAN ? ' clean' : ''}"
 
                     if (isShipping()) {
                         withGitHub {
