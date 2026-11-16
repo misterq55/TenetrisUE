@@ -43,14 +43,8 @@ private:
 	UFUNCTION()
 	void onOptionsCloseRequested();
 
-	// Replaces {MappingName} / {MappingName:Gamepad} tokens in the How To Play texts with the player's current keys.
-	void refreshActionKeyTexts();
-
-	// Returns the template with every key token resolved; unknown tokens are left as-is.
-	FString resolveKeyTokens(const FString& source) const;
-
-	// Original (token) text of each How To Play text block, captured the first time it is refreshed.
-	TMap<TWeakObjectPtr<UTextBlock>, FText> KeyTextTemplates;
+	// Updates every UTNHowToPlayRowWidget in the How To Play panel with the player's current keys.
+	void refreshHowToPlayRows();
 
 protected:
 	// Level opened when Play is pressed (set in the WBP; defaults to the demo level).

@@ -153,6 +153,12 @@ Code (done):
   `ResetKeyProfileIdToDefault`, save = `SaveSettings`.
   `UTNControlsSettingsWidget` builds the rows with `UTNKeyBindingSelector`; a column whose
   action has no IMC mapping for that device is disabled.
+- How To Play guide: the title's `HowToPlayPanel` holds `UTNHowToPlayRowWidget` instances
+  (WBP `WB_HowToPlayRow`), one per action, each with `MappingName` set in the Details panel
+  (`DisplayName` empty = the action's IMC display name). A row shows action / keyboard key /
+  gamepad key (`-` if none) from `UTNInputBindingSubsystem`; the title menu calls `Refresh()`
+  on every row when the panel opens, so rebinding is reflected. Rows must be placed directly
+  in `WB_DemoTitle` (not inside another user widget) to be refreshed.
 
 Editor setup and play-test verification are tracked as TODO checklists in section 5
 (Next steps / backlog → "Pause/Options TODO").
@@ -237,6 +243,12 @@ Note: some BPs were moved to `Content/BluePrint/` leaving UE redirectors — run
     (1,1), alignment (1,1), position e.g. (-20,-20). C++ fills it with
     `Build <ProjectVersion>`; `Config/DefaultGame.ini` keeps `ProjectVersion=local` and CI
     overwrites it with the Jenkins build number (`57`, `57-dev`) at build time.
+  - [x] `WB_HowToPlayRow` (parent `TNHowToPlayRowWidget`): required `ActionText`,
+    `KeyboardKeyText`, `GamepadKeyText` (TextBlocks), e.g. a `HorizontalBox` with fixed-width
+    `SizeBox` columns; key texts inside a `Border` styled as a keycap.
+  - [x] Title WBP: replace the token texts (`{MoveLeft}` ...) in `HowToPlayPanel` with a
+    header line (Action / Keyboard / Gamepad) and `WB_HowToPlayRow` instances (set
+    `MappingName` on each). Key tokens are no longer resolved.
   - [ ] Demo game-mode BP: set `PauseMenuWidgetClass` = `WB_PauseMenu`.
   - [ ] `DA_TNAudio`: register `MenuClick`.
 
