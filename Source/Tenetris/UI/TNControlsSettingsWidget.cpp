@@ -9,7 +9,10 @@
 #include "Components/VerticalBox.h"
 #include "Components/VerticalBoxSlot.h"
 #include "Tenetris/Input/TNInputBindingSubsystem.h"
+#include "Tenetris/Input/TNInputDeviceSubsystem.h"
 #include "Tenetris/Input/TNKeyBindingSelector.h"
+#include "Tenetris/UI/TNFocusRow.h"
+#include "Tenetris/UI/TNWidgetFocus.h"
 
 void UTNControlsSettingsWidget::NativeConstruct()
 {
@@ -18,6 +21,11 @@ void UTNControlsSettingsWidget::NativeConstruct()
 	if (IsValid(ResetButton))
 	{
 		ResetButton->OnClicked.AddDynamic(this, &UTNControlsSettingsWidget::onResetClicked);
+	}
+
+	if (UTNInputDeviceSubsystem* inputDevice = UTNInputDeviceSubsystem::Get(this))
+	{
+		inputDevice->OnInputDeviceChanged.AddUObject(this, &UTNControlsSettingsWidget::handleInputDeviceChanged);
 	}
 
 	buildRows();
@@ -31,7 +39,26 @@ void UTNControlsSettingsWidget::NativeDestruct()
 		ResetButton->OnClicked.RemoveDynamic(this, &UTNControlsSettingsWidget::onResetClicked);
 	}
 
+	if (UTNInputDeviceSubsystem* inputDevice = UTNInputDeviceSubsystem::Get(this))
+	{
+		inputDevice->OnInputDeviceChanged.RemoveAll(this);
+	}
+
 	Super::NativeDestruct();
+}
+
+UWidget* UTNControlsSettingsWidget::GetFirstFocusWidget() const
+{
+	const E_TNBindingDevice preferredDevice = getPreferredDevice();
+	for (UTNKeyBindingSelector* selector : Selectors)
+	{
+		if (IsValid(selector) && selector->GetDevice() == preferredDevice && selector->GetIsEnabled())
+		{
+			return selector;
+		}
+	}
+
+	return ResetButton;
 }
 
 void UTNControlsSettingsWidget::RefreshFromSettings()
@@ -79,7 +106,7 @@ void UTNControlsSettingsWidget::buildRows()
 
 		for (const E_TNBindingDevice device : { E_TNBindingDevice::Keyboard, E_TNBindingDevice::Gamepad })
 		{
-			UHorizontalBoxSlot* selectorSlot = row->AddChildToHorizontalBox(createSelector(action.MappingName, device));
+			UHorizontalBoxSlot* selectorSlot = row->AddChildToHorizontalBox(wrapInFocusRow(createSelector(action.MappingName, device)));
 			selectorSlot->SetSize(FSlateChildSize(ESlateSizeRule::Fill));
 			selectorSlot->SetPadding(FMargin(8.f, 0.f, 0.f, 0.f));
 		}
@@ -100,6 +127,67 @@ UTNKeyBindingSelector* UTNControlsSettingsWidget::createSelector(const FName act
 	return selector;
 }
 
+UWidget* UTNControlsSettingsWidget::wrapInFocusRow(UWidget* content)
+{
+	if (!FocusRowClass)
+	{
+		return content;
+	}
+
+	UTNFocusRow* focusRow = WidgetTree->ConstructWidget<UTNFocusRow>(FocusRowClass);
+	focusRow->SetContentForSlot(UTNFocusRow::ContentSlotName, content);
+	return focusRow;
+}
+
+E_TNBindingDevice UTNControlsSettingsWidget::getPreferredDevice() const
+{
+	const UTNInputDeviceSubsystem* inputDevice = UTNInputDeviceSubsystem::Get(this);
+	return inputDevice && inputDevice->IsUsingGamepad() ? E_TNBindingDevice::Gamepad : E_TNBindingDevice::Keyboard;
+}
+
+UTNKeyBindingSelector* UTNControlsSettingsWidget::findSelector(const FName actionName, const E_TNBindingDevice device) const
+{
+	for (UTNKeyBindingSelector* selector : Selectors)
+	{
+		if (IsValid(selector) && selector->GetActionName() == actionName && selector->GetDevice() == device)
+		{
+			return selector;
+		}
+	}
+
+	return nullptr;
+}
+
+void UTNControlsSettingsWidget::applyDeviceColumnMode()
+{
+	const bool bGamepad = getPreferredDevice() == E_TNBindingDevice::Gamepad;
+
+	for (UTNKeyBindingSelector* selector : Selectors)
+	{
+		if (!IsValid(selector) || selector->GetDevice() != E_TNBindingDevice::Keyboard)
+		{
+			continue;
+		}
+
+		// Still drawn, but out of the hit-test grid, which also removes it from gamepad navigation.
+		selector->SetVisibility(bGamepad ? ESlateVisibility::HitTestInvisible : ESlateVisibility::Visible);
+
+		if (bGamepad && (selector->HasAnyUserFocus() || selector->HasFocusedDescendants()))
+		{
+			UTNKeyBindingSelector* gamepadSelector = findSelector(selector->GetActionName(), E_TNBindingDevice::Gamepad);
+			if (!IsValid(gamepadSelector) || !gamepadSelector->GetIsEnabled() || !TNWidgetFocus::Focus(gamepadSelector))
+			{
+				TNWidgetFocus::Focus(GetFirstFocusWidget());
+			}
+		}
+	}
+}
+
+void UTNControlsSettingsWidget::handleInputDeviceChanged(const E_TNInputDevice device)
+{
+	applyDeviceColumnMode();
+}
+
 void UTNControlsSettingsWidget::refreshKeys()
 {
 	const UTNInputBindingSubsystem* bindings = getBindingSubsystem();
@@ -118,6 +206,8 @@ void UTNControlsSettingsWidget::refreshKeys()
 			selector->SetIsEnabled(key.IsValid());
 		}
 	}
+
+	applyDeviceColumnMode();
 }
 
 void UTNControlsSettingsWidget::handleBindingKeySelected(UTNKeyBindingSelector* selector, const FKey& key)
@@ -125,6 +215,14 @@ void UTNControlsSettingsWidget::handleBindingKeySelected(UTNKeyBindingSelector* 
 	UTNInputBindingSubsystem* bindings = getBindingSubsystem();
 	if (!bindings || !IsValid(selector))
 	{
+		return;
+	}
+
+	// The engine selector clears its key on the gamepad X button; unbinding is not supported,
+	// so just show the current key again.
+	if (!key.IsValid())
+	{
+		refreshKeys();
 		return;
 	}
 

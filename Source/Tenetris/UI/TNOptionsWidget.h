@@ -3,12 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "Tenetris/UI/TNMenuWidgetBase.h"
 #include "TNOptionsWidget.generated.h"
 
 class UButton;
 class UTNAudioSettingsWidget;
 class UTNControlsSettingsWidget;
+enum class E_TNInputDevice : uint8;
 
 // Fired when the user presses the close/back button.
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTNOptionsCloseRequested);
@@ -17,9 +18,10 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTNOptionsCloseRequested);
 //
 // Reusable from the title menu and the in-game pause menu. The visual layout lives in a
 // WBP subclass whose widgets must be named exactly like the BindWidget properties below.
-// Only one section is visible at a time; the tab buttons switch between them.
+// Only one section is visible at a time; the tab buttons (or LB / RB) switch between them,
+// and Back (gamepad B / Esc) closes the panel like the close button.
 UCLASS()
-class TENETRIS_API UTNOptionsWidget : public UUserWidget
+class TENETRIS_API UTNOptionsWidget : public UTNMenuWidgetBase
 {
 	GENERATED_BODY()
 
@@ -42,6 +44,10 @@ protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
+	virtual UWidget* GetDefaultFocusWidget() const override;
+	virtual bool HandleBack() override;
+	virtual bool HandleMenuKey(const FKey& key) override;
+
 private:
 	UFUNCTION()
 	void onAudioTabClicked();
@@ -51,6 +57,11 @@ private:
 
 	UFUNCTION()
 	void onCloseClicked();
+
+	void handleInputDeviceChanged(const E_TNInputDevice device);
+	void updateTabHints();
+
+	bool isAudioSectionShown() const;
 
 protected:
 	UPROPERTY(meta = (BindWidget))
@@ -67,4 +78,11 @@ protected:
 
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UButton> CloseButton;
+
+	// Optional "LB" / "RB" labels next to the tabs; shown only while a gamepad is in use.
+	UPROPERTY(meta = (BindWidgetOptional))
+	TObjectPtr<UWidget> PrevTabHint;
+
+	UPROPERTY(meta = (BindWidgetOptional))
+	TObjectPtr<UWidget> NextTabHint;
 };

@@ -92,6 +92,33 @@ void UTNTitleMenuWidget::NativeDestruct()
 	Super::NativeDestruct();
 }
 
+UWidget* UTNTitleMenuWidget::GetDefaultFocusWidget() const
+{
+	if (IsValid(OptionsPanel) && OptionsPanel->IsVisible())
+	{
+		return OptionsPanel;
+	}
+
+	if (IsValid(HowToPlayPanel) && HowToPlayPanel->IsVisible())
+	{
+		return CloseHowToPlayButton;
+	}
+
+	return PlayButton;
+}
+
+bool UTNTitleMenuWidget::HandleBack()
+{
+	// The options panel handles Back itself; here only the guide can be closed.
+	if (IsValid(HowToPlayPanel) && HowToPlayPanel->IsVisible())
+	{
+		onCloseHowToPlayClicked();
+	}
+
+	// Consumed even on the main menu: the title has nothing to go back to.
+	return true;
+}
+
 void UTNTitleMenuWidget::onPlayClicked()
 {
 	if (PlayLevelName.IsNone())
@@ -113,6 +140,11 @@ void UTNTitleMenuWidget::onHowToPlayClicked()
 	{
 		refreshHowToPlayRows();
 		HowToPlayPanel->SetVisibility(ESlateVisibility::Visible);
+	}
+
+	if (IsValid(CloseHowToPlayButton))
+	{
+		CloseHowToPlayButton->SetFocus();
 	}
 }
 
@@ -144,6 +176,12 @@ void UTNTitleMenuWidget::onCloseHowToPlayClicked()
 	{
 		MainMenuPanel->SetVisibility(ESlateVisibility::Visible);
 	}
+
+	// Return to the button that opened the guide.
+	if (IsValid(HowToPlayButton))
+	{
+		HowToPlayButton->SetFocus();
+	}
 }
 
 void UTNTitleMenuWidget::onOptionsClicked()
@@ -157,6 +195,7 @@ void UTNTitleMenuWidget::onOptionsClicked()
 	{
 		OptionsPanel->RefreshFromSettings();
 		OptionsPanel->SetVisibility(ESlateVisibility::Visible);
+		OptionsPanel->FocusMenu();
 	}
 }
 
@@ -170,6 +209,11 @@ void UTNTitleMenuWidget::onOptionsCloseRequested()
 	if (IsValid(MainMenuPanel))
 	{
 		MainMenuPanel->SetVisibility(ESlateVisibility::Visible);
+	}
+
+	if (IsValid(OptionsButton))
+	{
+		OptionsButton->SetFocus();
 	}
 }
 

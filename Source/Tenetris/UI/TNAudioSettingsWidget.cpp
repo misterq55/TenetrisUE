@@ -5,26 +5,32 @@
 #include "Tenetris/Audio/TNAudioSubsystem.h"
 #include "Tenetris/Audio/TNAudioData.h"
 
+namespace
+{
+	// Volume change per gamepad / keyboard step.
+	constexpr float SliderStepSize = 0.05f;
+}
+
 void UTNAudioSettingsWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
 	if (IsValid(MasterSlider))
 	{
+		setupSlider(MasterSlider);
 		MasterSlider->OnValueChanged.AddDynamic(this, &UTNAudioSettingsWidget::onMasterChanged);
-		MasterSlider->OnMouseCaptureEnd.AddDynamic(this, &UTNAudioSettingsWidget::onSliderReleased);
 	}
 
 	if (IsValid(BGMSlider))
 	{
+		setupSlider(BGMSlider);
 		BGMSlider->OnValueChanged.AddDynamic(this, &UTNAudioSettingsWidget::onBgmChanged);
-		BGMSlider->OnMouseCaptureEnd.AddDynamic(this, &UTNAudioSettingsWidget::onSliderReleased);
 	}
 
 	if (IsValid(SFXSlider))
 	{
+		setupSlider(SFXSlider);
 		SFXSlider->OnValueChanged.AddDynamic(this, &UTNAudioSettingsWidget::onSfxChanged);
-		SFXSlider->OnMouseCaptureEnd.AddDynamic(this, &UTNAudioSettingsWidget::onSliderReleased);
 	}
 
 	RefreshFromSettings();
@@ -35,22 +41,56 @@ void UTNAudioSettingsWidget::NativeDestruct()
 	if (IsValid(MasterSlider))
 	{
 		MasterSlider->OnValueChanged.RemoveDynamic(this, &UTNAudioSettingsWidget::onMasterChanged);
-		MasterSlider->OnMouseCaptureEnd.RemoveDynamic(this, &UTNAudioSettingsWidget::onSliderReleased);
 	}
 
 	if (IsValid(BGMSlider))
 	{
 		BGMSlider->OnValueChanged.RemoveDynamic(this, &UTNAudioSettingsWidget::onBgmChanged);
-		BGMSlider->OnMouseCaptureEnd.RemoveDynamic(this, &UTNAudioSettingsWidget::onSliderReleased);
 	}
 
 	if (IsValid(SFXSlider))
 	{
 		SFXSlider->OnValueChanged.RemoveDynamic(this, &UTNAudioSettingsWidget::onSfxChanged);
-		SFXSlider->OnMouseCaptureEnd.RemoveDynamic(this, &UTNAudioSettingsWidget::onSliderReleased);
+	}
+
+	// The menu can close (e.g. resume from pause) before the countdown ends; keep the change.
+	if (SettleCountdown >= 0.f)
+	{
+		SettleCountdown = -1.f;
+		SaveSettings();
 	}
 
 	Super::NativeDestruct();
+}
+
+void UTNAudioSettingsWidget::NativeTick(const FGeometry& myGeometry, const float deltaTime)
+{
+	Super::NativeTick(myGeometry, deltaTime);
+
+	if (SettleCountdown < 0.f)
+	{
+		return;
+	}
+
+	SettleCountdown -= deltaTime;
+	if (SettleCountdown < 0.f)
+	{
+		onVolumeSettled();
+	}
+}
+
+void UTNAudioSettingsWidget::setupSlider(USlider* slider)
+{
+	slider->RequiresControllerLock = false;
+	slider->SetStepSize(SliderStepSize);
+
+	// RequiresControllerLock has no setter; push it to the Slate slider.
+	slider->SynchronizeProperties();
+}
+
+UWidget* UTNAudioSettingsWidget::GetFirstFocusWidget() const
+{
+	return MasterSlider;
 }
 
 UTNAudioSubsystem* UTNAudioSettingsWidget::getAudioSubsystem() const
@@ -94,6 +134,8 @@ void UTNAudioSettingsWidget::onMasterChanged(const float value)
 	{
 		audio->SetMasterVolume(value);
 	}
+
+	scheduleSettle();
 }
 
 void UTNAudioSettingsWidget::onBgmChanged(const float value)
@@ -102,6 +144,8 @@ void UTNAudioSettingsWidget::onBgmChanged(const float value)
 	{
 		audio->SetBGMVolume(value);
 	}
+
+	scheduleSettle();
 }
 
 void UTNAudioSettingsWidget::onSfxChanged(const float value)
@@ -110,9 +154,16 @@ void UTNAudioSettingsWidget::onSfxChanged(const float value)
 	{
 		audio->SetSFXVolume(value);
 	}
+
+	scheduleSettle();
 }
 
-void UTNAudioSettingsWidget::onSliderReleased()
+void UTNAudioSettingsWidget::scheduleSettle()
+{
+	SettleCountdown = SettleDelay;
+}
+
+void UTNAudioSettingsWidget::onVolumeSettled()
 {
 	if (UTNAudioSubsystem* audio = getAudioSubsystem())
 	{

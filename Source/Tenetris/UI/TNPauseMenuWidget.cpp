@@ -60,6 +60,22 @@ void UTNPauseMenuWidget::NativeDestruct()
 	Super::NativeDestruct();
 }
 
+UWidget* UTNPauseMenuWidget::GetDefaultFocusWidget() const
+{
+	if (IsValid(OptionsPanel) && OptionsPanel->IsVisible())
+	{
+		return OptionsPanel;
+	}
+
+	return ResumeButton;
+}
+
+bool UTNPauseMenuWidget::HandleBack()
+{
+	onResumeClicked();
+	return true;
+}
+
 void UTNPauseMenuWidget::showMainPanel()
 {
 	if (IsValid(OptionsPanel))
@@ -92,12 +108,19 @@ void UTNPauseMenuWidget::onOptionsClicked()
 	{
 		OptionsPanel->RefreshFromSettings();
 		OptionsPanel->SetVisibility(ESlateVisibility::Visible);
+		OptionsPanel->FocusMenu();
 	}
 }
 
 void UTNPauseMenuWidget::onOptionsCloseRequested()
 {
 	showMainPanel();
+
+	// Return to the button that opened the options.
+	if (IsValid(OptionsButton))
+	{
+		OptionsButton->SetFocus();
+	}
 }
 
 void UTNPauseMenuWidget::onQuitToTitleClicked()

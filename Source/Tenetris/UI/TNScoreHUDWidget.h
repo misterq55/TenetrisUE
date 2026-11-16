@@ -8,7 +8,6 @@
 
 class ATNDemoSingleGameMode;
 class UTextBlock;
-class UButton;
 class UWidget;
 
 // Demo score HUD.
@@ -34,12 +33,6 @@ private:
 	UFUNCTION()
 	void handleGameOver();
 
-	UFUNCTION()
-	void onReplayClicked();
-
-	UFUNCTION()
-	void onMainMenuClicked();
-
 protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTextBlock> ScoreText;
@@ -50,15 +43,10 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UTextBlock> LinesText;
 
-	// Panel shown on game over (hidden by default).
+	// Panel shown on game over (hidden by default). A UTNGameOverWidget instance gets
+	// keyboard/gamepad focus when shown.
 	UPROPERTY(meta = (BindWidget))
 	TObjectPtr<UWidget> GameOverPanel;
-
-	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> ReplayButton;
-
-	UPROPERTY(meta = (BindWidget))
-	TObjectPtr<UButton> MainMenuButton;
 
 private:
 	UPROPERTY()

@@ -113,7 +113,6 @@ private:
   int32 Level = 1;
   bool bGameOver = false;
   bool bPaused = false;
-  bool bCursorWasVisible = false;
 
   UPROPERTY(Transient)
   TObjectPtr<UUserWidget> PauseMenuWidget;

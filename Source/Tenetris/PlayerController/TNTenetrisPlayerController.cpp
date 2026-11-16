@@ -9,6 +9,7 @@
 #include "Tenetris/Audio/TNAudioSubsystem.h"
 #include "Tenetris/Audio/TNAudioData.h"
 #include "Tenetris/GameMode/DemoSingleGameMode/TNDemoSingleGameMode.h"
+#include "Tenetris/Input/TNInputDeviceSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 
 void ATNTenetrisPlayerController::BeginPlay()
@@ -25,6 +26,12 @@ void ATNTenetrisPlayerController::BeginPlay()
 	FInputModeGameAndUI inputMode;
 	inputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
 	SetInputMode(inputMode);
+
+	// No cursor during play; the pause and game-over menus ask for it again.
+	if (UTNInputDeviceSubsystem* inputDevice = UTNInputDeviceSubsystem::Get(this))
+	{
+		inputDevice->SetCursorWanted(false);
+	}
 }
 
 void ATNTenetrisPlayerController::SetupInputComponent()

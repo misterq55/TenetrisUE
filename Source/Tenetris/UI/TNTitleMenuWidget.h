@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "Tenetris/UI/TNMenuWidgetBase.h"
 #include "TNTitleMenuWidget.generated.h"
 
 class UButton;
@@ -16,13 +16,16 @@ class UTNOptionsWidget;
 // Data/logic lives here (C++); the visual layout lives in a WBP subclass.
 // The WBP must contain buttons named exactly like the BindWidget properties below.
 UCLASS()
-class TENETRIS_API UTNTitleMenuWidget : public UUserWidget
+class TENETRIS_API UTNTitleMenuWidget : public UTNMenuWidgetBase
 {
 	GENERATED_BODY()
 
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
+
+	virtual UWidget* GetDefaultFocusWidget() const override;
+	virtual bool HandleBack() override;
 
 private:
 	UFUNCTION()

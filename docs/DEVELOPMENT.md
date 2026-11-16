@@ -32,6 +32,7 @@ Space-Inversion 180° flip animation needs real 3D rotation, which UMG can't do.
 Pattern used throughout: a **C++ `UUserWidget` base** holds logic and binds named
 widgets via `meta=(BindWidget)`; a **WBP subclass** does the visual layout. Examples:
 `UTNScoreHUDWidget`, `UTNTitleMenuWidget`, `UTNOptionsWidget`, `UTNPauseMenuWidget`.
+Menus derive from `UTNMenuWidgetBase` for keyboard/gamepad navigation (section 3c).
 
 ### Two-layer delegate pattern (important)
 Events cross layers via two distinct delegate tiers:
@@ -56,8 +57,9 @@ that don't subscribe), then have the relevant GameMode subscribe and react.
 - `ATNTitleGameMode` — shows `UTNTitleMenuWidget`, sets UI-only input + cursor.
 - `ATNTenetrisTestLocalMultipleGameMode` — test/multi mode (level-placed actors).
 
-Flow: Title level → Play button `OpenLevel(DemoSingle)` → demo. Game-over panel has
-Replay (`RestartMatch`) and Main Menu (`ReturnToTitle`, opens `TitleLevelName`).
+Flow: Title level → Play button `OpenLevel(DemoSingle)` → demo. Game-over panel
+(`UTNGameOverWidget`, placed in the HUD as `GameOverPanel`) has Replay (`RestartMatch`)
+and Main Menu (`ReturnToTitle`, opens `TitleLevelName`).
 
 Input: `ATNTenetrisPlayerController` (Enhanced Input, shared by all modes). On
 `BeginPlay` it resets input mode to **GameAndUI** so a UI-only mode left over from the
@@ -135,8 +137,10 @@ Code (done):
   sections, `UTNAudioSettingsWidget` (3 volume sliders) and `UTNControlsSettingsWidget`
   (key bindings, see below), switched by
   tab buttons, plus a close button (`OnCloseRequested`).
-- All C++-bound UMG widgets use `meta=(BindWidget)` (required, no `BindWidgetOptional`):
-  a missing or misnamed widget is a WBP compile error, which also fails the cook in CI.
+- C++-bound UMG widgets use `meta=(BindWidget)` (required): a missing or misnamed widget is
+  a WBP compile error, which also fails the cook in CI. Exceptions are purely decorative
+  widgets that use `BindWidgetOptional`: `UTNOptionsWidget::PrevTabHint/NextTabHint` and
+  `UTNFocusRow::FocusIndicator`.
 - Key rebinding uses the engine's **Enhanced Input User Settings** (`Config/DefaultInput.ini`,
   `[/Script/EnhancedInput.EnhancedInputDeveloperSettings]`): `bEnableUserSettings=True`, and
   `IMC_Tenetris` is a Default Mapping Context (Add Immediately + Register With User Settings),
@@ -162,6 +166,43 @@ Code (done):
 
 Editor setup and play-test verification are tracked as TODO checklists in section 5
 (Next steps / backlog → "Pause/Options TODO").
+
+---
+
+## 3c. Gamepad / keyboard menu navigation
+
+Code (done). Menus use plain UMG focus navigation (no CommonUI, no Enhanced Input for menus):
+the D-pad / arrow keys / left stick move focus, A / Enter / Space press the focused item, and
+B / Esc is Back. Menu keys are judged in C++.
+- **`UTNInputDeviceSubsystem`** (GameInstance subsystem, `Source/Tenetris/Input`) registers
+  `FTNInputDeviceProcessor` (Slate input preprocessor, never consumes input) and tracks the
+  last used device (`KeyboardMouse` / `Gamepad`, `OnInputDeviceChanged`). It owns the mouse
+  cursor: each screen calls `SetCursorWanted(bool)` (title, pause, game over = true;
+  gameplay = false) and the cursor is shown only when wanted AND the device is
+  keyboard/mouse. In gamepad mode the Slate cursor is hidden too; moving the mouse brings it
+  back. Do not write `bShowMouseCursor` directly elsewhere.
+- **`UTNMenuWidgetBase`**: `FocusMenu()` focuses `GetDefaultFocusWidget()` (recursing into a
+  nested menu); `HandleBack()` / `HandleMenuKey()` are called from `NativeOnKeyDown`, so the
+  innermost menu handles a key first. A root menu (not nested in another menu) re-takes
+  focus every tick when the game viewport holds it (first frame, clicks on empty space),
+  restoring the last focused item; it never steals focus from another window (PIE editor).
+  Keys it does not consume (e.g. Start) reach the player controller.
+- Back per menu: title = close How To Play (else nothing), pause = resume, options = close
+  (saves), game over = nothing. Start in the pause menu resumes via `PauseAction`; at game
+  over pause is blocked.
+- Options: LB / RB switch the Audio / Controls tab; `PrevTabHint` / `NextTabHint` are shown
+  only in gamepad mode. Audio sliders step 0.05 and save + play `MenuClick` 0.3 s after the
+  last change (debounce, flushed on destruct).
+- Controls: in gamepad mode the keyboard column is `HitTestInvisible` (drawn, but not
+  navigable or clickable), so a pad can only rebind pad keys; focus on a keyboard cell
+  moves to the same row's gamepad cell. X (the engine's "clear key") is ignored.
+- **`UTNFocusRow`**: wrapper with a `Content` named slot and an optional `FocusIndicator`
+  shown while anything inside has focus. Hovering it with the mouse focuses its content, so
+  mouse and pad share one highlight. Controls cells are wrapped when `FocusRowClass` is set.
+- `TNWidgetFocus::Focus` focuses the first focusable Slate widget inside a UMG widget
+  (key selectors wrap theirs in an overlay), deferring to the next frame if needed.
+- Known limitation: a hidden cursor resting on a button keeps that button's hover style
+  while the pad has focus (CommonUI moves the cursor away; not done here).
 
 ---
 
@@ -250,6 +291,25 @@ Note: some BPs were moved to `Content/BluePrint/` leaving UE redirectors — run
     header line (Action / Keyboard / Gamepad) and `WB_HowToPlayRow` instances (set
     `MappingName` on each). Key tokens are no longer resolved.
   - [ ] Demo game-mode BP: set `PauseMenuWidgetClass` = `WB_PauseMenu`.
+- **Gamepad menu TODO** (code done & compiled; design in section 3c). Editor setup:
+  - [ ] Recompile `WB_DemoTitle`, `WB_PauseMenu`, `WB_Options` (their parents now derive
+    from `TNMenuWidgetBase`).
+  - [ ] `WB_FocusRow` (parent `TNFocusRow`): `HorizontalBox` with a `TextBlock
+    "FocusIndicator"` (e.g. `>`, fixed-width) and a `NamedSlot "Content"`.
+  - [ ] Wrap the menu buttons (title, pause, game over) and the audio slider rows in
+    `WB_FocusRow` instances.
+  - [ ] `WB_ControlSettings`: set `FocusRowClass` = `WB_FocusRow`.
+  - [ ] `WB_Options`: add `TextBlock`s `PrevTabHint` ("LB") and `NextTabHint` ("RB") on
+    either side of the tab bar.
+  - [ ] `WB_GameOver` (parent `TNGameOverWidget`): required `ReplayButton`, `MainMenuButton`.
+    In `WB_DemoScore`, replace the old `GameOverPanel` with a `WB_GameOver` instance named
+    `GameOverPanel` (the HUD no longer binds `ReplayButton` / `MainMenuButton`; until this is
+    done the game-over buttons do nothing).
+  - [ ] Optional: Navigation → Wrap on the title / pause / game-over button containers.
+  Play-test verification (real pad):
+  - [ ] Title, pause, options (LB/RB, sliders, rebinding), game over fully usable by pad.
+  - [ ] Cursor hides on pad input and returns on mouse move; never visible in gameplay.
+  - [ ] Clicking empty space does not lose the menu focus; PIE editor focus is not stolen.
   - [ ] `DA_TNAudio`: register `MenuClick`.
 
   Play-test verification (not yet tested in editor):
@@ -275,6 +335,11 @@ Note: some BPs were moved to `Content/BluePrint/` leaving UE redirectors — run
   child, then add siblings inside it.
 - **Input mode leaks across level travel.** Each screen should set its own input mode
   on entry (title = UI-only; game = GameAndUI).
+- **D-pad / arrow keys never reach the player controller while a widget has focus** (the
+  focused widget consumes them for navigation). After closing a menu during gameplay,
+  give focus back to the viewport (re-apply `FInputModeGameAndUI`), as `SetGamePaused` does.
+- **`UWidget::SetFocus` may silently do nothing** for widgets made visible in the same frame
+  or whose focusable Slate widget is nested (key selectors); use `TNWidgetFocus::Focus`.
 - **UI (UMG) always draws over the 3D scene** — can't be used as a background behind
   the 3D board. Use a 3D Plane instead.
 - **Auto Exposure** can wash out a dark scene — fix with a Post Process Volume

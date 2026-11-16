@@ -13,6 +13,7 @@
 #include "Tenetris/Audio/TNAudioSubsystem.h"
 #include "Tenetris/Audio/TNAudioData.h"
 #include "Tenetris/PlayerController/TNTenetrisPlayerController.h"
+#include "Tenetris/Input/TNInputDeviceSubsystem.h"
 
 ATNDemoSingleGameMode::ATNDemoSingleGameMode()
 {
@@ -157,13 +158,16 @@ void ATNDemoSingleGameMode::SetGamePaused(const bool bShouldPause)
     tnPlayerController->SetGameplayInputBlocked(bPaused);
   }
 
+  if (UTNInputDeviceSubsystem* inputDevice = UTNInputDeviceSubsystem::Get(this))
+  {
+    inputDevice->SetCursorWanted(bPaused);
+  }
+
   if (bPaused)
   {
     if (IsValid(playerController))
     {
-      bCursorWasVisible = playerController->bShowMouseCursor;
-      playerController->bShowMouseCursor = true;
-
+      // The pause menu focuses its default button when it is constructed.
       if (PauseMenuWidgetClass)
       {
         PauseMenuWidget = CreateWidget<UUserWidget>(playerController, PauseMenuWidgetClass);
@@ -182,9 +186,12 @@ void ATNDemoSingleGameMode::SetGamePaused(const bool bShouldPause)
       PauseMenuWidget = nullptr;
     }
 
+    // Hand keyboard/gamepad focus back to the game viewport so gameplay input resumes.
     if (IsValid(playerController))
     {
-      playerController->bShowMouseCursor = bCursorWasVisible;
+      FInputModeGameAndUI inputMode;
+      inputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+      playerController->SetInputMode(inputMode);
     }
   }
 }

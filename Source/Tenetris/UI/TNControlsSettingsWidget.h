@@ -9,15 +9,21 @@
 class UButton;
 class UTextBlock;
 class UVerticalBox;
+class UWidget;
+class UTNFocusRow;
 class UTNKeyBindingSelector;
 class UTNInputBindingSubsystem;
 enum class E_TNBindingDevice : uint8;
+enum class E_TNInputDevice : uint8;
 
 // Key binding settings panel, hosted by UTNOptionsWidget.
 //
 // Rows (action label + keyboard selector + gamepad selector) are created in C++ inside
 // the BindingList box. The WBP subclass must contain widgets named exactly like the
 // BindWidget properties below.
+//
+// While the player uses a gamepad, only the gamepad column can be focused; the keyboard
+// column becomes editable again as soon as the keyboard or mouse is used.
 UCLASS()
 class TENETRIS_API UTNControlsSettingsWidget : public UUserWidget
 {
@@ -32,9 +38,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Options")
 	void SaveSettings();
 
+	// Widget that receives focus when the panel is opened with a gamepad or keyboard.
+	UWidget* GetFirstFocusWidget() const;
+
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
+
+	// Wrapper that shows a focus indicator next to each key cell. Optional; without it the
+	// selectors are added to the rows directly.
+	UPROPERTY(EditAnywhere, Category = "Options")
+	TSubclassOf<UTNFocusRow> FocusRowClass;
 
 private:
 	void buildRows();
@@ -42,8 +56,15 @@ private:
 	void showMessage(const FString& message);
 	UTNInputBindingSubsystem* getBindingSubsystem() const;
 	UTNKeyBindingSelector* createSelector(const FName actionName, const E_TNBindingDevice device);
+	UWidget* wrapInFocusRow(UWidget* content);
+
+	// Makes the keyboard column unreachable while a gamepad is in use.
+	void applyDeviceColumnMode();
+	E_TNBindingDevice getPreferredDevice() const;
+	UTNKeyBindingSelector* findSelector(const FName actionName, const E_TNBindingDevice device) const;
 
 	void handleBindingKeySelected(UTNKeyBindingSelector* selector, const FKey& key);
+	void handleInputDeviceChanged(const E_TNInputDevice device);
 
 	UFUNCTION()
 	void onResetClicked();

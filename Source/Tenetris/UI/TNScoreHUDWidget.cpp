@@ -2,25 +2,16 @@
 
 #include "Tenetris/UI/TNScoreHUDWidget.h"
 #include "Components/TextBlock.h"
-#include "Components/Button.h"
 #include "Kismet/GameplayStatics.h"
 #include "Tenetris/GameMode/DemoSingleGameMode/TNDemoSingleGameMode.h"
+#include "Tenetris/Input/TNInputDeviceSubsystem.h"
+#include "Tenetris/UI/TNMenuWidgetBase.h"
 
 void UTNScoreHUDWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
 	bindGameMode();
-
-	if (IsValid(ReplayButton))
-	{
-		ReplayButton->OnClicked.AddDynamic(this, &UTNScoreHUDWidget::onReplayClicked);
-	}
-
-	if (IsValid(MainMenuButton))
-	{
-		MainMenuButton->OnClicked.AddDynamic(this, &UTNScoreHUDWidget::onMainMenuClicked);
-	}
 
 	if (IsValid(GameOverPanel))
 	{
@@ -36,16 +27,6 @@ void UTNScoreHUDWidget::NativeDestruct()
 	{
 		GameMode->OnScoreChanged.RemoveDynamic(this, &UTNScoreHUDWidget::handleScoreChanged);
 		GameMode->OnGameOverUI.RemoveDynamic(this, &UTNScoreHUDWidget::handleGameOver);
-	}
-
-	if (IsValid(ReplayButton))
-	{
-		ReplayButton->OnClicked.RemoveDynamic(this, &UTNScoreHUDWidget::onReplayClicked);
-	}
-
-	if (IsValid(MainMenuButton))
-	{
-		MainMenuButton->OnClicked.RemoveDynamic(this, &UTNScoreHUDWidget::onMainMenuClicked);
 	}
 
 	Super::NativeDestruct();
@@ -93,24 +74,18 @@ void UTNScoreHUDWidget::handleScoreChanged(const int32 Score, const int32 Level,
 
 void UTNScoreHUDWidget::handleGameOver()
 {
+	if (UTNInputDeviceSubsystem* inputDevice = UTNInputDeviceSubsystem::Get(this))
+	{
+		inputDevice->SetCursorWanted(true);
+	}
+
 	if (IsValid(GameOverPanel))
 	{
 		GameOverPanel->SetVisibility(ESlateVisibility::Visible);
-	}
-}
 
-void UTNScoreHUDWidget::onReplayClicked()
-{
-	if (IsValid(GameMode))
-	{
-		GameMode->RestartMatch();
-	}
-}
-
-void UTNScoreHUDWidget::onMainMenuClicked()
-{
-	if (IsValid(GameMode))
-	{
-		GameMode->ReturnToTitle();
+		if (UTNMenuWidgetBase* gameOverMenu = Cast<UTNMenuWidgetBase>(GameOverPanel))
+		{
+			gameOverMenu->FocusMenu();
+		}
 	}
 }
