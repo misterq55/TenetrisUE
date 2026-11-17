@@ -95,5 +95,10 @@ Plugins/**/Intermediate/*
 
 # End of https://www.toptal.com/developers/gitignore/api/unrealengine
 
-# Source audio originals (Unreal imports WAV; keep MP3 sources out of the repo)
+# Source audio originals: third-party licenses forbid redistributing raw files.
+# Only the imported .uasset is committed; keep originals locally.
 *.mp3
+*.wav
+
+# Third-party reference documents
+*.pdf
