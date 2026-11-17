@@ -12,7 +12,7 @@ UTNTenetrisBufferComponent::UTNTenetrisBufferComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshObj(TEXT("StaticMesh'/Game/StarterContent/Shapes/Shape_Plane.Shape_Plane'"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> MeshObj(TEXT("StaticMesh'/Game/TetrominoResources/Mesh/Background_Plane.Background_Plane'"));
 	BackgroundMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BACKGROUNDMESH_COMPONENT"));
 	BackgroundMeshComponent->SetStaticMesh(MeshObj.Object);
 	BackgroundMeshComponent->AttachToComponent(this, FAttachmentTransformRules::KeepRelativeTransform);
