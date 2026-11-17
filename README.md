@@ -2,6 +2,9 @@
 
 A falling-block puzzle game with a twist, built with Unreal Engine 5.7 and C++.
 
+Inspired by the film *Tenet*: the name is Tenet + Tetris, and the film's "inversion" idea
+became the two core mechanics.
+
 - **Space Inversion**: flip the whole board 180° in the middle of a game.
 - **Time Inversion**: rewind your recent moves.
 
@@ -79,4 +82,4 @@ public download.
 ---
 
 Tenetris is a personal portfolio project. It is not affiliated with or endorsed by
-The Tetris Company. Tetris is a trademark of The Tetris Holding, LLC.
+The Tetris Company or the makers of *Tenet*. Tetris is a trademark of The Tetris Holding, LLC.
