@@ -19,9 +19,12 @@ BUILD_NAME = re.compile(r"-build-(\d+)")
 
 INSTALL_NOTES = """\
 ### How to run
-- **Windows**: unzip and run `Tenetris.exe`. If SmartScreen appears, choose *More info → Run anyway*.
+- **Windows**: extract the zip and run `Tenetris.exe`. If asked to install the Visual C++ Redistributable,
+  choose *Yes*. If SmartScreen appears, choose *More info → Run anyway*.
 - **macOS**: open the `.dmg` and copy the app anywhere. The app is not signed: right-click it → *Open*
   (on macOS 15+, use *System Settings → Privacy & Security → Open Anyway*).
+
+See the [README](https://github.com/misterq55/TenetrisUE#readme) for details and credits.
 """
 
 

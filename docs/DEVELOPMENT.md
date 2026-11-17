@@ -9,40 +9,17 @@ so work can continue in any session.
 
 ## 1. High-level architecture
 
-### MVC core (plain C++, not UObject)
-The board simulation lives in a hand-rolled MVC under `Source/Tenetris/Module/MVC/`,
-accessed through a singleton `FTNMVCHolder`:
-- **Model** (`FTNFieldModel`, `FTNTestModel`, ...) — pure board simulation. No engine
-  types, no audio, no rendering. Emits events via delegates.
-- **View** (`FTNTestView`, ...) — pushes model state to the on-screen actors.
-- **Controller** (`FTNTestController`, ...) — receives input, drives the model.
+The architecture overview (MVC core, 3D rendering, UI pattern, two-layer delegates) lives
+in [ARCHITECTURE.md](ARCHITECTURE.md). Rules to keep when changing code:
 
-The model is deliberately engine-agnostic. **Keep gameplay rules and audio/visual
-reactions OUT of the model.** The model only *notifies*; UObject layers react.
-
-### Rendering (3D, not 2D UMG)
-The board is drawn with **3D actors** (`ATNElectronicDisplayField`, mino actors via
-`UTNTenetrisBufferComponent`), not a 2D UMG grid. This is intentional: the
-Space-Inversion 180° flip animation needs real 3D rotation, which UMG can't do.
-- `ATNElectronicDisplayField::Tick` drives the flip animation (RotationRemainingTime).
-  If an actor is spawned without `FinishSpawning`, its Tick never registers and the
-  flip animation silently breaks — see pitfalls below.
-
-### UI (UMG with C++ base + WBP design)
-Pattern used throughout: a **C++ `UUserWidget` base** holds logic and binds named
-widgets via `meta=(BindWidget)`; a **WBP subclass** does the visual layout. Examples:
-`UTNScoreHUDWidget`, `UTNTitleMenuWidget`, `UTNOptionsWidget`, `UTNPauseMenuWidget`.
-Menus derive from `UTNMenuWidgetBase` for keyboard/gamepad navigation (section 3c).
-
-### Two-layer delegate pattern (important)
-Events cross layers via two distinct delegate tiers:
-1. **Model → GameMode** (`DECLARE_DELEGATE`, in `TNFieldModel.h`): `FTNLinesCleared`,
-   `FTNGameOver`, `FTNRewindStarted`, `FTNRewindEnded`. Pure gameplay events.
-2. **GameMode → UI** (`DECLARE_DYNAMIC_MULTICAST_DELEGATE`, BlueprintAssignable):
-   `FTNScoreChanged`, `FTNGameOverUI`. For HUD binding.
-
-New cross-cutting features follow this: add a model delegate (shared, inert for modes
-that don't subscribe), then have the relevant GameMode subscribe and react.
+- **Keep gameplay rules and audio/visual reactions OUT of the model.** The model only
+  *notifies*; UObject layers react.
+- `ATNElectronicDisplayField::Tick` drives the Space-Inversion flip animation
+  (RotationRemainingTime). If an actor is spawned without `FinishSpawning`, its Tick never
+  registers and the flip animation silently breaks (see pitfalls below).
+- Model delegates are declared in `TNFieldModel.h`. New cross-cutting features follow the
+  two-layer pattern: add a model delegate (shared, inert for modes that don't subscribe),
+  then have the relevant GameMode subscribe and react.
 
 ---
 
